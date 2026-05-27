@@ -1,0 +1,54 @@
+from fastapi import HTTPException
+from pydantic import BaseModel
+from typing import Optional
+from src.services.whatsapp.client import get_is_ready
+from src.services.whatsapp.messageFetcher import fetch_messages as whatsapp_fetch_messages
+from src.services.webhookService import trigger_webhook
+from src.utils.logger import logger
+
+class FetchMessagesRequest(BaseModel):
+    phone: str
+    limit: Optional[int] = 20
+    type: Optional[str] = "all"
+    webhook: Optional[dict] = None
+    onlyReactions: Optional[bool] = None
+    reactionEmoji: Optional[str] = None
+    query: Optional[str] = None
+    onlyButtons: Optional[bool] = None
+
+async def fetch_messages(data: FetchMessagesRequest):
+    if not get_is_ready():
+        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+
+    if not data.phone:
+        raise HTTPException(status_code=400, detail="O campo 'phone' é obrigatório")
+
+    try:
+        jid = f"{data.phone}@s.whatsapp.net"
+
+        filters = {
+            "onlyReactions": data.onlyReactions,
+            "reactionEmoji": data.reactionEmoji,
+            "query": data.query,
+            "onlyButtons": data.onlyButtons
+        }
+
+        result = await whatsapp_fetch_messages(jid, data.limit or 20, data.type or "all", filters)
+
+        if data.webhook and data.webhook.get("url"):
+            import asyncio
+            asyncio.create_task(trigger_webhook(data.webhook, {
+                "phone": data.phone,
+                "requested": str(result.get("requested", 0)),
+                "found": str(result.get("found", 0)),
+                "text": f"Histórico de {result.get('found', 0)} mensagens obtido."
+            }))
+
+        return {
+            "success": True,
+            "phone": data.phone,
+            **result
+        }
+    except Exception as e:
+        logger.error(f"❌ Erro ao buscar mensagens para {data.phone}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))

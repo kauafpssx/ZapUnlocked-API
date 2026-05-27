@@ -1,0 +1,28 @@
+# ============================================================
+# ZapUnlocked API — Dependências
+# Instalação: pip install -r requirements.txt
+# ============================================================
+
+# ── Servidor Web ──────────────────────────────────────────
+fastapi>=0.115.0
+uvicorn[standard]>=0.34.0
+pydantic>=2.10.0
+python-dotenv>=1.0.0
+
+# ── WhatsApp Client (Neonize) ─────────────────────────────
+neonize>=0.3.18.post0
+
+# ── Processamento de Mídia ────────────────────────────────
+Pillow>=11.0.0
+python-magic-bin>=0.4.14          # MIME detection no Windows
+ffmpeg-python>=0.2.0
+imageio-ffmpeg>=0.5.1              # Binário ffmpeg embutido (sem instalação manual)
+
+# ── Requisições HTTP ──────────────────────────────────────
+requests>=2.32.0
+httpx>=0.28.0
+
+# ── Utilitários ───────────────────────────────────────────
+qrcode>=8.0
+loguru>=0.7.0
+psutil>=7.0.0

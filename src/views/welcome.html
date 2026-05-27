@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZapUnlocked - Welcome</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --primary-glow: rgba(139, 92, 246, 0.4);
+            --bg: #0b0f1a;
+            --card-bg: rgba(23, 28, 45, 0.8);
+            --text: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: rgba(148, 163, 184, 0.1);
+            --border-highlight: rgba(139, 92, 246, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(99, 102, 241, 0.08) 0%, transparent 40%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 48px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            animation: cardAppear 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes cardAppear {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c084fc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+
+        p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 32px;
+            font-size: 15px;
+        }
+
+        /* Tabs Selection */
+        .tabs {
+            display: flex;
+            background: rgba(15, 23, 42, 0.4);
+            padding: 4px;
+            border-radius: 14px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab i { font-size: 18px; }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+            text-align: left;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .setup-box {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .setup-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .code-display {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 14px 16px;
+            border-radius: 10px;
+            color: var(--primary);
+            font-size: 13px;
+            word-break: break-all;
+            border-left: 3px solid var(--primary);
+            line-height: 1.5;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-top: 24px;
+            margin-top: 32px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: #fff;
+        }
+
+        .footer-link i { font-size: 20px; color: var(--primary); }
+
+        .footer-link span {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .brand-footer {
+            margin-top: 32px;
+            font-size: 12px;
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">
+            <i class="ph-fill ph-lightning"></i>
+            ZapUnlocked
+        </div>
+        
+        <div class="status-badge">
+            <i class="ph-bold ph-check-circle"></i>
+            API Status: Online
+        </div>
+        
+        <h2>Bem-vindo ao ZapUnlocked!</h2>
+        <p>Sua API de alto desempenho para automação de WhatsApp.<br>Inicie sua sessão de forma segura e rápida.</p>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('url')">
+                <i class="ph-bold ph-link"></i>
+                Via URL
+            </div>
+            <div class="tab" onclick="switchTab('request')">
+                <i class="ph-bold ph-code"></i>
+                Via Request
+            </div>
+        </div>
+
+        <div id="content-url" class="tab-content active">
+            <div class="setup-box">
+                <span class="setup-title">Sua URL de Acesso ao Painel:</span>
+                <div class="code-display">
+                    <span style="color: #64748b;"># Use este link para conectar seu WhatsApp:</span><br>
+                    {{BASE_URL}}/qr?API_KEY={{API_KEY}}
+                </div>
+            </div>
+        </div>
+
+        <div id="content-request" class="tab-content">
+            <div class="setup-box">
+                <span class="setup-title">Como conectar via Request (Imagem):</span>
+                <div class="code-display">
+                    <span style="color: #64748b;"># Endpoint para obter o QR Code bruto:</span><br>
+                    GET {{BASE_URL}}/qr/image?API_KEY={{API_KEY}}
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-links">
+            <a href="https://github.com/zKauaFerreira/ZapUnlocked-API" class="footer-link" target="_blank">
+                <i class="ph-bold ph-github-logo"></i>
+                <span>GitHub:</span> github.com/zKauaFerreira/ZapUnlocked-API
+            </a>
+            <a href="https://zapdocs.kauafpss.qzz.io" class="footer-link" target="_blank">
+                <i class="ph-bold ph-book-open"></i>
+                <span>Documentação:</span> zapdocs.kauafpss.qzz.io
+            </a>
+        </div>
+
+        <div class="brand-footer">Desenvolvido por ZapUnlocked • Neonize Core</div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tabId === 'url') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('content-url').classList.add('active');
+            } else {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('content-request').classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

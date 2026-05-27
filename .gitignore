@@ -1,0 +1,76 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+.venv/
+ENV/
+
+# Environment Variables
+.env
+.env.local
+.env.*
+!.env.example
+
+# Sessions & Data (Sensitive WhatsApp Data)
+auth_info/
+data/
+*.sqlite
+*.sqlite-journal
+*.db
+*.db-journal
+
+# Internal project docs (not for public repo)
+CLAUDE.md
+.claude/
+docs/internal/
+
+# External API reference collections (internal use only)
+Z-API Collection.postman_collection.json
+
+# Temp media uploads
+temp_media/
+
+# Neonize source (cloned for reference — not part of project)
+neonize-master/
+
+# Logs
+*.log
+logs/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+.agent/
+.ruff_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+.pytest_cache/
+.coverage
+htmlcov/

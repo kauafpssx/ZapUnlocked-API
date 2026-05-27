@@ -1,0 +1,55 @@
+import json
+import os
+from pathlib import Path
+from src.config.constants import DATA_DIR
+from src.utils.logger import logger
+
+SETTINGS_FILE = Path(DATA_DIR) / "settings.json"
+
+DEFAULT_SETTINGS = {
+    "ai_tag_enabled": False,
+    "ai_tag_text": " (ZapUnlocked AI)",
+    "ip_control_enabled": False,
+    "ip_whitelist": [],
+    "ip_blacklist": [],
+    # Instance settings
+    "call_reject_auto": False,
+    "call_reject_message": "No momento não posso atender. Por favor, envie uma mensagem.",
+    "auto_read_message": False,
+}
+
+def get_settings():
+    try:
+        if not SETTINGS_FILE.exists():
+            return DEFAULT_SETTINGS.copy()
+        
+        with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
+            content = f.read()
+            if not content:
+                return DEFAULT_SETTINGS.copy()
+            
+            loaded = json.loads(content)
+            # Ensure all default keys exist
+            for key, val in DEFAULT_SETTINGS.items():
+                if key not in loaded:
+                    loaded[key] = val
+            return loaded
+    except Exception as e:
+        logger.error(f"❌ Erro ao ler configurações: {e}")
+        return DEFAULT_SETTINGS.copy()
+
+def save_settings(settings: dict):
+    try:
+        # Merge with current
+        current = get_settings()
+        current.update(settings)
+        
+        # Ensure directory exists
+        SETTINGS_FILE.parent.mkdir(parents=True, exist_ok=True)
+        
+        with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
+            json.dump(current, f, indent=4)
+        return current
+    except Exception as e:
+        logger.error(f"❌ Erro ao salvar configurações: {e}")
+        return None
