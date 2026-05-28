@@ -32,7 +32,7 @@ temp_dir.mkdir(parents=True, exist_ok=True)
 print(f"📁 Diretório de autenticação: {auth_dir}")
 print(f"📁 Diretório de dados (chats): {data_dir}")
 
-PORT = int(os.getenv("PORT", 3000))
+PORT = int(os.getenv("PORT", 8300))
 API_KEY = os.getenv("API_KEY")
 INTERNAL_SECRET = os.getenv("INTERNAL_SECRET")
 

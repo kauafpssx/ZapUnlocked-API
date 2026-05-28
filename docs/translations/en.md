@@ -1,21 +1,21 @@
-# 🚀 [ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io) 📲✨
+# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
-![ZapUnlocked-API Banner](https://github.com/zKauaFerreira/ZapUnlocked-API/raw/refs/heads/documentation/images/hero-dark.svg)
+![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/raw/refs/heads/documentation/images/hero-dark.svg)
 
 <p align="center">
-  <img src="https://img.shields.io/github/stars/zKauaFerreira/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="Stars">
-  <img src="https://img.shields.io/github/forks/zKauaFerreira/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="Forks">
-  <img src="https://img.shields.io/github/repo-size/zKauaFerreira/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="Repo Size">
-  <img src="https://img.shields.io/github/license/zKauaFerreira/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="License">
+  <img src="https://img.shields.io/github/stars/kauafpssx/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="Stars">
+  <img src="https://img.shields.io/github/forks/kauafpssx/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="Forks">
+  <img src="https://img.shields.io/github/repo-size/kauafpssx/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="Repo Size">
+  <img src="https://img.shields.io/github/license/kauafpssx/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="License">
 </p>
 
-🌐 [Leia em Português (BR)](https://github.com/zKauaFerreira/ZapUnlocked-API/blob/main/README.md)
+🌐 [Leia em Português (BR)](https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md)
 
 ---
 
-## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/us.svg" width="30"> What is [ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io)?
+## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/us.svg" width="30"> What is [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br)?
 
-**[ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io)** is a professional, **100% free and open-source** solution designed to transform WhatsApp into a powerful automation tool. Built in **Python** with **[Neonize](https://github.com/krypton-byte/neonize)** as the connection engine, this API provides a simple REST interface (FastAPI) for managing sessions, sending complex media, and creating intelligent interactions without requiring a heavy database.
+**[ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br)** is a professional, **100% free and open-source** solution designed to transform WhatsApp into a powerful automation tool. Built in **Python** with **[Neonize](https://github.com/krypton-byte/neonize)** as the connection engine, this API provides a simple REST interface (FastAPI) for managing sessions, sending complex media, and creating intelligent interactions without requiring a heavy database.
 
 > [!TIP]
 > Perfect for developers seeking agility in integrating bots, notifications, and automated customer service systems.
@@ -69,10 +69,13 @@
 
 ### 🔗 Connection and Session
 
+- `GET /` - Welcome Page (HTML)
 - `GET /status` - Connection and Session Status
+- `GET /status/stream` - Real-time Status (SSE)
 - `GET /qr` - View Interactive QR Code
 - `GET /qr/image` - Get QR Code Image (Base64)
 - `POST /qr/pair` - Generate Numeric Pairing Code
+- `GET /settings/phone-code/{phone}` - Generate Pairing Code by Phone Number
 - `POST /qr/logout` - Disconnect and Reset Session
 
 ### 📡 Webhooks (CRUD)
@@ -91,6 +94,28 @@
 - `POST /settings/privacy` - Adjust Privacy (Last seen, etc.)
 - `POST /settings/block` - Block/Unblock Contact
 
+### 🤖 Bot Settings
+
+- `GET /settings/bot` - View Bot Settings
+- `POST /settings/bot` - Update Bot Settings (AI tag, IP control)
+- `PUT /settings/instance/call-reject-auto` - Auto-reject Calls
+- `PUT /settings/instance/call-reject-message` - Call Rejection Message
+- `PUT /settings/instance/auto-read-message` - Automatic Message Read
+
+### 📱 Instance
+
+- `GET /instance/me` - Connected Account Data
+- `GET /instance/device` - Device Technical Data
+- `PUT /instance/update-name` - Rename Instance
+
+### 🖥️ System
+
+- `GET /system/env` - View Environment Variables
+- `PUT /system/env` - Update Environment Variables
+- `POST /system/cleanup/force` - Force Temporary Media Cleanup
+- `GET /system/cleanup/settings` - View Auto-cleanup Settings
+- `PUT /system/cleanup/settings` - Update Auto-cleanup Interval
+
 ---
 
 # 🛠️ Installation and Hosting
@@ -104,30 +129,29 @@ Ideal for development, testing, or running on your own server.
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/zKauaFerreira/ZapUnlocked-API.git
+   git clone https://github.com/kauafpssx/ZapUnlocked-API.git
    cd ZapUnlocked-API
    ```
 
 2. **Install Dependencies**
    Run the automatic installer for your system:
-   - **Windows**: `scripts\install.bat`
-   - **Linux/macOS**: `bash scripts/install.sh`
+   - **Windows**: `scripts\install\install.bat`
+   - **Linux/macOS**: `bash scripts/install/install.sh`
 
 3. **Configure the Environment**
-   Copy `.env.example` and set your variables:
-
-   ```bash
-   cp .env.example .env
-   ```
+   Generate the `.env` automatically with the official script:
+   - **Windows**: `scripts\generate-env\generate-env.bat`
+   - **Linux/macOS**: `bash scripts/generate-env/generate-env.sh`
 
    | Variable          | Description                                  |
    | :---------------- | :------------------------------------------- |
    | `API_KEY`         | Password for authentication on all endpoints |
    | `INTERNAL_SECRET` | Token to validate webhook signatures         |
+   | `PORT`            | API port (default: `8300`)                   |
 
 4. **Run the API**
-   - **Windows**: `scripts\run.bat`
-   - **Linux/macOS**: `bash scripts/run.sh`
+   - **Windows**: `scripts\run\run.bat`
+   - **Linux/macOS**: `bash scripts/run/run.sh`
 
 ---
 
@@ -147,18 +171,29 @@ Ideal for development, testing, or running on your own server.
 
 ### Deployment Steps:
 
-1. **Fork the Repository**: Fork the [Official Repository](https://github.com/zKauaFerreira/ZapUnlocked-API) to your GitHub account.
-2. **Create your Account**: Access [Alwaysdata.com](https://www.alwaysdata.com/) and choose the **Free** plan.
-3. **Access the Web Terminal**: In the panel, go to **Remote access › SSH** and access the provided SSH host.
-4. **Install the API**: In the SSH terminal, run:
+1. **Create your Account**: Access [Alwaysdata.com](https://www.alwaysdata.com/) and choose the **Free** plan.
+2. **Access the SSH Terminal**: In the panel, go to **Remote access › SSH**.
+3. **Clone and Install**:
    ```bash
-   git clone https://github.com/your-user/ZapUnlocked-API.git
-   cd ZapUnlocked-API
-   bash install.sh
+   git clone https://github.com/kauafpssx/ZapUnlocked-API.git ~/ZapUnlocked-API
+   cd ~/ZapUnlocked-API
+   bash scripts/install/install.sh
    ```
-5. **Configure the Service (24/7)**: In the Alwaysdata panel, go to **Web › Services** and add a new service:
-   - **Command**: `python main.py`
-   - **Working directory**: `/home/[user]/ZapUnlocked-API`
+4. **Generate the `.env` file**:
+   ```bash
+   bash scripts/generate-env/generate-env.sh
+   ```
+   The script generates keys automatically and saves `.env` at the project root.
+5. **Configure the Service (24/7)**: In the panel, go to **Advanced › Services › Add a service**:
+   - **Name**: `ZapUnlocked-API`
+   - **Command**: `python3 main.py`
+   - **Working directory**: `ZapUnlocked-API`
+   - **Environment variables**: `PORT=8300`
+6. **Internal Access URL**:
+   ```
+   http://services-[user].alwaysdata.net:8300/
+   ```
+   > Alwaysdata restricts direct external access to ports 8300–8499. To expose publicly, configure a **Reverse Proxy** under **Web › Sites › Add a site** pointing to this internal URL.
 
 ---
 
@@ -167,7 +202,7 @@ Ideal for development, testing, or running on your own server.
 After deployment, connect your WhatsApp account by accessing in your browser:
 
 ```text
-https://your-slug.alwaysdata.net/qr?API_KEY=YOUR_SECRET_PASSWORD
+http://services-[user].alwaysdata.net:8300/qr?API_KEY=YOUR_SECRET_KEY
 ```
 
 ---
@@ -176,11 +211,11 @@ https://your-slug.alwaysdata.net/qr?API_KEY=YOUR_SECRET_PASSWORD
 
 For detailed technical documentation, code examples, and an interactive playground, visit our official website.
 
-👉 **[Access the Official Documentation](https://zapdocs.kauafpss.qzz.io)**
+👉 **[Access the Official Documentation](https://zapunlocked-api.kauafpss.com.br)**
 
 > ### Documentation Index
 >
-> Fetch the complete documentation index at: https://zapdocs.kauafpss.qzz.io/llms.txt
+> Fetch the complete documentation index at: https://zapunlocked-api.kauafpss.com.br/llms.txt
 > Use this file to discover all available pages before exploring further.
 
 ---

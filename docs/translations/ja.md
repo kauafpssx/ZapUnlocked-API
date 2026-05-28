@@ -1,14 +1,14 @@
-# 🚀 [ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io) 📲✨
+# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
-![ZapUnlocked-API Banner](https://github.com/zKauaFerreira/ZapUnlocked-API/raw/refs/heads/documentation/images/hero-dark.svg)
+![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/raw/refs/heads/documentation/images/hero-dark.svg)
 
-🌐 [Leia em Português (BR)](https://github.com/zKauaFerreira/ZapUnlocked-API/blob/main/README.md)
+🌐 [Leia em Português (BR)](https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md)
 
 ---
 
-## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/jp.svg" width="30"> [ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io) とは？
+## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/jp.svg" width="30"> [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) とは？
 
-**[ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io)** は、**Python** と **[Neonize](https://github.com/krypton-byte/neonize)** を使用した WhatsApp 自動化ソリューションです。
+**[ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br)** は、**Python** と **[Neonize](https://github.com/krypton-byte/neonize)** を使用した WhatsApp 自動化ソリューションです。
 
 ---
 
@@ -40,10 +40,10 @@
 
 ## 💻 ローカル
 
-1. `git clone`
-2. `scripts\install.bat` (Win) または `bash scripts/install.sh` (Linux)
-3. `.env` の設定
-4. 実行
+1. `git clone https://github.com/kauafpssx/ZapUnlocked-API.git`
+2. `scripts\install\install.bat` (Win) または `bash scripts/install/install.sh` (Linux)
+3. `bash scripts/generate-env/generate-env.sh` — `.env` を自動生成
+4. `scripts\run\run.bat` または `bash scripts/run/run.sh`
 
 ---
 
@@ -55,7 +55,34 @@
 | RAM        | **256 MB**   |
 | 稼働時間   | **24/7**     |
 
-👉 **[Alwaysdata セットアップガイド](https://zapdocs.kauafpss.qzz.io/essentials/quickstart)**
+### デプロイ手順:
+
+1. [Alwaysdata.com](https://www.alwaysdata.com/) でアカウント作成 — **Free** プラン。
+2. SSH ターミナルを開く: **Remote access › SSH**。
+3. クローンとインストール:
+   ```bash
+   git clone https://github.com/kauafpssx/ZapUnlocked-API.git ~/ZapUnlocked-API
+   cd ~/ZapUnlocked-API
+   bash scripts/install/install.sh
+   ```
+4. `.env` を生成:
+   ```bash
+   bash scripts/generate-env/generate-env.sh
+   ```
+5. Service を設定: **Advanced › Services › Add a service**:
+   - **Name**: `ZapUnlocked-API`
+   - **Command**: `python3 main.py`
+   - **Working directory**: `ZapUnlocked-API`
+   - **Environment variables**: `PORT=8300`
+6. 内部 URL: `http://services-[ユーザー].alwaysdata.net:8300/`
+
+---
+
+## 🔐 ログイン
+
+```text
+http://services-[ユーザー].alwaysdata.net:8300/qr?API_KEY=YOUR_SECRET_KEY
+```
 
 ---
 

@@ -1,14 +1,14 @@
-# 🚀 [ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io) 📲✨
+# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
-![ZapUnlocked-API Banner](https://github.com/zKauaFerreira/ZapUnlocked-API/raw/refs/heads/documentation/images/hero-dark.svg)
+![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/raw/refs/heads/documentation/images/hero-dark.svg)
 
-🌐 [Leia em Português (BR)](https://github.com/zKauaFerreira/ZapUnlocked-API/blob/main/README.md)
+🌐 [Leia em Português (BR)](https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md)
 
 ---
 
-## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/ru.svg" width="30"> Что такое [ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io)?
+## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/ru.svg" width="30"> Что такое [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br)?
 
-**[ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io)** — это решение для автоматизации WhatsApp на **Python** и **[Neonize](https://github.com/krypton-byte/neonize)**.
+**[ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br)** — это решение для автоматизации WhatsApp на **Python** и **[Neonize](https://github.com/krypton-byte/neonize)**.
 
 ---
 
@@ -40,10 +40,10 @@
 
 ## 💻 Локально
 
-1. `git clone`
-2. `scripts\install.bat` (Win) или `bash scripts/install.sh` (Linux)
-3. Настройка `.env`
-4. `scripts\run.bat` (Win) или `bash scripts/run.sh` (Linux)
+1. `git clone https://github.com/kauafpssx/ZapUnlocked-API.git`
+2. `scripts\install\install.bat` (Win) или `bash scripts/install/install.sh` (Linux)
+3. `bash scripts/generate-env/generate-env.sh` — автоматически создаёт `.env`
+4. `scripts\run\run.bat` (Win) или `bash scripts/run/run.sh` (Linux)
 
 ---
 
@@ -55,7 +55,34 @@
 | RAM      | **256 MB**   |
 | Аптайм   | **24/7**     |
 
-👉 **[Руководство Alwaysdata](https://zapdocs.kauafpss.qzz.io/essentials/quickstart)**
+### Шаги деплоя:
+
+1. Создать аккаунт на [Alwaysdata.com](https://www.alwaysdata.com/) — план **Free**.
+2. Открыть SSH-терминал: **Remote access › SSH**.
+3. Клонировать и установить:
+   ```bash
+   git clone https://github.com/kauafpssx/ZapUnlocked-API.git ~/ZapUnlocked-API
+   cd ~/ZapUnlocked-API
+   bash scripts/install/install.sh
+   ```
+4. Сгенерировать `.env`:
+   ```bash
+   bash scripts/generate-env/generate-env.sh
+   ```
+5. Настроить Service: **Advanced › Services › Add a service**:
+   - **Name**: `ZapUnlocked-API`
+   - **Command**: `python3 main.py`
+   - **Working directory**: `ZapUnlocked-API`
+   - **Environment variables**: `PORT=8300`
+6. Внутренний URL: `http://services-[пользователь].alwaysdata.net:8300/`
+
+---
+
+## 🔐 Аутентификация
+
+```text
+http://services-[пользователь].alwaysdata.net:8300/qr?API_KEY=YOUR_SECRET_KEY
+```
 
 ---
 

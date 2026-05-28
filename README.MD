@@ -1,25 +1,25 @@
-# 🚀 [ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io) 📲✨
+# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
-![ZapUnlocked-API Banner](https://github.com/zKauaFerreira/ZapUnlocked-API/raw/refs/heads/documentation/images/hero-dark.svg)
+![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/raw/refs/heads/documentation/images/hero-dark.svg)
 
 <p align="center">
-  <img src="https://img.shields.io/github/stars/zKauaFerreira/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="Stars">
-  <img src="https://img.shields.io/github/forks/zKauaFerreira/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="Forks">
-  <img src="https://img.shields.io/github/repo-size/zKauaFerreira/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="Repo Size">
-  <img src="https://img.shields.io/github/license/zKauaFerreira/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="License">
+  <img src="https://img.shields.io/github/stars/kauafpssx/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="Stars">
+  <img src="https://img.shields.io/github/forks/kauafpssx/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="Forks">
+  <img src="https://img.shields.io/github/repo-size/kauafpssx/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="Repo Size">
+  <img src="https://img.shields.io/github/license/kauafpssx/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="License">
 </p>
 
 ### 🌐 Select Language / Selecione o Idioma:
 
 |                                                                                   English                                                                                   |                                                                                   Español                                                                                   |                                                                                  Français                                                                                   |                                                                                   Deutsch                                                                                   |                                                                                    中文                                                                                     |                                                                                   日本語                                                                                    |                                                                                   Русский                                                                                   |
 | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [<img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/us.svg" width="40">](https://github.com/zKauaFerreira/ZapUnlocked-API/blob/main/readmes/en.md) | [<img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg" width="40">](https://github.com/zKauaFerreira/ZapUnlocked-API/blob/main/readmes/es.md) | [<img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/fr.svg" width="40">](https://github.com/zKauaFerreira/ZapUnlocked-API/blob/main/readmes/fr.md) | [<img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/de.svg" width="40">](https://github.com/zKauaFerreira/ZapUnlocked-API/blob/main/readmes/de.md) | [<img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/cn.svg" width="40">](https://github.com/zKauaFerreira/ZapUnlocked-API/blob/main/readmes/zh.md) | [<img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/jp.svg" width="40">](https://github.com/zKauaFerreira/ZapUnlocked-API/blob/main/readmes/ja.md) | [<img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/ru.svg" width="40">](https://github.com/zKauaFerreira/ZapUnlocked-API/blob/main/readmes/ru.md) |
+| [<img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/us.svg" width="40">](https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/en.md) | [<img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg" width="40">](https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/es.md) | [<img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/fr.svg" width="40">](https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/fr.md) | [<img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/de.svg" width="40">](https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/de.md) | [<img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/cn.svg" width="40">](https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/zh.md) | [<img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/jp.svg" width="40">](https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ja.md) | [<img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/ru.svg" width="40">](https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ru.md) |
 
 ---
 
-## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg" width="30"> O que é o [ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io)?
+## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg" width="30"> O que é o [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br)?
 
-O **[ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io)** é uma solução profissional, **100% gratuita e de código aberto**, projetada para transformar o WhatsApp em uma poderosa ferramenta de automação. Construída em **Python** com **[Neonize](https://github.com/krypton-byte/neonize)** como motor de conexão, esta API oferece uma interface REST (FastAPI) simples para gerenciar sessões, enviar mídias complexas e criar interações inteligentes sem a necessidade de um banco de dados pesado.
+O **[ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br)** é uma solução profissional, **100% gratuita e de código aberto**, projetada para transformar o WhatsApp em uma poderosa ferramenta de automação. Construída em **Python** com **[Neonize](https://github.com/krypton-byte/neonize)** como motor de conexão, esta API oferece uma interface REST (FastAPI) simples para gerenciar sessões, enviar mídias complexas e criar interações inteligentes sem a necessidade de um banco de dados pesado.
 
 > [!TIP]
 > Perfeito para desenvolvedores que buscam agilidade na integração de bots, notificações e sistemas de atendimento automatizados.
@@ -73,10 +73,13 @@ O **[ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io)** é uma solução profis
 
 ### 🔗 Conexão e Sessão
 
+- `GET /` - Página de Boas-vindas (HTML)
 - `GET /status` - Status da Conexão e Sessão
+- `GET /status/stream` - Status em Tempo Real (SSE)
 - `GET /qr` - Visualizar QR Code Interativo
 - `GET /qr/image` - Obter Imagem do QR Code (Base64)
 - `POST /qr/pair` - Gerar Código de Pareamento Numérico
+- `GET /settings/phone-code/{phone}` - Gerar Código de Pareamento por Número
 - `POST /qr/logout` - Desconectar e Resetar Sessão
 
 ### 📡 Webhooks (CRUD)
@@ -95,6 +98,28 @@ O **[ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io)** é uma solução profis
 - `POST /settings/privacy` - Ajustar Privacidade (Visto por último, etc)
 - `POST /settings/block` - Bloquear/Desbloquear Contato
 
+### 🤖 Configurações do Bot
+
+- `GET /settings/bot` - Ver Configurações do Bot
+- `POST /settings/bot` - Atualizar Configurações do Bot (tag IA, IP control)
+- `PUT /settings/instance/call-reject-auto` - Rejeitar Chamadas Automaticamente
+- `PUT /settings/instance/call-reject-message` - Mensagem de Chamada Rejeitada
+- `PUT /settings/instance/auto-read-message` - Leitura Automática de Mensagens
+
+### 📱 Instância
+
+- `GET /instance/me` - Dados da Conta Conectada
+- `GET /instance/device` - Dados Técnicos do Dispositivo
+- `PUT /instance/update-name` - Renomear Instância
+
+### 🖥️ Sistema
+
+- `GET /system/env` - Ver Variáveis de Ambiente
+- `PUT /system/env` - Atualizar Variáveis de Ambiente
+- `POST /system/cleanup/force` - Limpeza Forçada de Mídia Temporária
+- `GET /system/cleanup/settings` - Ver Configurações de Limpeza Automática
+- `PUT /system/cleanup/settings` - Atualizar Intervalo de Limpeza Automática
+
 ---
 
 # 🛠️ Instalação e Hospedagem
@@ -108,30 +133,29 @@ Ideal para desenvolvimento, testes ou rodar em servidor próprio.
 1. **Clone o Repositório**
 
    ```bash
-   git clone https://github.com/zKauaFerreira/ZapUnlocked-API.git
+   git clone https://github.com/kauafpssx/ZapUnlocked-API.git
    cd ZapUnlocked-API
    ```
 
 2. **Instale as Dependências**
    Execute o instalador automático do seu sistema:
-   - **Windows**: `scripts\install.bat`
-   - **Linux/macOS**: `bash scripts/install.sh`
+   - **Windows**: `scripts\install\install.bat`
+   - **Linux/macOS**: `bash scripts/install/install.sh`
 
 3. **Configure o Ambiente**
-   Copie o `.env.example` e defina suas variáveis:
-
-   ```bash
-   cp .env.example .env
-   ```
+   Gere o `.env` automaticamente com o script oficial:
+   - **Windows**: `scripts\generate-env\generate-env.bat`
+   - **Linux/macOS**: `bash scripts/generate-env/generate-env.sh`
 
    | Variável          | Descrição                                     |
    | :---------------- | :-------------------------------------------- |
    | `API_KEY`         | Senha para autenticação em todos os endpoints |
    | `INTERNAL_SECRET` | Token para validar assinaturas de webhook     |
+   | `PORT`            | Porta da API (padrão: `8300`)                 |
 
 4. **Execute a API**
-   - **Windows**: `scripts\run.bat`
-   - **Linux/macOS**: `bash scripts/run.sh`
+   - **Windows**: `scripts\run\run.bat`
+   - **Linux/macOS**: `bash scripts/run/run.sh`
 
 ---
 
@@ -151,18 +175,29 @@ A **Alwaysdata** é a opção recomendada para hospedar a API de forma estável 
 
 ### Passo a Passo para Deploy:
 
-1. **Fork do Repositório**: Faça um fork do [Repositório Oficial](https://github.com/zKauaFerreira/ZapUnlocked-API) para sua conta do GitHub.
-2. **Crie sua Conta**: Acesse [Alwaysdata.com](https://www.alwaysdata.com/) e escolha o plano **Free**.
-3. **Acesse o Terminal Web**: No painel, vá em **Remote access › SSH** e acesse o host SSH fornecido.
-4. **Instale a API**: No terminal SSH, rode:
+1. **Crie sua Conta**: Acesse [Alwaysdata.com](https://www.alwaysdata.com/) e escolha o plano **Free**.
+2. **Acesse o Terminal SSH**: No painel, vá em **Remote access › SSH**.
+3. **Clone e Instale**:
    ```bash
-   git clone https://github.com/seu-usuario/ZapUnlocked-API.git
-   cd ZapUnlocked-API
-   bash scripts/install.sh
+   git clone https://github.com/kauafpssx/ZapUnlocked-API.git ~/ZapUnlocked-API
+   cd ~/ZapUnlocked-API
+   bash scripts/install/install.sh
    ```
-5. **Configure o Serviço (24/7)**: No painel da Alwaysdata, vá em **Web › Services** e adicione um novo serviço:
-   - **Command**: `python main.py`
-   - **Working directory**: `/home/[usuario]/ZapUnlocked-API`
+4. **Gere o arquivo `.env`**:
+   ```bash
+   bash scripts/generate-env/generate-env.sh
+   ```
+   O script gera as chaves automaticamente e salva o `.env` na raiz do projeto.
+5. **Configure o Serviço (24/7)**: No painel, vá em **Advanced › Services › Add a service**:
+   - **Name**: `ZapUnlocked-API`
+   - **Command**: `python3 main.py`
+   - **Working directory**: `ZapUnlocked-API`
+   - **Environment variables**: `PORT=8300`
+6. **URL de Acesso Interno**:
+   ```
+   http://services-[usuario].alwaysdata.net:8300/
+   ```
+   > O AlwaysData restringe acesso externo direto às portas 8300–8499. Para expor publicamente, configure um **Reverse Proxy** em **Web › Sites › Add a site** apontando para essa URL interna.
 
 ---
 
@@ -171,7 +206,7 @@ A **Alwaysdata** é a opção recomendada para hospedar a API de forma estável 
 Após o deploy, conecte sua conta do WhatsApp acessando no navegador:
 
 ```text
-https://seu-slug.alwaysdata.net/qr?API_KEY=SUA_SENHA_SECRETA
+http://services-[usuario].alwaysdata.net:8300/qr?API_KEY=SUA_SENHA_SECRETA
 ```
 
 ---
@@ -180,11 +215,11 @@ https://seu-slug.alwaysdata.net/qr?API_KEY=SUA_SENHA_SECRETA
 
 Para documentação técnica detalhada, exemplos de código e playground interativo, acesse nosso site oficial.
 
-👉 **[Acesse a Documentação Oficial](https://zapdocs.kauafpss.qzz.io)**
+👉 **[Acesse a Documentação Oficial](https://zapunlocked-api.kauafpss.com.br)**
 
 > ### Documentation Index
 >
-> Fetch the complete documentation index at: https://zapdocs.kauafpss.qzz.io/llms.txt
+> Fetch the complete documentation index at: https://zapunlocked-api.kauafpss.com.br/llms.txt
 > Use this file to discover all available pages before exploring further.
 
 ---

@@ -22,16 +22,54 @@ async def fetch_messages(jid: str, limit: int = 20, msg_type: str = "all", optio
     reaction_map = {}
     processed_messages = []
 
+    _STUB_TYPES = {
+        0: "unknown",
+        1: "revoke",
+        2: "revoke",
+        6: "ciphertext",
+        7: "future_proof",
+        8: "non_plain_text_message",
+        14: "e2e_encrypted",
+        21: "e2e_encrypted_now",
+    }
+
+    _META_KEYS = {
+        "messageContextInfo",
+        "senderKeyDistributionMessage",
+        "protocolMessage",
+    }
+
     for m in messages:
         if not isinstance(m, dict):
             continue
 
-        # Avoid crashing if m is missing keys
-        msg_wrapper = m.get("message", {})
-        msg_keys = [k for k in msg_wrapper.keys() if k not in ("messageContextInfo", "senderKeyDistributionMessage")]
-        message_type = msg_keys[0] if msg_keys else "unknown"
+        msg_wrapper = m.get("message") or {}
 
-        text = ""
+        # Stub messages (receipts, system events, key distribution)
+        stub_type = m.get("messageStubType")
+        if stub_type is not None and stub_type != 0:
+            message_type = _STUB_TYPES.get(stub_type, f"stub_{stub_type}")
+            processed_messages.append({
+                "id": m.get("key", {}).get("id"),
+                "fromMe": m.get("key", {}).get("fromMe", False),
+                "pushName": m.get("pushName"),
+                "text": f"[{message_type}]",
+                "timestamp": (lambda ts: (ts.get("low") if isinstance(ts, dict) else ts) if (ts := m.get("messageTimestamp", 0)) else 0)(),
+                "mimetype": None,
+                "type": message_type,
+                "hasButtons": False,
+                "reaction": None,
+            })
+            continue
+
+        msg_keys = [k for k in msg_wrapper.keys() if k not in _META_KEYS]
+
+        # No real content keys → system/meta message, skip silently
+        if not msg_keys:
+            continue
+
+        message_type = msg_keys[0]
+
         msg = msg_wrapper.get("viewOnceMessage", {}).get("message") or \
               msg_wrapper.get("viewOnceMessageV2", {}).get("message") or \
               msg_wrapper

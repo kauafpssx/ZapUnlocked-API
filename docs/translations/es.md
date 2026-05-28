@@ -1,14 +1,14 @@
-# 🚀 [ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io) 📲✨
+# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
-![ZapUnlocked-API Banner](https://github.com/zKauaFerreira/ZapUnlocked-API/raw/refs/heads/documentation/images/hero-dark.svg)
+![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/raw/refs/heads/documentation/images/hero-dark.svg)
 
-🌐 [Leia em Português (BR)](https://github.com/zKauaFerreira/ZapUnlocked-API/blob/main/README.md)
+🌐 [Leia em Português (BR)](https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md)
 
 ---
 
-## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg" width="30"> ¿Qué es [ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io)?
+## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg" width="30"> ¿Qué es [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br)?
 
-**[ZapUnlocked-API](https://zapdocs.kauafpss.qzz.io)** es una solución profesional, **100% gratuita y de código abierto**, diseñada para transformar WhatsApp en una poderosa herramienta de automatización. Construida en **Python** con **[Neonize](https://github.com/krypton-byte/neonize)** como motor de conexión, esta API ofrece una interfaz REST sencilla (FastAPI) para gestionar sesiones, enviar medios complejos y crear interacciones inteligentes sin necesidad de una base de datos pesada.
+**[ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br)** es una solución profesional, **100% gratuita y de código abierto**, diseñada para transformar WhatsApp en una poderosa herramienta de automatización. Construida en **Python** con **[Neonize](https://github.com/krypton-byte/neonize)** como motor de conexión, esta API ofrece una interfaz REST sencilla (FastAPI) para gestionar sesiones, enviar medios complejos y crear interacciones inteligentes sin necesidad de una base de datos pesada.
 
 > [!TIP]
 > Perfecto para desarrolladores que buscan agilidad en la integración de bots, notificaciones y sistemas de atención automatizada.
@@ -59,12 +59,12 @@
 
 ## 💻 Instalación Local
 
-1. **Clonar**: `git clone https://github.com/zKauaFerreira/ZapUnlocked-API.git`
+1. **Clonar**: `git clone https://github.com/kauafpssx/ZapUnlocked-API.git`
 2. **Dependencias**:
-   - Windows: `scripts\install.bat`
-   - Linux: `bash scripts/install.sh`
-3. **Configurar**: `cp .env.example .env`
-4. **Ejecutar**: `scripts\run.bat` o `bash scripts/run.sh`
+   - Windows: `scripts\install\install.bat`
+   - Linux: `bash scripts/install/install.sh`
+3. **Configurar**: `bash scripts/generate-env/generate-env.sh` — genera `.env` automáticamente
+4. **Ejecutar**: `scripts\run\run.bat` o `bash scripts/run/run.sh`
 
 ---
 
@@ -78,7 +78,26 @@
 | RAM            | **256 MB**   |
 | Uptime         | **24/7**     |
 
-👉 **[Guía de configuración en Alwaysdata](https://zapdocs.kauafpss.qzz.io/essentials/quickstart)**
+### Pasos de Deploy:
+
+1. Crear cuenta en [Alwaysdata.com](https://www.alwaysdata.com/) — plan **Free**.
+2. Abrir terminal SSH: **Remote access › SSH**.
+3. Clonar e instalar:
+   ```bash
+   git clone https://github.com/kauafpssx/ZapUnlocked-API.git ~/ZapUnlocked-API
+   cd ~/ZapUnlocked-API
+   bash scripts/install/install.sh
+   ```
+4. Generar `.env`:
+   ```bash
+   bash scripts/generate-env/generate-env.sh
+   ```
+5. Configurar Service: **Advanced › Services › Add a service**:
+   - **Name**: `ZapUnlocked-API`
+   - **Command**: `python3 main.py`
+   - **Working directory**: `ZapUnlocked-API`
+   - **Environment variables**: `PORT=8300`
+6. URL interna: `http://services-[usuario].alwaysdata.net:8300/`
 
 ---
 
@@ -87,14 +106,14 @@
 Conecta tu WhatsApp:
 
 ```text
-https://tu-slug.alwaysdata.net/qr?API_KEY=TU_CLAVE
+http://services-[usuario].alwaysdata.net:8300/qr?API_KEY=TU_CLAVE
 ```
 
 ---
 
 ## 📖 Documentación Oficial
 
-👉 **[Accede a la Documentación Oficial](https://zapdocs.kauafpss.qzz.io)**
+👉 **[Accede a la Documentación Oficial](https://zapunlocked-api.kauafpss.com.br)**
 
 ---
 

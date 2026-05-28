@@ -1,6 +1,19 @@
+import time
 import psutil
 import gc
 from fastapi import Request
+
+def _fmt_uptime(seconds: float) -> str:
+    d = int(seconds // 86400)
+    h = int((seconds % 86400) // 3600)
+    m = int((seconds % 3600) // 60)
+    s = int(seconds % 60)
+    parts = []
+    if d: parts.append(f"{d}d")
+    if h: parts.append(f"{h}h")
+    if m: parts.append(f"{m}m")
+    parts.append(f"{s}s")
+    return " ".join(parts)
 
 from src.services.whatsapp.client import get_store
 
@@ -30,7 +43,7 @@ async def get_memory_stats(request: Request):
             "free": format_mb(sys_mem.available),
             "usagePercent": f"{sys_mem.percent}%"
         },
-        "uptime": f"{int(process.create_time())} s", # Using creation time as a pseudo uptime for the process
+        "uptime": _fmt_uptime(time.time() - process.create_time()),
     }
 
     return stats
