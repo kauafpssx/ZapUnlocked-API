@@ -74,7 +74,8 @@
    - **Command**: `python3 main.py`
    - **Working directory**: `ZapUnlocked-API`
    - **Environment variables**: `PORT=8300`
-6. 内部访问地址: `http://services-[用户名].alwaysdata.net:8300/`
+6. 访问地址: `http://services-[用户名].alwaysdata.net:8300/`
+   > 直接在浏览器中访问，无需额外配置。
 
 ---
 

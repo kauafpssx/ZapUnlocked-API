@@ -97,7 +97,8 @@
    - **Command**: `python3 main.py`
    - **Working directory**: `ZapUnlocked-API`
    - **Environment variables**: `PORT=8300`
-6. URL interna: `http://services-[usuario].alwaysdata.net:8300/`
+6. URL de Acceso: `http://services-[usuario].alwaysdata.net:8300/`
+   > Accede directamente desde tu navegador, sin configuración adicional.
 
 ---
 
