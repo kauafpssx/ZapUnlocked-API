@@ -1,68 +1,68 @@
-# Contributing to ZapUnlocked-API
+# Contribuindo com a ZapUnlocked-API
 
-All contributions are welcome, whether bug reports, feature suggestions, or pull requests.
-
----
-
-## Report an Issue
-
-Before opening an issue, check if it already exists in [open issues](https://github.com/kauafpssx/ZapUnlocked-API/issues).
-
-- **Bug**: use the [Bug Report](.github/ISSUE_TEMPLATE/bug_report.md) template
-- **Feature**: use the [Feature Request](.github/ISSUE_TEMPLATE/feature_request.md) template
-
-Issues without sufficient context may be closed.
+Toda contribuição é bem-vinda, seja um bug report, sugestão de feature ou pull request.
 
 ---
 
-## Contribute Code
+## Reportar um problema
 
-### 1. Fork and clone
+Antes de abrir uma issue, verifique se ela já existe em [issues abertas](https://github.com/kauafpssx/ZapUnlocked-API/issues).
+
+- **Bug**: use o template [Bug Report](.github/ISSUE_TEMPLATE/bug_report.md)
+- **Feature**: use o template [Feature Request](.github/ISSUE_TEMPLATE/feature_request.md)
+
+Issues sem contexto suficiente podem ser fechadas.
+
+---
+
+## Contribuir com código
+
+### 1. Fork e clone
 
 ```bash
-git clone https://github.com/YOUR_USER/ZapUnlocked-API.git
+git clone https://github.com/SEU_USER/ZapUnlocked-API.git
 cd ZapUnlocked-API
 ```
 
-### 2. Create a branch
+### 2. Crie uma branch
 
 ```bash
-git checkout -b feat/feature-name
-# or
-git checkout -b fix/bug-name
+git checkout -b feat/nome-da-feature
+# ou
+git checkout -b fix/nome-do-bug
 ```
 
-### 3. Implement
+### 3. Implemente
 
-Keep the scope focused. One PR per feature or fix.
+Mantenha o escopo focado. Um PR por feature ou fix.
 
 ### 4. Commit
 
 Use [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
-feat: add location send endpoint
-fix: fix media queue timeout
-docs: update webhook examples
-refactor: extract auth logic to separate module
-chore: update dependencies
+feat: adiciona endpoint de envio de localização
+fix: corrige timeout na fila de mídia
+docs: atualiza exemplos de webhook
+refactor: extrai lógica de auth para módulo separado
+chore: atualiza dependências
 ```
 
-### 5. Open the Pull Request
+### 5. Abra o Pull Request
 
-PR to the `main` branch, filling out the template completely.
-
----
-
-## Standards
-
-- Python: PEP 8, descriptive names in English
-- No debug `print()` in PRs
-- No commented-out code left behind
-- Imports: stdlib, third-party, local (in that order)
+PR para a branch `main`, preenchendo o template completamente.
 
 ---
 
-## Security
+## Padrões
 
-Never open a public issue for vulnerabilities. See [SECURITY.md](SECURITY.md).
+- Python: PEP 8, nomes descritivos em inglês
+- Sem `print()` de debug em PRs
+- Sem código comentado deixado para trás
+- Imports: stdlib, terceiros, locais (nessa ordem)
+
+---
+
+## Segurança
+
+Nunca abra issue pública para vulnerabilidades. Veja [SECURITY.md](SECURITY.md).
