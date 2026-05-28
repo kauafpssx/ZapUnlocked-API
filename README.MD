@@ -1,6 +1,6 @@
 # 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
-![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/raw/refs/heads/documentation/images/hero-dark.svg)
+![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
 <p align="center">
   <img src="https://img.shields.io/github/stars/kauafpssx/ZapUnlocked-API?style=for-the-badge&logo=github&color=30A3E6" alt="Stars">
@@ -193,11 +193,11 @@ A **Alwaysdata** é a opção recomendada para hospedar a API de forma estável 
    - **Command**: `python3 main.py`
    - **Working directory**: `ZapUnlocked-API`
    - **Environment variables**: `PORT=8300`
-6. **URL de Acesso Interno**:
+6. **URL de Acesso**:
    ```
    http://services-[usuario].alwaysdata.net:8300/
    ```
-   > O AlwaysData restringe acesso externo direto às portas 8300–8499. Para expor publicamente, configure um **Reverse Proxy** em **Web › Sites › Add a site** apontando para essa URL interna.
+   A URL já é acessível externamente. *(Opcional)* Para usar um domínio personalizado, configure um **Reverse Proxy** em **Web › Sites › Add a site** apontando para `http://[usuario].alwaysdata.net`.
 
 ---
 

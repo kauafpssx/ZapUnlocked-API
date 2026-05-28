@@ -1,6 +1,6 @@
 # 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
-![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/raw/refs/heads/documentation/images/hero-dark.svg)
+![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
 🌐 [Leia em Português (BR)](https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md)
 
@@ -74,8 +74,8 @@
    - **Command**: `python3 main.py`
    - **Working directory**: `ZapUnlocked-API`
    - **Environment variables**: `PORT=8300`
-6. URL доступа: `http://services-[пользователь].alwaysdata.net:8300/`
-   > Открывайте прямо в браузере, дополнительная настройка не требуется.
+6. **URL доступа**: `http://services-[пользователь].alwaysdata.net:8300/`
+   > Открывайте прямо в браузере. *(Необязательно)* Для использования собственного домена настройте **Reverse Proxy** в **Web › Sites › Add a site**, указав `http://[пользователь].alwaysdata.net`.
 
 ---
 

@@ -1,6 +1,6 @@
 # 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
-![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/raw/refs/heads/documentation/images/hero-dark.svg)
+![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
 🌐 [Leia em Português (BR)](https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md)
 
@@ -74,8 +74,8 @@
    - **Command**: `python3 main.py`
    - **Working directory**: `ZapUnlocked-API`
    - **Environment variables**: `PORT=8300`
-6. 访问地址: `http://services-[用户名].alwaysdata.net:8300/`
-   > 直接在浏览器中访问，无需额外配置。
+6. **访问地址**: `http://services-[用户名].alwaysdata.net:8300/`
+   > 直接在浏览器中访问。*(可选)* 如需使用自定义域名，请在 **Web › Sites › Add a site** 配置 **Reverse Proxy**，指向 `http://[用户名].alwaysdata.net`。
 
 ---
 

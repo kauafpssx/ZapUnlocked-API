@@ -1,6 +1,6 @@
 # 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
-![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/raw/refs/heads/documentation/images/hero-dark.svg)
+![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
 🌐 [Leia em Português (BR)](https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md)
 
@@ -74,8 +74,8 @@
    - **Command**: `python3 main.py`
    - **Working directory**: `ZapUnlocked-API`
    - **Environment variables**: `PORT=8300`
-6. アクセス URL: `http://services-[ユーザー].alwaysdata.net:8300/`
-   > ブラウザから直接アクセスできます。追加設定は不要です。
+6. **アクセス URL**: `http://services-[ユーザー].alwaysdata.net:8300/`
+   > ブラウザから直接アクセスできます。*(オプション)* カスタムドメインを使用するには、**Web › Sites › Add a site** で **Reverse Proxy** を設定し、`http://[ユーザー].alwaysdata.net` を指定してください。
 
 ---
 
