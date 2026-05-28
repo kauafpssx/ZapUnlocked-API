@@ -1,0 +1,33 @@
+---
+title: 'Atualizar Env Vars'
+icon: 'file-pen'
+api: "PUT /system/env"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Atualiza variáveis no arquivo `.env` e na memória do processo. Chaves sensíveis (`API_KEY`, `DB_PASSWORD`, `SESSIONS_KEY`, `SECRET_KEY`) são bloqueadas e não podem ser alteradas por este endpoint.
+
+### Body
+
+Objeto com as variáveis a atualizar (chave-valor, ambos strings):
+
+<ResponseExample>
+
+```json Body de exemplo
+{
+  "PORT": "8400",
+  "AUTH_DIR": "auth_custom"
+}
+```
+
+```json 200 Sucesso
+{
+  "status": "success",
+  "message": "Variáveis de ambiente atualizadas. Chaves sensíveis (API_KEY, etc) não podem ser alteradas por aqui."
+}
+```
+
+</ResponseExample>

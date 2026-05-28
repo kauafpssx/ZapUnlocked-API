@@ -1,0 +1,40 @@
+---
+title: 'Uso do Disco'
+icon: 'hard-drive'
+api: "GET /management/volume_stats"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Retorna o espaço ocupado pelo armazenamento de mídias e dados do WhatsApp no servidor.
+
+### Autenticação
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+    "success": true,
+    "totalSizeBytes": 1048576,
+    "totalSizeFormatted": "1.00 MB",
+    "fileCount": 15,
+    "structure": [
+        {
+            "name": "chats",
+            "type": "folder",
+            "size": 1048576,
+            "children": [
+                 {
+                    "name": "5511999999999.json.gz",
+                    "type": "file",
+                    "size": 524288
+                }
+            ]
+        }
+    ]
+}
+```
+
+</ResponseExample>

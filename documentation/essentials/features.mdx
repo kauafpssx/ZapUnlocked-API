@@ -1,0 +1,120 @@
+---
+title: "Funcionalidades e Roadmap"
+icon: "rocket"
+description: "Explore o universo de possibilidades da **ZapUnlocked-API**."
+---
+
+A **ZapUnlocked-API** é uma engine de automação robusta construída sobre o motor Neonize, projetada para ser estável e poderosa.
+
+<Info>
+  **Eficiência de Recursos**: O sistema é otimizado para rodar com **120-140 MB
+  de RAM**, utilizando compressão inteligente e fila de mídias. Saiba mais em
+  [Otimização do Sistema](/api-reference/optimization) e [Otimização de
+  Recursos](/api-reference/resource-optimization).
+</Info>
+
+---
+
+## <Icon icon="check-double" iconType="sharp-regular" color="#9d4fe6" size={22} /> Funcionalidades Implementadas
+
+Ferramentas prontas para automação:
+
+### Mensageria
+
+- **Texto**: Envio de mensagens com placeholders dinâmicos (`{{day}}`, `{{phone}}`, etc.)
+- **Reações**: Reagir a mensagens com emojis
+- **Edição e Exclusão**: Alterar ou deletar mensagens para todos no chat
+- **Marcar como Lida**: Enviar duplo check azul programaticamente
+- **Localização**: Envio de coordenadas geográficas com nome e endereço
+- **Contatos**: Compartilhamento de vCards individuais ou múltiplos
+- **Link com Preview**: Envio de URLs com card Open Graph
+- **Botões Interativos**: Sistema stateless com webhooks criptografados (validade 24h)
+- **Lista de Opções**: Menus interativos com seções e IDs por item
+- **Enquetes**: Envio de enquetes e recebimento de votos em tempo real
+- **Figurinhas**: Envio de stickers com controle de redimensionamento (pad, cover, stretch, blur, transparent)
+
+### Mídia
+
+- **Imagens, Vídeos, Áudios e Documentos**: Suporte completo com fila inteligente
+- **Áudio PTT**: Conversão automática para compatibilidade com iPhone
+- **Fila de Mídias**: Gerenciamento de queue para evitar estouro de recursos
+
+### Webhooks
+
+- **CRUD Nomeado**: Múltiplos webhooks com nome único, gerenciados via API (criar, listar, editar, remover)
+- **20 Tipos de Eventos**: `message.*` (text, image, video, audio, document, sticker, contact, location, reaction, poll, button, list, deleted), `connection.*`, `call.received`
+- **Subscrição por Evento**: Cada webhook assina apenas os eventos que importam, ou `["*"]` para todos
+- **Envelope Padrão**: `{event, timestamp, data}` automático quando body não é customizado
+- **Placeholders**: Body/headers customizáveis com `{{from}}`, `{{text}}`, `{{event}}`, etc.
+
+### Gerenciamento
+
+- **Contatos**: Buscar informações de contatos e listar recentes (últimos 1.000)
+- **Mensagens**: Buscar histórico com filtros (tipo, query, reação) - 100 msgs/chat
+- **Armazenamento**: Verificar uso de disco e limpar JSONs compactados
+
+### Conexão
+
+- **QR Code**: Interface web com auto-refresh
+- **Pairing Code**: Login via código numérico (alternativa ao QR)
+- **Logout**: Desconectar e resetar sessão
+
+### Configurações
+
+- **Privacidade**: Ajustar visibilidade de Visto por Último, Foto e Status
+- **Bloqueio**: Bloquear/desbloquear contatos
+- **Perfil**: Atualizar nome e foto do bot
+
+---
+
+## <Icon icon="gears" iconType="sharp-regular" color="#9d4fe6" size={22} /> Capacidades do Motor (Neonize)
+
+O motor suporta diversas funções que podem ser expostas na API conforme a demanda:
+
+### **Conexão e Sincronização**
+
+- **Pairing Code**: Conexão via código numérico (alternativa ao QR Code).
+- **Sincronização de Histórico**: Recepção de mensagens antigas no momento do login.
+- **Auto-Recuperação**: Reconexão automática após quedas de sinal.
+
+### **Gerenciamento de Mensagens**
+
+- **Grupos e Comunidades**: Criar grupos, gerenciar membros e administradores.
+- **Canais (Newsletter)**: Criar e gerenciar canais de broadcast.
+
+### **Grupos e Comunidades**
+
+- **Moderação**: Criar grupos, gerenciar membros e permissões de administradores.
+- **Metadata**: Alterar nome, descrição e foto do grupo.
+- **Convites**: Gerenciar links e aprovação de novos membros.
+
+### **Privacidade e Perfil**
+
+- **Privacidade**: Configurar visibilidade de Visto por Último, Foto e Status.
+- **Perfil**: Alterar nome e frase de status programaticamente.
+
+---
+
+## <Icon icon="bolt" iconType="sharp-regular" color="#9d4fe6" size={22} /> Roadmap e Futuro
+
+### **1. Inteligência Artificial**
+
+Transforme o bot em um assistente inteligente com integrações nativas:
+
+- **Groq e Gemini**: Respostas geradas por IA com baixo consumo de recursos.
+- **Contexto de Conversa**: Memória para que o bot entenda o histórico do chat.
+
+### **2. Segurança Avançada**
+
+- **Múltiplos Métodos de Autenticação**: Opções extras de segurança além da x-api-key atual.
+- **Whitelist de IP**: Restrição de acesso por origem.
+
+### **3. Dashboard de Controle**
+
+Interface visual para gestão de instâncias, logs e métricas de desempenho.
+
+---
+
+### <Icon icon="code-fork" iconType="sharp-regular" color="#9d4fe6" size={22} /> Sugestões
+
+A ZapUnlocked-API é open-source. Se você precisa de uma função do Neonize ainda não implementada, abra uma [Issue no GitHub](https://github.com/kauafpssx/ZapUnlocked-API/issues).

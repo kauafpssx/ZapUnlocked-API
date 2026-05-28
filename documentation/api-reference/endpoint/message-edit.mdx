@@ -1,0 +1,64 @@
+---
+title: "Editar Mensagem"
+icon: "pen-to-square"
+api: "POST /messages/edit"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Edita o texto de uma mensagem **enviada pelo bot**. A mensagem aparece com a tag "Editado" no WhatsApp de todos os participantes.
+
+### Corpo da Requisição (Body)
+
+<ParamField body="phone" type="string" required>
+  Número do chat com código do país (ex: `5511999999999`).
+</ParamField>
+
+<ParamField body="newMessage" type="string" required>
+  O novo conteúdo de texto da mensagem.
+</ParamField>
+
+<ParamField body="messageId" type="string">
+  ID da mensagem original a ser editada. Use junto com `type: "id"`.
+</ParamField>
+
+<ParamField body="messageText" type="string">
+  Texto da mensagem original a ser editada. Use junto com `type: "text"`.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como localizar a mensagem: `"id"` (por ID) ou `"text"` (por conteúdo de texto).
+</ParamField>
+
+<Warning>
+  Só é possível editar mensagens **enviadas pelo próprio bot**. Tentativas de editar mensagens de terceiros serão ignoradas pelo WhatsApp.
+</Warning>
+
+
+<ResponseField name="success" type="boolean">
+  Indica se a mensagem foi editada com sucesso.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Mensagem descritiva do status.
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Mensagem editada ✅"
+}
+```
+
+```json 404 Erro
+{
+  "success": false,
+  "message": "Mensagem não encontrada no histórico"
+}
+```
+
+</ResponseExample>

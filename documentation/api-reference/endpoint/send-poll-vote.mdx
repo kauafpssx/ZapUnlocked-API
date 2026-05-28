@@ -1,0 +1,64 @@
+---
+title: "Votar em Enquete"
+icon: "square-check"
+api: "POST /messages/send-poll-vote"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Envia um voto em uma enquete existente. Útil para simular participação do bot em enquetes ou para testes.
+
+### Corpo da Requisição (Body)
+
+<ParamField body="phone" type="string" required>
+  Número do chat onde a enquete foi enviada (ex: `5511999999999`).
+</ParamField>
+
+<ParamField body="pollId" type="string">
+  ID da mensagem da enquete. Use junto com `type: "id"`.
+</ParamField>
+
+<ParamField body="pollName" type="string">
+  Texto exato da enquete (pergunta). Use junto com `type: "text"`.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como localizar a enquete: `"id"` (por ID) ou `"text"` (por pergunta).
+</ParamField>
+
+<ParamField body="selectedOptions" type="array" required>
+  Lista com os textos das opções selecionadas:
+  ```json
+  ["Azul"]
+  ```
+  Para remover voto, envie array vazio: `[]`.
+</ParamField>
+
+
+<ResponseField name="success" type="boolean">
+  Indica se o voto foi registrado com sucesso.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Mensagem descritiva do status.
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Voto registrado ✅"
+}
+```
+
+```json 404 Erro
+{
+  "success": false,
+  "message": "Enquete não encontrada no histórico"
+}
+```
+
+</ResponseExample>

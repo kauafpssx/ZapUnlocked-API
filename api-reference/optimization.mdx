@@ -1,0 +1,88 @@
+---
+title: "Otimização do Sistema"
+icon: "gauge-high"
+description: "Entenda como a **ZapUnlocked-API** é otimizada para máxima eficiência."
+---
+
+A **ZapUnlocked-API** foi projetada para rodar e ser estável mesmo em ambientes de alta restrição de recursos. Cada componente foi otimizado para garantir estabilidade e performance.
+
+---
+
+## <Icon icon="layer-group" iconType="sharp-regular" color="#9d4fe6" size={22} /> Fila de Mídias
+
+Para evitar que múltiplos envios simultâneos estourem os limites de recursos, a API usa um sistema de **Fila Inteligente**:
+
+<Steps>
+  <Step title="Recebimento" icon="inbox">
+    A API recebe múltiplas requisições de envio de mídia simultaneamente.
+  </Step>
+  <Step title="Enfileiramento" icon="list-ol">
+    Em vez de baixar tudo ao mesmo tempo, os arquivos entram em uma fila de espera ordenada.
+  </Step>
+  <Step title="Processamento unitário" icon="play">
+    O sistema processa um arquivo por vez, evitando picos de uso de memória e disco.
+  </Step>
+  <Step title="Limpeza automática" icon="trash">
+    Assim que o arquivo é enviado ao WhatsApp, ele é deletado do servidor e o espaço é liberado imediatamente.
+  </Step>
+</Steps>
+
+<Info>
+  Este sistema garante envio de arquivos de até **2GB** (via protocolo) mesmo com recursos limitados no servidor.
+</Info>
+
+---
+
+## <Icon icon="file-zipper" iconType="sharp-regular" color="#9d4fe6" size={22} /> Compressão de Dados
+
+Todos os **históricos de mensagens** e **índices de contatos** são armazenados em formato **JSON compactado (gzip)**.
+
+<Steps>
+  <Step title="Armazenamento" icon="floppy-disk">
+    Quando uma mensagem é salva, o JSON é compactado antes de ser gravado em disco.
+  </Step>
+  <Step title="Leitura" icon="magnifying-glass">
+    Ao buscar mensagens, o arquivo é descompactado em memória, processado e retornado.
+  </Step>
+  <Step title="Economia" icon="chart-line">
+    A compressão reduz o tamanho dos arquivos em até **70%**, permitindo armazenar mais dados no mesmo espaço.
+  </Step>
+</Steps>
+
+<Tip>
+  Para detalhes sobre limites de armazenamento e cálculos de consumo, veja a página de [Gerenciamento de Mensagens](/api-reference/message-storage).
+</Tip>
+
+---
+
+## <Icon icon="gauge-high" iconType="sharp-regular" color="#9d4fe6" size={22} /> Performance da Compressão
+
+A compressão não deixa as requisições lentas. Mesmo com o ciclo de descompactar, processar e compactar novamente, as latências permanecem baixas.
+
+**Latências reais medidas** (servidor na Virgínia/EUA, cliente no Brasil com ~160ms de ping):
+
+| Endpoint | Tempo de Resposta |
+| :--- | :--- |
+| `GET /management/volume_stats` | ~1.082 segundos |
+| `POST /management/fetch_messages` | ~956 ms |
+| `POST /management/recent_contacts` | ~959 ms |
+
+<Info>
+  A maior parte do tempo é consumida pela latência de rede, não pela compressão. O overhead do gzip é mínimo e compensado pela economia de espaço.
+</Info>
+
+---
+
+## <Icon icon="sparkles" iconType="sharp-regular" color="#9d4fe6" size={22} /> Otimização Nativa
+
+<CardGroup cols={3}>
+  <Card title="Zero configuração" icon="sliders">
+    Nenhum tuning manual necessário. Cada componente já vem ajustado de fábrica para extrair o máximo dos recursos disponíveis.
+  </Card>
+  <Card title="Memória controlada" icon="microchip">
+    Gestão ativa de memória com garbage collector sob demanda e limpeza automática de objetos após uso.
+  </Card>
+  <Card title="Foco no negócio" icon="code">
+    Infraestrutura resolvida. Você escreve sua lógica, a API cuida do resto.
+  </Card>
+</CardGroup>

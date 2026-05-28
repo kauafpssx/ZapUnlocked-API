@@ -1,0 +1,47 @@
+---
+title: 'Stream de Status'
+icon: 'tower-broadcast'
+api: "GET /status/stream"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Retorna um stream **Server-Sent Events (SSE)** com o status da conexão e QR Code em tempo real. Útil para monitorar a sessão e exibir o QR Code dinamicamente sem polling.
+
+<Note>
+  A conexão permanece aberta. O servidor envia um evento a cada poucos segundos com o estado atual. Ao conectar o WhatsApp, o QR Code desaparece e `connected` passa a `true`.
+</Note>
+
+### Resposta (evento SSE)
+
+Cada evento é um JSON no campo `data:`:
+
+<ResponseExample>
+
+```json Aguardando QR
+{
+  "connected": false,
+  "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...",
+  "timestamp": "2026-05-28T02:00:00.000000+00:00"
+}
+```
+
+```json Conectado
+{
+  "connected": true,
+  "qr": null,
+  "timestamp": "2026-05-28T02:05:00.000000+00:00"
+}
+```
+
+</ResponseExample>
+
+### Campos
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| `connected` | `boolean` | Se o WhatsApp está autenticado |
+| `qr` | `string \| null` | QR Code como imagem Base64 PNG, ou `null` se já conectado |
+| `timestamp` | `string` | Timestamp UTC do evento |

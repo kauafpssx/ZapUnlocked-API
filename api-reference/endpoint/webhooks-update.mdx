@@ -1,0 +1,79 @@
+---
+title: "Editar Webhook"
+icon: "pen"
+api: "PUT /webhooks/{name}"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Atualiza parcialmente um webhook existente. Envie apenas os campos que deseja alterar.
+
+### Path
+
+<ParamField path="name" type="string" required>
+  Nome do webhook a ser editado (ex: `meu-crm`).
+</ParamField>
+
+### Corpo da Requisição (Body)
+
+<ParamField body="url" type="string">
+  Nova URL de destino.
+</ParamField>
+
+<ParamField body="method" type="string">
+  Novo método HTTP: `"POST"`, `"GET"` ou `"PUT"`.
+</ParamField>
+
+<ParamField body="headers" type="object">
+  Novos headers (substitui completamente os headers existentes).
+</ParamField>
+
+<ParamField body="body" type="object">
+  Novo body personalizado (substitui completamente o body existente). Envie `{}` para voltar ao envelope padrão.
+</ParamField>
+
+<ParamField body="events" type="array">
+  Nova lista de eventos. Substitui a lista atual.
+</ParamField>
+
+<ParamField body="active" type="boolean">
+  Ativar ou desativar o webhook.
+</ParamField>
+
+
+<ResponseField name="success" type="boolean">
+  Indica se o webhook foi atualizado com sucesso.
+</ResponseField>
+
+<ResponseField name="webhook" type="object">
+  Dados atualizados do webhook.
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "webhook": {
+    "name": "meu-crm",
+    "url": "https://novo-endpoint.com/hook",
+    "method": "POST",
+    "headers": {},
+    "body": {},
+    "events": ["message.text", "message.button_reply"],
+    "active": true,
+    "created_at": "2025-01-01T12:00:00Z"
+  }
+}
+```
+
+```json 404 Erro
+{
+  "success": false,
+  "message": "Webhook 'meu-crm' não encontrado"
+}
+```
+
+</ResponseExample>

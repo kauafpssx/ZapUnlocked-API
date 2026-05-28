@@ -1,0 +1,46 @@
+---
+title: 'Uso de Memória'
+icon: 'microchip'
+api: "GET /management/memory"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Retorna estatísticas de memória do processo e do sistema.
+
+<ParamField query="gc" type="string">
+  Passe `gc=true` para forçar o garbage collector do Python antes de retornar as métricas.
+</ParamField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "process": {
+    "rss": "48.32 MB",
+    "vms": "312.10 MB"
+  },
+  "whatsapp": {
+    "contactsInMemory": 0
+  },
+  "system": {
+    "total": "256.00 MB",
+    "free": "58.44 MB",
+    "usagePercent": "77.2%"
+  },
+  "uptime": "2d 3h 45m 12s"
+}
+```
+
+</ResponseExample>
+
+### Campos
+
+| Campo | Descrição |
+|---|---|
+| `process.rss` | RAM física usada pelo processo |
+| `process.vms` | Memória virtual total alocada |
+| `system.usagePercent` | % de RAM consumida no servidor |
+| `uptime` | Tempo online do processo |

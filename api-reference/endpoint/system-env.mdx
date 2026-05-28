@@ -1,0 +1,24 @@
+---
+title: 'Variáveis Env'
+icon: 'file-code'
+api: "GET /system/env"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Retorna as variáveis de ambiente do arquivo `.env`. Chaves sensíveis (`API_KEY`, `DB_PASSWORD`, `SESSIONS_KEY`, `SECRET_KEY`) são ocultadas com `********`.
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "API_KEY": "********",
+  "PORT": "8300",
+  "AUTH_DIR": "auth",
+  "INTERNAL_SECRET": "********"
+}
+```
+
+</ResponseExample>

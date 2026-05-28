@@ -1,0 +1,295 @@
+---
+title: "Instalação e Hospedagem"
+icon: "rocket"
+description: "Coloque sua API profissional de WhatsApp no ar em menos de 5 minutos com a **ZapUnlocked-API**."
+---
+
+## <Icon icon="desktop" iconType="sharp-regular" color="#9d4fe6" size={22} /> Instalação Local (Windows / Linux / macOS)
+
+Ideal para desenvolvimento, testes ou rodar em servidor próprio.
+
+<Steps>
+  <Step title="Clone o Repositório" icon="code-fork">
+    ```bash
+    git clone https://github.com/kauafpssx/ZapUnlocked-API.git
+    cd ZapUnlocked-API
+    ```
+  </Step>
+  <Step title="Instale as Dependências" icon="download">
+    Execute o instalador automático do seu sistema:
+
+    <CodeGroup>
+    ```bat Windows icon="windows"
+    scripts\install\install.bat
+    ```
+    ```bash Linux icon="linux"
+    bash scripts/install/install.sh
+    ```
+    ```bash macOS icon="apple"
+    bash scripts/install/install.sh
+    ```
+    </CodeGroup>
+
+  </Step>
+  <Step title="Configure o Ambiente" icon="gear">
+    Gere seu arquivo `.env` automaticamente com o script oficial:
+
+    <CodeGroup>
+    ```bat Windows icon="windows"
+    scripts\generate-env\generate-env.bat
+    ```
+    ```bash Linux/macOS icon="linux"
+    bash scripts/generate-env/generate-env.sh
+    ```
+    </CodeGroup>
+
+    O script gera chaves criptograficamente seguras e salva o `.env` na raiz do projeto.
+
+    | Variável           | Descrição                                       |
+    |--------------------|------------------------------------------------|
+    | `API_KEY`          | Senha para autenticação em todos os endpoints (`zu_...`)  |
+    | `INTERNAL_SECRET`  | Token para validar assinaturas de webhook (`zu_sec_...`)  |
+    | `PORT`             | Porta da API (padrão: `8300`)                   |
+
+  </Step>
+  <Step title="Execute a API" icon="play">
+    <CodeGroup>
+    ```bat Windows icon="windows"
+    scripts\run\run.bat
+    ```
+    ```bash Linux icon="linux"
+    bash scripts/run/run.sh
+    ```
+    ```bash macOS icon="apple"
+    bash scripts/run/run.sh
+    ```
+    </CodeGroup>
+  </Step>
+</Steps>
+
+---
+
+## <Icon icon="cloud" iconType="sharp-regular" color="#9d4fe6" size={22} /> Hospedagem: Alwaysdata (Grátis 24/7)
+
+A **Alwaysdata** é a opção recomendada para hospedar a API de forma estável e gratuita sem precisar manter um servidor ligado.
+
+### Recursos do Plano Free
+
+| Recurso       | Disponível no Free    |
+| ------------- | --------------------- |
+| Armazenamento | **1 GB SSD**          |
+| RAM           | **256 MB**            |
+| CPU           | **1/4 vCPU**          |
+| Backup        | **3 dias** automático |
+| Uptime        | **24/7** via Services |
+
+<Steps>
+  <Step title="Crie sua Conta e Acesse o Terminal SSH" icon="terminal">
+    1. Acesse [Alwaysdata.com](https://www.alwaysdata.com/) e escolha o plano **Free**.
+    2. No painel, vá em **Remote access › SSH**.
+    3. Localize o seu **SSH host**. O próprio link (ex: `ssh-[usuario].alwaysdata.net`) já abre um **terminal Linux 100% na web** diretamente no seu navegador.
+    4. Faça o login com seu usuário e senha da Alwaysdata para acessar o console e prosseguir com a instalação.
+  </Step>
+
+  <Step title="Clone e Instale" icon="download">
+    No terminal SSH, clone e rode o instalador:
+
+    ```bash
+    git clone https://github.com/kauafpssx/ZapUnlocked-API.git ~/ZapUnlocked-API
+    cd ~/ZapUnlocked-API
+    bash scripts/install/install.sh
+    ```
+  </Step>
+
+  <Step title="Gere o arquivo .env" icon="key">
+    ```bash
+    bash scripts/generate-env/generate-env.sh
+    ```
+
+    O script gera `API_KEY` e `INTERNAL_SECRET` automaticamente e salva o `.env` na raiz do projeto.
+  </Step>
+
+  <Step title="Configure o Serviço (24/7)" icon="server">
+    No painel da Alwaysdata, vá em **Advanced › Services › Add a service**:
+
+    | Campo                  | Valor                    |
+    |------------------------|--------------------------|
+    | **Name**               | `ZapUnlocked-API`        |
+    | **Command**            | `python3 main.py`        |
+    | **Working directory**  | `ZapUnlocked-API`        |
+    | **Environment variables** | `PORT=8300`           |
+
+    Após salvar, sua API estará acessível em:
+    ```
+    http://services-[usuario].alwaysdata.net:8300/
+    ```
+  </Step>
+</Steps>
+
+---
+
+## <Icon icon="qrcode" iconType="sharp-regular" color="#9d4fe6" size={22} /> Autenticação (Login)
+
+Após o deploy, conecte sua conta do WhatsApp acessando no navegador:
+
+<CodeGroup>
+```bash Local icon="house"
+http://localhost:8300/qr?API_KEY=SUA_SENHA_SECRETA
+```
+```bash Alwaysdata icon="cloud"
+http://services-[usuario].alwaysdata.net:8300/qr?API_KEY=SUA_SENHA_SECRETA
+```
+</CodeGroup>
+
+<Tip>
+  Com a API no ar, acesse a [página de
+  Configuração](/api-reference/configuration) para salvar seu endpoint e testar
+  requisições diretamente nesta documentação.
+</Tip>
+
+---
+
+## <Icon icon="circle-play" iconType="sharp-regular" color="#9d4fe6" size={22} /> Próximos Passos
+
+Agora que a API está rodando, envie sua primeira mensagem:
+
+<CodeGroup>
+
+```bash cURL icon="terminal"
+curl -X POST 'https://example.com/send' \
+  -H 'x-api-key: SUA_SENHA_SECRETA' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "phone": "5511999999999",
+    "message": "Olá mundo! 🚀"
+  }'
+```
+
+```javascript Node.js icon="node-js"
+fetch("https://example.com/send", {
+  method: "POST",
+  headers: {
+    "x-api-key": "SUA_SENHA_SECRETA",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    phone: "5511999999999",
+    message: "Olá mundo! 🚀",
+  }),
+});
+```
+
+```python Python icon="python"
+import requests
+
+url = 'https://example.com/send'
+headers = {'x-api-key': 'SUA_SENHA_SECRETA'}
+data = {
+    "phone": "5511999999999",
+    "message": "Olá mundo! 🚀"
+}
+
+response = requests.post(url, headers=headers, json=data)
+print(response.json())
+```
+
+```php PHP icon="php"
+<?php
+$url = 'https://example.com/send';
+$headers = [
+    'x-api-key: SUA_SENHA_SECRETA',
+    'Content-Type: application/json'
+];
+$data = [
+    'phone' => '5511999999999',
+    'message' => 'Olá mundo! 🚀'
+];
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+echo $response;
+?>
+```
+
+```go Go icon="golang"
+package main
+
+import (
+    "bytes"
+    "fmt"
+    "net/http"
+)
+
+func main() {
+    url := "https://example.com/send"
+    jsonStr := []byte(`{"phone":"5511999999999", "message":"Olá mundo! 🚀"}`)
+    req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
+    req.Header.Set("x-api-key", "SUA_SENHA_SECRETA")
+    req.Header.Set("Content-Type", "application/json")
+
+    client := &http.Client{}
+    resp, _ := client.Do(req)
+    defer resp.Body.Close()
+
+    fmt.Println("Response Status:", resp.Status)
+}
+```
+
+```java Java icon="java"
+// Requer biblioteca 'OkHttp'
+OkHttpClient client = new OkHttpClient().newBuilder().build();
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{\"phone\": \"5511999999999\", \"message\": \"Olá mundo! 🚀\"}");
+Request request = new Request.Builder()
+  .url("https://example.com/send")
+  .method("POST", body)
+  .addHeader("x-api-key", "SUA_SENHA_SECRETA")
+  .addHeader("Content-Type", "application/json")
+  .build();
+Response response = client.newCall(request).execute();
+```
+
+```ruby Ruby icon="gem"
+require 'net/http'
+require 'uri'
+require 'json'
+
+uri = URI.parse("https://example.com/send")
+header = { 'Content-Type': 'application/json', 'x-api-key': 'SUA_SENHA_SECRETA' }
+user = {
+  phone: '5511999999999',
+  message: 'Olá mundo! 🚀'
+}
+
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+request = Net::HTTP::Post.new(uri.request_uri, header)
+request.body = user.to_json
+
+response = http.request(request)
+puts response.body
+```
+
+```powershell PowerShell icon="terminal"
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+
+$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+$headers.Add("x-api-key", "SUA_SENHA_SECRETA")
+$headers.Add("Content-Type", "application/json")
+
+$body = '{
+  "phone": "5511999999999",
+  "message": "Olá mundo! 🚀"
+}'
+
+$response = Invoke-RestMethod 'https://example.com/send' -Method 'POST' -Headers $headers -Body $body
+$response | ConvertTo-Json
+```
+
+</CodeGroup>

@@ -1,0 +1,75 @@
+---
+title: "Lista de Opções"
+icon: "list-ul"
+api: "POST /messages/send-option-list"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Envia uma mensagem com lista de opções organizadas em seções. O usuário abre a lista tocando no botão e seleciona um item. A seleção dispara um evento `message.list_reply` via webhook.
+
+### Corpo da Requisição (Body)
+
+<ParamField body="phone" type="string" required>
+  Número do destinatário com código do país (ex: `5511999999999`).
+</ParamField>
+
+<ParamField body="title" type="string" required>
+  Título principal da mensagem.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Descrição/corpo da mensagem exibido acima da lista.
+</ParamField>
+
+<ParamField body="buttonText" type="string" default="Ver opções">
+  Texto do botão que abre a lista.
+</ParamField>
+
+<ParamField body="sections" type="array" required>
+  Lista de seções, cada uma com título e itens:
+  ```json
+  [
+    {
+      "title": "Produtos",
+      "rows": [
+        { "rowId": "prod_01", "title": "Camiseta", "description": "P, M, G" },
+        { "rowId": "prod_02", "title": "Calça", "description": "38 ao 46" }
+      ]
+    }
+  ]
+  ```
+</ParamField>
+
+<Note>
+  O `rowId` de cada item é retornado no webhook quando o usuário selecionar. Use-o para identificar a escolha sem precisar de banco de dados.
+</Note>
+
+
+<ResponseField name="success" type="boolean">
+  Indica se a lista foi enviada com sucesso.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Mensagem descritiva do status.
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Lista enviada ✅"
+}
+```
+
+```json 401 Erro
+{
+  "error": "Unauthorized",
+  "message": "API Key inválida ou ausente"
+}
+```
+
+</ResponseExample>

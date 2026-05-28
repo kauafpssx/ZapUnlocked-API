@@ -1,0 +1,32 @@
+---
+title: 'Dados da Instância'
+icon: 'id-card'
+api: "GET /instance/me"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Retorna os dados da conta do WhatsApp conectada: número, JID, nome de exibição e plataforma.
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "connected": true,
+  "phone": "5511999999999",
+  "jid": "5511999999999@s.whatsapp.net",
+  "server": "s.whatsapp.net",
+  "pushname": "Meu Bot",
+  "platform": "SMBI"
+}
+```
+
+```json 503 Não conectado
+{
+  "detail": "WhatsApp não conectado"
+}
+```
+
+</ResponseExample>

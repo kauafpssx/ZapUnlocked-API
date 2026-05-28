@@ -1,0 +1,44 @@
+---
+title: "Enviar Imagem"
+icon: "image"
+api: "POST /send_image"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Envia uma imagem a partir de uma URL pública.
+
+### Corpo da Requisição (Body)
+
+<ParamField body="phone" type="string" required>
+  Número do destinatário com código do país (ex: `5511999999999`).
+</ParamField>
+
+<ParamField body="image_url" type="string" required>
+  URL pública direta da imagem (jpg, png, etc).
+</ParamField>
+
+<ParamField body="caption" type="string">
+  Legenda opcional para a imagem.
+</ParamField>
+
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Imagem enviada com sucesso ✅"
+}
+```
+
+```json 401 Erro
+{
+  "error": "Unauthorized",
+  "message": "API Key inválida ou ausente"
+}
+```
+
+</ResponseExample>

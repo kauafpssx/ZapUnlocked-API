@@ -1,0 +1,64 @@
+---
+title: "Enviar Enquete"
+icon: "chart-bar"
+api: "POST /messages/send-poll"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Envia uma enquete nativa do WhatsApp com múltiplas opções. Os participantes votam diretamente no app e os votos disparam eventos via webhook.
+
+### Corpo da Requisição (Body)
+
+<ParamField body="phone" type="string" required>
+  Número do destinatário com código do país (ex: `5511999999999`).
+</ParamField>
+
+<ParamField body="pollName" type="string" required>
+  Pergunta ou título da enquete (ex: `"Qual a sua cor favorita?"`).
+</ParamField>
+
+<ParamField body="pollOptions" type="array" required>
+  Lista de opções da enquete. Mínimo 2, máximo 12 opções.
+  ```json
+  ["Azul", "Verde", "Vermelho", "Amarelo"]
+  ```
+</ParamField>
+
+<ParamField body="selectableCount" type="integer" default="1">
+  Número máximo de opções que o participante pode selecionar. `1` = escolha única, `0` = ilimitado.
+</ParamField>
+
+<Note>
+  Os votos são recebidos via webhook com o evento `message.poll_vote`. Configure um webhook para processar os resultados em tempo real.
+</Note>
+
+
+<ResponseField name="success" type="boolean">
+  Indica se a enquete foi enviada com sucesso.
+</ResponseField>
+
+<ResponseField name="pollId" type="string">
+  ID único da enquete, usado para rastrear votos via `POST /messages/send-poll-vote`.
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Enquete enviada ✅",
+  "pollId": "3EB0A1B2C3D4E5F6A7B8"
+}
+```
+
+```json 401 Erro
+{
+  "error": "Unauthorized",
+  "message": "API Key inválida ou ausente"
+}
+```
+
+</ResponseExample>

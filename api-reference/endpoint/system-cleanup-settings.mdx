@@ -1,0 +1,29 @@
+---
+title: 'Config. Limpeza'
+icon: 'gear'
+api: "GET /system/cleanup/settings"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Retorna as configurações de limpeza automática do banco de dados. Para atualizar, use `PUT /system/cleanup/settings`.
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "interval": 1440,
+  "last_run": 1748390400
+}
+```
+
+</ResponseExample>
+
+### Campos
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| `interval` | `integer` | Intervalo de limpeza automática em minutos (padrão: `1440` = 24h) |
+| `last_run` | `integer` | Timestamp Unix da última execução (`0` = nunca executado) |

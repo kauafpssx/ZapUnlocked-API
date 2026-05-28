@@ -1,0 +1,60 @@
+---
+title: "Marcar como Lida"
+icon: "check-double"
+api: "POST /messages/read"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Marca uma ou mais mensagens como lidas, enviando o duplo check azul para o remetente.
+
+### Corpo da Requisição (Body)
+
+<ParamField body="phone" type="string" required>
+  Número do remetente/chat com código do país (ex: `5511999999999`).
+</ParamField>
+
+<ParamField body="messageId" type="string">
+  ID da mensagem a marcar como lida. Use junto com `type: "id"`.
+</ParamField>
+
+<ParamField body="messageText" type="string">
+  Texto da mensagem a marcar como lida. Use junto com `type: "text"`.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como localizar a mensagem: `"id"` (por ID) ou `"text"` (por conteúdo de texto).
+</ParamField>
+
+<Note>
+  Este endpoint só funciona se a opção de confirmação de leitura estiver habilitada nas configurações de privacidade do bot (`readReceipts: "all"`).
+</Note>
+
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi aceita com sucesso.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Mensagem descritiva do status.
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Mensagem marcada como lida ✅"
+}
+```
+
+```json 404 Erro
+{
+  "success": false,
+  "message": "Mensagem não encontrada no histórico"
+}
+```
+
+</ResponseExample>

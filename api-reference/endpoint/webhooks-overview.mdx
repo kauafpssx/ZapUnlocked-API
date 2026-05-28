@@ -1,0 +1,420 @@
+---
+title: "Visão Geral"
+icon: "webhook"
+description: "Webhooks nomeados com CRUD completo e 20 tipos de eventos."
+---
+
+Registre múltiplos endpoints externos para receber eventos do WhatsApp em tempo real. Cada webhook tem um **nome único** (ex: `meu-crm`, `meu-bot`) e pode ser inscrito em tipos de eventos diferentes de forma independente.
+
+<CardGroup cols={3}>
+  <Card title="CRUD completo" icon="pen-to-square">
+    Criar, listar, atualizar, deletar, ativar/desativar e testar cada webhook individualmente.
+  </Card>
+  <Card title="Eventos granulares" icon="filter">
+    Inscreva cada webhook só nos eventos que importam. Use `"*"` para receber tudo.
+  </Card>
+  <Card title="Body personalizado" icon="code">
+    Defina um payload customizado com placeholders dinâmicos por webhook.
+  </Card>
+</CardGroup>
+
+---
+
+## <Icon icon="envelope" iconType="sharp-regular" color="#9d4fe6" size={22} /> Envelope Padrão
+
+Todos os eventos entregues seguem a mesma estrutura:
+
+```json
+{
+  "event": "message.text",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": { ... }
+}
+```
+
+Se o webhook tiver `body` personalizado, os placeholders (`{{from}}`, `{{text}}`, etc.) são substituídos antes do envio. Sem `body`, o envelope padrão é enviado completo.
+
+---
+
+## <Icon icon="list" iconType="sharp-regular" color="#9d4fe6" size={22} /> Tipos de Eventos
+
+Use `"events": ["*"]` para receber todos, ou especifique uma lista.
+
+<AccordionGroup>
+
+<Accordion title="message.text — Mensagem de texto recebida" icon="message">
+```json
+{
+  "event": "message.text",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "text": "Olá, tudo bem?",
+    "quoted": {
+      "id": "3EB0C4AAABBBCC",
+      "fromMe": true
+    }
+  }
+}
+```
+`quoted` é `null` se não for uma resposta.
+</Accordion>
+
+<Accordion title="message.image — Imagem recebida" icon="image">
+```json
+{
+  "event": "message.image",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "caption": "Veja essa foto!",
+    "mimetype": "image/jpeg",
+    "fileLength": 204800
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.video — Vídeo recebido" icon="video">
+```json
+{
+  "event": "message.video",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "caption": "",
+    "mimetype": "video/mp4",
+    "fileLength": 5242880,
+    "isPTT": false,
+    "isGif": false
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.audio — Áudio / PTT recebido" icon="microphone">
+```json
+{
+  "event": "message.audio",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "mimetype": "audio/ogg; codecs=opus",
+    "fileLength": 32768,
+    "isPTT": true,
+    "durationSeconds": 5
+  }
+}
+```
+`isPTT: true` indica mensagem de voz gravada na hora.
+</Accordion>
+
+<Accordion title="message.document — Documento recebido" icon="file">
+```json
+{
+  "event": "message.document",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "fileName": "relatorio.pdf",
+    "caption": "",
+    "mimetype": "application/pdf",
+    "fileLength": 1048576
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.sticker — Sticker recebido" icon="face-smile">
+```json
+{
+  "event": "message.sticker",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "mimetype": "image/webp",
+    "isAnimated": false
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.contact — Contato vCard recebido" icon="address-card">
+```json
+{
+  "event": "message.contact",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "displayName": "Maria Souza",
+    "vcard": "BEGIN:VCARD\nVERSION:3.0\nFN:Maria Souza\nTEL:+5511988887777\nEND:VCARD"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.location — Localização recebida" icon="location-dot">
+```json
+{
+  "event": "message.location",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "lat": -23.5505,
+    "lng": -46.6333,
+    "name": "São Paulo",
+    "address": "Av. Paulista, 1000"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.reaction — Reação a mensagem" icon="heart">
+```json
+{
+  "event": "message.reaction",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "emoji": "👍",
+    "targetMessageId": "3EB0C4AAABBBCC",
+    "isRemoved": false
+  }
+}
+```
+`isRemoved: true` quando a reação foi removida (`emoji` estará vazio).
+</Accordion>
+
+<Accordion title="message.poll_created — Enquete recebida" icon="square-poll-horizontal">
+```json
+{
+  "event": "message.poll_created",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "pollName": "Qual produto preferem?",
+    "options": ["Produto A", "Produto B", "Produto C"]
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.poll_vote — Voto em enquete" icon="check-to-slot">
+```json
+{
+  "event": "message.poll_vote",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "pollId": "3EB0C4AAABBBCC",
+    "selectedOptions": ["Produto B"]
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.button_reply — Botão clicado" icon="hand-pointer">
+```json
+{
+  "event": "message.button_reply",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "buttonId": "btn_confirmar",
+    "displayText": "Confirmar Pedido",
+    "type": "quick_reply"
+  }
+}
+```
+`type` pode ser `quick_reply` ou `legacy_button`.
+</Accordion>
+
+<Accordion title="message.list_reply — Item de lista selecionado" icon="list-check">
+```json
+{
+  "event": "message.list_reply",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "rowId": "1",
+    "title": "Suporte Técnico",
+    "description": "Problemas com seu produto"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.deleted — Mensagem deletada" icon="trash">
+```json
+{
+  "event": "message.deleted",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.unknown — Tipo não reconhecido" icon="circle-question">
+```json
+{
+  "event": "message.unknown",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "rawType": "protocolMessage"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.sent — Mensagem enviada pelo bot" icon="paper-plane">
+```json
+{
+  "event": "message.sent",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "Meu Bot",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "text": "Olá! Como posso ajudar?"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="connection.connected — WhatsApp conectado" icon="circle-check">
+```json
+{
+  "event": "connection.connected",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "status": "connected"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="connection.disconnected — WhatsApp desconectado" icon="circle-xmark">
+```json
+{
+  "event": "connection.disconnected",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "status": "disconnected",
+    "reason": "logged_out"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="connection.qr_ready — QR Code gerado" icon="qrcode">
+```json
+{
+  "event": "connection.qr_ready",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "status": "qr_ready"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="call.received — Chamada recebida" icon="phone">
+```json
+{
+  "event": "call.received",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "João Silva",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false
+  }
+}
+```
+</Accordion>
+
+</AccordionGroup>
+
+---
+
+## <Icon icon="brackets-curly" iconType="sharp-regular" color="#9d4fe6" size={22} /> Placeholders no Body
+
+Se o webhook tiver `body` personalizado, você pode usar:
+
+| Placeholder | Descrição |
+| :---------- | :-------- |
+| `{{from}}` | Número de quem enviou |
+| `{{name}}` | Nome do contato |
+| `{{text}}` | Texto da mensagem |
+| `{{phone}}` | Mesmo que `from` |
+| `{{id}}` | ID da mensagem |
+| `{{timestamp}}` | Data/hora do evento |
+| `{{event}}` | Tipo do evento |
+
+Se `body` estiver vazio, o envelope padrão é enviado automaticamente.

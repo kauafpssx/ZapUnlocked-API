@@ -1,0 +1,39 @@
+---
+title: "Escanear QR"
+icon: "qrcode"
+api: "GET /qr"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Acessa a interface visual para escanear o QR Code no navegador.
+
+<Note>
+  Retorna uma **página HTML** interativa — não JSON. Abra esta URL diretamente no navegador para escanear o QR Code com o WhatsApp.
+</Note>
+
+
+<ResponseExample>
+
+```json 200 QR aguardando leitura
+{
+  "_note": "Retorna HTML — abrir no navegador"
+}
+```
+
+```json 200 Já conectado
+{
+  "_note": "Retorna HTML indicando sessão ativa"
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "API Key inválida ou ausente"
+}
+```
+
+</ResponseExample>
