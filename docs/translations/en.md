@@ -49,7 +49,7 @@ Our proposal is grounded in **technical excellence** and **developer independenc
 
 ## 🗺️ API Overview
 
-`````mermaid
+```mermaid
 mindmap
   root((📲 ZapUnlocked-API))
     📨 Messages
