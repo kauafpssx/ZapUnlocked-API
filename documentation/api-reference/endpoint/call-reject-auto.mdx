@@ -1,0 +1,35 @@
+---
+title: 'Rejeitar Chamadas'
+icon: 'phone-slash'
+api: "PUT /settings/instance/call-reject-auto"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Ativa ou desativa a rejeição automática de chamadas recebidas. Quando ativo, toda ligação é rejeitada automaticamente.
+
+### Body
+
+<ParamField body="value" type="boolean" required>
+  `true` para ativar, `false` para desativar.
+</ParamField>
+
+<ResponseExample>
+
+```json 200 Ativado
+{
+  "success": true,
+  "call_reject_auto": true
+}
+```
+
+```json 200 Desativado
+{
+  "success": true,
+  "call_reject_auto": false
+}
+```
+
+</ResponseExample>

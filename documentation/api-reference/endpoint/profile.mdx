@@ -1,0 +1,52 @@
+---
+title: 'Editar Perfil'
+icon: 'user-gear'
+api: "POST /settings/profile"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Atualize o nome de exibição e a foto de perfil do próprio Bot.
+
+### Body
+
+<ParamField body="name" type="string">
+  Novo nome de exibição para o perfil do Bot.
+</ParamField>
+
+<ParamField body="newProfilePictureUrl" type="string">
+  URL pública de uma imagem (JPEG/PNG) para definir como nova foto de perfil.
+</ParamField>
+
+<Note>
+  Você deve enviar pelo menos um dos campos: `name` ou `newProfilePictureUrl`.
+</Note>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "updated": [
+    "Nome atualizado para: Meu Bot",
+    "Foto de perfil atualizada"
+  ]
+}
+```
+
+```json 400 Nenhum campo enviado
+{
+  "detail": "Envie pelo menos 'name' ou 'newProfilePictureUrl'"
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "API Key inválida ou ausente"
+}
+```
+
+</ResponseExample>

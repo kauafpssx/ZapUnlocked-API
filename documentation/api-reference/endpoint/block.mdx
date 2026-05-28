@@ -1,0 +1,46 @@
+---
+title: 'Bloquear Contato'
+icon: 'user-lock'
+api: "POST /settings/block"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Bloqueie ou desbloqueie um contato no WhatsApp.
+
+### Body
+
+<ParamField body="phone" type="string" required>
+  Número do contato com código do país (ex: `5511999999999`).
+</ParamField>
+
+<ParamField body="action" type="string" required>
+  `"block"` para bloquear, `"unblock"` para desbloquear.
+</ParamField>
+
+<ResponseExample>
+
+```json 200 Bloqueado
+{
+  "success": true,
+  "message": "Contato 5511999999999 bloqueado com sucesso"
+}
+```
+
+```json 200 Desbloqueado
+{
+  "success": true,
+  "message": "Contato 5511999999999 desbloqueado com sucesso"
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "API Key inválida ou ausente"
+}
+```
+
+</ResponseExample>

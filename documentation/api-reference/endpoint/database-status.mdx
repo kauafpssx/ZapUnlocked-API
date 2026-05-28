@@ -1,0 +1,37 @@
+---
+title: "Status Limpeza"
+icon: "chart-simple"
+api: "GET /management/database/status"
+description: "Retorna informações sobre a última limpeza e a contagem regressiva para a próxima."
+---
+
+
+<ResponseField name="last_run" type="number">
+  Timestamp Unix da última limpeza realizada.
+</ResponseField>
+
+<ResponseField name="next_run" type="number">
+  Timestamp Unix previsto para a próxima limpeza.
+</ResponseField>
+
+<ResponseField name="interval" type="number">
+  Intervalo configurado atualmente (em minutos).
+</ResponseField>
+
+<ResponseField name="time_remaining_human" type="string">
+  Tempo restante formatado (ex: "23h 59m").
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "last_run": 1708970000,
+  "next_run": 1709056400,
+  "interval": 1440,
+  "time_remaining_seconds": 86400,
+  "time_remaining_human": "1440m 0s"
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,60 @@
+---
+title: "Deletar Mensagem"
+icon: "trash"
+api: "POST /messages/delete"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Deleta uma mensagem para todos os participantes do chat (equivalente ao "apagar para todos" do WhatsApp).
+
+### Corpo da Requisição (Body)
+
+<ParamField body="phone" type="string" required>
+  Número do destinatário/chat com código do país (ex: `5511999999999`).
+</ParamField>
+
+<ParamField body="messageId" type="string">
+  ID único da mensagem a ser deletada. Use junto com `type: "id"`.
+</ParamField>
+
+<ParamField body="messageText" type="string">
+  Texto da mensagem a ser deletada. Use junto com `type: "text"`.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como localizar a mensagem: `"id"` (por ID) ou `"text"` (por conteúdo de texto).
+</ParamField>
+
+<Warning>
+  A exclusão é permanente e para todos os participantes. Mensagens muito antigas podem não aceitar a operação dependendo do cliente WhatsApp do destinatário.
+</Warning>
+
+
+<ResponseField name="success" type="boolean">
+  Indica se a mensagem foi deletada com sucesso.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Mensagem descritiva do status.
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Mensagem deletada ✅"
+}
+```
+
+```json 404 Erro
+{
+  "success": false,
+  "message": "Mensagem não encontrada no histórico"
+}
+```
+
+</ResponseExample>

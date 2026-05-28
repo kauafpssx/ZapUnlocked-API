@@ -1,0 +1,235 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "ZapUnlocked-API",
+  "colors": {
+    "primary": "#7c1bc2",
+    "light": "#a855f7",
+    "dark": "#7c1bc2"
+  },
+  "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentação",
+        "icon": "book-open",
+        "groups": [
+          {
+            "group": "Visão Geral",
+            "pages": [
+              "index",
+              "essentials/features",
+              "essentials/mission"
+            ]
+          },
+          {
+            "group": "Recursos Técnicos",
+            "pages": [
+              "api-reference/optimization",
+              "api-reference/resource-optimization",
+              "api-reference/message-storage"
+            ]
+          },
+          {
+            "group": "Implantação e Comunidade",
+            "pages": [
+              "essentials/quickstart",
+              "essentials/ban-risk",
+              "essentials/contributing"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Requisições",
+        "icon": "code",
+        "groups": [
+          {
+            "group": "Configuração",
+            "pages": [
+              "api-reference/configuration"
+            ]
+          },
+          {
+            "group": "Enviar Mensagem",
+            "pages": [
+              "api-reference/endpoint/create",
+              "api-reference/endpoint/send-reaction",
+              "api-reference/endpoint/buttons",
+              "api-reference/endpoint/send-sticker",
+              "api-reference/endpoint/video",
+              "api-reference/endpoint/image",
+              "api-reference/endpoint/document",
+              "api-reference/endpoint/audio",
+              "api-reference/endpoint/send-location",
+              "api-reference/endpoint/send-contact",
+              "api-reference/endpoint/send-link"
+            ]
+          },
+          {
+            "group": "Ações de Mensagem",
+            "pages": [
+              "api-reference/endpoint/message-delete",
+              "api-reference/endpoint/message-read",
+              "api-reference/endpoint/message-edit"
+            ]
+          },
+          {
+            "group": "Mensagens Interativas",
+            "pages": [
+              "api-reference/endpoint/send-poll",
+              "api-reference/endpoint/send-poll-vote",
+              "api-reference/endpoint/send-option-list"
+            ]
+          },
+          {
+            "group": "Consultas",
+            "pages": [
+              "api-reference/endpoint/contact-info",
+              "api-reference/endpoint/memory",
+              "api-reference/endpoint/volume-stats",
+              "api-reference/endpoint/fetch-messages",
+              "api-reference/endpoint/recent-contacts",
+              "api-reference/endpoint/cleanup"
+            ]
+          },
+          {
+            "group": "Banco Auth",
+            "pages": [
+              "api-reference/endpoint/database-cleanup",
+              "api-reference/endpoint/database-config",
+              "api-reference/endpoint/database-status"
+            ]
+          },
+          {
+            "group": "Conexão",
+            "pages": [
+              "api-reference/endpoint/get",
+              "api-reference/endpoint/status",
+              "api-reference/endpoint/status-stream",
+              "api-reference/endpoint/qr",
+              "api-reference/endpoint/qr-image",
+              "api-reference/endpoint/pair",
+              "api-reference/endpoint/delete"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "api-reference/endpoint/webhooks-overview",
+              "api-reference/endpoint/webhooks-create",
+              "api-reference/endpoint/webhooks-list",
+              "api-reference/endpoint/webhooks-update",
+              "api-reference/endpoint/webhooks-delete",
+              "api-reference/endpoint/webhooks-toggle",
+              "api-reference/endpoint/webhooks-test",
+              "api-reference/endpoint/webhooks-events"
+            ]
+          },
+          {
+            "group": "Privacidade",
+            "pages": [
+              "api-reference/endpoint/privacy"
+            ]
+          },
+          {
+            "group": "Perfil",
+            "pages": [
+              "api-reference/endpoint/block",
+              "api-reference/endpoint/profile"
+            ]
+          },
+          {
+            "group": "Configurações do Bot",
+            "pages": [
+              "api-reference/endpoint/bot-settings",
+              "api-reference/endpoint/bot-settings-update",
+              "api-reference/endpoint/call-reject-auto",
+              "api-reference/endpoint/call-reject-message",
+              "api-reference/endpoint/auto-read"
+            ]
+          },
+          {
+            "group": "Instância",
+            "pages": [
+              "api-reference/endpoint/instance-me",
+              "api-reference/endpoint/instance-device",
+              "api-reference/endpoint/instance-update-name"
+            ]
+          },
+          {
+            "group": "Sistema",
+            "pages": [
+              "api-reference/endpoint/system-env",
+              "api-reference/endpoint/system-env-update",
+              "api-reference/endpoint/system-cleanup-force",
+              "api-reference/endpoint/system-cleanup-settings",
+              "api-reference/endpoint/system-cleanup-settings-update"
+            ]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "GitHub",
+          "href": "https://github.com/kauafpssx/ZapUnlocked-API",
+          "icon": "github"
+        },
+        {
+          "anchor": "Issues",
+          "href": "https://github.com/kauafpssx/ZapUnlocked-API/issues",
+          "icon": "circle-question"
+        },
+        {
+          "anchor": "Email",
+          "href": "mailto:contato@kauafpss.com.br",
+          "icon": "envelope"
+        }
+      ]
+    }
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Suporte",
+        "href": "https://github.com/kauafpssx/ZapUnlocked-API/issues"
+      }
+    ]
+  },
+  "api": {
+    "mdx": {
+      "server": "https://api.example.com",
+      "auth": {
+        "method": "key",
+        "name": "x-api-key"
+      }
+    },
+    "playground": {
+      "display": "interactive",
+      "proxy": false
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/kauafpssx/ZapUnlocked-API",
+      "instagram": "https://instagram.com/kauafpss_",
+      "website": "https://zapunlocked-api.kauafpss.com.br"
+    }
+  },
+  "appearance": {
+    "default": "dark"
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "chatgpt",
+      "claude"
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+---
+title: 'Enviar Figurinha'
+icon: 'note-sticky'
+api: "POST /send_sticker"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Envia uma figurinha (sticker) a partir de uma URL de imagem.
+
+### Body
+
+<ParamField body="phone" type="string" required>
+  Número do contato.
+</ParamField>
+
+<ParamField body="image_url" type="string" required>
+  URL pública da imagem para converter em sticker.
+</ParamField>
+
+<ParamField body="pack" type="string">
+  Nome do pacote de figurinhas (ex: "Meu Pack").
+</ParamField>
+
+<ParamField body="author" type="string">
+  Nome do autor da figurinha (ex: "Bot").
+</ParamField>
+
+<ParamField body="resizeMode" type="string" default="pad">
+  Modo de redimensionamento da imagem.
+  
+  | Modo | O que faz | Parâmetro Extra |
+  | :--- | :--- | :--- |
+  | `pad` | Adiciona bordas para preencher (padrão). | `padColor` |
+  | `cover` | Corta a imagem para preencher todo o espaço. | - |
+  | `stretch` | Estica a imagem (pode distorcer). | - |
+  | `blur` | Preenche o fundo com a imagem borrada. | `blurIntensity` |
+  | `transparent` | Redimensiona mantendo proporção com fundo transparente. | - |
+</ParamField>
+
+<ParamField body="padColor" type="string" default="black">
+  Cor de fundo (apenas para `pad`). Ex: `#FFFFFF` ou `transparent`.
+</ParamField>
+
+<ParamField body="blurIntensity" type="number" default="20">
+  Intensidade do desfoque (apenas para `blur`). 1 a 100.
+</ParamField>
+
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Figurinha enviada com sucesso ✅"
+}
+```
+
+```json 500 Erro
+{
+  "error": "Erro ao converter imagem"
+}
+```
+
+</ResponseExample>
