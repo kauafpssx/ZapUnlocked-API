@@ -2,39 +2,39 @@
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
-<p align=\"center\">
-  <img src=\"https://img.shields.io/badge/Free%20%26%20Open%20Source-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white\" alt=\"Free & Open Source\">
-  <img src=\"https://img.shields.io/badge/Self%20Hosted-A855F7?style=for-the-badge&logo=docker&logoColor=white\" alt=\"Self Hosted\">
-  <img src=\"https://img.shields.io/badge/REST%20API-A855F7?style=for-the-badge&logo=fastapi&logoColor=white\" alt=\"REST API\">
-  <img src=\"https://img.shields.io/badge/MIT%20License-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white\" alt=\"MIT License\">
-  <img src=\"https://img.shields.io/badge/Python%203.10%2B-A855F7?style=for-the-badge&logo=python&logoColor=white\" alt=\"Python 3.10+\">
+<p align="center">
+  <img src="https://img.shields.io/badge/Free%20%26%20Open%20Source-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="Free & Open Source">
+  <img src="https://img.shields.io/badge/Self%20Hosted-A855F7?style=for-the-badge&logo=docker&logoColor=white" alt="Self Hosted">
+  <img src="https://img.shields.io/badge/REST%20API-A855F7?style=for-the-badge&logo=fastapi&logoColor=white" alt="REST API">
+  <img src="https://img.shields.io/badge/MIT%20License-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="MIT License">
+  <img src="https://img.shields.io/badge/Python%203.10%2B-A855F7?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+">
 </p>
 
 ---
 
 ### 🌐 Dil Seçin:
 
-<table width=\"100%\">
+<table width="100%">
   <tr>
-    <td align=\"center\" valign=\"middle\"><a href=\"https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md\"><img src=\"https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg\" width=\"40\" title=\"Português (Brasil)\"></a></td>
-    <td align=\"center\" valign=\"middle\"><a href=\"https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/en.md\"><img src=\"https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/us.svg\" width=\"40\" title=\"English\"></a></td>
-    <td align=\"center\" valign=\"middle\"><a href=\"https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/es.md\"><img src=\"https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg\" width=\"40\" title=\"Español\"></a></td>
-    <td align=\"center\" valign=\"middle\"><a href=\"https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/fr.md\"><img src=\"https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/fr.svg\" width=\"40\" title=\"Français\"></a></td>
-    <td align=\"center\" valign=\"middle\"><a href=\"https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/de.md\"><img src=\"https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/de.svg\" width=\"40\" title=\"Deutsch\"></a></td>
-    <td align=\"center\" valign=\"middle\"><a href=\"https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/zh.md\"><img src=\"https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/cn.svg\" width=\"40\" title=\"中文\"></a></td>
-    <td align=\"center\" valign=\"middle\"><a href=\"https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ja.md\"><img src=\"https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/jp.svg\" width=\"40\" title=\"日本語\"></a></td>
-    <td align=\"center\" valign=\"middle\"><a href=\"https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ru.md\"><img src=\"https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/ru.svg\" width=\"40\" title=\"Русский\"></a></td>
-    <td align=\"center\" valign=\"middle\"><a href=\"https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/it.md\"><img src=\"https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/it.svg\" width=\"40\" title=\"Italiano\"></a></td>
-    <td align=\"center\" valign=\"middle\"><a href=\"https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ar.md\"><img src=\"https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/sa.svg\" width=\"40\" title=\"العربية\"></a></td>
-    <td align=\"center\" valign=\"middle\"><a href=\"https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ko.md\"><img src=\"https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/kr.svg\" width=\"40\" title=\"한국어\"></a></td>
-    <td align=\"center\" valign=\"middle\"><a href=\"https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/hi.md\"><img src=\"https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/in.svg\" width=\"40\" title=\"हिन्दी\"></a></td>
-    <td align=\"center\" valign=\"middle\"><a href=\"https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/nl.md\"><img src=\"https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/nl.svg\" width=\"40\" title=\"Nederlands\"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg" width="40" title="Português (Brasil)"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/en.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/us.svg" width="40" title="English"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/es.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg" width="40" title="Español"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/fr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/fr.svg" width="40" title="Français"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/de.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/de.svg" width="40" title="Deutsch"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/zh.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/cn.svg" width="40" title="中文"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ja.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/jp.svg" width="40" title="日本語"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ru.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/ru.svg" width="40" title="Русский"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/it.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/it.svg" width="40" title="Italiano"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ar.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/sa.svg" width="40" title="العربية"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ko.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/kr.svg" width="40" title="한국어"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/hi.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/in.svg" width="40" title="हिन्दी"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/nl.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/nl.svg" width="40" title="Nederlands"></a></td>
   </tr>
 </table>
 
 ---
 
-## <img src=\"https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/tr.svg\" width=\"30\"> ZapUnlocked-API Nedir?
+## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/tr.svg" width="30"> ZapUnlocked-API Nedir?
 
 WhatsApp API pazarı, aylık onlarca ila yüzlerce dolar ücret talep ediyor: kullanım sınırlamaları, konuşma başına ücretler ve üçüncü taraf sunuculardan geçen veriler. **ZapUnlocked-API bunu değiştirmek için var.**
 
@@ -105,7 +105,7 @@ mindmap
 | :------ | :------- |
 | 🧩 **Durumsuz Düğmeler** | Şifrelenmiş webhook'lar ile veritabanı olmadan etkileşimli akışlar oluşturun |
 | 🔢 **QR Kodsuz Eşleştirme** | Sayısal kod ile bağlanın · GUI'siz sunucular için ideal |
-| 🎵 **Otomatik Ses Dönüşümü** | iOS ve Android'de doğal olarak \"şimdi kaydedildi\" (PTT) olarak görünen ses gönderimi |
+| 🎵 **Otomatik Ses Dönüşümü** | iOS ve Android'de doğal olarak "şimdi kaydedildi" (PTT) olarak görünen ses gönderimi |
 | 📦 **Akıllı Medya Kuyruğu** | Aşırı bellek tüketimini önlemek için otomatik yönetim |
 | 🏷️ **Dinamik Yer Tutucular** | `{{name}}`, `{{day}}`, `{{phone}}` gibi değişkenlerle mesajları ve webhook'ları kişiselleştirin |
 
@@ -358,8 +358,8 @@ http://services-[kullanıcı].alwaysdata.net:8300/qr?API_KEY=GIZLI_SIFRENIZ
 
 ## 📖 Resmi Dokümantasyon
 
-<p align=\"center\">
-  👉 <a href=\"https://zapunlocked-api.kauafpss.com.br\"><strong>zapunlocked-api.kauafpss.com.br</strong></a>
+<p align="center">
+  👉 <a href="https://zapunlocked-api.kauafpss.com.br"><strong>zapunlocked-api.kauafpss.com.br</strong></a>
 </p>
 
 Detaylı teknik dokümantasyon, kod örnekleri ve etkileşimli bir oyun alanı için resmi web sitemizi ziyaret edin.
@@ -383,6 +383,6 @@ Detaylı teknik dokümantasyon, kod örnekleri ve etkileşimli bir oyun alanı i
 
 Bu proje **MIT Lisansı** altında lisanslanmıştır.
 
-<p align=\"center\">
-  💜 ile <a href=\"https://www.instagram.com/kauafpss_/\">Kauã Ferreira</a> tarafından yapıldı
+<p align="center">
+  💜 ile <a href="https://www.instagram.com/kauafpss_/">Kauã Ferreira</a> tarafından yapıldı
 </p>

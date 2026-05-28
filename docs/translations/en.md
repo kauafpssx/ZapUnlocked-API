@@ -49,7 +49,7 @@ Our proposal is grounded in **technical excellence** and **developer independenc
 
 ## 🗺️ API Overview
 
-`mermaid
+`````mermaid
 mindmap
   root((📲 ZapUnlocked-API))
     📨 Messages
@@ -95,7 +95,7 @@ mindmap
       Environment Variables
       Media Cleanup
       Auto Cleanup
-`
+```
 
 ---
 
@@ -247,35 +247,35 @@ mindmap
 
 Ideal for development, testing, or running on your own server.
 
-`mermaid
+```mermaid
 flowchart LR
   A[Clone] --> B[Install]
   B --> C[Config .env]
   C --> D[Run 🚀]
   D --> E[Config Account 🔗]
   E --> F[Production! ⚡]
-`
+```
 
 **1. Clone the Repository**
 
-`ash
+```bash
 git clone https://github.com/kauafpssx/ZapUnlocked-API.git
 cd ZapUnlocked-API
-`
+```
 
 **2. Install Dependencies**
 
 | System | Command |
 | :----- | :------ |
 | 🪟 Windows | scripts\install\install.bat |
-| 🐧 Linux / macOS | ash scripts/install/install.sh |
+| 🐧 Linux / macOS | bash scripts/install/install.sh |
 
 **3. Configure the Environment**
 
 | System | Command |
 | :----- | :------ |
 | 🪟 Windows | scripts\generate-env\generate-env.bat |
-| 🐧 Linux / macOS | ash scripts/generate-env/generate-env.sh |
+| 🐧 Linux / macOS | bash scripts/generate-env/generate-env.sh |
 
 | Variable | Description |
 | :------- | :---------- |
@@ -288,7 +288,7 @@ cd ZapUnlocked-API
 | System | Command |
 | :----- | :------ |
 | 🪟 Windows | scripts\run\run.bat |
-| 🐧 Linux / macOS | ash scripts/run/run.sh |
+| 🐧 Linux / macOS | bash scripts/run/run.sh |
 
 ---
 
@@ -314,17 +314,17 @@ cd ZapUnlocked-API
 
 **3.** Clone and install:
 
-`ash
+```bash
 git clone https://github.com/kauafpssx/ZapUnlocked-API.git ~/ZapUnlocked-API
 cd ~/ZapUnlocked-API
 bash scripts/install/install.sh
-`
+```
 
 **4.** Generate .env:
 
-`ash
+```bash
 bash scripts/generate-env/generate-env.sh
-`
+```
 
 **5.** Configure the Service (24/7) under **Advanced · Services · Add a service**:
 
@@ -337,9 +337,9 @@ bash scripts/generate-env/generate-env.sh
 
 **6.** Access via:
 
-`
+```
 http://services-[user].alwaysdata.net:8300/
-`
+```
 
 > [!TIP]
 > The URL is already externally accessible. *(Optional)* To use a custom domain, configure a **Reverse Proxy** under **Web · Sites · Add a site** pointing to http://[user].alwaysdata.net.
@@ -350,9 +350,9 @@ http://services-[user].alwaysdata.net:8300/
 
 After deployment, connect your WhatsApp account by accessing in your browser:
 
-`	ext
+```text
 http://services-[user].alwaysdata.net:8300/qr?API_KEY=YOUR_SECRET_KEY
-`
+```
 
 ---
 
