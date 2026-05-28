@@ -1,29 +1,29 @@
-# Código de Conduta
+# Code of Conduct
 
-## Nosso compromisso
+## Our Commitment
 
-Nos comprometemos a fazer da participação neste projeto uma experiência respeitosa e livre de assédio para todos, independente de idade, aparência, deficiência, etnia, identidade de gênero, nível de experiência, nacionalidade, religião ou orientação sexual.
+We are committed to making participation in this project a respectful and harassment-free experience for everyone, regardless of age, appearance, disability, ethnicity, gender identity, experience level, nationality, religion, or sexual orientation.
 
-## Comportamentos esperados
+## Expected Behavior
 
-- Usar linguagem acolhedora e inclusiva
-- Respeitar pontos de vista e experiências diferentes
-- Aceitar críticas construtivas com profissionalismo
-- Focar no que é melhor para a comunidade e o projeto
+- Use welcoming and inclusive language
+- Respect different points of view and experiences
+- Accept constructive criticism professionally
+- Focus on what is best for the community and the project
 
-## Comportamentos inaceitáveis
+## Unacceptable Behavior
 
-- Linguagem ou imagens sexualizadas
-- Ataques pessoais, insultos ou comentários depreciativos
-- Assédio público ou privado
-- Publicar informações privadas de outros sem permissão
+- Sexualized language or imagery
+- Personal attacks, insults, or derogatory comments
+- Public or private harassment
+- Publishing others' private information without permission
 
-## Aplicação
+## Enforcement
 
-Comportamentos inaceitáveis podem ser reportados abrindo uma issue ou pelo email **contato@kauafpss.com.br**. Todos os relatórios serão revisados com discrição.
+Unacceptable behavior may be reported by opening an issue or emailing **contato@kauafpss.com.br**. All reports will be reviewed confidentially.
 
-Mantenedores têm o direito de remover, editar ou rejeitar comentários, commits, issues e outras contribuições que não estejam alinhadas com este código de conduta.
+Maintainers have the right to remove, edit, or reject comments, commits, issues, and other contributions that are not aligned with this code of conduct.
 
 ---
 
-Este Código de Conduta é adaptado do [Contributor Covenant](https://www.contributor-covenant.org), versão 2.1.
+This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org), version 2.1.

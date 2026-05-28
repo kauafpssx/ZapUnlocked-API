@@ -1,29 +1,29 @@
-# Política de Segurança
+# Security Policy
 
-## Versões suportadas
+## Supported Versions
 
-| Versão | Suporte de segurança |
-|---|---|
-| latest (main) | Sim |
-| versões antigas | Não |
+| Version | Security Support |
+|---------|-----------------|
+| latest (main) | Yes |
+| old versions | No |
 
-Sempre use a versão mais recente da branch `main`.
+Always use the latest version from the `main` branch.
 
-## Reportar uma vulnerabilidade
+## Reporting a Vulnerability
 
-**Nunca abra uma issue pública para reportar vulnerabilidades de segurança.**
+**Never open a public issue to report security vulnerabilities.**
 
-Reporte de forma privada via **GitHub Security Advisories**:
+Report privately via **GitHub Security Advisories**:
 
-1. Acesse [Security > Advisories](https://github.com/kauafpssx/ZapUnlocked-API/security/advisories/new)
-2. Preencha com detalhes: descrição, impacto, passos para reproduzir e versão afetada
-3. Aguarde resposta em até **72 horas**
+1. Go to [Security › Advisories](https://github.com/kauafpssx/ZapUnlocked-API/security/advisories/new)
+2. Fill in details: description, impact, reproduction steps, and affected version
+3. Expect a response within **72 hours**
 
-Se preferir, envie por email: **contato@kauafpss.com.br**
+If you prefer, send an email to: **contato@kauafpss.com.br**
 
-## O que esperar
+## What to Expect
 
-- Confirmação de recebimento em até 72 horas
-- Avaliação do impacto e prioridade
-- Correção e publicação coordenada com o reporter
-- Crédito público ao reporter (se desejado)
+- Confirmation of receipt within 72 hours
+- Impact assessment and priority evaluation
+- Coordinated fix and publication with the reporter
+- Public credit to the reporter (if desired)
