@@ -4,6 +4,10 @@
    to ensure only the parameter is colored, not the full URL */
 
 /* Success feedback state for the hijacked button */
+.nav-logo {
+  height: 2.8875rem !important;
+}
+
 .btn-success {
    background-color: rgb(157, 79, 230) !important;
    border-color: rgb(157, 79, 230) !important;
