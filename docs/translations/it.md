@@ -1,4 +1,4 @@
-﻿# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
+# ?? [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) ???
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
@@ -12,24 +12,25 @@
 
 <table width="100%">
   <tr>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg" width="40" title="Portugu�s (BR)"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/en.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/us.svg" width="40" title="English"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/es.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg" width="40" title="Español"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/fr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/fr.svg" width="40" title="Français"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/es.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg" width="40" title="Espa�ol"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/fr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/fr.svg" width="40" title="Fran�ais"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/de.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/de.svg" width="40" title="Deutsch"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/zh.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/cn.svg" width="40" title="中文"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ja.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/jp.svg" width="40" title="日本語"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ru.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/ru.svg" width="40" title="Русский"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ar.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/sa.svg" width="40" title="العربية"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/tr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/tr.svg" width="40" title="Türkçe"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/kr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/kr.svg" width="40" title="한국어"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/in.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/in.svg" width="40" title="हिन्दी"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/zh.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/cn.svg" width="40" title="??"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ja.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/jp.svg" width="40" title="???"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ru.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/ru.svg" width="40" title="???????"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ar.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/sa.svg" width="40" title="???????"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/tr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/tr.svg" width="40" title="T�rk�e"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/kr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/kr.svg" width="40" title="???"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/in.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/in.svg" width="40" title="??????"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/nl.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/nl.svg" width="40" title="Nederlands"></a></td>
   </tr>
 </table>
 
 ---
 
-## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/it.svg" width="30"> Cos'è ZapUnlocked-API?
+## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/it.svg" width="30"> Cos'� ZapUnlocked-API?
 
 Il mercato delle API per WhatsApp impone canoni mensili esorbitanti: decine o centinaia di euro al mese, con limiti di utilizzo, commissioni per conversazione e dati che transitano su server di terze parti. **ZapUnlocked-API esiste per cambiare tutto questo.**
 
@@ -38,55 +39,55 @@ Costruita in **Python** con **[Neonize](https://github.com/krypton-byte/neonize)
 La nostra proposta si fonda sull'**eccellenza tecnica** e sull'**indipendenza dello sviluppatore**. Crediamo che gli strumenti potenti debbano essere accessibili a chi costruisce le proprie soluzioni.
 
 > [!TIP]
-> Perfetto per sviluppatori che cercano agilità nell'integrazione di bot, notifiche e sistemi di assistenza automatizzati. **Senza pagare nulla.**
+> Perfetto per sviluppatori che cercano agilit� nell'integrazione di bot, notifiche e sistemi di assistenza automatizzati. **Senza pagare nulla.**
 
 ---
 
-## 🗺️ Panoramica dell'API
+## ??? Panoramica dell'API
 
 ```mermaid
 mindmap
-  root((📲 ZapUnlocked-API))
-    📨 Messaggi
+  root((?? ZapUnlocked-API))
+    ?? Messaggi
       Testo / Rispondi
-      Media 📸🎥🎵
+      Media ??????
       Reazioni / Posizione
       Contatti / Link
       Modifica / Elimina / Leggi
-    🔘 Interattivi
+    ?? Interattivi
       Pulsanti Stateless
       Elenco Opzioni
       Sondaggi
-    🔍 Consultazioni
+    ?? Consultazioni
       Info Contatto
       Cronologia
       Chat Recenti
       Memoria / Disco
       Database
-    🔗 Connessione
+    ?? Connessione
       Stato / SSE
       QR Code
       Codice di Abbinamento
       Logout
-    📡 Webhook
+    ?? Webhook
       Crea / Elenca
       Modifica / Elimina
       Attiva / Test
       20 Eventi
-    ⚙️ Profilo e Privacy
+    ?? Profilo e Privacy
       Nome / Foto
       Ultimo accesso
       Blocchi
-    🤖 Bot
+    ?? Bot
       Tag IA
       IP Control
       Rifiuta Chiamate
       Lettura Automatica
-    📱 Istanza
+    ?? Istanza
       Dati Account
       Dispositivo
       Rinomina
-    🖥️ Sistema
+    ??? Sistema
       Variabili d'Ambiente
       Pulizia Media
       Pulizia Automatica
@@ -94,25 +95,25 @@ mindmap
 
 ---
 
-## ✨ Funzionalità in Evidenza
+## ? Funzionalit� in Evidenza
 
-| Funzionalità | Descrizione |
+| Funzionalit� | Descrizione |
 | :--- | :--- |
-| 🧩 **Pulsanti Stateless** | Crea flussi interattivi senza database, con webhook crittografati |
-| 🔢 **Abbinamento senza QR Code** | Connettiti tramite codice numerico · ideale per server senza GUI |
-| 🎵 **Conversione Audio Automatica** | Invia audio che appaiono come registrati al momento (PTT) nativamente |
-| 📦 **Coda Media Intelligente** | Gestione automatica per evitare un consumo eccessivo di memoria |
-| 🏷️ **Segnaposto Dinamici** | Personalizza messaggi e webhook con `{{name}}`, `{{day}}`, `{{phone}}` |
+| ?? **Pulsanti Stateless** | Crea flussi interattivi senza database, con webhook crittografati |
+| ?? **Abbinamento senza QR Code** | Connettiti tramite codice numerico � ideale per server senza GUI |
+| ?? **Conversione Audio Automatica** | Invia audio che appaiono come registrati al momento (PTT) nativamente |
+| ?? **Coda Media Intelligente** | Gestione automatica per evitare un consumo eccessivo di memoria |
+| ??? **Segnaposto Dinamici** | Personalizza messaggi e webhook con `{{name}}`, `{{day}}`, `{{phone}}` |
 
 > [!NOTE]
-> Tutte le funzionalità sono **100% gratuite** e mantenute dalla comunità open-source.
+> Tutte le funzionalit� sono **100% gratuite** e mantenute dalla comunit� open-source.
 
 ---
 
-## 📋 Rotte dell'API
+## ?? Rotte dell'API
 
 <details>
-<summary><b>📨 Invio Messaggi</b> · 13 endpoint</summary>
+<summary><b>?? Invio Messaggi</b> � 13 endpoint</summary>
 
 | Metodo | Rotta | Descrizione |
 | :----- | :--- | :-------- |
@@ -133,7 +134,7 @@ mindmap
 </details>
 
 <details>
-<summary><b>🔘 Messaggi Interattivi</b> · 4 endpoint</summary>
+<summary><b>?? Messaggi Interattivi</b> � 4 endpoint</summary>
 
 | Metodo | Rotta | Descrizione |
 | :----- | :--- | :-------- |
@@ -144,7 +145,7 @@ mindmap
 </details>
 
 <details>
-<summary><b>🔍 Consultazioni e Gestione</b> · 7 endpoint</summary>
+<summary><b>?? Consultazioni e Gestione</b> � 7 endpoint</summary>
 
 | Metodo | Rotta | Descrizione |
 | :----- | :--- | :-------- |
@@ -158,7 +159,7 @@ mindmap
 </details>
 
 <details>
-<summary><b>🔗 Connessione e Sessione</b> · 8 endpoint</summary>
+<summary><b>?? Connessione e Sessione</b> � 8 endpoint</summary>
 
 | Metodo | Rotta | Descrizione |
 | :----- | :--- | :-------- |
@@ -173,7 +174,7 @@ mindmap
 </details>
 
 <details>
-<summary><b>📡 Webhook (CRUD)</b> · 7 endpoint</summary>
+<summary><b>?? Webhook (CRUD)</b> � 7 endpoint</summary>
 
 | Metodo | Rotta | Descrizione |
 | :----- | :--- | :-------- |
@@ -187,7 +188,7 @@ mindmap
 </details>
 
 <details>
-<summary><b>⚙️ Profilo e Privacy</b> · 3 endpoint</summary>
+<summary><b>?? Profilo e Privacy</b> � 3 endpoint</summary>
 
 | Metodo | Rotta | Descrizione |
 | :----- | :--- | :-------- |
@@ -197,7 +198,7 @@ mindmap
 </details>
 
 <details>
-<summary><b>🤖 Configurazioni del Bot</b> · 5 endpoint</summary>
+<summary><b>?? Configurazioni del Bot</b> � 5 endpoint</summary>
 
 | Metodo | Rotta | Descrizione |
 | :----- | :--- | :-------- |
@@ -209,7 +210,7 @@ mindmap
 </details>
 
 <details>
-<summary><b>📱 Istanza</b> · 3 endpoint</summary>
+<summary><b>?? Istanza</b> � 3 endpoint</summary>
 
 | Metodo | Rotta | Descrizione |
 | :----- | :--- | :-------- |
@@ -219,7 +220,7 @@ mindmap
 </details>
 
 <details>
-<summary><b>🖥️ Sistema</b> · 5 endpoint</summary>
+<summary><b>??? Sistema</b> � 5 endpoint</summary>
 
 | Metodo | Rotta | Descrizione |
 | :----- | :--- | :-------- |
@@ -230,15 +231,15 @@ mindmap
 | `PUT` | `/system/cleanup/settings` | Aggiornare intervallo pulizia automatica |
 </details>
 
-> **Totale: 56 endpoint** · REST completi per l'automazione di WhatsApp.
+> **Totale: 56 endpoint** � REST completi per l'automazione di WhatsApp.
 
 ---
 
-## 🛠️ Installazione e Hosting
+## ??? Installazione e Hosting
 
 > Metti online la tua API WhatsApp professionale in meno di **5 minuti** con **ZapUnlocked-API**.
 
-### 💻 Installazione Locale
+### ?? Installazione Locale
 
 Ideale per sviluppo, test o esecuzione su server proprio.
 
@@ -246,9 +247,9 @@ Ideale per sviluppo, test o esecuzione su server proprio.
 flowchart LR
   A[Clone] --> B[Install]
   B --> C[Config .env]
-  C --> D[Run 🚀]
-  D --> E[Config Account 🔗]
-  E --> F[Production! ⚡]
+  C --> D[Run ??]
+  D --> E[Config Account ??]
+  E --> F[Production! ?]
 ```
 
 **1. Clona il Repository**
@@ -262,15 +263,15 @@ cd ZapUnlocked-API
 
 | Sistema | Comando |
 | :------ | :------ |
-| 🪟 Windows | `scripts\install\install.bat` |
-| 🐧 Linux / macOS | `bash scripts/install/install.sh` |
+| ?? Windows | `scripts\install\install.bat` |
+| ?? Linux / macOS | `bash scripts/install/install.sh` |
 
 **3. Configura l'Ambiente**
 
 | Sistema | Comando |
 | :------ | :------ |
-| 🪟 Windows | `scripts\generate-env\generate-env.bat` |
-| 🐧 Linux / macOS | `bash scripts/generate-env/generate-env.sh` |
+| ?? Windows | `scripts\generate-env\generate-env.bat` |
+| ?? Linux / macOS | `bash scripts/generate-env/generate-env.sh` |
 
 | Variabile | Descrizione |
 | :------- | :-------- |
@@ -282,28 +283,28 @@ cd ZapUnlocked-API
 
 | Sistema | Comando |
 | :------ | :------ |
-| 🪟 Windows | `scripts\run\run.bat` |
-| 🐧 Linux / macOS | `bash scripts/run/run.sh` |
+| ?? Windows | `scripts\run\run.bat` |
+| ?? Linux / macOS | `bash scripts/run/run.sh` |
 
 ---
 
-### ☁️ Hosting: Alwaysdata (Gratis 24/7)
+### ?? Hosting: Alwaysdata (Gratis 24/7)
 
-**Alwaysdata** è l'opzione consigliata per ospitare l'API in modo stabile e gratuito senza dover mantenere un server acceso.
+**Alwaysdata** � l'opzione consigliata per ospitare l'API in modo stabile e gratuito senza dover mantenere un server acceso.
 
-#### 📊 Risorse del Piano Free
+#### ?? Risorse del Piano Free
 
 | Risorsa | Disponibile nel Free |
 | :------ | :----------------- |
-| 💾 Archiviazione | **1 GB SSD** |
-| 🧠 RAM | **256 MB** |
-| ⚡ CPU | **1/4 vCPU** |
-| 🔄 Backup | **3 giorni** automatico |
-| 📡 Uptime | **24/7** tramite Services |
+| ?? Archiviazione | **1 GB SSD** |
+| ?? RAM | **256 MB** |
+| ? CPU | **1/4 vCPU** |
+| ?? Backup | **3 giorni** automatico |
+| ?? Uptime | **24/7** tramite Services |
 
-#### 👣 Guida Passo Passo per il Deploy
+#### ?? Guida Passo Passo per il Deploy
 
-**1.** Crea il tuo account su [Alwaysdata.com](https://www.alwaysdata.com/) · piano **Free**.
+**1.** Crea il tuo account su [Alwaysdata.com](https://www.alwaysdata.com/) � piano **Free**.
 
 **2.** Accedi via SSH: `https://ssh-[usuario].alwaysdata.net`.
 
@@ -321,7 +322,7 @@ bash scripts/install/install.sh
 bash scripts/generate-env/generate-env.sh
 ```
 
-**5.** Configura il Servizio (24/7) in **Advanced › Services › Add a service**:
+**5.** Configura il Servizio (24/7) in **Advanced � Services � Add a service**:
 
 | Campo | Valore |
 | :---- | :---- |
@@ -337,11 +338,11 @@ http://services-[usuario].alwaysdata.net:8300/
 ```
 
 > [!TIP]
-> L'URL è già accessibile esternamente. *(Opzionale)* Per utilizzare un dominio personalizzato, configura un **Reverse Proxy** in **Web › Sites › Add a site** puntando a `http://[usuario].alwaysdata.net`.
+> L'URL � gi� accessibile esternamente. *(Opzionale)* Per utilizzare un dominio personalizzato, configura un **Reverse Proxy** in **Web � Sites � Add a site** puntando a `http://[usuario].alwaysdata.net`.
 
 ---
 
-## 🔐 Autenticazione (Login)
+## ?? Autenticazione (Login)
 
 Dopo il deploy, collega il tuo account WhatsApp accedendo nel browser:
 
@@ -351,10 +352,10 @@ http://services-[usuario].alwaysdata.net:8300/qr?API_KEY=SUA_SENHA_SECRETA
 
 ---
 
-## 📖 Documentazione Ufficiale
+## ?? Documentazione Ufficiale
 
 <p align="center">
-  👉 <a href="https://zapunlocked-api.kauafpss.com.br"><strong>zapunlocked-api.kauafpss.com.br</strong></a>
+  ?? <a href="https://zapunlocked-api.kauafpss.com.br"><strong>zapunlocked-api.kauafpss.com.br</strong></a>
 </p>
 
 Per documentazione tecnica dettagliata, esempi di codice e playground interattivo, visita il nostro sito ufficiale.
@@ -364,21 +365,21 @@ Per documentazione tecnica dettagliata, esempi di codice e playground interattiv
 
 ---
 
-## ❤️ Crediti e Riconoscimenti
+## ?? Crediti e Riconoscimenti
 
 | Progetto | Descrizione |
 | :------ | :-------- |
 | [![Neonize](https://img.shields.io/badge/Neonize-A855F7?style=for-the-badge&logo=python&logoColor=white)](https://github.com/krypton-byte/neonize) | Libreria Python per connessione nativa a WhatsApp Web |
-| [![whatsmeow](https://img.shields.io/badge/whatsmeow-A855F7?style=for-the-badge&logo=go&logoColor=white)](https://github.com/tulir/whatsmeow) | Libreria Go base di Neonize · il cuore della connessione |
-| [![Alwaysdata](https://img.shields.io/badge/Alwaysdata-A855F7?style=for-the-badge&logo=alwaysdata&logoColor=white)](https://www.alwaysdata.com/) | Infrastruttura gratuita di alta qualità |
+| [![whatsmeow](https://img.shields.io/badge/whatsmeow-A855F7?style=for-the-badge&logo=go&logoColor=white)](https://github.com/tulir/whatsmeow) | Libreria Go base di Neonize � il cuore della connessione |
+| [![Alwaysdata](https://img.shields.io/badge/Alwaysdata-A855F7?style=for-the-badge&logo=alwaysdata&logoColor=white)](https://www.alwaysdata.com/) | Infrastruttura gratuita di alta qualit� |
 
 ---
 
-## 📄 Licenza
+## ?? Licenza
 
-Questo progetto è concesso in licenza sotto la **Licenza MIT**.
+Questo progetto � concesso in licenza sotto la **Licenza MIT**.
 
 <p align="center">
-  Fatto con 💜 da <a href="https://www.instagram.com/kauafpss_/">Kauã Ferreira</a>
+  Fatto con ?? da <a href="https://www.instagram.com/kauafpss_/">Kau� Ferreira</a>
 </p>
 

@@ -1,4 +1,4 @@
-﻿# 🚀 ZapUnlocked-API 📲✨
+# ?? ZapUnlocked-API ???
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
@@ -12,18 +12,19 @@
 
 <table width="100%">
   <tr>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg" width="40" title="Portugu�s (BR)"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/en.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/us.svg" width="40" title="English"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/es.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg" width="40" title="Español"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/fr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/fr.svg" width="40" title="Français"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/es.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg" width="40" title="Espa�ol"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/fr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/fr.svg" width="40" title="Fran�ais"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/de.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/de.svg" width="40" title="Deutsch"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/zh.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/cn.svg" width="40" title="中文"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ja.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/jp.svg" width="40" title="日本語"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ru.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/ru.svg" width="40" title="Русский"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/zh.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/cn.svg" width="40" title="??"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ja.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/jp.svg" width="40" title="???"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ru.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/ru.svg" width="40" title="???????"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/it.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/it.svg" width="40" title="Italiano"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ar.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/sa.svg" width="40" title="العربية"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/tr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/tr.svg" width="40" title="Türkçe"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ko.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/kr.svg" width="40" title="한국어"></a></td>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/hi.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/in.svg" width="40" title="हिन्दी"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ar.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/sa.svg" width="40" title="???????"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/tr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/tr.svg" width="40" title="T�rk�e"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ko.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/kr.svg" width="40" title="???"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/hi.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/in.svg" width="40" title="??????"></a></td>
   </tr>
 </table>
 
@@ -33,7 +34,7 @@
 
 De WhatsApp API-markt brengt exorbitante maandelijkse kosten in rekening: tientallen tot honderden euro's per maand, met gebruikslimieten, kosten per gesprek en gegevens die via servers van derden gaan. **ZapUnlocked-API is er om dat te veranderen.**
 
-Gebouwd met **Python** en **[Neonize](https://github.com/krypton-byte/neonize)** als verbindingsmotor, biedt deze API een eenvoudige REST-interface (FastAPI) voor het beheren van sessies, het verzenden van complexe media en het creëren van slimme interacties. **Geen zware database, geen maandelijkse kosten, niet afhankelijk van wie dan ook.**
+Gebouwd met **Python** en **[Neonize](https://github.com/krypton-byte/neonize)** als verbindingsmotor, biedt deze API een eenvoudige REST-interface (FastAPI) voor het beheren van sessies, het verzenden van complexe media en het cre�ren van slimme interacties. **Geen zware database, geen maandelijkse kosten, niet afhankelijk van wie dan ook.**
 
 Ons voorstel is gebaseerd op **technische excellentie** en **ontwikkelaarsonafhankelijkheid**. Wij geloven dat krachtige tools toegankelijk moeten zijn voor degenen die hun eigen oplossingen bouwen.
 
@@ -42,51 +43,51 @@ Ons voorstel is gebaseerd op **technische excellentie** en **ontwikkelaarsonafha
 
 ---
 
-## 🗺️ API Overzicht
+## ??? API Overzicht
 
 ```mermaid
 mindmap
-  root((📲 ZapUnlocked-API))
-    📨 Berichten
+  root((?? ZapUnlocked-API))
+    ?? Berichten
       Tekst / Antwoorden
-      Media 📸🎥🎵
+      Media ??????
       Reacties / Locatie
       Contacten / Links
       Bewerken / Verwijderen / Lezen
-    🔘 Interactief
+    ?? Interactief
       Staatloze Knoppen
       Optielijst
-      Enquêtes
-    🔍 Query's
+      Enqu�tes
+    ?? Query's
       Contactinformatie
       Geschiedenis
       Recente Chats
       Geheugen / Schijf
       Database
-    🔗 Verbinding
+    ?? Verbinding
       Status / SSE
       QR Code
       Pairing Code
       Uitloggen
-    📡 Webhooks
+    ?? Webhooks
       Aanmaken / Lijst
       Bewerken / Verwijderen
       Activeren / Testen
       20 Gebeurtenissen
-    ⚙️ Profiel & Privacy
+    ?? Profiel & Privacy
       Naam / Foto
       Laatst Gezien
       Blokkades
-    🤖 Bot
+    ?? Bot
       AI Tag
       IP Controle
       Oproepen Weigeren
       Auto Lezen
-    📱 Instantie
+    ?? Instantie
       Accountgegevens
       Apparaat
       Hernoemen
-    🖥️ Systeem
+    ??? Systeem
       Omgevingsvariabelen
       Media Opschonen
       Automatisch Opschonen
@@ -94,25 +95,25 @@ mindmap
 
 ---
 
-## ✨ Hoofdfuncties
+## ? Hoofdfuncties
 
 | Functionaliteit | Beschrijving |
 | :-------------- | :----------- |
-| 🧩 **Staatloze Knoppen** | Creëer interactieve flows zonder database, met versleutelde webhooks |
-| 🔢 **Pairing zonder QR Code** | Verbind via numerieke code · ideaal voor servers zonder GUI |
-| 🎵 **Automatische Audioconversie** | Verzend audio die eruitziet als live opgenomen (PTT) native |
-| 📦 **Slimme Media Queue** | Automatisch beheer om overmatig geheugengebruik te voorkomen |
-| 🏷️ **Dynamische Placeholders** | Personaliseer berichten en webhooks met `{{name}}`, `{{day}}`, `{{phone}}` |
+| ?? **Staatloze Knoppen** | Cre�er interactieve flows zonder database, met versleutelde webhooks |
+| ?? **Pairing zonder QR Code** | Verbind via numerieke code � ideaal voor servers zonder GUI |
+| ?? **Automatische Audioconversie** | Verzend audio die eruitziet als live opgenomen (PTT) native |
+| ?? **Slimme Media Queue** | Automatisch beheer om overmatig geheugengebruik te voorkomen |
+| ??? **Dynamische Placeholders** | Personaliseer berichten en webhooks met `{{name}}`, `{{day}}`, `{{phone}}` |
 
 > [!NOTE]
 > Alle functies zijn **100% gratis** en worden onderhouden door de open-source gemeenschap.
 
 ---
 
-## 📋 API Routes
+## ?? API Routes
 
 <details>
-<summary><b>📨 Berichten Verzenden</b> · 13 endpoints</summary>
+<summary><b>?? Berichten Verzenden</b> � 13 endpoints</summary>
 
 | Methode | Route | Beschrijving |
 | :------ | :---- | :----------- |
@@ -133,18 +134,18 @@ mindmap
 </details>
 
 <details>
-<summary><b>🔘 Interactieve Berichten</b> · 4 endpoints</summary>
+<summary><b>?? Interactieve Berichten</b> � 4 endpoints</summary>
 
 | Methode | Route | Beschrijving |
 | :------ | :---- | :----------- |
 | `POST` | `/send_wbuttons` | Knoppen verzenden (lijst, actie, OTP, PIX) |
 | `POST` | `/messages/send-option-list` | Optielijst verzenden |
-| `POST` | `/messages/send-poll` | Enquête verzenden |
-| `POST` | `/messages/send-poll-vote` | Stemmen op enquête |
+| `POST` | `/messages/send-poll` | Enqu�te verzenden |
+| `POST` | `/messages/send-poll-vote` | Stemmen op enqu�te |
 </details>
 
 <details>
-<summary><b>🔍 Query's en Beheer</b> · 7 endpoints</summary>
+<summary><b>?? Query's en Beheer</b> � 7 endpoints</summary>
 
 | Methode | Route | Beschrijving |
 | :------ | :---- | :----------- |
@@ -158,7 +159,7 @@ mindmap
 </details>
 
 <details>
-<summary><b>🔗 Verbinding en Sessie</b> · 8 endpoints</summary>
+<summary><b>?? Verbinding en Sessie</b> � 8 endpoints</summary>
 
 | Methode | Route | Beschrijving |
 | :------ | :---- | :----------- |
@@ -173,7 +174,7 @@ mindmap
 </details>
 
 <details>
-<summary><b>📡 Webhooks (CRUD)</b> · 7 endpoints</summary>
+<summary><b>?? Webhooks (CRUD)</b> � 7 endpoints</summary>
 
 | Methode | Route | Beschrijving |
 | :------ | :---- | :----------- |
@@ -187,7 +188,7 @@ mindmap
 </details>
 
 <details>
-<summary><b>⚙️ Profiel en Privacy</b> · 3 endpoints</summary>
+<summary><b>?? Profiel en Privacy</b> � 3 endpoints</summary>
 
 | Methode | Route | Beschrijving |
 | :------ | :---- | :----------- |
@@ -197,7 +198,7 @@ mindmap
 </details>
 
 <details>
-<summary><b>🤖 Bot Instellingen</b> · 5 endpoints</summary>
+<summary><b>?? Bot Instellingen</b> � 5 endpoints</summary>
 
 | Methode | Route | Beschrijving |
 | :------ | :---- | :----------- |
@@ -209,7 +210,7 @@ mindmap
 </details>
 
 <details>
-<summary><b>📱 Instantie</b> · 3 endpoints</summary>
+<summary><b>?? Instantie</b> � 3 endpoints</summary>
 
 | Methode | Route | Beschrijving |
 | :------ | :---- | :----------- |
@@ -219,7 +220,7 @@ mindmap
 </details>
 
 <details>
-<summary><b>🖥️ Systeem</b> · 5 endpoints</summary>
+<summary><b>??? Systeem</b> � 5 endpoints</summary>
 
 | Methode | Route | Beschrijving |
 | :------ | :---- | :----------- |
@@ -230,15 +231,15 @@ mindmap
 | `PUT` | `/system/cleanup/settings` | Automatisch opschooninterval bijwerken |
 </details>
 
-> **Totaal: 56 endpoints** · Volledige REST voor WhatsApp automatisering.
+> **Totaal: 56 endpoints** � Volledige REST voor WhatsApp automatisering.
 
 ---
 
-## 🛠️ Installatie en Hosting
+## ??? Installatie en Hosting
 
 > Zet uw professionele WhatsApp API in minder dan **5 minuten** op met **ZapUnlocked-API**.
 
-### 💻 Lokale Installatie
+### ?? Lokale Installatie
 
 Ideaal voor ontwikkeling, testen of draaien op uw eigen server.
 
@@ -246,9 +247,9 @@ Ideaal voor ontwikkeling, testen of draaien op uw eigen server.
 flowchart LR
   A[Clone] --> B[Install]
   B --> C[Config .env]
-  C --> D[Run 🚀]
-  D --> E[Config Account 🔗]
-  E --> F[Production! ⚡]
+  C --> D[Run ??]
+  D --> E[Config Account ??]
+  E --> F[Production! ?]
 ```
 
 **1. Kloon de Repository**
@@ -262,15 +263,15 @@ cd ZapUnlocked-API
 
 | Systeem | Commando |
 | :------ | :------- |
-| 🪟 Windows | `scripts\install\install.bat` |
-| 🐧 Linux / macOS | `bash scripts/install/install.sh` |
+| ?? Windows | `scripts\install\install.bat` |
+| ?? Linux / macOS | `bash scripts/install/install.sh` |
 
 **3. Configureer de Omgeving**
 
 | Systeem | Commando |
 | :------ | :------- |
-| 🪟 Windows | `scripts\generate-env\generate-env.bat` |
-| 🐧 Linux / macOS | `bash scripts/generate-env/generate-env.sh` |
+| ?? Windows | `scripts\generate-env\generate-env.bat` |
+| ?? Linux / macOS | `bash scripts/generate-env/generate-env.sh` |
 
 | Variabele | Beschrijving |
 | :-------- | :----------- |
@@ -282,28 +283,28 @@ cd ZapUnlocked-API
 
 | Systeem | Commando |
 | :------ | :------- |
-| 🪟 Windows | `scripts\run\run.bat` |
-| 🐧 Linux / macOS | `bash scripts/run/run.sh` |
+| ?? Windows | `scripts\run\run.bat` |
+| ?? Linux / macOS | `bash scripts/run/run.sh` |
 
 ---
 
-### ☁️ Hosting: Alwaysdata (Gratis 24/7)
+### ?? Hosting: Alwaysdata (Gratis 24/7)
 
 **Alwaysdata** is de aanbevolen optie om de API stabiel en gratis te hosten zonder een server aan te hoeven houden.
 
-#### 📊 Gratis Plan Bronnen
+#### ?? Gratis Plan Bronnen
 
 | Bron | Beschikbaar in Gratis |
 | :--- | :-------------------- |
-| 💾 Opslag | **1 GB SSD** |
-| 🧠 RAM | **256 MB** |
-| ⚡ CPU | **1/4 vCPU** |
-| 🔤 Backup | **3 dagen** automatisch |
-| 📡 Uptime | **24/7** via Services |
+| ?? Opslag | **1 GB SSD** |
+| ?? RAM | **256 MB** |
+| ? CPU | **1/4 vCPU** |
+| ?? Backup | **3 dagen** automatisch |
+| ?? Uptime | **24/7** via Services |
 
-#### 👣 Stap-voor-Stap Implementatie
+#### ?? Stap-voor-Stap Implementatie
 
-**1.** Maak een account aan op [Alwaysdata.com](https://www.alwaysdata.com/) · **Gratis** plan.
+**1.** Maak een account aan op [Alwaysdata.com](https://www.alwaysdata.com/) � **Gratis** plan.
 
 **2.** Toegang via SSH op `https://ssh-[gebruiker].alwaysdata.net`.
 
@@ -321,7 +322,7 @@ bash scripts/install/install.sh
 bash scripts/generate-env/generate-env.sh
 ```
 
-**5.** Configureer de Service (24/7) onder **Advanced · Services · Add a service**:
+**5.** Configureer de Service (24/7) onder **Advanced � Services � Add a service**:
 
 | Veld | Waarde |
 | :--- | :----- |
@@ -337,11 +338,11 @@ http://services-[gebruiker].alwaysdata.net:8300/
 ```
 
 > [!TIP]
-> De URL is extern al bereikbaar. *(Optioneel)* Voor een aangepast domein configureert u een **Reverse Proxy** onder **Web · Sites · Add a site** die verwijst naar `http://[gebruiker].alwaysdata.net`.
+> De URL is extern al bereikbaar. *(Optioneel)* Voor een aangepast domein configureert u een **Reverse Proxy** onder **Web � Sites � Add a site** die verwijst naar `http://[gebruiker].alwaysdata.net`.
 
 ---
 
-## 🔐 Authenticatie (Login)
+## ?? Authenticatie (Login)
 
 Na implementatie, verbind uw WhatsApp-account door in de browser te navigeren naar:
 
@@ -351,34 +352,34 @@ http://services-[gebruiker].alwaysdata.net:8300/qr?API_KEY=UW_GEHEIME_WACHTWOORD
 
 ---
 
-## 📖 Officiële Documentatie
+## ?? Offici�le Documentatie
 
 <p align="center">
-  👉 <a href="https://zapunlocked-api.kauafpss.com.br"><strong>zapunlocked-api.kauafpss.com.br</strong></a>
+  ?? <a href="https://zapunlocked-api.kauafpss.com.br"><strong>zapunlocked-api.kauafpss.com.br</strong></a>
 </p>
 
-Voor gedetailleerde technische documentatie, codevoorbeelden en een interactieve playground, bezoek onze officiële website.
+Voor gedetailleerde technische documentatie, codevoorbeelden en een interactieve playground, bezoek onze offici�le website.
 
 > [!TIP]
 > Gebruik **LLMs.txt** als AI-index: [`zapunlocked-api.kauafpss.com.br/llms.txt`](https://zapunlocked-api.kauafpss.com.br/llms.txt). Ontdek alle pagina's voordat u gaat verkennen.
 
 ---
 
-## ❤️ Credits & Dankbetuigingen
+## ?? Credits & Dankbetuigingen
 
 | Project | Beschrijving |
 | :------ | :----------- |
 | [![Neonize](https://img.shields.io/badge/Neonize-A855F7?style=for-the-badge&logo=python&logoColor=white)](https://github.com/krypton-byte/neonize) | Python bibliotheek voor native verbinding met WhatsApp Web |
-| [![whatsmeow](https://img.shields.io/badge/whatsmeow-A855F7?style=for-the-badge&logo=go&logoColor=white)](https://github.com/tulir/whatsmeow) | Go bibliotheek basis van Neonize · het hart van de verbinding |
+| [![whatsmeow](https://img.shields.io/badge/whatsmeow-A855F7?style=for-the-badge&logo=go&logoColor=white)](https://github.com/tulir/whatsmeow) | Go bibliotheek basis van Neonize � het hart van de verbinding |
 | [![Alwaysdata](https://img.shields.io/badge/Alwaysdata-A855F7?style=for-the-badge&logo=alwaysdata&logoColor=white)](https://www.alwaysdata.com/) | Gratis infrastructuur van hoge kwaliteit |
 
 ---
 
-## 📄 Licentie
+## ?? Licentie
 
 Dit project is gelicentieerd onder de **MIT Licentie**.
 
 <p align="center">
-  Gemaakt met 💜 door <a href="https://www.instagram.com/kauafpss_/">Kauã Ferreira</a>
+  Gemaakt met ?? door <a href="https://www.instagram.com/kauafpss_/">Kau� Ferreira</a>
 </p>
 
