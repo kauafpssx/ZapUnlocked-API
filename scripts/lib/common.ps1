@@ -55,7 +55,7 @@ function Show-Banner {
 }
 
 function Show-Tags {
-    param([string]$Icon, [string]$Label)
+    param([string]$Icon, [string]$Label, [string]$OsLabel = "")
     $ram = Get-RamPct
     $cpu = Get-CpuPct
     $py  = Get-PyVer
@@ -68,6 +68,9 @@ function Show-Tags {
         @{ text = "UP ${up}";     color = "#6B7280" }
         @{ text = "${Icon} ${Label}"; color = "#8B3DFF" }
     )
+    if ($OsLabel) {
+        $tags += @{ text = "$OsLabel"; color = "#8B3DFF" }
+    }
 
     $items = @()
     foreach ($t in $tags) {
@@ -76,6 +79,47 @@ function Show-Tags {
     }
 
     & gum join --horizontal @items
+}
+
+# ── Header state (for in-place refresh) ──────────────────────────────
+$script:HeaderIcon = ""
+$script:HeaderLabel = ""
+$script:HeaderOs = ""
+
+function Init-Header {
+    param([string]$Icon, [string]$Label, [string]$OsLabel = "")
+    $script:HeaderIcon = $Icon
+    $script:HeaderLabel = $Label
+    $script:HeaderOs = $OsLabel
+}
+
+function Refresh-Header {
+    $ram = Get-RamPct
+    $cpu = Get-CpuPct
+    $py  = Get-PyVer
+    $up  = Get-Elapsed
+
+    $tags = @(
+        @{ text = "RAM ${ram}%";  color = "#8B3DFF" }
+        @{ text = "CPU ${cpu}%";  color = "#A855F7" }
+        @{ text = "PY ${py}";     color = "#C084FC" }
+        @{ text = "UP ${up}";     color = "#6B7280" }
+        @{ text = "${script:HeaderIcon} ${script:HeaderLabel}"; color = "#8B3DFF" }
+    )
+    if ($script:HeaderOs) {
+        $tags += @{ text = "$($script:HeaderOs)"; color = "#8B3DFF" }
+    }
+
+    $items = @()
+    foreach ($t in $tags) {
+        $item = & gum style --border rounded --padding "0 1" --foreground $t.color $t.text
+        $items += $item
+    }
+
+    # Move up 5 lines and redraw
+    Write-Host -NoNewline "`e[5A`e[J"
+    & gum join --horizontal @items
+    Show-Sep
 }
 
 function Show-Sep {
@@ -89,11 +133,11 @@ function Show-Task {
     & gum style --foreground "#E9D5FF" --bold "  $Label"
 }
 
-function Write-Info  { & gum style --foreground "#A855F7" "  ◉ $args" }
-function Write-Ok    { & gum style --foreground "#42C292" "  ✓ $args" }
-function Write-Warn  { & gum style --foreground "#F59E0B" "  ⚠ $args" }
-function Write-Err   { & gum style --foreground "#EF4444" "  ✖ $args" }
-function Write-Step  { & gum style --foreground "#6B7280" "  · $args" }
+function Write-Info  { Write-Host "  " -NoNewline; Write-Host "◉" -NoNewline -ForegroundColor DarkMagenta; Write-Host " $args" }
+function Write-Ok    { Write-Host "  " -NoNewline; Write-Host "✓" -NoNewline -ForegroundColor Green; Write-Host " $args" }
+function Write-Warn  { Write-Host "  " -NoNewline; Write-Host "⚠" -NoNewline -ForegroundColor Yellow; Write-Host " $args" }
+function Write-Err   { Write-Host "  " -NoNewline; Write-Host "✖" -NoNewline -ForegroundColor Red; Write-Host " $args" }
+function Write-Step  { Write-Host "  " -NoNewline; Write-Host "·" -NoNewline -ForegroundColor Gray; Write-Host " $args" }
 
 function Show-Footer {
     param([string]$Message)

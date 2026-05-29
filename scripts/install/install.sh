@@ -4,21 +4,29 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../lib/common.sh"
 cd "$ROOT_DIR"
 
-# ── Start ──────────────────────────────────────────────────────────────
-ui_banner
-ui_tags "$ICON_INSTALL" "INSTALL"
-ui_sep
-ui_task "Installing ZapUnlocked API"
-
-# Detect OS
+# ── Detect OS & environment ─────────────────────────────────────────
 if [[ "$OSTYPE" == "darwin"* ]]; then OS="macos"
 elif [ -f /etc/os-release ]; then . /etc/os-release; OS=$ID
 else OS=$(uname -s); fi
 
-# ── Python ─────────────────────────────────────────────────────────────
-if command -v python3 &>/dev/null; then
-    ui_log_ok "Python $(python3 --version 2>&1 | awk '{print $2}')"
+_ALWAYSDATA=false; __alwaysdata_check && _ALWAYSDATA=true
+
+if $_ALWAYSDATA; then
+    OS_LABEL="Alwaysdata"
+elif [[ "$OS" == "macos" ]]; then
+    OS_LABEL="macOS"
 else
+    OS_LABEL="Linux"
+fi
+
+# ── Start ──────────────────────────────────────────────────────────────
+ui_banner
+ui_tags "$ICON_INSTALL" "INSTALL" "$OS_LABEL"
+ui_sep
+ui_init_header "$ICON_INSTALL" "INSTALL" "$OS_LABEL"
+
+# ── Python ─────────────────────────────────────────────────────────────
+if ! command -v python3 &>/dev/null; then
     case $OS in
         macos)
             command -v brew &>/dev/null || gum spin --spinner dot --title "Instalando Homebrew..." -- \
@@ -43,17 +51,14 @@ else
             ;;
     esac
     ui_log_ok "Python instalado"
+    ui_refresh_header
 fi
 
 # ── Installation method ──────────────────────────────────────────────
 _USE_INTERNAL=false
-_ALWAYSDATA=false
-
-__alwaysdata_check && _ALWAYSDATA=true
 
 if $_ALWAYSDATA; then
     _USE_INTERNAL=true
-    ui_log_info "Ambiente Alwaysdata — modo offline (wheels diretos)"
 elif [[ "$OS" != "macos" ]]; then
     ui_log_step "Escolha o método de instalação:"
     METHOD=$(gum choose \
@@ -62,10 +67,13 @@ elif [[ "$OS" != "macos" ]]; then
     echo ""
     if [[ "$METHOD" == *"Offline"* ]]; then
         _USE_INTERNAL=true
-        ui_log_info "Modo offline selecionado"
+        echo -e "  \e[38;2;66;194;146m✓\e[0m Offline selecionado"
     else
-        ui_log_info "Modo pip selecionado"
+        echo -e "  \e[38;2;66;194;146m✓\e[0m pip selecionado
     fi
+fi
+else
+    ui_os_card "macOS"
 fi
 
 # ── Internal method (offline wheels) ─────────────────────────────────
@@ -75,7 +83,8 @@ if $_USE_INTERNAL; then
     rm -rf "$SITE_PKG" "$ROOT_DIR/wheels"
     mkdir -p "$SITE_PKG" "$ROOT_DIR/wheels"
 
-    python3 - "$SITE_PKG" "$ROOT_DIR/wheels" <<'PY'
+    gum spin --spinner dot --title "Installing ZapUnlocked API" --show-output -- \
+        python3 - "$SITE_PKG" "$ROOT_DIR/wheels" <<'PY'
 import json, os, subprocess, sys, urllib.request
 from pathlib import Path
 
@@ -142,17 +151,21 @@ def pick(pkg, ver, tag):
             return f["url"], f["filename"]
     raise RuntimeError(f"sem wheel: {pkg}=={ver}")
 
+G = '\033[92m'
+Y = '\033[93m'
+R = '\033[0m'
+
 failed = []
 for pkg, ver, tag in PKGS:
     try:
         url, name = pick(pkg, ver, tag)
         out = WHEELS / name
-        print(f"  {pkg}=={ver}", flush=True)
+        print(f"  {G}✓{R} {pkg} ({ver})", flush=True)
         subprocess.check_call(["curl", "-fsSL", "--retry", "3", "--retry-delay", "2", "-o", str(out), url])
         subprocess.check_call(["unzip", "-q", "-o", str(out), "-d", str(TARGET)])
         out.unlink(missing_ok=True)
     except Exception as e:
-        print(f"  FALHOU {pkg}=={ver}: {e}", flush=True)
+        print(f"  {Y}⚠{R} {pkg} ({ver}): {e}", flush=True)
         failed.append(pkg)
 
 import subprocess as sp, shutil
@@ -164,18 +177,19 @@ for f in data["urls"]:
     n = f["filename"]
     if n.endswith(".whl") and "abi3" in n and "manylinux" in n and "x86_64" in n:
         out = WHEELS / n
-        print(f"  psutil==7.0.0 (abi3)", flush=True)
+        print(f"  {G}✓{R} psutil (7.0.0)", flush=True)
         sp.check_call(["curl", "-fsSL", "--retry", "3", "--retry-delay", "2", "-o", str(out), f["url"]])
         sp.check_call(["unzip", "-q", "-o", str(out), "-d", str(TARGET)])
         out.unlink(missing_ok=True)
         break
 
 if failed:
-    print(f"AVISOS: falharam {failed}", flush=True)
+    print(f"  {Y}⚠{R} Falharam: {', '.join(failed)}", flush=True)
 PY
 
     rm -rf "$ROOT_DIR/wheels"
     ui_log_ok "Requirements instalados"
+    ui_refresh_header
 
     if ! command -v ffmpeg &>/dev/null; then
         TMP_DIR=$(mktemp -d "$HOME/.ffmpeg_extract_XXXXX")
@@ -189,6 +203,7 @@ PY
     else
         ui_log_ok "ffmpeg ja no sistema"
     fi
+    ui_refresh_header
 
 # ── Standard pip method ──────────────────────────────────────────────
 else
@@ -206,6 +221,7 @@ else
         exit 1
     }
     ui_log_ok "Requirements instalados"
+    ui_refresh_header
 fi
 
 # ── Done ───────────────────────────────────────────────────────────────

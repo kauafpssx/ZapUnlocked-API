@@ -96,7 +96,9 @@ ui_banner() {
 }
 
 ui_tags() {
-    local icon=$1 label=$2
+    local icon=$1 label=$2 os_label=$3
+    local os_tag=""
+    [ -n "$os_label" ] && os_tag="  $(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "$os_label")"
     gum join --horizontal \
         "$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "RAM $(__ram)%")" \
         "  " \
@@ -106,7 +108,8 @@ ui_tags() {
         "  " \
         "$(gum style --border rounded --padding "0 1" --foreground "#6B7280" "UP $(__up)")" \
         "  " \
-        "$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" --bold "${icon} ${label}")"
+        "$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" --bold "${icon} ${label}")" \
+        "$os_tag"
 }
 
 ui_sep() {
@@ -121,11 +124,41 @@ ui_task() {
     gum style --foreground "#E9D5FF" --bold "  ${label}"
 }
 
-ui_log_info()  { gum style --foreground "#A855F7" "  ◉ $1"; }
-ui_log_ok()    { gum style --foreground "#42C292" "  ✓ $1"; }
-ui_log_warn()  { gum style --foreground "#F59E0B" "  ⚠ $1"; }
-ui_log_err()   { gum style --foreground "#EF4444" "  ✖ $1"; }
-ui_log_step()  { gum style --foreground "#6B7280" "  · $1"; }
+# ── Header state (for in-place refresh) ──────────────────────────────
+__header_icon=""
+__header_label=""
+__header_os=""
+
+ui_init_header() {
+    __header_icon=$1
+    __header_label=$2
+    __header_os=$3
+}
+
+ui_refresh_header() {
+    # Move up 5 lines (tags(3) + sep(1) + blank gap(1)) and redraw
+    echo -ne "\e[5A\e[J"
+    local os_tag=""
+    [ -n "$__header_os" ] && os_tag="  $(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "$__header_os")"
+    gum join --horizontal \
+        "$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "RAM $(__ram)%")" \
+        "  " \
+        "$(gum style --border rounded --padding "0 1" --foreground "#A855F7" "CPU $(__cpu)%")" \
+        "  " \
+        "$(gum style --border rounded --padding "0 1" --foreground "#C084FC" "PY $(__py)")" \
+        "  " \
+        "$(gum style --border rounded --padding "0 1" --foreground "#6B7280" "UP $(__elapsed)")" \
+        "  " \
+        "$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" --bold "${__header_icon} ${__header_label}")" \
+        "$os_tag"
+    ui_sep
+}
+
+ui_log_info()  { echo -e "  \e[38;2;168;85;247m◉\e[0m $1"; }
+ui_log_ok()    { echo -e "  \e[38;2;66;194;146m✓\e[0m $1"; }
+ui_log_warn()  { echo -e "  \e[38;2;245;158;11m⚠\e[0m $1"; }
+ui_log_err()   { echo -e "  \e[38;2;239;68;68m✖\e[0m $1"; }
+ui_log_step()  { echo -e "  \e[38;2;107;114;128m·\e[0m $1"; }
 
 ui_footer() {
     echo ""
