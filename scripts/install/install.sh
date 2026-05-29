@@ -76,16 +76,15 @@ fi
 gum log --level info "Ambiente virtual criado"
 
 # ── Requirements ─────────────────────────────────────────────────────────────
-gum log --level info "Instalando requirements..."
-
-.venv/bin/pip install --upgrade pip -q
+gum spin --spinner dot --title "Atualizando pip..." -- .venv/bin/pip install --upgrade pip -q
 
 grep -v '^\s*#' requirements.txt | grep -v '^\s*$' | while IFS= read -r pkg; do
-    gum log --level debug "instalando $pkg"
     if [ "$pkg" = "Pillow" ]; then
-        .venv/bin/pip install "$pkg" --no-cache-dir --only-binary :all: -q
+        gum spin --spinner dot --title "$pkg (binário)" -- \
+            .venv/bin/pip install "$pkg" --no-cache-dir --only-binary :all: -q
     else
-        .venv/bin/pip install "$pkg" --no-cache-dir -q
+        gum spin --spinner dot --title "$pkg" -- \
+            .venv/bin/pip install "$pkg" --no-cache-dir -q
     fi
     if [ $? -ne 0 ]; then
         gum log --level error "Falha ao instalar: $pkg"
