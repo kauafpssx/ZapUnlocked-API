@@ -9,14 +9,17 @@ _REQUIRED = [
     ("python-dotenv",    "dotenv"),
     ("neonize",          "neonize"),
     ("Pillow",           "PIL"),
-    ("python-magic-bin", "magic"),
+    ("python-magic",     "magic"),
     ("ffmpeg-python",    "ffmpeg"),
-    ("imageio-ffmpeg",   "imageio_ffmpeg"),
     ("requests",         "requests"),
     ("httpx",            "httpx"),
     ("qrcode",           "qrcode"),
     ("loguru",           "loguru"),
     ("psutil",           "psutil"),
+]
+
+_OPTIONAL = [
+    ("imageio-ffmpeg",   "imageio_ffmpeg"),
 ]
 
 
@@ -27,6 +30,12 @@ def validate_dependencies() -> None:
             importlib.import_module(import_name)
         except ImportError:
             missing.append(pip_name)
+
+    for pip_name, import_name in _OPTIONAL:
+        try:
+            importlib.import_module(import_name)
+        except ImportError:
+            pass
 
     if missing:
         lines = [
@@ -40,7 +49,10 @@ def validate_dependencies() -> None:
         lines += [
             "",
             "Execute para instalar tudo:",
-            "  pip install -r requirements.txt",
+            "  .venv/bin/pip install -r requirements.txt",
+            "",
+            "Depois inicie com:",
+            "  bash scripts/run/run.sh",
             "=" * 60,
             "",
         ]
