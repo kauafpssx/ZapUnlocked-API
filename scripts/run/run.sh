@@ -19,13 +19,6 @@ gum style \
     "ZapUnlocked API  ·  Servidor"
 echo ""
 
-# ── Venv ─────────────────────────────────────────────────────────────────────
-if [ ! -d ".venv" ]; then
-    gum log --level error "Ambiente virtual não encontrado — execute install.sh primeiro"
-    exit 1
-fi
-gum log --level info "Ambiente virtual encontrado"
-
 # ── Port ─────────────────────────────────────────────────────────────────────
 PID=$(lsof -t -i:8300 2>/dev/null)
 if [ -n "$PID" ]; then
@@ -34,9 +27,21 @@ if [ -n "$PID" ]; then
 fi
 gum log --level info "Porta 8300 livre"
 
+# ── Detectar bin do uvicorn ──────────────────────────────────────────────────
+if [ -f ".venv/bin/uvicorn" ]; then
+    UVICORN=".venv/bin/uvicorn"
+    gum log --level info "Usando .venv"
+elif command -v uvicorn &>/dev/null; then
+    UVICORN="uvicorn"
+    gum log --level info "Usando uvicorn global"
+else
+    gum log --level error "uvicorn nao encontrado — execute install.sh primeiro"
+    exit 1
+fi
+
 # ── Start ─────────────────────────────────────────────────────────────────────
 echo ""
 gum style --foreground "240" "  Iniciando servidor..."
 echo ""
 
-.venv/bin/uvicorn main:app --host '::' --port 8300 --proxy-headers --forwarded-allow-ips '::1' --reload --log-level info
+$UVICORN main:app --host '::' --port 8300 --proxy-headers --forwarded-allow-ips '::1' --reload --log-level info
