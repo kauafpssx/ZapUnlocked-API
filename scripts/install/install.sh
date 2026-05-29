@@ -69,50 +69,10 @@ fi
 
 # ── Venv ─────────────────────────────────────────────────────────────────────
 gum log --level info "Criando ambiente virtual..."
-python3 -m venv .venv 2>/tmp/venv_err.log
-rc=$?
-if [ $rc -ne 0 ]; then
-    gum log --level debug "ensurepip falhou — copiando pip manualmente"
-    python3 -m venv .venv --without-pip 2>/dev/null
-    venv_rc=$?
-    if [ $venv_rc -ne 0 ]; then
-        gum log --level error "Falha ao criar ambiente virtual"
-        exit 1
-    fi
-    # Copia o modulo pip do sistema para o venv (sem download, sem OOM)
-    PY_VER=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
-    VENV_SITE=".venv/lib/python$PY_VER/site-packages"
-    mkdir -p "$VENV_SITE"
-    python3 << 'PYEOF'
-import sys, os, shutil, importlib.util
-venv_site = os.path.join(os.getcwd(), '.venv', 'lib', f'python{sys.version_info.major}.{sys.version_info.minor}', 'site-packages')
-os.makedirs(venv_site, exist_ok=True)
-# Copia modulos do sistema para o venv
-for name in ('pip', 'setuptools', 'pkg_resources', '_distutils_hack'):
-    spec = importlib.util.find_spec(name)
-    if spec and spec.origin:
-        src = os.path.dirname(spec.origin)
-        dst = os.path.join(venv_site, name)
-        if os.path.exists(dst): shutil.rmtree(dst)
-        shutil.copytree(src, dst)
-# Copia .dist-info
-sys_site = os.path.dirname(os.path.dirname(spec.origin)) if spec and spec.origin else ''
-if sys_site and os.path.isdir(sys_site):
-    for f in os.listdir(sys_site):
-        if any(f.startswith(p) for p in ('pip', 'setuptools', 'pkg_resources')) and f.endswith('.dist-info'):
-            src = os.path.join(sys_site, f)
-            dst = os.path.join(venv_site, f)
-            if os.path.exists(dst): shutil.rmtree(dst)
-            shutil.copytree(src, dst)
-# Entry point do pip
-pip_bin = os.path.join(os.getcwd(), '.venv', 'bin', 'pip')
-with open(pip_bin, 'w') as f:
-    f.write('#!/usr/bin/env python3\nimport sys\nfrom pip._internal.cli.main import main\nsys.exit(main())\n')
-os.chmod(pip_bin, 0o755)
-print('pip copiado com sucesso')
-PYEOF
-fi
-rm -f /tmp/venv_err.log
+python3 -m venv .venv 2>/dev/null || python3 -m venv .venv --without-pip --system-site-packages 2>/dev/null || {
+    gum log --level error "Falha ao criar ambiente virtual"
+    exit 1
+}
 gum log --level info "Ambiente virtual criado"
 
 # ── Alwaysdata detection ───────────────────────────────────────────────────
@@ -123,7 +83,7 @@ hostname -f 2>/dev/null | grep -qi 'alwaysdata' && _ALWAYSDATA=true
 uname -r 2>/dev/null | grep -qi 'alwaysdata' && _ALWAYSDATA=true
 
 # ── Requirements ─────────────────────────────────────────────────────────────
-gum spin --spinner dot --title "Atualizando pip..." -- .venv/bin/pip install --upgrade pip -q
+gum spin --spinner dot --title "Atualizando pip..." -- .venv/bin/python -m pip install --upgrade pip -q
 
 if $_ALWAYSDATA; then
     gum log --level info "Alwaysdata detectado — instalando em modo economia de RAM"
@@ -133,7 +93,7 @@ if $_ALWAYSDATA; then
         pkg=$(echo "$pkg" | sed 's/#.*//' | xargs)
         [ -z "$pkg" ] && continue
         gum log --level info "  $pkg"
-        .venv/bin/pip install --no-cache-dir --no-deps "$pkg" -q || exit 1
+        .venv/bin/python -m pip install --no-cache-dir --no-deps "$pkg" -q || exit 1
     done < <(grep -v '^[[:space:]]*#' requirements.txt)
 
     # 2. ffmpeg estatico se necessario
@@ -152,14 +112,14 @@ if $_ALWAYSDATA; then
     # 3. Resolve dependencias faltantes via pip check
     gum log --level info "Resolvendo dependencias..."
     while true; do
-        missing=$(.venv/bin/pip check 2>/dev/null | grep 'requires')
+        missing=$(.venv/bin/python -m pip check 2>/dev/null | grep 'requires')
         [ -z "$missing" ] && break
         echo "$missing" | while IFS= read -r line; do
             # Extrai cada dependencia (ex: "fastapi 0.136.3 requires starlette>=0.46.0" -> "starlette")
             for dep in $(echo "$line" | sed 's/.*requires //' | tr ',' '\n' | sed 's/\[.*\]//' | sed 's/[<>=!~].*//' | xargs); do
                 [ -z "$dep" ] && continue
                 gum spin --spinner dot --title "  $dep" -- \
-                    .venv/bin/pip install --no-cache-dir "$dep" -q || exit 1
+                    .venv/bin/python -m pip install --no-cache-dir "$dep" -q || exit 1
             done
         done
     done
@@ -168,7 +128,7 @@ if $_ALWAYSDATA; then
 else
     # Servidor normal: instala tudo de uma vez (rapido)
     gum spin --spinner dot --title "Instalando requirements..." -- \
-        .venv/bin/pip install -r requirements.txt --no-cache-dir -q
+        .venv/bin/python -m pip install -r requirements.txt --no-cache-dir -q
     if [ $? -eq 0 ]; then
         gum log --level info "Requirements instalados"
     else
