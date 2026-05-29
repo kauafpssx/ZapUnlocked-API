@@ -61,21 +61,19 @@ function Show-Tags {
     $py  = Get-PyVer
     $up  = Get-UpTime
 
-    $tags = @(
-        @{ text = "RAM ${ram}%";  color = "#8B3DFF" }
-        @{ text = "CPU ${cpu}%";  color = "#A855F7" }
-        @{ text = "PY ${py}";     color = "#C084FC" }
-        @{ text = "UP ${up}";     color = "#6B7280" }
-        @{ text = "${Icon} ${Label}"; color = "#8B3DFF" }
-    )
-    if ($OsLabel) {
-        $tags += @{ text = "$OsLabel"; color = "#8B3DFF" }
-    }
-
     $items = @()
-    foreach ($t in $tags) {
-        $item = & gum style --border rounded --padding "0 1" --foreground $t.color $t.text
-        $items += $item
+    $items += & gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "RAM ${ram}%"
+    $items += "  "
+    $items += & gum style --border rounded --padding "0 1" --foreground "#A855F7" "CPU ${cpu}%"
+    $items += "  "
+    $items += & gum style --border rounded --padding "0 1" --foreground "#C084FC" "PY ${py}"
+    $items += "  "
+    $items += & gum style --border rounded --padding "0 1" --foreground "#6B7280" "UP ${up}"
+    $items += "  "
+    $items += & gum style --border rounded --padding "0 1" --foreground "#8B3DFF" --bold "${Icon} ${Label}"
+    if ($OsLabel) {
+        $items += "  "
+        $items += & gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "$OsLabel"
     }
 
     & gum join --horizontal @items
@@ -99,24 +97,21 @@ function Refresh-Header {
     $py  = Get-PyVer
     $up  = Get-Elapsed
 
-    $tags = @(
-        @{ text = "RAM ${ram}%";  color = "#8B3DFF" }
-        @{ text = "CPU ${cpu}%";  color = "#A855F7" }
-        @{ text = "PY ${py}";     color = "#C084FC" }
-        @{ text = "UP ${up}";     color = "#6B7280" }
-        @{ text = "${script:HeaderIcon} ${script:HeaderLabel}"; color = "#8B3DFF" }
-    )
-    if ($script:HeaderOs) {
-        $tags += @{ text = "$($script:HeaderOs)"; color = "#8B3DFF" }
-    }
-
     $items = @()
-    foreach ($t in $tags) {
-        $item = & gum style --border rounded --padding "0 1" --foreground $t.color $t.text
-        $items += $item
+    $items += & gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "RAM ${ram}%"
+    $items += "  "
+    $items += & gum style --border rounded --padding "0 1" --foreground "#A855F7" "CPU ${cpu}%"
+    $items += "  "
+    $items += & gum style --border rounded --padding "0 1" --foreground "#C084FC" "PY ${py}"
+    $items += "  "
+    $items += & gum style --border rounded --padding "0 1" --foreground "#6B7280" "UP ${up}"
+    $items += "  "
+    $items += & gum style --border rounded --padding "0 1" --foreground "#8B3DFF" --bold "${script:HeaderIcon} ${script:HeaderLabel}"
+    if ($script:HeaderOs) {
+        $items += "  "
+        $items += & gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "$($script:HeaderOs)"
     }
 
-    # Move up 5 lines and redraw
     Write-Host -NoNewline "`e[5A`e[J"
     & gum join --horizontal @items
     Show-Sep

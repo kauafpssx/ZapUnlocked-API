@@ -69,11 +69,8 @@ elif [[ "$OS" != "macos" ]]; then
         _USE_INTERNAL=true
         echo -e "  \e[38;2;66;194;146m✓\e[0m Offline selecionado"
     else
-        echo -e "  \e[38;2;66;194;146m✓\e[0m pip selecionado
+        echo -e "  \e[38;2;66;194;146m✓\e[0m pip selecionado"
     fi
-fi
-else
-    ui_os_card "macOS"
 fi
 
 # ── Internal method (offline wheels) ─────────────────────────────────
@@ -83,8 +80,7 @@ if $_USE_INTERNAL; then
     rm -rf "$SITE_PKG" "$ROOT_DIR/wheels"
     mkdir -p "$SITE_PKG" "$ROOT_DIR/wheels"
 
-    gum spin --spinner dot --title "Installing ZapUnlocked API" --show-output -- \
-        python3 - "$SITE_PKG" "$ROOT_DIR/wheels" <<'PY'
+    python3 - "$SITE_PKG" "$ROOT_DIR/wheels" <<'PY'
 import json, os, subprocess, sys, urllib.request
 from pathlib import Path
 

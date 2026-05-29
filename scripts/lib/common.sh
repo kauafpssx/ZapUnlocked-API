@@ -97,19 +97,21 @@ ui_banner() {
 
 ui_tags() {
     local icon=$1 label=$2 os_label=$3
-    local os_tag=""
-    [ -n "$os_label" ] && os_tag="  $(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "$os_label")"
-    gum join --horizontal \
-        "$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "RAM $(__ram)%")" \
-        "  " \
-        "$(gum style --border rounded --padding "0 1" --foreground "#A855F7" "CPU $(__cpu)%")" \
-        "  " \
-        "$(gum style --border rounded --padding "0 1" --foreground "#C084FC" "PY $(__py)")" \
-        "  " \
-        "$(gum style --border rounded --padding "0 1" --foreground "#6B7280" "UP $(__up)")" \
-        "  " \
-        "$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" --bold "${icon} ${label}")" \
-        "$os_tag"
+    local args=()
+    args+=("$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "RAM $(__ram)%")")
+    args+=("  ")
+    args+=("$(gum style --border rounded --padding "0 1" --foreground "#A855F7" "CPU $(__cpu)%")")
+    args+=("  ")
+    args+=("$(gum style --border rounded --padding "0 1" --foreground "#C084FC" "PY $(__py)")")
+    args+=("  ")
+    args+=("$(gum style --border rounded --padding "0 1" --foreground "#6B7280" "UP $(__up)")")
+    args+=("  ")
+    args+=("$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" --bold "${icon} ${label}")")
+    if [ -n "$os_label" ]; then
+        args+=("  ")
+        args+=("$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "$os_label")")
+    fi
+    gum join --horizontal "${args[@]}"
 }
 
 ui_sep() {
@@ -136,21 +138,22 @@ ui_init_header() {
 }
 
 ui_refresh_header() {
-    # Move up 5 lines (tags(3) + sep(1) + blank gap(1)) and redraw
     echo -ne "\e[5A\e[J"
-    local os_tag=""
-    [ -n "$__header_os" ] && os_tag="  $(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "$__header_os")"
-    gum join --horizontal \
-        "$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "RAM $(__ram)%")" \
-        "  " \
-        "$(gum style --border rounded --padding "0 1" --foreground "#A855F7" "CPU $(__cpu)%")" \
-        "  " \
-        "$(gum style --border rounded --padding "0 1" --foreground "#C084FC" "PY $(__py)")" \
-        "  " \
-        "$(gum style --border rounded --padding "0 1" --foreground "#6B7280" "UP $(__elapsed)")" \
-        "  " \
-        "$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" --bold "${__header_icon} ${__header_label}")" \
-        "$os_tag"
+    local args=()
+    args+=("$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "RAM $(__ram)%")")
+    args+=("  ")
+    args+=("$(gum style --border rounded --padding "0 1" --foreground "#A855F7" "CPU $(__cpu)%")")
+    args+=("  ")
+    args+=("$(gum style --border rounded --padding "0 1" --foreground "#C084FC" "PY $(__py)")")
+    args+=("  ")
+    args+=("$(gum style --border rounded --padding "0 1" --foreground "#6B7280" "UP $(__elapsed)")")
+    args+=("  ")
+    args+=("$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" --bold "${__header_icon} ${__header_label}")")
+    if [ -n "$__header_os" ]; then
+        args+=("  ")
+        args+=("$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "$__header_os")")
+    fi
+    gum join --horizontal "${args[@]}"
     ui_sep
 }
 
