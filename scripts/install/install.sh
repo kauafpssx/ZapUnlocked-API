@@ -76,9 +76,7 @@ uname -r 2>/dev/null | grep -qi 'alwaysdata' && _ALWAYSDATA=true
 
 # ── Venv + Requirements ─────────────────────────────────────────────────────
 if $_ALWAYSDATA; then
-    # Alwaysdata: sem venv (causa OOM). Instala global com pip do sistema.
-    gum log --level info "Alwaysdata detectado — instalando pacotes globalmente"
-    _PIP="python3 -m pip"
+    gum log --level info "Alwaysdata detectado — instalando sem pip (install_wheel.py)"
 else
     # Servidor normal: venv com pip interno
     gum log --level info "Criando ambiente virtual..."
@@ -93,13 +91,20 @@ fi
 
 # ── Instala requirements ────────────────────────────────────────────────────
 if $_ALWAYSDATA; then
+    SITE_PKG=$(python3 -c "
+import site, sys
+try:
+    print(site.getsitepackages()[-1])
+except:
+    print([p for p in sys.path if 'site-packages' in p][0])
+")
     while IFS= read -r pkg || [ -n "$pkg" ]; do
         pkg=$(echo "$pkg" | sed 's/#.*//' | xargs)
         [ -z "$pkg" ] && continue
         gum log --level info "  $pkg"
-        python3 -m pip install --no-cache-dir --no-deps "$pkg" -q || exit 1
+        python3 "$ROOT/scripts/install/install_wheel.py" "$pkg" "$SITE_PKG" || exit 1
     done < <(grep -v '^[[:space:]]*#' requirements.txt)
-    gum log --level info "Requirements instalados (global)"
+    gum log --level info "Requirements instalados"
 
     # ffmpeg estatico
     if ! command -v ffmpeg &>/dev/null; then
