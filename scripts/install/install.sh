@@ -90,21 +90,126 @@ else
     $_PIP install --upgrade pip -q
 fi
 
+# ── Helpers ──────────────────────────────────────────────────────────────────
+# Resolve a melhor versao via Simple API HTML (curl+grep, sem Python carregar JSON grande)
+_resolve_ver() {
+    local pkg=$1 constraint=$2 min_ver name_pat
+    # Extrai a versao minima do constraint (ex: ">=0.115.0" → "0.115.0")
+    if echo "$constraint" | grep -q '>='; then
+        min_ver=$(echo "$constraint" | sed 's/.*>=//' | sed 's/[^0-9.]//g' | sed 's/\.$//')
+    else
+        min_ver="0.0.0"
+    fi
+    # Normaliza nome: wheel usa _ no lugar de -
+    name_pat=$(echo "$pkg" | sed 's/-/[-_]/g')
+    curl -sS "https://pypi.org/simple/$pkg/" 2>/dev/null | \
+        grep -oP "${name_pat}-\K\d[\d.]*[a-zA-Z0-9]*(?=-py|-cp|-none)" | \
+        sort -V | \
+        awk -v min="$min_ver" 'BEGIN{split(min,a,"."); m=a[1]*1000000+a[2]*1000+a[3]} {split($0,b,"."); v=b[1]*1000000+b[2]*1000+b[3]} v >= m' | \
+        tail -1
+}
+
+# Pega um campo do JSON de versao especifica (JSON pequeno, so 1 versao)
+_get_json_field() {
+    local pkg=$1 ver=$2 expr=$3
+    curl -sS "https://pypi.org/pypi/$pkg/$ver/json" 2>/dev/null | \
+        python3 -c "import sys,json; print($(echo "$expr" | sed "s/{ver}/'$ver'/"))"
+}
+
+# Pega URL da wheel (prioriza py3)
+_get_wheel_url() {
+    local pkg=$1 ver=$2
+    curl -sS "https://pypi.org/pypi/$pkg/$ver/json" 2>/dev/null | \
+        python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for f in d.get('urls') or []:
+    if f.get('packagetype')=='bdist_wheel' and f.get('python_version','') in ('py3','py2.py3','none',''):
+        print(f['url']); sys.exit(0)
+for f in d.get('urls') or []:
+    if f.get('packagetype')=='bdist_wheel':
+        print(f['url']); sys.exit(0)
+for f in d.get('releases',{}).get('$ver',[]):
+    if f.get('packagetype')=='bdist_wheel':
+        print(f['url']); sys.exit(0)
+"
+}
+
+# Pega deps (non-extra)
+_get_deps() {
+    local pkg=$1 ver=$2
+    curl -sS "https://pypi.org/pypi/$pkg/$ver/json" 2>/dev/null | \
+        python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r in d['info'].get('requires_dist') or []:
+    r=r.strip()
+    if 'extra ==' in r: continue
+    if ';' in r: r=r.split(';')[0].strip()
+    if r: print(r)
+"
+}
+
+_instalar_um() {
+    local pkg=$1 ver=$2 url
+    url=$(_get_wheel_url "$pkg" "$ver")
+    [ -z "$url" ] && { gum log --level warn "  Sem wheel para $pkg $ver"; return 1; }
+    python3 "$ROOT/scripts/install/install_wheel.py" "$url" "$SITE_PKG"
+}
+
 # ── Instala requirements ────────────────────────────────────────────────────
 if $_ALWAYSDATA; then
     SITE_PKG="$ROOT/.local_lib"
     mkdir -p "$SITE_PKG"
-    while IFS= read -r pkg || [ -n "$pkg" ]; do
-        pkg=$(echo "$pkg" | sed 's/#.*//' | xargs)
-        [ -z "$pkg" ] && continue
-        # imageio-ffmpeg eh opcional (embute ffmpeg) — pula no Alwaysdata
-        echo "$pkg" | grep -qi 'imageio-ffmpeg' && continue
-        gum log --level info "  $pkg"
-        for attempt in 1 2 3; do
-            MALLOC_ARENA_MAX=1 PYTHONMALLOC=malloc python3 "$ROOT/scripts/install/install_wheel.py" "$pkg" "$SITE_PKG" && break
-            gum log --level warn "  Tentativa $attempt/3 falhou, retentando..."
-        done || gum log --level warn "  Pulado apos 3 tentativas: $pkg"
+    _QUEUE=()
+    _SEEN=""
+
+    _enqueue() {
+        local spec=$1
+        echo "$_SEEN" | tr ' ' '\n' | grep -qxF "$spec" && return
+        _SEEN="$_SEEN $spec"
+        _QUEUE+=("$spec")
+    }
+
+    # Popula fila inicial com os requisitos de requirements.txt
+    while IFS= read -r line; do
+        line=$(echo "$line" | sed 's/#.*//' | xargs)
+        [ -z "$line" ] && continue
+        echo "$line" | grep -qi 'imageio-ffmpeg' && continue
+        _enqueue "$line"
     done < <(grep -v '^[[:space:]]*#' requirements.txt)
+
+    # Processa fila
+    i=0
+    while [ $i -lt ${#_QUEUE[@]} ]; do
+        spec="${_QUEUE[$i]}"
+        ((i++))
+        gum log --level info "  $spec"
+
+        # Extrai nome da spec
+        pkg=$(echo "$spec" | sed 's/\[.*\]//' | sed 's/[><=!~].*//' | xargs)
+
+        # Resolve versao (curl + grep — sem Python carregar JSON grande)
+        constraint=$(echo "$spec" | sed 's/^[a-zA-Z0-9._-]*//')
+        ver=$(_resolve_ver "$pkg" "$constraint")
+        [ -z "$ver" ] && { gum log --level warn "  Nao resolveu versao para $spec"; continue; }
+
+        # Verifica se ja instalado
+        [ -d "$SITE_PKG/${pkg}-${ver}.dist-info" ] && { gum log --level info "  $pkg==$ver  ja instalado"; continue; }
+
+        # Instala
+        for attempt in 1 2 3; do
+            if _instalar_um "$pkg" "$ver"; then
+                # Depois de instalar, coleta deps e enfileira
+                while IFS= read -r dep; do
+                    [ -n "$dep" ] && _enqueue "$dep"
+                done < <(_get_deps "$pkg" "$ver")
+                break
+            fi
+            gum log --level warn "  Tentativa $attempt/3 falhou, retentando..."
+        done || gum log --level warn "  Pulado apos 3 tentativas: $spec"
+    done
+
     gum log --level info "Requirements instalados"
 
     # ffmpeg estatico
