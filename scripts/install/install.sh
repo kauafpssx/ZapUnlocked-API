@@ -69,28 +69,50 @@ fi
 
 # ── Venv ─────────────────────────────────────────────────────────────────────
 gum log --level info "Criando ambiente virtual..."
-python3 -m venv .venv 2>/tmp/venv_debug.log
+python3 -m venv .venv 2>/tmp/venv_err.log
 rc=$?
 if [ $rc -ne 0 ]; then
-    gum log --level debug "venv falhou — debug: $(cat /tmp/venv_debug.log | tr '\n' ';')"
-    gum log --level info "Tentando --without-pip..."
-    python3 -m venv .venv --without-pip 2>/tmp/venv_debug2.log
+    gum log --level debug "ensurepip falhou — copiando pip manualmente"
+    python3 -m venv .venv --without-pip 2>/dev/null
     venv_rc=$?
-    pip_ok=false
-    if [ $venv_rc -eq 0 ] && command -v curl &>/dev/null; then
-        curl -fsSL -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py
-        if [ $? -eq 0 ]; then
-            .venv/bin/python /tmp/get-pip.py -q && pip_ok=true
-            rm -f /tmp/get-pip.py
-        fi
-    fi
-    if ! $pip_ok; then
+    if [ $venv_rc -ne 0 ]; then
         gum log --level error "Falha ao criar ambiente virtual"
-        [ -f /tmp/venv_debug2.log ] && gum log --level debug "--without-pip: $(cat /tmp/venv_debug2.log | tr '\n' ';')"
         exit 1
     fi
+    # Copia o modulo pip do sistema para o venv (sem download, sem OOM)
+    PY_VER=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+    VENV_SITE=".venv/lib/python$PY_VER/site-packages"
+    mkdir -p "$VENV_SITE"
+    python3 << 'PYEOF'
+import sys, os, shutil, importlib.util
+venv_site = os.path.join(os.getcwd(), '.venv', 'lib', f'python{sys.version_info.major}.{sys.version_info.minor}', 'site-packages')
+os.makedirs(venv_site, exist_ok=True)
+# Copia modulos do sistema para o venv
+for name in ('pip', 'setuptools', 'pkg_resources', '_distutils_hack'):
+    spec = importlib.util.find_spec(name)
+    if spec and spec.origin:
+        src = os.path.dirname(spec.origin)
+        dst = os.path.join(venv_site, name)
+        if os.path.exists(dst): shutil.rmtree(dst)
+        shutil.copytree(src, dst)
+# Copia .dist-info
+sys_site = os.path.dirname(os.path.dirname(spec.origin)) if spec and spec.origin else ''
+if sys_site and os.path.isdir(sys_site):
+    for f in os.listdir(sys_site):
+        if any(f.startswith(p) for p in ('pip', 'setuptools', 'pkg_resources')) and f.endswith('.dist-info'):
+            src = os.path.join(sys_site, f)
+            dst = os.path.join(venv_site, f)
+            if os.path.exists(dst): shutil.rmtree(dst)
+            shutil.copytree(src, dst)
+# Entry point do pip
+pip_bin = os.path.join(os.getcwd(), '.venv', 'bin', 'pip')
+with open(pip_bin, 'w') as f:
+    f.write('#!/usr/bin/env python3\nimport sys\nfrom pip._internal.cli.main import main\nsys.exit(main())\n')
+os.chmod(pip_bin, 0o755)
+print('pip copiado com sucesso')
+PYEOF
 fi
-rm -f /tmp/venv_debug.log /tmp/venv_debug2.log
+rm -f /tmp/venv_err.log
 gum log --level info "Ambiente virtual criado"
 
 # ── Alwaysdata detection ───────────────────────────────────────────────────
