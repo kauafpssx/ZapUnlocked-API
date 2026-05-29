@@ -87,10 +87,13 @@ gum spin --spinner dot --title "Atualizando pip..." -- .venv/bin/pip install --u
 if $_ALWAYSDATA; then
     gum log --level info "Alwaysdata detectado — instalando em modo economia de RAM"
 
-    # 1. Instala todos os pacotes principais sem dependencias (leve)
-    gum spin --spinner dot --title "Instalando pacotes (sem dependencias)..." -- \
-        .venv/bin/pip install --no-cache-dir --no-deps -r requirements.txt -q
-    [ $? -ne 0 ] && gum log --level error "Falha na instalacao inicial" && exit 1
+    # 1. Instala cada pacote sem dependencias (um por vez, evita OOM)
+    while IFS= read -r pkg || [ -n "$pkg" ]; do
+        pkg=$(echo "$pkg" | sed 's/#.*//' | xargs)
+        [ -z "$pkg" ] && continue
+        gum spin --spinner dot --title "$pkg" -- \
+            .venv/bin/pip install --no-cache-dir --no-deps "$pkg" -q || exit 1
+    done < <(grep -v '^\s*#' requirements.txt)
 
     # 2. ffmpeg estatico se necessario
     if ! command -v ffmpeg &>/dev/null; then
