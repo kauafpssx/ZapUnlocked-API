@@ -17,32 +17,41 @@ def _vt(ver: str):
 def _parse_spec(spec: str):
     spec = spec.strip()
     spec = re.sub(r'\[.*?\]', '', spec)
-    for op in ('>=', '<=', '!=', '~=', '==', '>', '<'):
-        if op in spec:
-            pkg, ver = spec.split(op, 1)
-            return pkg.strip(), f'{op}{ver.strip()}'
-    return spec, ''
+    m = re.match(r'([a-zA-Z0-9][a-zA-Z0-9._-]*)(.*)', spec)
+    if not m:
+        return spec, ''
+    return m.group(1), m.group(2).strip()
+
+
+def _matches(v: str, constraint: str) -> bool:
+    """Check if version v matches a PEP 440 constraint like '>=1.0,<2.0'."""
+    vt = _vt(v)
+    for clause in constraint.split(','):
+        clause = clause.strip()
+        if not clause:
+            continue
+        op = re.match(r'[<>=!~]+', clause)
+        if not op:
+            continue
+        op = op.group()
+        tv = _vt(clause[len(op):])
+        try:
+            if op == '>=' and not (vt >= tv): return False
+            if op == '>' and not (vt > tv): return False
+            if op == '<=' and not (vt <= tv): return False
+            if op == '<' and not (vt < tv): return False
+            if op == '==' and not (vt == tv): return False
+            if op == '!=' and not (vt != tv): return False
+        except Exception:
+            return False
+    return True
 
 
 def _best_version(data, ver_spec: str) -> str:
     releases = list(data['releases'].keys())
     if not ver_spec:
         return data['info']['version']
-    op = re.match(r'[<>=!~]+', ver_spec).group()
-    tv = _vt(ver_spec[len(op):])
-    matches = []
-    for v in releases:
-        try:
-            vt = _vt(v)
-            if (op == '>=' and vt >= tv) or \
-               (op == '>' and vt > tv) or \
-               (op == '<=' and vt <= tv) or \
-               (op == '<' and vt < tv) or \
-               (op == '==' and vt == tv) or \
-               (op == '!=' and vt != tv):
-                matches.append(v)
-        except Exception:
-            pass
+    matches = [v for v in releases if _matches(v, ver_spec)]
     if not matches:
         return data['info']['version']
     matches.sort(key=_vt)
