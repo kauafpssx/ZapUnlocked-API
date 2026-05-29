@@ -15,11 +15,11 @@ class ContactRequest(BaseModel):
 async def get_contact_info(data: ContactRequest):
     sock = get_sock()
     if not sock:
-        raise HTTPException(status_code=503, detail="WhatsApp não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     phone = data.phone
     if not phone:
-        raise HTTPException(status_code=400, detail="Número de telefone (phone) é obrigatório")
+        raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'phone' is required."})
 
     jid_str = f"{phone}@s.whatsapp.net"
     jid = build_jid(jid_str)
@@ -38,26 +38,26 @@ async def get_contact_info(data: ContactRequest):
         "businessProfile": None
     }
     
-    logger.info(f"🔍 Buscando informações detalhadas para {jid_str}")
+    logger.info(f"🔍 Fetching detailed info for {jid_str}")
 
-    # 1. Verificação se existe no WhatsApp
+    # 1. Check if number exists on WhatsApp
     try:
-        logger.debug(f"👀 Verificando existência de {phone}...")
+        logger.debug(f"👀 Checking existence of {phone}...")
         # Corrigido: a resposta do is_on_whatsapp usa o campo 'IsIn'
         results = await asyncio.wait_for(asyncio.to_thread(sock.is_on_whatsapp, phone), timeout=4.0)
         if results and len(results) > 0:
             info["exists"] = results[0].IsIn
-            logger.debug(f"✅ Existência: {info['exists']}")
+            logger.debug(f"✅ Existence: {info['exists']}")
         else:
             info["exists"] = False
     except Exception as e:
-        logger.debug(f"⚠️ Erro ao verificar existência: {e}")
+        logger.debug(f"⚠️ Existence check failed: {e}")
         info["exists"] = "unknown"
 
-    # 2. Informações de Contato (Nomes) via ContactStore
+    # 2. Contact info (names) via ContactStore
     try:
         if hasattr(sock, "contact"):
-            logger.debug(f"👤 Obtendo dados de contato via ContactStore...")
+            logger.debug("👤 Fetching contact data via ContactStore...")
             contact = await asyncio.wait_for(asyncio.to_thread(sock.contact.get_contact, jid), timeout=3.0)
             if contact:
                 info["fullName"] = contact.FullName or None
@@ -68,24 +68,24 @@ async def get_contact_info(data: ContactRequest):
                 info["name"] = info["fullName"] or info["pushName"] or info["firstName"] or info["businessName"]
                 logger.debug(f"✅ Dados da Store obtidos. Nome: {info['name']}")
     except Exception as e:
-        logger.debug(f"⚠️ Erro ao obter dados via ContactStore: {e}")
+        logger.debug(f"⚠️ ContactStore fetch failed: {e}")
 
-    # 3. Informações de Usuário (Status e Names fallback)
+    # 3. User info (status and name fallback)
     try:
-        logger.debug(f"👤 Obtendo dados via get_user_info...")
+        logger.debug("👤 Fetching data via get_user_info...")
         user_infos = await asyncio.wait_for(asyncio.to_thread(sock.get_user_info, jid), timeout=4.0)
         if user_infos and len(user_infos) > 0:
             u_info = user_infos[0].UserInfo
             if u_info.Status:
                 info["status"] = u_info.Status
-            
+
             # Fallback para nome se estiver vazio
             if not info["name"] and u_info.VerifiedName:
                 info["name"] = u_info.VerifiedName.Details.VerifiedName or u_info.VerifiedName.Details.PublicName
-            
-            logger.debug(f"✅ Dados de usuário obtidos. Status: {info['status']}")
+
+            logger.debug(f"✅ User data fetched. Status: {info['status']}")
     except Exception as e:
-        logger.debug(f"⚠️ Erro ao obter dados via get_user_info: {e}")
+        logger.debug(f"⚠️ get_user_info fetch failed: {e}")
 
     # 4. Foto de Perfil
     try:
@@ -122,5 +122,5 @@ async def get_contact_info(data: ContactRequest):
     except Exception:
         pass
 
-    logger.info(f"✅ Processamento de {jid_str} concluído.")
+    logger.info(f"✅ Processing of {jid_str} complete.")
     return {"success": True, "data": info}

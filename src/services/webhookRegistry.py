@@ -52,7 +52,7 @@ def _read_file(path: Path) -> dict | None:
         content = path.read_text(encoding="utf-8").strip()
         return json.loads(content) if content else None
     except Exception as e:
-        logger.error(f"Erro ao ler webhook {path}: {e}")
+        logger.error(f"Failed to read webhook {path}: {e}")
         return None
 
 
@@ -78,11 +78,11 @@ def create_webhook(data: dict) -> dict:
     _ensure_dir()
     name = _slugify(data.get("name", ""))
     if not name:
-        raise ValueError("name é obrigatório")
+        raise ValueError("'name' is required.")
 
     path = _webhook_path(name)
     if path.exists():
-        raise ValueError(f"Webhook '{name}' já existe. Use PUT para editar.")
+        raise ValueError(f"Webhook '{name}' already exists. Use PUT to update.")
 
     wh = {
         "name": name,
@@ -103,7 +103,7 @@ def update_webhook(name: str, data: dict) -> dict:
     path = _webhook_path(name)
     wh = _read_file(path)
     if not wh:
-        raise ValueError(f"Webhook '{name}' não encontrado")
+        raise ValueError(f"Webhook '{name}' not found.")
 
     if "url" in data:
         wh["url"] = data["url"]
@@ -126,7 +126,7 @@ def update_webhook(name: str, data: dict) -> dict:
 def delete_webhook(name: str):
     path = _webhook_path(name)
     if not path.exists():
-        raise ValueError(f"Webhook '{name}' não encontrado")
+        raise ValueError(f"Webhook '{name}' not found.")
     path.unlink()
     logger.info(f"🗑️ Webhook removido: {name}")
 
@@ -135,10 +135,10 @@ def toggle_webhook(name: str, active: bool) -> dict:
     path = _webhook_path(name)
     wh = _read_file(path)
     if not wh:
-        raise ValueError(f"Webhook '{name}' não encontrado")
+        raise ValueError(f"Webhook '{name}' not found.")
     wh["active"] = active
     _write_file(path, wh)
-    status = "ativado" if active else "desativado"
+    status = "enabled" if active else "disabled"
     logger.info(f"🔗 Webhook {status}: {name}")
     return wh
 

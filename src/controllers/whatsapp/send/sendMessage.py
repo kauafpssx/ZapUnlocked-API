@@ -9,10 +9,10 @@ from ..schemas import SendMessageRequest
 
 async def send_message(data: SendMessageRequest):
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     if not data.phone or not data.message:
-        raise HTTPException(status_code=400, detail="phone e message obrigatórios")
+        raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'phone' and 'message' are required."})
 
     logger.info(f"📥 Recebido em POST /send: texto={data.message!r}")
 
@@ -29,7 +29,7 @@ async def send_message(data: SendMessageRequest):
 
         await whatsapp_send_message(jid, formatted_message, options)
 
-        return {"success": True, "message": "Mensagem enviada ✅"}
+        return {"success": True, "message": "Message sent."}
     except Exception as e:
         logger.error(f"❌ Erro ao enviar: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})

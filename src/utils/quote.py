@@ -1,8 +1,8 @@
 """
-Utility compartilhada para resolução de reply/quote em mensagens.
+Shared utility for resolving reply/quote references in outgoing messages.
 
-Elimina a duplicação do bloco de quote que existia em 8 controllers de send.
-Uso único: controllers de envio chamam esta função em vez de reimplementar a lógica.
+Eliminates the duplicated quote block that existed across 8 send controllers.
+Usage: send controllers call this function instead of reimplementing the logic.
 """
 
 from src.services.whatsapp.sender import find_message
@@ -14,18 +14,18 @@ async def resolve_quote(
     reply_type: str | None = "id",
 ) -> dict:
     """
-    Resolve uma mensagem citada (reply/quote) no histórico local.
+    Resolve a quoted message (reply/quote) from local history.
 
     Args:
-        jid: JID completo do destinatário (ex: "5511999999999@s.whatsapp.net")
-        reply_identifier: ID da mensagem ou texto para busca
-        reply_type: "id" (padrão) para buscar por ID, "text" para buscar por texto
+        jid: Full recipient JID (e.g. "5511999999999@s.whatsapp.net")
+        reply_identifier: Message ID or search text
+        reply_type: "id" (default) to look up by ID, "text" to search by content
 
     Returns:
-        Dict com chave "quoted" se encontrado, dict vazio caso contrário.
+        Dict with "quoted" key if found, empty dict otherwise.
 
     Raises:
-        Exception: Se reply_type=="text" e mensagem não for encontrada.
+        Exception: If reply_type=="text" and the message is not found.
     """
     if not reply_identifier:
         return {}
@@ -35,7 +35,7 @@ async def resolve_quote(
         return {"quoted": quoted_msg}
 
     if reply_type == "id":
-        # Stub para que o WA ainda renderize o quote mesmo sem a msg no histórico local
+        # Stub so WhatsApp still renders the quote even if the message is not in local history
         return {
             "quoted": {
                 "key": {
@@ -48,6 +48,5 @@ async def resolve_quote(
         }
 
     raise Exception(
-        f"Não foi possível encontrar a mensagem para responder com o texto: "
-        f"'{reply_identifier}'"
+        f"Could not find the message to quote with text: '{reply_identifier}'"
     )

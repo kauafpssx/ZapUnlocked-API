@@ -7,9 +7,9 @@ async def logout(request: Request):
         keep_data = request.query_params.get("keepData") == "true"
         await client_logout(keep_data)
 
-        message = "Desconectado com sucesso (Dados preservados). A página será recarregada." if keep_data else "Desconectado com sucesso (Dados apagados). A página será recarregada."
+        message = "Disconnected successfully (data preserved)." if keep_data else "Disconnected successfully (data cleared)."
 
         return {"success": True, "message": message}
     except Exception as e:
-        logger.error(f"Erro no logout: {str(e)}")
-        raise HTTPException(status_code=500, detail={"success": False, "error": "Erro ao realizar logout"})
+        logger.error(f"Logout failed: {str(e)}")
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": "Failed to disconnect."})

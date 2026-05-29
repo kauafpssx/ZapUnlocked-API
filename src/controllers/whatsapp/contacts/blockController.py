@@ -9,13 +9,13 @@ from src.controllers.whatsapp.schemas import BlockRequest
 async def block_user(data: BlockRequest):
     sock = get_sock()
     if not sock:
-        raise HTTPException(status_code=503, detail="WhatsApp não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     if not data.phone:
-        raise HTTPException(status_code=400, detail="Número de telefone (phone) é obrigatório")
+        raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'phone' is required."})
 
     if data.action not in ("block", "unblock"):
-        raise HTTPException(status_code=400, detail="Ação (action) deve ser 'block' ou 'unblock'")
+        raise HTTPException(status_code=400, detail={"error": "INVALID_FIELD", "message": "'action' must be 'block' or 'unblock'."})
 
     jid = build_jid(data.phone)
     action = BlocklistAction.BLOCK if data.action == "block" else BlocklistAction.UNBLOCK
@@ -26,7 +26,7 @@ async def block_user(data: BlockRequest):
             "success": True,
             "phone": data.phone,
             "action": data.action,
-            "message": f"Usuário {data.phone} {'bloqueado' if data.action == 'block' else 'desbloqueado'} com sucesso.",
+            "message": f"User {data.phone} {'blocked' if data.action == 'block' else 'unblocked'} successfully.",
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})

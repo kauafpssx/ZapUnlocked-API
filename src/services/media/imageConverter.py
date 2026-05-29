@@ -9,11 +9,11 @@ async def convert_to_webp(input_path: str, options: dict = None) -> str:
         options = {}
 
     path = Path(input_path)
-    # Garante que o output seja diferente do input (evita erro in-place do FFmpeg)
+    # Ensure output differs from input (avoids FFmpeg in-place error)
     output_path = path.parent / f"{path.stem}_conv.webp"
 
-    # Log de versão v2.6 (Subprocess Threading)
-    logger.info(f"🖼️ Iniciando figurinha v2.6: {path.name}")
+    # v2.6 (Subprocess Threading)
+    logger.info(f"🖼️ Starting sticker conversion v2.6: {path.name}")
 
     rmode = str(options.get("resizeMode", "pad") or "pad")
     pcolor = str(options.get("padColor", "black") or "black")
@@ -45,24 +45,23 @@ async def convert_to_webp(input_path: str, options: dict = None) -> str:
         str(output_path)
     ]
     
-    # Filtrar qualquer item vazio no comando por segurança
+    # Filter empty items from command for safety
     cmd = [c for c in cmd if c]
     
     logger.debug(f"⚙️ Comando v2.6: {'|'.join(cmd)}")
 
     try:
-        # Usar asyncio.to_thread para rodar o processo síncrono sem travar o loop
-        # e sem depender do loop policy do Windows para subprocessos
+        # Run synchronous subprocess without blocking the event loop (Windows-safe)
         result = await asyncio.to_thread(run_ffmpeg_sync, cmd)
 
         if result.returncode != 0:
             err_msg = result.stderr.decode(errors='replace').strip()
-            logger.error(f"❌ Erro FFmpeg ({result.returncode}): {err_msg}")
+            logger.error(f"❌ FFmpeg error ({result.returncode}): {err_msg}")
             raise Exception(f"FFmpeg error: {err_msg}")
 
-        logger.info("✅ Figurinha convertida!")
+        logger.info("✅ Sticker converted!")
         return str(output_path)
     except Exception as e:
-        logger.error(f"❌ Erro na conversão: {str(e)}")
+        logger.error(f"❌ Sticker conversion failed: {str(e)}")
         logger.error(traceback.format_exc())
         raise e

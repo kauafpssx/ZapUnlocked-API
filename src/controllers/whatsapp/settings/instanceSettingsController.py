@@ -1,4 +1,4 @@
-"""Controller para configurações da instância (renomear, etc)."""
+"""Controller for instance settings (rename, etc)."""
 
 import asyncio
 import json
@@ -10,12 +10,12 @@ from src.utils.logger import logger
 
 
 async def update_instance_name(data: UpdateInstanceNameRequest):
-    """Renomeia a instância no arquivo db_config.json + WhatsApp pushname."""
+    """Rename the instance in db_config.json and update WhatsApp pushname."""
     try:
         # ── Atualiza pushname no WhatsApp ────────────────────
         sock = get_sock()
         if not sock:
-            raise HTTPException(status_code=503, detail="WhatsApp não conectado")
+            raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
         await asyncio.to_thread(sock.set_profile_name, data.name)
 
         # ── Persiste nome localmente ─────────────────────────
@@ -28,14 +28,14 @@ async def update_instance_name(data: UpdateInstanceNameRequest):
         with open(db_config_file, "w") as f:
             json.dump(current, f)
 
-        logger.info(f"📛 Instância renomeada para: {data.name}")
+        logger.info(f"📛 Instance renamed to: {data.name}")
         return {
-            "status": "success",
-            "message": f"Instância renomeada para: {data.name}",
+            "success": True,
+            "message": f"Instance renamed to: {data.name}",
         }
     except HTTPException:
         raise
     except Exception as e:
         raise HTTPException(
-            status_code=500, detail=f"Erro ao renomear instância: {str(e)}"
+            status_code=500, detail={"error": "INTERNAL_ERROR", "message": f"Failed to rename instance: {str(e)}"}
         )

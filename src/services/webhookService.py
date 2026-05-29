@@ -32,7 +32,7 @@ async def trigger_webhook(config: dict, context: dict, default_payload: dict | N
 
     final_headers = replace_placeholders(headers)
 
-    # Se body customizado vazio/ausente, envia default_payload (envelope estruturado)
+    # If custom body is empty/absent, send the structured default_payload envelope
     if not body and default_payload is not None:
         final_body = default_payload
     else:
@@ -50,10 +50,10 @@ async def trigger_webhook(config: dict, context: dict, default_payload: dict | N
             )
             response = await client.send(request)
             response.raise_for_status()
-            logger.info(f"✅ Webhook enviado com sucesso para {url}")
+            logger.info(f"✅ Webhook delivered to {url}")
 
     except httpx.HTTPStatusError as e:
-        logger.error(f"❌ Erro ao disparar webhook para {url}: {e}")
-        logger.error(f"Status: {e.response.status_code} - Data: {e.response.text}")
+        logger.error(f"❌ Webhook delivery failed for {url}: {e}")
+        logger.error(f"Status: {e.response.status_code} - Body: {e.response.text}")
     except Exception as e:
-        logger.error(f"❌ Erro ao disparar webhook para {url}: {str(e)}")
+        logger.error(f"❌ Webhook delivery failed for {url}: {str(e)}")

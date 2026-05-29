@@ -12,7 +12,7 @@ INDEX_FILE = CHATS_DIR / "index.json"
 # Ensure directories exist
 CHATS_DIR.mkdir(parents=True, exist_ok=True)
 
-# Limite de mensagens armazenadas por chat (em disco) - Reduzido para economizar RAM
+# Max messages stored per chat on disk — kept low to conserve RAM
 HISTORY_LIMIT = 20
 
 async def save_chat_index(chat_info: dict):
@@ -43,7 +43,7 @@ async def save_chat_index(chat_info: dict):
                 json.dump(index, f, indent=2)
 
     except Exception as err:
-        logger.error(f"❌ Erro ao salvar índice de chats: {str(err)}")
+        logger.error(f"❌ Failed to save chat index: {str(err)}")
 
 def get_recent_chats_from_index() -> list:
     try:
@@ -59,14 +59,14 @@ def get_recent_chats_from_index() -> list:
         chats = list(index.values())
         return sorted(chats, key=lambda x: x.get("lastMessageTimestamp", 0) or 0, reverse=True)
     except Exception as err:
-        logger.error(f"❌ Erro ao ler índice de chats: {str(err)}")
+        logger.error(f"❌ Failed to read chat index: {str(err)}")
         return []
 
 async def add_message_to_history(phone: str, message: dict):
     if not phone:
         return
 
-    # Higienização de segurança: remover caracteres de navegação de diretório
+    # Security sanitization: strip directory traversal characters
     safe_phone = re.sub(r'[^a-zA-Z0-9_\-\.]', '', phone)
     
     file_name = f"{safe_phone}.json.gz"
@@ -94,7 +94,7 @@ async def add_message_to_history(phone: str, message: dict):
             json.dump(history, f)
 
     except Exception as err:
-        logger.error(f"❌ Erro ao salvar histórico para {phone}: {str(err)}")
+        logger.error(f"❌ Failed to save history for {phone}: {str(err)}")
 
 async def bulk_add_messages(messages: list):
     if not messages:
@@ -144,7 +144,7 @@ async def bulk_add_messages(messages: list):
                     json.dump(history, f)
 
         except Exception as err:
-            logger.error(f"❌ Erro no Bulk Write para {phone}: {str(err)}")
+            logger.error(f"❌ Bulk write failed for {phone}: {str(err)}")
 
 async def get_history(phone: str) -> list:
     if not phone:
@@ -164,7 +164,7 @@ async def get_history(phone: str) -> list:
                 return json.loads(content)
         return []
     except Exception as err:
-        logger.error(f"❌ Erro ao ler histórico de {phone}: {str(err)}")
+        logger.error(f"❌ Failed to read history for {phone}: {str(err)}")
         return []
 
 def resolve_phone_from_jid(jid: str) -> str:
@@ -180,7 +180,7 @@ async def clear_all_data():
             for file in CHATS_DIR.iterdir():
                 if file.is_file():
                     file.unlink()
-            logger.info("🧹 Todos os dados de histórico de chats foram apagados com sucesso.")
+            logger.info("🧹 All chat history data cleared successfully.")
     except Exception as err:
         logger.error(f"❌ Erro ao limpar dados de chats: {str(err)}")
 
@@ -214,4 +214,4 @@ async def update_message_reaction(phone: str, target_id: str, reaction: str):
                 json.dump(history, f)
 
     except Exception as err:
-        logger.error(f"❌ Erro ao atualizar reação em {phone}: {str(err)}")
+        logger.error(f"❌ Failed to update reaction for {phone}: {str(err)}")

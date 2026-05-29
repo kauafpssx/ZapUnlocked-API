@@ -7,7 +7,7 @@ from ..schemas import SendPollRequest, SendPollVoteRequest
 
 async def send_poll(data: SendPollRequest):
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     try:
         jid = f"{data.phone}@s.whatsapp.net"
@@ -17,9 +17,9 @@ async def send_poll(data: SendPollRequest):
             reply_identifier=data.reply or data.quoted_id,
             reply_type=data.type or "id",
         )
-        
+
         if not data.options or len(data.options) < 2:
-            raise HTTPException(status_code=400, detail="Uma enquete deve ter pelo menos 2 opções.")
+            raise HTTPException(status_code=400, detail={"error": "INVALID_FIELD", "message": "A poll must have at least 2 options."})
             
         await send_poll_message(
             jid, 
@@ -28,22 +28,22 @@ async def send_poll(data: SendPollRequest):
             selectable_count=data.selectableCount or 1,
             message_options=options_dict
         )
-        return {"success": True, "message": "Enquete enviada ✅"}
+        return {"success": True, "message": "Poll sent."}
     except Exception as e:
         logger.error(f"❌ Erro ao enviar enquete: {str(e)}")
         if isinstance(e, HTTPException):
             raise e
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 async def send_poll_vote(data: SendPollVoteRequest):
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     try:
         jid = f"{data.phone}@s.whatsapp.net"
-        
+
         if not data.options:
-            raise HTTPException(status_code=400, detail="Pelo menos uma opção deve ser selecionada para o voto.")
+            raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "At least one option must be selected to vote."})
         
         poll_id = data.pollId
         poll_name = data.pollName or "Poll"
@@ -58,11 +58,11 @@ async def send_poll_vote(data: SendPollVoteRequest):
             logger.debug(f"🗳️ Buscando enquete por texto: '{search_query}'")
 
             if not search_query:
-                raise HTTPException(status_code=400, detail="pollId ou pollName é obrigatório pesquisar por texto.")
+                raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'pollId' or 'pollName' is required to search by text."})
 
             found_msg = await find_message(jid, search_query, target_type)
             if not found_msg:
-                raise HTTPException(status_code=404, detail=f"Enquete não encontrada via texto: {search_query}")
+                raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": f"Poll not found by text: {search_query}"})
 
             poll_id = found_msg["key"]["id"]
             from_me = found_msg["key"].get("fromMe", False)
@@ -81,9 +81,9 @@ async def send_poll_vote(data: SendPollVoteRequest):
             from_me=from_me,
             timestamp=timestamp
         )
-        return {"success": True, "message": "Voto de enquete enviado ✅"}
+        return {"success": True, "message": "Poll vote sent."}
     except Exception as e:
         logger.error(f"❌ Erro ao enviar voto na enquete: {str(e)}")
         if isinstance(e, HTTPException):
             raise e
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})

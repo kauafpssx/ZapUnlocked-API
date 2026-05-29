@@ -21,7 +21,7 @@ def get_ffmpeg_path() -> str:
     if _ffmpeg_path is not None:
         return _ffmpeg_path
 
-    # 1. imageio-ffmpeg: binário embutido, funciona sem instalação
+    # 1. imageio-ffmpeg: bundled binary, works without system install
     try:
         import imageio_ffmpeg
         _ffmpeg_path = imageio_ffmpeg.get_ffmpeg_exe()
@@ -36,7 +36,7 @@ def get_ffmpeg_path() -> str:
         _ffmpeg_path = found
         return _ffmpeg_path
 
-    # 3. $HOME/.local/bin (instalação automática do install.sh)
+    # 3. $HOME/.local/bin (auto-installed by install.sh)
     home_local = Path.home() / ".local" / "bin" / "ffmpeg"
     if home_local.exists():
         _ffmpeg_path = str(home_local)
@@ -51,8 +51,8 @@ def get_ffmpeg_path() -> str:
             return _ffmpeg_path
 
     raise FileNotFoundError(
-        "ffmpeg não encontrado. Execute: pip install imageio-ffmpeg "
-        "ou instale o ffmpeg manualmente: https://ffmpeg.org/download.html"
+        "ffmpeg not found. Run: pip install imageio-ffmpeg "
+        "or install ffmpeg manually: https://ffmpeg.org/download.html"
     )
 
 
@@ -61,7 +61,7 @@ def get_ffprobe_path() -> str:
     if _ffprobe_path is not None:
         return _ffprobe_path
 
-    # Tenta o mesmo diretório do ffmpeg (binários normalmente ficam juntos)
+    # Try the same directory as ffmpeg (binaries are usually co-located)
     try:
         ffmpeg = get_ffmpeg_path()
         candidate = Path(ffmpeg).parent / ("ffprobe.exe" if sys.platform == "win32" else "ffprobe")
@@ -84,28 +84,25 @@ def get_ffprobe_path() -> str:
             return _ffprobe_path
 
     raise FileNotFoundError(
-        "ffprobe não encontrado. Execute: pip install imageio-ffmpeg "
-        "ou instale o ffmpeg manualmente: https://ffmpeg.org/download.html"
+        "ffprobe not found. Run: pip install imageio-ffmpeg "
+        "or install ffmpeg manually: https://ffmpeg.org/download.html"
     )
 
 
 def warm_up_ffmpeg() -> None:
-    """Resolve e cacheia o path do ffmpeg no startup. Deve ser chamado uma vez."""
+    """Resolve and cache the ffmpeg path at startup. Should be called once."""
     try:
         path = get_ffmpeg_path()
-        logger.info(f"🎬 ffmpeg pronto: {path}")
+        logger.info(f"🎬 ffmpeg ready: {path}")
     except FileNotFoundError as e:
         hint = ""
         if is_alwaysdata():
-            hint = " Rode: bash scripts/install/install.sh (baixa ffmpeg estatico em ~/.local/bin)"
+            hint = " Run: bash scripts/install/install.sh (downloads static ffmpeg to ~/.local/bin)"
         logger.warning(f"⚠️ {e}{hint}")
 
 
 def run_ffmpeg_sync(cmd):
-    """
-    Executa o FFmpeg de forma síncrona para ser usado com asyncio.to_thread.
-    Substitui automaticamente 'ffmpeg' pelo caminho resolvido.
-    """
+    """Run FFmpeg synchronously for use with asyncio.to_thread. Auto-resolves 'ffmpeg' to the cached path."""
     if cmd and cmd[0] == "ffmpeg":
         cmd = [get_ffmpeg_path()] + cmd[1:]
     return subprocess.run(
@@ -122,9 +119,9 @@ def cleanup(file_path: str):
         if path.exists() and path.is_file():
             try:
                 path.unlink()
-                logger.info(f"🗑️ Arquivo temporário removido: {path.name}")
+                logger.info(f"🗑️ Temp file removed: {path.name}")
             except Exception as e:
-                logger.error(f"⚠️ Erro ao remover arquivo temporário: {str(e)}")
+                logger.error(f"⚠️ Failed to remove temp file: {str(e)}")
 
 
 def get_file_size(file_path: str) -> int:

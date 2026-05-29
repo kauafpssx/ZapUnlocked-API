@@ -5,7 +5,7 @@ from src.services.whatsapp import storage
 async def fetch_messages(jid: str, limit: int = 20, msg_type: str = "all", options: dict = None):
     sock = get_sock()
     if not sock:
-        raise Exception("WhatsApp não conectado")
+        raise Exception("WhatsApp is not connected.")
 
     logger.info(f"🔍 Buscando {limit} mensagens ({msg_type}) para {jid}...")
 
@@ -115,7 +115,7 @@ async def fetch_messages(jid: str, limit: int = 20, msg_type: str = "all", optio
         elif "listResponseMessage" in content:
             text = content["listResponseMessage"].get("title", "[list_response]")
         else:
-            # Fallback para outros tipos ou NativeFlow dentro de interactiveMessage
+            # Fallback for other types or NativeFlow inside interactiveMessage
             if "interactiveMessage" in content:
                  text = "[interactive_message]"
             else:
@@ -123,7 +123,7 @@ async def fetch_messages(jid: str, limit: int = 20, msg_type: str = "all", optio
 
         ts_raw = m.get("messageTimestamp", 0)
         timestamp = ts_raw.get("low") if isinstance(ts_raw, dict) else ts_raw
-        # Normalizar milissegundos para segundos se necessário
+        # Normalize milliseconds to seconds if needed
         if timestamp > 10000000000:
             timestamp = timestamp // 1000
 

@@ -8,21 +8,21 @@ from src.utils.logger import logger
 
 
 def _get_secret() -> str:
-    """Retorna o INTERNAL_SECRET ou levanta erro se não configurado."""
+    """Return INTERNAL_SECRET or raise if not configured."""
     if not INTERNAL_SECRET:
         logger.error(
-            "INTERNAL_SECRET não configurado! Callbacks de botão não funcionarão. "
-            "Defina INTERNAL_SECRET no arquivo .env."
+            "INTERNAL_SECRET not configured! Button callbacks will not work. "
+            "Set INTERNAL_SECRET in .env."
         )
         raise RuntimeError(
-            "INTERNAL_SECRET não está configurado no .env. "
-            "Callbacks de botão exigem esta chave para segurança."
+            "INTERNAL_SECRET is not set in .env. "
+            "Button callbacks require this key for security."
         )
     return INTERNAL_SECRET
 
 
 def create_callback_payload(webhook: dict) -> str:
-    """Cria token HMAC-SHA256 com expiração de 24h para callback de botões."""
+    """Create a 24h-expiry HMAC-SHA256 token for button callbacks."""
     now = int(time.time())
     exp = now + (24 * 60 * 60)
     secret = _get_secret()
@@ -47,7 +47,7 @@ def create_callback_payload(webhook: dict) -> str:
 
 
 def verify_and_decode_payload(token: str) -> dict | None:
-    """Verifica e decodifica token callback, retorna config ou None se inválido/expirado."""
+    """Verify and decode a callback token. Returns config dict or None if invalid/expired."""
     try:
         json_str = base64.urlsafe_b64decode(token).decode("utf-8")
         data = json.loads(json_str)

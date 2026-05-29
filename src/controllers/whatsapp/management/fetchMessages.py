@@ -18,10 +18,10 @@ class FetchMessagesRequest(BaseModel):
 
 async def fetch_messages(data: FetchMessagesRequest):
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     if not data.phone:
-        raise HTTPException(status_code=400, detail="O campo 'phone' é obrigatório")
+        raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'phone' is required."})
 
     try:
         jid = f"{data.phone}@s.whatsapp.net"
@@ -41,7 +41,7 @@ async def fetch_messages(data: FetchMessagesRequest):
                 "phone": data.phone,
                 "requested": str(result.get("requested", 0)),
                 "found": str(result.get("found", 0)),
-                "text": f"Histórico de {result.get('found', 0)} mensagens obtido."
+                "text": f"Retrieved history of {result.get('found', 0)} messages."
             }))
 
         return {
@@ -51,4 +51,4 @@ async def fetch_messages(data: FetchMessagesRequest):
         }
     except Exception as e:
         logger.error(f"❌ Erro ao buscar mensagens para {data.phone}: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})

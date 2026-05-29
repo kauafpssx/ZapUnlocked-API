@@ -14,28 +14,28 @@ async def download_media(url: str) -> str:
     from urllib.parse import urlparse
     import ipaddress
 
-    logger.info(f"🌐 Iniciando download da URL: {url}")
+    logger.info(f"🌐 Downloading: {url}")
 
-    # --- Proteção SSRF ---
+    # --- SSRF protection ---
     try:
         parsed_url = urlparse(url)
         if parsed_url.scheme not in ["http", "https"]:
-            raise Exception(f"Protocolo inválido: {parsed_url.scheme}. Apenas HTTP/HTTPS são permitidos.")
+            raise Exception(f"Invalid protocol: {parsed_url.scheme}. Only HTTP/HTTPS allowed.")
 
         hostname = parsed_url.hostname
         if not hostname:
-            raise Exception("URL inválida: hostname não identificado.")
+            raise Exception("Invalid URL: hostname not identified.")
 
-        # Resolver IP para verificar se é privado/interno
+        # Resolve IP and check for private/internal addresses
         ip_address = socket.gethostbyname(hostname)
         ip_obj = ipaddress.ip_address(ip_address)
 
         if ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_link_local or ip_obj.is_multicast:
-            logger.warning(f"🚨 Tentativa de SSRF bloqueada para IP interno: {ip_address} ({hostname})")
-            raise Exception(f"Acesso negado: O endereço {hostname} resolve para um IP protegido/interno.")
-            
+            logger.warning(f"🚨 SSRF attempt blocked for internal IP: {ip_address} ({hostname})")
+            raise Exception(f"Access denied: {hostname} resolves to a protected/internal IP.")
+
     except Exception as ssrf_err:
-        logger.error(f"❌ Falha na validação de segurança da URL: {str(ssrf_err)}")
+        logger.error(f"❌ URL security validation failed: {str(ssrf_err)}")
         raise ssrf_err
     # ---------------------
 
@@ -47,7 +47,7 @@ async def download_media(url: str) -> str:
             "Referer": "https://www.google.com/"
         }
 
-        # Usar requests em thread para melhor compatibilidade com CDNs (bypassing TLS fingerprints do httpx)
+        # Run requests in a thread for better CDN compatibility (bypasses httpx TLS fingerprints)
         def perform_download():
             with requests.get(url, headers=common_headers, stream=True, timeout=60, allow_redirects=True) as r:
                 r.raise_for_status()
@@ -55,7 +55,7 @@ async def download_media(url: str) -> str:
                 content_length = int(r.headers.get("content-length", 0))
                 if content_length > MAX_SIZE:
                     size_mb = content_length / (1024 * 1024)
-                    raise Exception(f"Arquivo muito grande: {size_mb:.2f}MB. O limite máximo é 400MB.")
+                    raise Exception(f"File too large: {size_mb:.2f}MB. Maximum allowed is 400MB.")
 
                 content_type = r.headers.get("content-type", "")
                 extension = ".bin"
@@ -75,7 +75,7 @@ async def download_media(url: str) -> str:
                 filename = f"{uuid.uuid4()}{extension}"
                 file_path = Path(TEMP_DIR) / filename
 
-                logger.info(f"⏳ Gravando stream no arquivo: {filename}...")
+                logger.info(f"⏳ Writing stream to file: {filename}...")
                 with open(file_path, "wb") as f:
                     for chunk in r.iter_content(chunk_size=8192):
                         if chunk:
@@ -86,10 +86,10 @@ async def download_media(url: str) -> str:
         
         file_path = Path(file_path_str)
         size_mb = file_path.stat().st_size / (1024 * 1024)
-        logger.info(f"✅ Download concluído: {file_path.name} ({size_mb:.2f} MB)")
+        logger.info(f"✅ Download complete: {file_path.name} ({size_mb:.2f} MB)")
         gc.collect()
         return str(file_path)
 
     except Exception as e:
-        logger.error(f"❌ Erro ao baixar mídia: {str(e)}")
+        logger.error(f"❌ Media download failed: {str(e)}")
         raise e

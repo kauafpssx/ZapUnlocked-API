@@ -44,7 +44,7 @@ def get_webhook_config():
 def toggle_webhook(status: bool) -> dict:
     config = get_webhook_config()
     if not config:
-        raise Exception("Webhook ainda não configurado. Use a rota de configuração primeiro.")
+        raise Exception("Webhook not configured yet. Use the configuration route first.")
 
     config["enabled"] = status
     with open(WEBHOOK_FILE, "w", encoding="utf-8") as f:
@@ -56,4 +56,4 @@ def delete_webhook_config():
         if WEBHOOK_FILE.exists():
             WEBHOOK_FILE.unlink()
     except Exception as e:
-        logger.error(f"Erro ao remover webhook.json: {e}")
+        logger.error(f"Failed to delete webhook.json: {e}")

@@ -13,7 +13,7 @@ async def send_document(data: SendDocumentRequest):
     logger.info(f"🔍 Request recebida em /send_document para {data.phone}")
 
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     try:
         async def process_task():
@@ -34,8 +34,8 @@ async def send_document(data: SendDocumentRequest):
                 cleanup(file_path)
 
         await task_queue.enqueue(process_task())
-        return {"success": True, "message": "Documento enviado com sucesso ✅"}
+        return {"success": True, "message": "Document sent successfully."}
 
     except Exception as e:
         logger.error(f"❌ Erro ao enviar documento: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})

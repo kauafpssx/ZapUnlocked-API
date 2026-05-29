@@ -12,10 +12,10 @@ async def send_image(data: SendMediaRequest):
     logger.info(f"🔍 Request recebida em /send_image para {data.phone}")
 
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     if not data.phone or not data.image_url:
-        raise HTTPException(status_code=400, detail="phone e image_url são obrigatórios")
+        raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'phone' and 'image_url' are required."})
 
     try:
         async def process_task():
@@ -46,8 +46,8 @@ async def send_image(data: SendMediaRequest):
                     cleanup(file_path)
 
         await task_queue.enqueue(process_task())
-        return {"success": True, "message": "Imagem enviada com sucesso ✅"}
+        return {"success": True, "message": "Image sent successfully."}
 
     except Exception as e:
         logger.error(f"❌ Erro ao enviar imagem: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})

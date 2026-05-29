@@ -9,7 +9,7 @@ def _utc_now() -> str:
 
 
 async def dispatch_event(event_type: str, data: dict) -> None:
-    """Dispara event_type para todos os webhooks ativos inscritos."""
+    """Fire event_type to all active subscribed webhooks."""
     try:
         from src.services.webhookRegistry import get_active_webhooks_for_event
         from src.services.webhookService import trigger_webhook
@@ -33,4 +33,4 @@ async def dispatch_event(event_type: str, data: dict) -> None:
 
         logger.debug(f"📡 Evento '{event_type}' despachado para {len(webhooks)} webhook(s)")
     except Exception as e:
-        logger.error(f"Erro ao despachar evento '{event_type}': {e}")
+        logger.error(f"Failed to dispatch event '{event_type}': {e}")

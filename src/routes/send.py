@@ -21,7 +21,7 @@ from src.controllers.whatsapp.send.sendExtras import (
 
 router = APIRouter(dependencies=[Depends(auth)])
 
-# ── Mensagens básicas ─────────────────────────────────
+# ── Basic messages ────────────────────────────────────
 router.post("/send")(send_message)
 router.post("/send_wbuttons")(send_with_buttons)
 router.post("/send_image")(send_image)
@@ -31,24 +31,24 @@ router.post("/send_document")(send_document)
 router.post("/send_sticker")(send_sticker)
 router.post("/send_reaction")(send_reaction)
 
-# ── Novas rotas ────────────────────────────────────────
+# ── New routes ─────────────────────────────────────────
 router.post("/send_location")(send_location)
 router.post("/send_contact")(send_contact)
 router.post("/send_contacts")(send_contacts)
 router.post("/send_link")(send_link)
 
-# ── Gerenciamento de mensagens ─────────────────────────
+# ── Message management ─────────────────────────────────
 router.post("/messages/delete")(delete_msg)
 router.post("/messages/read")(read_messages)
 router.post("/messages/edit")(send_edit)
 
-# ── Botões Interativos ─────────────────────────────────
+# ── Interactive buttons ────────────────────────────────
 router.post("/messages/send-button-list")(send_with_buttons)
 router.post("/messages/send-button-actions")(send_with_buttons)
 router.post("/messages/send-button-otp")(send_with_buttons)
 router.post("/messages/send-button-pix")(send_with_buttons)
 router.post("/messages/send-option-list")(send_with_buttons)
 
-# ── Enquetes ───────────────────────────────────────────
+# ── Polls ──────────────────────────────────────────────
 router.post("/messages/send-poll")(send_poll)
 router.post("/messages/send-poll-vote")(send_poll_vote)

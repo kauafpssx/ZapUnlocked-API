@@ -6,14 +6,10 @@ async def clear_storage():
         await storage.clear_all_data()
         return {
             "success": True,
-            "message": "Todos os arquivos de chat e índices foram apagados do disco."
+            "message": "All chat files and indexes have been cleared from disk."
         }
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail={
-                "success": False,
-                "error": "Erro ao limpar storage",
-                "details": str(e)
-            }
+            detail={"error": "INTERNAL_ERROR", "message": str(e)}
         )

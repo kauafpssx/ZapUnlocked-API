@@ -8,15 +8,15 @@ from src.services.media.utils import get_ffmpeg_path
 
 async def convert_audio(input_path: str, target_format: str = "ogg") -> tuple[str, int]:
     """
-    Converte áudio para diferentes formatos para teste de compatibilidade iOS.
-    Formatos suportados: ogg (opus), mp3, wav, m4a (aac)
+    Convert audio to different formats for iOS compatibility.
+    Supported formats: ogg (opus), mp3, wav, m4a (aac)
     """
     path = Path(input_path)
     output_path = path.with_suffix(f".{target_format}")
 
-    logger.info(f"🔄 Convertendo áudio para {target_format.upper()}: {path.name}")
+    logger.info(f"🔄 Converting audio to {target_format.upper()}: {path.name}")
 
-    # Configurações baseadas no formato
+    # Format-specific settings
     if target_format == "ogg":
         cmd = [
             "ffmpeg", "-i", str(input_path),
@@ -46,7 +46,7 @@ async def convert_audio(input_path: str, target_format: str = "ogg") -> tuple[st
             "-y", "--", str(output_path)
         ]
     else:
-        raise ValueError(f"Formato {target_format} não suportado.")
+        raise ValueError(f"Unsupported format: {target_format}.")
 
     try:
         def run_ffmpeg():
@@ -59,7 +59,7 @@ async def convert_audio(input_path: str, target_format: str = "ogg") -> tuple[st
             logger.error(f"❌ Erro FFmpeg ({result.returncode}): {result.stderr}")
             raise Exception(f"FFmpeg error: {result.stderr}")
 
-        # Duração via ffmpeg -i (stderr) — não depende de ffprobe
+        # Get duration from ffmpeg -i (stderr) — no ffprobe dependency
         def get_duration() -> int:
             probe = subprocess.run(
                 [get_ffmpeg_path(), "-i", str(output_path)],
@@ -77,11 +77,11 @@ async def convert_audio(input_path: str, target_format: str = "ogg") -> tuple[st
             duration = await asyncio.to_thread(get_duration)
         except Exception:
             duration = 0
-        logger.info(f"✅ Conversão concluída! Duração: {duration}s")
+        logger.info(f"✅ Conversion complete. Duration: {duration}s")
 
         return str(output_path), duration
     except Exception as e:
-        logger.error(f"❌ Falha na conversão para {target_format}: {str(e)}")
+        logger.error(f"❌ Audio conversion to {target_format} failed: {str(e)}")
         raise e
 
 

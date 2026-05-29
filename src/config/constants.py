@@ -29,8 +29,8 @@ auth_dir.mkdir(parents=True, exist_ok=True)
 data_dir.mkdir(parents=True, exist_ok=True)
 temp_dir.mkdir(parents=True, exist_ok=True)
 
-print(f"📁 Diretório de autenticação: {auth_dir}")
-print(f"📁 Diretório de dados (chats): {data_dir}")
+print(f"📁 Auth directory: {auth_dir}")
+print(f"📁 Data directory (chats): {data_dir}")
 
 PORT = int(os.getenv("PORT", 8300))
 API_KEY = os.getenv("API_KEY")

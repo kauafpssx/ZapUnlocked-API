@@ -1,6 +1,6 @@
 """
-Cliente WhatsApp via Neonize.
-Gerencia conexão, eventos, reconexão e ciclo de vida do bot.
+WhatsApp client via Neonize.
+Manages connection, events, reconnection and bot lifecycle.
 """
 
 import asyncio
@@ -24,7 +24,7 @@ from src.utils.logger import logger
 from src.config.constants import AUTH_DIR, DATA_DIR, RECONNECT_DELAY, PORT, API_KEY
 from src.services.whatsapp import storage
 
-# ── Estado global ──────────────────────────────────────
+# ── Global state ──────────────────────────────────────
 client: NewClient | None = None
 is_ready = False
 current_qr: str | None = None
@@ -74,8 +74,8 @@ def reset_pair_code():
 
 
 def activate_qr():
-    """Autoriza armazenamento de QR. Chamar após auth válida em /qr ou /qr/image.
-    Se já conectado: no-op. Se QR expirou (current_qr=None): reinicia bot para gerar novo."""
+    """Authorize QR storage. Call after valid auth on /qr or /qr/image.
+    If already connected: no-op. If QR expired (current_qr=None): restart bot to generate a new one."""
     global qr_generation_active, _keep_qr_active_on_restart
     if is_ready:
         return
@@ -88,7 +88,7 @@ def activate_qr():
 
 
 def get_qr_expires_in() -> int | None:
-    """Segundos restantes do QR atual. None se sem QR."""
+    """Remaining seconds of the current QR. None if no QR."""
     if current_qr is None or qr_last_generated_at is None:
         return None
     remaining = QR_EXPIRY_SECONDS - int(time.time() - qr_last_generated_at)
@@ -96,7 +96,7 @@ def get_qr_expires_in() -> int | None:
 
 
 def get_store():
-    return None  # Depreciado para economizar RAM
+    return None  # Deprecated to conserve RAM
 
 
 def get_reaction_cache():
@@ -104,15 +104,15 @@ def get_reaction_cache():
 
 
 def set_cleanup_interval(interval_minutes: int):
-    """Define o intervalo de limpeza do banco SQLite (em minutos)."""
+    """Set the SQLite database cleanup interval (in minutes)."""
     global current_interval
     current_interval = interval_minutes
     save_db_config()
-    logger.info(f"⚙️ Intervalo de limpeza atualizado para {interval_minutes} minutos via setter")
+    logger.info(f"⚙️ Cleanup interval updated to {interval_minutes} minutes via setter")
 
 
 def get_cleanup_state():
-    """Retorna estado atual do cleanup (para diagnóstico)."""
+    """Return current cleanup state (for diagnostics)."""
     return {
         "last_cleanup_time": last_cleanup_time,
         "current_interval": current_interval,
@@ -120,7 +120,7 @@ def get_cleanup_state():
 
 
 # ══════════════════════════════════════════════════════════
-# GERENCIAMENTO DO BANCO SQLITE
+# SQLITE DATABASE MANAGEMENT
 # ══════════════════════════════════════════════════════════
 
 def load_db_config():
@@ -146,10 +146,10 @@ def save_db_config():
 
 
 def cleanup_db():
-    """Limpa tabelas temporárias do SQLite e executa VACUUM (thread-safe)."""
+    """Clean temporary SQLite tables and run VACUUM (thread-safe)."""
     global last_cleanup_time
     if not cleanup_lock.acquire(blocking=False):
-        logger.warning("⚠️ Uma limpeza já está em curso. Pulando...")
+        logger.warning("⚠️ A cleanup is already in progress. Skipping...")
         return
 
     try:
@@ -157,7 +157,7 @@ def cleanup_db():
         if not auth_file.exists():
             return
 
-        logger.info("🧹 Iniciando limpeza automática do banco SQLite...")
+        logger.info("🧹 Starting automatic SQLite cleanup...")
 
         conn = sqlite3.connect(str(auth_file), isolation_level=None)
         cursor = conn.cursor()
@@ -166,13 +166,13 @@ def cleanup_db():
             cursor.execute("PRAGMA journal_mode=WAL")
             cursor.execute("PRAGMA synchronous=NORMAL")
         except sqlite3.Error as e:
-            logger.warning(f"⚠️ Não foi possível ativar modo WAL: {e}")
+            logger.warning(f"⚠️ Failed to enable WAL mode: {e}")
 
         cursor.execute("BEGIN TRANSACTION")
         for table in ["whatsmeow_event_buffer"]:
             try:
                 cursor.execute(f"DELETE FROM {table}")
-                logger.debug(f"Removidos registros da tabela {table}")
+                logger.debug(f"Removed records from table {table}")
             except sqlite3.OperationalError:
                 pass
         cursor.execute("COMMIT")
@@ -180,22 +180,22 @@ def cleanup_db():
         try:
             cursor.execute("VACUUM")
         except sqlite3.Error as e:
-            logger.error(f"❌ Erro ao executar VACUUM: {e}")
+            logger.error(f"❌ Error executing VACUUM: {e}")
 
         conn.close()
         gc.collect()
 
         last_cleanup_time = int(time.time())
         save_db_config()
-        logger.info("✅ Limpeza do banco concluída com sucesso.")
+        logger.info("✅ Database cleanup completed successfully.")
     except Exception as e:
-        logger.error(f"❌ Erro na limpeza do banco: {e}")
+        logger.error(f"❌ Database cleanup failed: {e}")
     finally:
         cleanup_lock.release()
 
 
 async def db_cleanup_scheduler():
-    """Loop infinito que executa cleanup periodicamente conforme intervalo configurado."""
+    """Infinite loop that runs cleanup periodically per configured interval."""
     while True:
         now = int(time.time())
         elapsed = (now - last_cleanup_time) / 60
@@ -209,7 +209,7 @@ async def db_cleanup_scheduler():
 # ══════════════════════════════════════════════════════════
 
 async def handle_message_async(c: NewClient, message: "MessageEv"):
-    """Processa mensagem recebida: filtra, persiste, webhook, auto-read, handlers."""
+    """Process received message: filter, persist, webhook, auto-read, handlers."""
     ts = message.Info.Timestamp
     if ts < START_TIME - 10 or message.Info.MessageSource.Chat.User == "status":
         return
@@ -275,7 +275,7 @@ async def handle_message_async(c: NewClient, message: "MessageEv"):
 
 
 def _cache_reaction_if_present(message):
-    """Extrai e cacheia reação se presente na mensagem."""
+    """Extract and cache reaction if present in the message."""
     try:
         reaction = message.Message.reactionMessage
         if reaction and reaction.key.ID:
@@ -285,16 +285,16 @@ def _cache_reaction_if_present(message):
 
 
 async def _fire(event_type: str, data: dict):
-    """Despacha evento para o sistema de webhooks nomeados."""
+    """Dispatch event to the named webhooks system."""
     try:
         from src.services.webhookDispatcher import dispatch_event
         await dispatch_event(event_type, data)
     except Exception as e:
-        logger.error(f"Erro ao disparar evento '{event_type}': {e}")
+        logger.error(f"Error dispatching event '{event_type}': {e}")
 
 
 def _auto_read_message(c, message, source):
-    """Marca mensagem como lida automaticamente se configurado."""
+    """Mark message as read automatically if configured."""
     try:
         from src.services.whatsapp.settingsService import get_settings
 
@@ -308,11 +308,11 @@ def _auto_read_message(c, message, source):
                 receipt=ReceiptType.READ,
             )
     except Exception as e:
-        logger.debug(f"Auto-read falhou: {e}")
+        logger.debug(f"Auto-read failed: {e}")
 
 
 def _forward_to_handler(c, message):
-    """Encaminha mensagem para o handler de callbacks."""
+    """Forward message to the callback handler."""
     try:
         from src.handlers.messageHandler import handleMessage
         asyncio.create_task(handleMessage(c, message))
@@ -326,7 +326,7 @@ def _forward_to_handler(c, message):
 
 def get_contact_name(client, jid: str, push_name: str = None) -> str:
     """
-    Resolve nome do contato com fallback de 4 níveis:
+    Resolve contact name with 4-level fallback:
     FullName > FirstName > BusinessName > PushName.
     """
     try:
@@ -343,23 +343,23 @@ def get_contact_name(client, jid: str, push_name: str = None) -> str:
                 return name.strip()
     except Exception:
         pass
-    return (push_name or "Anônimo").strip()
+    return (push_name or "Anonymous").strip()
 
 
 # ══════════════════════════════════════════════════════════
-# EVENT HANDLERS (registrados no start_bot)
+# EVENT HANDLERS (registered in start_bot)
 # ══════════════════════════════════════════════════════════
 
 def _on_qr(c: NewClient, qr_bytes: bytes):
     global current_qr, qr_last_generated_at
     if not qr_generation_active:
-        logger.debug("🔒 QR ignorado — aguardando acesso autenticado em /qr")
+        logger.debug("🔒 QR ignored — waiting for authenticated access on /qr")
         return
     current_qr = qr_bytes.decode("utf-8")
     qr_last_generated_at = time.time()
 
-    # ── Monta URL pública dinâmica ──────────────────────────────────
-    public_url = os.getenv("PUBLIC_URL")                        # 1. env var explicita (ex: http://meudominio.com:8080)
+    # ── Build public URL dynamically ──────────────────────────────────
+    public_url = os.getenv("PUBLIC_URL")                        # 1. explicit env var (e.g.: http://mydomain.com:8080)
     if not public_url:
         user = os.getenv("USER", "")
         if user:
@@ -368,13 +368,13 @@ def _on_qr(c: NewClient, qr_bytes: bytes):
             hostname = socket.gethostname()
             public_url = f"http://{hostname}:{PORT}"
     else:
-        # Se a env var nao veio com :porta, adiciona
+        # If env var did not include :port, append it
         if ":" not in public_url.split("/")[-1]:
             public_url = f"{public_url}:{PORT}"
     qr_url = f"{public_url}/qr"
     if API_KEY:
         qr_url += f"?API_KEY={API_KEY}"
-    logger.info(f"📲 QR Code gerado! Acesse: {qr_url}")
+    logger.info(f"📲 QR Code generated! Access: {qr_url}")
     if main_loop and main_loop.is_running():
         main_loop.call_soon_threadsafe(
             lambda: asyncio.create_task(_fire("connection.qr_ready", {"qr": current_qr}))
@@ -388,7 +388,7 @@ def _on_connected(c: NewClient, event: "ConnectedEv"):
     current_pair_code = None
     qr_generation_active = False
     qr_last_generated_at = None
-    logger.info("✅ WhatsApp conectado e pronto")
+    logger.info("✅ WhatsApp connected and ready")
     if main_loop and main_loop.is_running():
         phone = ""
         try:
@@ -405,15 +405,15 @@ def _on_pair_code(c: NewClient, code: str, connected: bool):
     global current_pair_code
     if not connected:
         current_pair_code = code
-        logger.info(f"🔑 Código de pareamento recebido: {code}")
+        logger.info(f"🔑 Pairing code received: {code}")
 
 
 def _on_history_sync(c: NewClient, event: "HistorySyncEv"):
-    pass  # Ignoramos sincronização de histórico para economizar RAM
+    pass  # Skip history sync to conserve RAM
 
 
 def _on_call_offer(c: NewClient, event: "CallOfferEv"):
-    """Rejeita chamadas automaticamente se configurado."""
+    """Reject calls automatically if configured."""
     try:
         from src.services.whatsapp.settingsService import get_settings
         settings = get_settings()
@@ -438,29 +438,29 @@ def _on_call_offer(c: NewClient, event: "CallOfferEv"):
         if not settings.get("call_reject_auto", False):
             return
 
-        logger.info(f"📞 Chamada de {caller_str} (ID: {call_id}) — rejeitando automaticamente")
+        logger.info(f"📞 Call from {caller_str} (ID: {call_id}) — rejecting automatically")
 
         msg = settings.get(
             "call_reject_message",
-            "No momento não posso atender. Por favor, envie uma mensagem.",
+            "I'm not available right now. Please send a message.",
         )
         if msg and main_loop and main_loop.is_running():
             async def _send_call_reply():
                 try:
                     c.send_message(caller_jid, msg)
-                    logger.info(f"📞 Mensagem de rejeição enviada para {caller_str}")
+                    logger.info(f"📞 Rejection message sent to {caller_str}")
                 except Exception as send_err:
-                    logger.warning(f"⚠️ Não foi possível enviar mensagem de rejeição: {send_err}")
+                    logger.warning(f"⚠️ Failed to send rejection message: {send_err}")
 
             main_loop.call_soon_threadsafe(
                 lambda: asyncio.create_task(_send_call_reply())
             )
     except Exception as e:
-        logger.error(f"Erro no handler de chamada: {e}")
+        logger.error(f"Error in call handler: {e}")
 
 
 def _on_message(c: NewClient, message: "MessageEv"):
-    """Agenda processamento de mensagem recebida no event loop principal."""
+    """Schedule received message processing in the main event loop."""
     if message.Info.Timestamp < START_TIME - 10:
         return
     try:
@@ -469,19 +469,19 @@ def _on_message(c: NewClient, message: "MessageEv"):
                 lambda: asyncio.create_task(handle_message_async(c, message))
             )
         else:
-            logger.warning("🕒 Loop principal não disponível para processar mensagem")
+            logger.warning("🕒 Main loop not available to process message")
     except Exception as e:
-        logger.error(f"Erro ao agendar mensagem: {e}")
+        logger.error(f"Error scheduling message: {e}")
 
 
 # ══════════════════════════════════════════════════════════
-# MONKEY-PATCHES para captura de Pair Code (fallback)
+# MONKEY-PATCHES for Pair Code capture (fallback)
 # ══════════════════════════════════════════════════════════
 
 def _patch_neonize_logging():
     """
-    Aplica monkey-patches para capturar código de pareamento que pode vir
-    via logs do CGo ou Python, como fallback para o callback oficial paircode.
+    Apply monkey-patches to capture pairing code that may come
+    via CGo or Python logs, as fallback for the official paircode callback.
     """
     try:
         import neonize.utils as neonize_utils
@@ -504,7 +504,7 @@ def _patch_neonize_logging():
             neonize_utils.log_whatsmeow = patched_log_whatsmeow
             neonize_client.log_whatsmeow = patched_log_whatsmeow
     except Exception as e:
-        logger.warning(f"⚠️ Erro ao patchear log_whatsmeow: {e}")
+        logger.warning(f"⚠️ Error patching log_whatsmeow: {e}")
 
     try:
         import neonize.events as neonize_events
@@ -523,7 +523,7 @@ def _patch_neonize_logging():
             neonize_events.log.info = patched_events_info
             neonize_events.log._patched = True
     except Exception as e:
-        logger.warning(f"⚠️ Erro ao patchear neonize.events: {e}")
+        logger.warning(f"⚠️ Error patching neonize.events: {e}")
 
     try:
         import builtins
@@ -542,18 +542,18 @@ def _patch_neonize_logging():
             builtins.print = patched_print
             builtins.print._patched = True
     except Exception as e:
-        logger.warning(f"⚠️ Erro ao patchear builtins.print: {e}")
+        logger.warning(f"⚠️ Error patching builtins.print: {e}")
 
 
 def _intercept_pair_code(text: str):
-    """Tenta extrair código de pareamento de uma string de log."""
+    """Try to extract a pairing code from a log string."""
     global current_pair_code
     if "Pair" in text or "code" in text.lower():
         match = re.search(r"([A-Z0-9]{4}[- ]?[A-Z0-9]{4})", text)
         if match:
             code = match.group(1).replace(" ", "-")
             current_pair_code = code
-            logger.info(f"🎯 Código capturado via interceptor: {code}")
+            logger.info(f"🎯 Code captured via interceptor: {code}")
 
 
 # ══════════════════════════════════════════════════════════
@@ -561,7 +561,7 @@ def _intercept_pair_code(text: str):
 # ══════════════════════════════════════════════════════════
 
 async def start_bot():
-    """Inicializa o cliente Neonize: configura logging, registra handlers e conecta."""
+    """Initialize the Neonize client: configure logging, register handlers and connect."""
     global client, is_ready, current_qr, main_loop
     main_loop = asyncio.get_running_loop()
 
@@ -581,13 +581,13 @@ async def start_bot():
         await loop.run_in_executor(None, client.connect)
 
     except Exception as e:
-        logger.error(f"❌ Erro ao iniciar bot: {str(e)}")
+        logger.error(f"❌ Error starting bot: {str(e)}")
         await asyncio.sleep(RECONNECT_DELAY / 1000)
         asyncio.create_task(start_bot())
 
 
 def _reset_state():
-    """Reseta variáveis de estado globais para uma nova conexão."""
+    """Reset global state variables for a new connection."""
     global qr_generation_active, qr_last_generated_at, current_qr, _keep_qr_active_on_restart
     reset_pair_code()
     qr_last_generated_at = None
@@ -600,7 +600,7 @@ def _reset_state():
 
 
 def _disconnect_existing():
-    """Desconecta cliente existente se houver."""
+    """Disconnect existing client if any."""
     global client
     if client:
         try:
@@ -610,13 +610,13 @@ def _disconnect_existing():
 
 
 def _configure_logging():
-    """Configura níveis de log do Neonize para reduzir verbosidade."""
+    """Configure Neonize log levels to reduce verbosity."""
     neonize_logger.setLevel(logging.ERROR)
     logging.getLogger("whatsmeow").setLevel(logging.INFO)
 
 
 def _register_event_handlers():
-    """Registra todos os callbacks de eventos no cliente Neonize."""
+    """Register all event callbacks on the Neonize client."""
     client.qr(_on_qr)
     client.event(ConnectedEv)(_on_connected)
     client.event.paircode(_on_pair_code)
@@ -626,7 +626,7 @@ def _register_event_handlers():
 
 
 def _load_db_config_and_start_scheduler():
-    """Carrega configuração de cleanup e inicia o scheduler."""
+    """Load cleanup config and start the scheduler."""
     load_db_config()
     asyncio.create_task(db_cleanup_scheduler())
 
@@ -636,9 +636,9 @@ def _load_db_config_and_start_scheduler():
 # ══════════════════════════════════════════════════════════
 
 async def logout(keep_data=False):
-    """Desconecta, limpa sessão e reinicia bot."""
+    """Disconnect, clear session, and restart the bot."""
     global client, is_ready, current_qr
-    logger.info(f"🗑️ Iniciando logout... (Manter dados: {keep_data})")
+    logger.info(f"🗑️ Starting logout... (Keep data: {keep_data})")
 
     if client:
         try:
@@ -665,8 +665,8 @@ async def logout(keep_data=False):
 
     if not keep_data:
         await storage.clear_all_data()
-        logger.info("🧹 Dados de histórico apagados.")
+        logger.info("🧹 History data cleared.")
 
-    logger.info("🔄 Reiniciando bot para novo escaneamento...")
+    logger.info("🔄 Restarting bot for new scan...")
     await asyncio.sleep(2)
     asyncio.create_task(start_bot())

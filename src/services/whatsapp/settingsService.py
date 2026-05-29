@@ -14,7 +14,7 @@ DEFAULT_SETTINGS = {
     "ip_blacklist": [],
     # Instance settings
     "call_reject_auto": False,
-    "call_reject_message": "No momento não posso atender. Por favor, envie uma mensagem.",
+    "call_reject_message": "I'm unavailable right now. Please send a message.",
     "auto_read_message": False,
 }
 
@@ -35,7 +35,7 @@ def get_settings():
                     loaded[key] = val
             return loaded
     except Exception as e:
-        logger.error(f"❌ Erro ao ler configurações: {e}")
+        logger.error(f"❌ Failed to read settings: {e}")
         return DEFAULT_SETTINGS.copy()
 
 def save_settings(settings: dict):
@@ -51,5 +51,5 @@ def save_settings(settings: dict):
             json.dump(current, f, indent=4)
         return current
     except Exception as e:
-        logger.error(f"❌ Erro ao salvar configurações: {e}")
+        logger.error(f"❌ Failed to save settings: {e}")
         return None

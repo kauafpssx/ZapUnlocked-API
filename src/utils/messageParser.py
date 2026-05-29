@@ -35,13 +35,13 @@ def parse_message(msg):
         if msg.Message.extendedTextMessage.text:
             extended_text = msg.Message.extendedTextMessage.text
     except Exception as e:
-        logger.debug(f"parse_message: extendedTextMessage não disponível ({e})")
+        logger.debug(f"parse_message: extendedTextMessage not available ({e})")
 
     try:
         if msg.Message.imageMessage.caption:
             image_caption = msg.Message.imageMessage.caption
     except Exception as e:
-        logger.debug(f"parse_message: imageMessage não disponível ({e})")
+        logger.debug(f"parse_message: imageMessage not available ({e})")
 
     # Legacy ButtonsResponseMessage (deprecated but some clients still send)
     try:
@@ -49,7 +49,7 @@ def parse_message(msg):
             button_response_text = msg.Message.buttonsResponseMessage.selectedDisplayText
             button_response_id = msg.Message.buttonsResponseMessage.selectedButtonID
     except Exception as e:
-        logger.debug(f"parse_message: buttonsResponseMessage não disponível ({e})")
+        logger.debug(f"parse_message: buttonsResponseMessage not available ({e})")
 
     # NativeFlow InteractiveResponseMessage (modern WhatsApp)
     try:
@@ -78,21 +78,21 @@ def parse_message(msg):
         if msg.Message.extendedTextMessage.contextInfo.stanzaID:
             context_info = msg.Message.extendedTextMessage.contextInfo
     except Exception as e:
-        logger.debug(f"parse_message: contextInfo em extendedTextMessage não disponível ({e})")
+        logger.debug(f"parse_message: contextInfo in extendedTextMessage not available ({e})")
 
     if not context_info:
         try:
             if msg.Message.imageMessage.contextInfo.stanzaID:
                 context_info = msg.Message.imageMessage.contextInfo
         except Exception as e:
-            logger.debug(f"parse_message: contextInfo em imageMessage não disponível ({e})")
+            logger.debug(f"parse_message: contextInfo in imageMessage not available ({e})")
 
     quoted_message = None
     if context_info:
         try:
             quoted_message = context_info.quotedMessage
         except Exception as e:
-            logger.debug(f"parse_message: quotedMessage não disponível ({e})")
+            logger.debug(f"parse_message: quotedMessage not available ({e})")
 
     return {
         "jid": f"{resolved_user}{jid_suffix}",

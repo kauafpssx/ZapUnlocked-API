@@ -8,8 +8,8 @@ async def get_qr_image():
     qr = get_qr()
 
     if not qr:
-        message = "WhatsApp já está conectado" if get_is_ready() else "Aguardando geração do QR Code..."
-        raise HTTPException(status_code=404, detail={"error": "QR Code não disponível", "message": message})
+        message = "WhatsApp is already connected." if get_is_ready() else "Waiting for QR code generation..."
+        raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": message})
 
     try:
         img = qrcode.make(qr)
@@ -23,4 +23,4 @@ async def get_qr_image():
         }
         return Response(content=buf.getvalue(), media_type="image/png", headers=headers)
     except Exception as e:
-        raise HTTPException(status_code=500, detail={"error": "Erro ao gerar QR Code", "message": str(e)})
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})

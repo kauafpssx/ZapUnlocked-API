@@ -24,10 +24,10 @@ from ..schemas import (
 )
 
 
-# ── Localização ────────────────────────────────────────
+# ── Location ────────────────────────────────────────
 async def send_location(data: SendLocationRequest):
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     try:
         async def process_task():
@@ -43,17 +43,17 @@ async def send_location(data: SendLocationRequest):
             )
 
         await task_queue.enqueue(process_task())
-        return {"success": True, "message": "Localização enviada ✅"}
+        return {"success": True, "message": "Location sent."}
 
     except Exception as e:
-        logger.error(f"❌ Erro ao enviar localização: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"❌ Failed to send location: {e}")
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
-# ── Contato (único) ────────────────────────────────────
+# ── Single contact ────────────────────────────────────
 async def send_contact(data: SendContactRequest):
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     try:
         async def process_task():
@@ -67,20 +67,20 @@ async def send_contact(data: SendContactRequest):
             )
 
         await task_queue.enqueue(process_task())
-        return {"success": True, "message": "Contato enviado ✅"}
+        return {"success": True, "message": "Contact sent."}
 
     except Exception as e:
         logger.error(f"❌ Erro ao enviar contato: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
-# ── Vários contatos ────────────────────────────────────
+# ── Multiple contacts ────────────────────────────────────
 async def send_contacts(data: SendContactsRequest):
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     if not data.contacts:
-        raise HTTPException(status_code=400, detail="Pelo menos um contato é necessário.")
+        raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "At least one contact is required."})
 
     try:
         async def process_task():
@@ -90,20 +90,20 @@ async def send_contacts(data: SendContactsRequest):
             await send_contacts_message(jid, contacts_list, options=options)
 
         await task_queue.enqueue(process_task())
-        return {"success": True, "message": f"{len(data.contacts)} contato(s) enviado(s) ✅"}
+        return {"success": True, "message": f"{len(data.contacts)} contact(s) sent."}
 
     except Exception as e:
         logger.error(f"❌ Erro ao enviar contatos: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
 # ── Link com preview ────────────────────────────────────
 async def send_link(data: SendLinkRequest):
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     if not data.url:
-        raise HTTPException(status_code=400, detail="url é obrigatório.")
+        raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'url' is required."})
 
     try:
         async def process_task():
@@ -120,25 +120,25 @@ async def send_link(data: SendLinkRequest):
             )
 
         await task_queue.enqueue(process_task())
-        return {"success": True, "message": "Link enviado ✅"}
+        return {"success": True, "message": "Link sent."}
 
     except Exception as e:
         logger.error(f"❌ Erro ao enviar link: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
-# ── Deletar mensagem ───────────────────────────────────
+# ── Delete message ───────────────────────────────────
 async def delete_msg(data: DeleteMessageRequest):
     """
-    Deleta uma mensagem pelo ID.
-    fromMe=True deleta do seu lado (e para todos).
-    fromMe=False tenta deletar uma mensagem recebida (só do seu lado).
+    Delete a message by ID.
+    fromMe=True deletes for everyone.
+    fromMe=False deletes only on your side.
     """
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     if not data.messageId:
-        raise HTTPException(status_code=400, detail="messageId é obrigatório.")
+        raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'messageId' is required."})
 
     try:
         jid = f"{data.phone}@s.whatsapp.net"
@@ -148,29 +148,29 @@ async def delete_msg(data: DeleteMessageRequest):
         if target_type == "text":
             found_msg = await find_message(jid, data.messageId, target_type)
             if not found_msg:
-                raise HTTPException(status_code=404, detail="Mensagem não encontrada via texto.")
+                raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": "Message not found by text."})
             target_id = found_msg["key"]["id"]
-            
+
         await delete_message(jid, target_id, data.fromMe)
-        return {"success": True, "message": "Mensagem deletada ✅"}
+        return {"success": True, "message": "Message deleted."}
 
     except Exception as e:
-        logger.error(f"❌ Erro ao deletar mensagem: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"❌ Failed to delete message: {e}")
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
-# ── Marcar como lida ───────────────────────────────────
+# ── Mark as read ───────────────────────────────────
 async def read_messages(data: ReadMessagesRequest):
     """
-    Marca uma lista de mensagens como lidas.
-    messageIds: lista de IDs das mensagens a marcar.
-    sender: JID do remetente (opcional, necessário para grupos).
+    Mark a list of messages as read.
+    messageIds: list of message IDs to mark.
+    sender: sender JID (optional, required for groups).
     """
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     if not data.messageIds:
-        raise HTTPException(status_code=400, detail="messageIds não pode ser vazio.")
+        raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'messageIds' cannot be empty."})
 
     try:
         jid = f"{data.phone}@s.whatsapp.net"
@@ -186,21 +186,21 @@ async def read_messages(data: ReadMessagesRequest):
                 target_ids.append(msg_identifier)
                 
         if not target_ids:
-            raise HTTPException(status_code=404, detail="Nenhuma mensagem encontrada para marcar como lida.")
-            
+            raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": "No messages found to mark as read."})
+
         await mark_messages_read(jid, target_ids, data.sender)
-        return {"success": True, "message": f"{len(target_ids)} mensagem(ns) marcada(s) como lida(s) ✅"}
+        return {"success": True, "message": f"{len(target_ids)} message(s) marked as read."}
 
     except Exception as e:
         logger.error(f"❌ Erro ao marcar mensagens como lidas: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
 # ── Editar Mensagem ───────────────────────────────────
 async def send_edit(data: SendEditMessageRequest):
     """Edita uma mensagem enviada."""
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     try:
         jid = f"{data.phone}@s.whatsapp.net"
@@ -210,12 +210,12 @@ async def send_edit(data: SendEditMessageRequest):
         if target_type == "text":
             found_msg = await find_message(jid, data.messageId, target_type)
             if not found_msg:
-                raise HTTPException(status_code=404, detail="Mensagem não encontrada para editar.")
+                raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": "Message not found to edit."})
             target_id = found_msg["key"]["id"]
-            
+
         await edit_message(jid, target_id, data.message)
-        return {"success": True, "message": "Mensagem editada ✅"}
+        return {"success": True, "message": "Message edited."}
 
     except Exception as e:
         logger.error(f"❌ Erro ao editar mensagem: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})

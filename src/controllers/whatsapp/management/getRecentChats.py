@@ -10,7 +10,7 @@ class RecentChatsRequest(BaseModel):
 
 async def get_recent_chats(data: RecentChatsRequest):
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     limit = data.limit or 20
 
@@ -25,4 +25,4 @@ async def get_recent_chats(data: RecentChatsRequest):
         }
     except Exception as e:
         logger.error(f"❌ Erro ao obter chats recentes: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})

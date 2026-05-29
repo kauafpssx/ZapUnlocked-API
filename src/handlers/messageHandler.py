@@ -9,8 +9,8 @@ from src.utils.logger import logger
 
 async def handleMessage(client, msg):
     """
-    Handler principal: detecta callbacks embutidos (cb=) e despacha eventos de webhook
-    para todos os tipos de mensagem recebida.
+    Main handler: detects embedded callbacks (cb=) and dispatches webhook events
+    for all incoming message types.
     """
     if should_ignore_message(msg):
         return
@@ -23,7 +23,7 @@ async def handleMessage(client, msg):
     text = parsed["text"] or ""
     button_response = parsed["buttonResponse"] or ""
 
-    # ── CALLBACK DE BOTÃO (cb=) ─────────────────────────────
+    # ── BUTTON CALLBACK (cb=) ─────────────────────────────
     callback_part = None
     if isinstance(button_response, str) and button_response.startswith("cb="):
         callback_part = button_response[3:]
@@ -33,16 +33,16 @@ async def handleMessage(client, msg):
     if callback_part:
         webhook_config = verify_and_decode_payload(callback_part)
         if webhook_config:
-            button_label = text or "Botão clicado"
-            logger.info(f'🎯 Callback detectado: "{button_label}" de {phone}')
+            button_label = text or "Button clicked"
+            logger.info(f'🎯 Callback detected: "{button_label}" from {phone}')
 
             if webhook_config.get("reaction"):
                 try:
                     from src.services.whatsapp.sender import send_reaction
                     await send_reaction(phone, msg.Info.ID, webhook_config["reaction"])
-                    logger.info(f"💖 Reagiu com {webhook_config['reaction']} para {phone}")
+                    logger.info(f"💖 Reacted with {webhook_config['reaction']} for {phone}")
                 except Exception as err:
-                    logger.error(f"Erro ao reagir à mensagem: {str(err)}")
+                    logger.error(f"Failed to react to message: {str(err)}")
 
             if webhook_config.get("url"):
                 try:
@@ -51,17 +51,17 @@ async def handleMessage(client, msg):
                         "text": button_label,
                     }))
                 except Exception as err:
-                    logger.error(f"Erro ao disparar webhook de callback: {str(err)}")
+                    logger.error(f"Failed to fire callback webhook: {str(err)}")
         elif isinstance(button_response, str) and button_response.startswith("cb="):
-            logger.warning(f"⚠️ Callback inválido ou expirado recebido de {phone}")
+            logger.warning(f"⚠️ Invalid or expired callback received from {phone}")
         return
 
-    # ── DISPATCH DE EVENTOS PARA WEBHOOKS ──────────────────
+    # ── DISPATCH WEBHOOK EVENTS ──────────────────
     asyncio.create_task(_dispatch_message_event(msg, phone, parsed))
 
 
 async def _dispatch_message_event(msg, phone: str, parsed: dict):
-    """Identifica tipo da mensagem e despacha evento estruturado."""
+    """Identifies message type and dispatches structured event."""
     try:
         from src.services.webhookDispatcher import dispatch_event
 
@@ -113,7 +113,7 @@ async def _dispatch_message_event(msg, phone: str, parsed: dict):
             })
             return
 
-        # ── Vídeo ─────────────────────────────────────────────
+        # ── Video ─────────────────────────────────────────────
         if _has(raw, "videoMessage"):
             vid = raw.videoMessage
             await dispatch_event("message.video", {
@@ -126,7 +126,7 @@ async def _dispatch_message_event(msg, phone: str, parsed: dict):
             })
             return
 
-        # ── Áudio ─────────────────────────────────────────────
+        # ── Audio ─────────────────────────────────────────────
         if _has(raw, "audioMessage"):
             aud = raw.audioMessage
             await dispatch_event("message.audio", {
@@ -170,7 +170,7 @@ async def _dispatch_message_event(msg, phone: str, parsed: dict):
             })
             return
 
-        # ── Localização ───────────────────────────────────────
+        # ── Location ───────────────────────────────────────────
         if _has(raw, "locationMessage"):
             loc = raw.locationMessage
             await dispatch_event("message.location", {
@@ -182,7 +182,7 @@ async def _dispatch_message_event(msg, phone: str, parsed: dict):
             })
             return
 
-        # ── Reação ────────────────────────────────────────────
+        # ── Reaction ────────────────────────────────────────────
         if _has(raw, "reactionMessage"):
             react = raw.reactionMessage
             emoji = _safe_str(react, "text")
@@ -229,7 +229,7 @@ async def _dispatch_message_event(msg, phone: str, parsed: dict):
             })
             return
 
-        # ── Resposta interativa (botão / lista) ───────────────
+        # ── Interactive response (button / list) ───────────────
         if _has(raw, "interactiveResponseMessage"):
             resp = raw.interactiveResponseMessage
             button_id = None
@@ -241,7 +241,7 @@ async def _dispatch_message_event(msg, phone: str, parsed: dict):
                     params = json.loads(native.paramsJSON)
                     button_id = params.get("id", "")
                     display_text = params.get("display_text", "")
-                    # single_select = lista; outros = botão
+                    # single_select = list; others = button
                     resp_type = "list_reply" if params.get("id", "").isdigit() else "button_reply"
             except Exception:
                 pass
@@ -294,7 +294,7 @@ async def _dispatch_message_event(msg, phone: str, parsed: dict):
         await dispatch_event("message.unknown", {**base, "rawType": _detect_type(raw)})
 
     except Exception as e:
-        logger.error(f"Erro ao despachar evento de mensagem: {e}")
+        logger.error(f"Failed to dispatch message event: {e}")
 
 
 # ── Helpers ─────────────────────────────────────────────────

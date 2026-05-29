@@ -6,13 +6,13 @@ import asyncio
 
 async def _get_sock_info(info_type: str = "me") -> dict:
     """
-    Obtém informações da instância ou dispositivo via Neonize.
-    info_type="me" retorna dados do perfil (phone, pushname, etc).
-    info_type="device" retorna dados do dispositivo (device, raw_agent, etc).
+    Fetch instance or device info via Neonize.
+    info_type="me" returns profile data (phone, pushname, etc).
+    info_type="device" returns device data (device, raw_agent, etc).
     """
     sock = get_sock()
     if not sock:
-        raise HTTPException(status_code=503, detail="WhatsApp não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     try:
         me = await asyncio.to_thread(sock.get_me)
@@ -64,15 +64,15 @@ async def _get_sock_info(info_type: str = "me") -> dict:
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Erro ao buscar dados da instância: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Failed to fetch instance data: {str(e)}")
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
 async def get_instance_me():
-    """Retorna dados da instância (phone, jid, PushName, etc)."""
+    """Return instance profile data (phone, jid, PushName, etc)."""
     return await _get_sock_info("me")
 
 
 async def get_instance_device():
-    """Retorna dados do dispositivo (Device, RawAgent, Integrator, etc)."""
+    """Return device data (Device, RawAgent, Integrator, etc)."""
     return await _get_sock_info("device")

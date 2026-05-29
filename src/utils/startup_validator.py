@@ -41,17 +41,17 @@ def validate_dependencies() -> None:
         lines = [
             "",
             "=" * 60,
-            "❌  DEPENDÊNCIAS FALTANDO — o app não pode iniciar.",
+            "❌  MISSING DEPENDENCIES — the app cannot start.",
             "=" * 60,
         ]
         for pkg in missing:
             lines.append(f"  • {pkg}")
         lines += [
             "",
-            "Execute para instalar tudo:",
+            "Run to install everything:",
             f"  {install_cmd}",
             "",
-            "Depois inicie com:",
+            "Then start with:",
             "  bash scripts/run/run.sh",
             "=" * 60,
             "",
@@ -62,35 +62,35 @@ def validate_dependencies() -> None:
 
 def is_alwaysdata() -> bool:
     """
-    Detecta se estamos rodando em um servidor Alwaysdata.
-    Usado pelo install.sh, warm_up_ffmpeg e bloqueio de execucao direta.
+    Detect if running on an Alwaysdata server.
+    Used by install.sh, warm_up_ffmpeg and direct execution blocking.
     """
-    # 1. Variavel de ambiente tipica do Alwaysdata
+    # 1. Typical Alwaysdata environment variable
     if os.getenv("ALWAYSDATA_ACCOUNT"):
         return True
-    # 2. Arquivo marcador
+    # 2. Marker file
     if os.path.isfile("/etc/alwaysdata"):
         return True
-    # 3. Hostname termina com alwaysdata.net ou alwaysdata.com
+    # 3. Hostname ends with alwaysdata.net or alwaysdata.com
     try:
         fqdn = socket.getfqdn().lower()
         if fqdn.endswith((".alwaysdata.net", ".alwaysdata.com")):
             return True
     except Exception:
         pass
-    # 4. Conteudo do /etc/hostname
+    # 4. Contents of /etc/hostname
     try:
         if Path("/etc/hostname").read_text().strip().endswith(".alwaysdata.net"):
             return True
     except Exception:
         pass
-    # 5. Diretorio $HOME/admin (criado pelo Alwaysdata para logs de servicos)
+    # 5. $HOME/admin directory (created by Alwaysdata for service logs)
     try:
         if Path(os.path.expanduser("~/admin/logs/services")).is_dir():
             return True
     except Exception:
         pass
-    # 6. Kernel version contem "alwaysdata" (ex: 6.18.30-alwaysdata)
+    # 6. Kernel version contains "alwaysdata" (e.g.: 6.18.30-alwaysdata)
     try:
         if "alwaysdata" in os.uname().release.lower():
             return True

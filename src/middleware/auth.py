@@ -10,7 +10,7 @@ async def auth(
     query_key: str = Security(api_key_query)
 ):
     """
-    FastAPI Dependency para autenticação via API Key.
+    FastAPI dependency for API key authentication.
     Pode ser injetada nas rotas ou no APIRouter inteiro.
     """
     # Dynamic env fetch avoids requiring a server restart to apply new keys
@@ -20,5 +20,5 @@ async def auth(
 
     raise HTTPException(
         status_code=401,
-        detail={"error": "Unauthorized"}
+        detail={"error": "UNAUTHORIZED", "message": "Invalid or missing API key."}
     )

@@ -12,12 +12,12 @@ async def update_my_profile(data: ProfileUpdateRequest):
     try:
         sock = get_sock()
         if not sock:
-            raise HTTPException(status_code=503, detail="WhatsApp não conectado")
+            raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
         if not data.name and not data.newProfilePictureUrl:
             raise HTTPException(
                 status_code=400,
-                detail="Informe 'name' ou 'newProfilePictureUrl' para atualizar (envie ao menos um).",
+                detail={"error": "MISSING_FIELD", "message": "Provide 'name' or 'newProfilePictureUrl' to update (at least one required)."},
             )
 
         updates = []
@@ -25,7 +25,7 @@ async def update_my_profile(data: ProfileUpdateRequest):
         # ── Nome do perfil (pushname) ──────────────────────
         if data.name:
             await asyncio.to_thread(sock.set_profile_name, data.name)
-            updates.append(f"Nome alterado para: {data.name}")
+            updates.append(f"Name changed to: {data.name}")
 
         # ── Foto do perfil ──────────────────────────────────
         if data.newProfilePictureUrl:
@@ -34,18 +34,18 @@ async def update_my_profile(data: ProfileUpdateRequest):
             # set_profile_photo aceita str (caminho) ou bytes
             # Retorna PictureID
             picture_id = await asyncio.to_thread(sock.set_profile_photo, temp_file_path)
-            updates.append(f"Foto de perfil atualizada (PictureID: {picture_id})")
+            updates.append(f"Profile photo updated (PictureID: {picture_id})")
 
-        logger.info(f"👤 Perfil do bot atualizado: {', '.join(updates)}")
+        logger.info(f"👤 Bot profile updated: {', '.join(updates)}")
         return {"success": True, "updated": updates}
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Erro ao atualizar perfil do bot: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Failed to update bot profile: {str(e)}")
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
     finally:
         if temp_file_path and os.path.exists(temp_file_path):
             try:
                 os.remove(temp_file_path)
             except Exception as e:
-                logger.error(f"Erro ao apagar arquivo temporário: {str(e)}")
+                logger.error(f"Failed to delete temp file: {str(e)}")

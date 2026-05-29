@@ -28,6 +28,6 @@ def update_bot_settings(data: BotSettingsIn):
             update_data["ip_blacklist"] = data.ip_blacklist
             
         settings = settingsService.save_settings(update_data)
-        return {"success": True, "message": "Configurações do bot atualizadas", "settings": settings}
+        return {"success": True, "message": "Bot settings updated.", "settings": settings}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})

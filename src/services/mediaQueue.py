@@ -6,15 +6,13 @@ class TaskQueue:
         self.lock = asyncio.Lock()
 
     async def enqueue(self, coro):
-        """
-        Adiciona uma corrotina à fila (na prática, serializa com Lock)
-        """
+        """Enqueue a coroutine (serializes execution via Lock)."""
         async with self.lock:
             try:
                 return await coro
             except Exception as e:
                 import traceback
-                logger.error(f"❌ Erro na fila de processamento: {str(e)}")
+                logger.error(f"❌ Task queue processing error: {str(e)}")
                 logger.error(traceback.format_exc())
                 raise e
 

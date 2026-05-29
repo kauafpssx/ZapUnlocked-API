@@ -11,7 +11,7 @@ async def clear_session():
         if not auth_path.exists():
             return {
                 "success": True,
-                "message": "Sessão já estava limpa"
+                "message": "Session was already clean."
             }
 
         removed_files = []
@@ -22,22 +22,22 @@ async def clear_session():
                 elif file.is_dir():
                     shutil.rmtree(file)
                 removed_files.append(file.name)
-                logger.info(f"🗑️ Arquivo/Diretório removido: {file.name}")
+                logger.info(f"🗑️ Removed: {file.name}")
             except Exception as e:
-                logger.error(f"❌ Erro ao remover {file.name}: {str(e)}")
+                logger.error(f"❌ Failed to remove {file.name}: {str(e)}")
 
         try:
             auth_path.rmdir()
         except Exception:
             pass
 
-        logger.info("✅ Sessão apagada com sucesso")
+        logger.info("✅ Session cleared successfully")
 
         return {
             "success": True,
-            "message": "Sessão apagada com sucesso. Reinicie o bot para gerar novo QR Code.",
+            "message": "Session cleared. Restart the bot to generate a new QR code.",
             "removedFiles": len(removed_files)
         }
     except Exception as e:
-        logger.error(f"❌ Erro ao apagar sessão: {str(e)}")
+        logger.error(f"❌ Failed to clear session: {str(e)}")
         raise e

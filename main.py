@@ -1,28 +1,36 @@
 import asyncio
 import os
 import sys
+from pathlib import Path
 
-# Reduz uso de memória em servidores pequenos
+# Reduce memory arena usage on small servers
 os.environ.setdefault("MALLOC_ARENA_MAX", "1")
 
-# Flags de teste
-BYPASS_ALWAYSDATA_CHECK = os.getenv("BYPASS_ALWAYSDATA_CHECK", "0") == "1"
+# Windows: python-magic-bin bundles libmagic.dll under magic/libmagic/ but
+# python-magic's loader only searches PATH and ./. Prepend the directory so
+# ctypes.util.find_library and LoadLibrary can resolve it.
+if sys.platform == "win32":
+    _libmagic_dir = Path(sys.executable).parent.parent / "Lib" / "site-packages" / "magic" / "libmagic"
+    if _libmagic_dir.exists():
+        os.environ["PATH"] = str(_libmagic_dir) + os.pathsep + os.environ.get("PATH", "")
+        os.add_dll_directory(str(_libmagic_dir))
+
 ENABLE_WHATSAPP = os.getenv("ENABLE_WHATSAPP", "1") == "1"
 ENABLE_FFMPEG_WARMUP = os.getenv("ENABLE_FFMPEG_WARMUP", "1") == "1"
 
 _THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# .local_lib legado (menor prioridade)
+# Legacy .local_lib (lowest priority)
 _LOCAL_LIB = os.path.join(_THIS_DIR, ".local_lib")
 if os.path.isdir(_LOCAL_LIB):
     sys.path.insert(0, _LOCAL_LIB)
 
-# vendor tem prioridade maxima (inserido por ultimo = sys.path[0])
+# vendor takes highest priority (inserted last = sys.path[0])
 _VENDOR_DIR = os.path.join(_THIS_DIR, "vendor")
 if os.path.isdir(_VENDOR_DIR):
     sys.path.insert(0, _VENDOR_DIR)
 
-# Auto-venv apenas se existir
+# Auto-activate venv if present and not already inside it
 _VENV_DIR = os.path.join(_THIS_DIR, ".venv")
 if __name__ == "__main__":
     VENV_PYTHON = os.path.join(_VENV_DIR, "bin", "python")
@@ -40,23 +48,27 @@ from src.utils.startup_validator import is_alwaysdata, validate_dependencies
 
 validate_dependencies()
 
-if is_alwaysdata() and sys.stdin.isatty() and not BYPASS_ALWAYSDATA_CHECK:
+if is_alwaysdata() and sys.stdin.isatty():
     msg = (
         "\n"
-        "╔══════════════════════════════════════════════════╗\n"
-        "║   ATENCAO: Alwaysdata detectado                  ║\n"
-        "║   A porta 8300-8499 so fica acessivel           ║\n"
-        "║   apos registrar um Service no painel:           ║\n"
-        "║     Advanced > Services > Add a service          ║\n"
-        "║                                                  ║\n"
-        "║   Name          ZapUnlocked-API                  ║\n"
-        "║   Command       python3 main.py                  ║\n"
-        "║   Working dir   ZapUnlocked-API                  ║\n"
-        "║   Env vars      PORT=8300                        ║\n"
-        "║                                                  ║\n"
-        "║   Para testar manualmente:                       ║\n"
-        "║   BYPASS_ALWAYSDATA_CHECK=1 python3 main.py      ║\n"
-        "╚══════════════════════════════════════════════════╝\n"
+        "╔══════════════════════════════════════════════════════╗\n"
+        "║  ⚠  ALWAYSDATA — SERVICE REQUIRED                   ║\n"
+        "╠══════════════════════════════════════════════════════╣\n"
+        "║                                                      ║\n"
+        "║  Port 8300-8499 is only accessible after             ║\n"
+        "║  registering this app as a Service in the panel.     ║\n"
+        "║                                                      ║\n"
+        "║  Advanced › Services › Add a service                 ║\n"
+        "║                                                      ║\n"
+        "╠══════════════════════════════════════════════════════╣\n"
+        "║  Field           Value                               ║\n"
+        "║  ─────────────   ─────────────────────────────────   ║\n"
+        "║  Name            ZapUnlocked-API                     ║\n"
+        "║  Command         python3 main.py                     ║\n"
+        "║  Working dir     ZapUnlocked-API                     ║\n"
+        "║  Env vars        PORT=8300                           ║\n"
+        "║                                                      ║\n"
+        "╚══════════════════════════════════════════════════════╝\n"
     )
 
     try:
@@ -66,30 +78,23 @@ if is_alwaysdata() and sys.stdin.isatty() and not BYPASS_ALWAYSDATA_CHECK:
             [
                 "gum",
                 "style",
-                "--foreground",
-                "196",
-                "--border-foreground",
-                "196",
-                "--border",
-                "rounded",
-                "--align",
-                "center",
-                "--width",
-                "58",
-                "--padding",
-                "1 1",
-                "ATENCAO: Alwaysdata detectado",
-                "A porta 8300-8499 so fica acessivel",
-                "apos registrar um Service no painel:",
-                "Advanced > Services > Add a service",
-                "",
-                "Name......... ZapUnlocked-API",
-                "Command...... python3 main.py",
-                "Working dir.. ZapUnlocked-API",
-                "Env vars..... PORT=8300",
-                "",
-                "Teste manual:",
-                "BYPASS_ALWAYSDATA_CHECK=1 python3 main.py",
+                "--foreground", "214",
+                "--border-foreground", "214",
+                "--border", "rounded",
+                "--align", "left",
+                "--width", "58",
+                "--padding", "1 2",
+                "⚠  ALWAYSDATA — SERVICE REQUIRED\n",
+                "Port 8300-8499 is only accessible after",
+                "registering this app as a Service in the panel.\n",
+                "Advanced › Services › Add a service\n",
+                "──────────────────────────────────────────────",
+                "Field           Value",
+                "─────────────   ─────────────────────────────",
+                "Name            ZapUnlocked-API",
+                "Command         python3 main.py",
+                "Working dir     ZapUnlocked-API",
+                "Env vars        PORT=8300",
             ],
             stderr=subprocess.DEVNULL,
         )
@@ -119,20 +124,20 @@ async def lifespan(app: FastAPI):
 
             warm_up_ffmpeg()
         except Exception as e:
-            logger.warning(f"FFmpeg warmup ignorado: {e}")
+            logger.warning(f"FFmpeg warmup skipped: {e}")
 
     if ENABLE_WHATSAPP:
         try:
             from src.services.whatsapp.client import start_bot
 
             asyncio.create_task(start_bot())
-            logger.info("WhatsApp bot iniciado")
+            logger.info("WhatsApp bot started")
         except Exception as e:
-            logger.error(f"Falha ao iniciar WhatsApp bot: {e}")
+            logger.error(f"Failed to start WhatsApp bot: {e}")
     else:
-        logger.warning("WhatsApp bot desativado por ENABLE_WHATSAPP=0")
+        logger.warning("WhatsApp bot disabled (ENABLE_WHATSAPP=0)")
 
-    logger.info(f"🚀 API rodando na porta {PORT}")
+    logger.info(f"🚀 API running on port {PORT}")
     yield
 
 

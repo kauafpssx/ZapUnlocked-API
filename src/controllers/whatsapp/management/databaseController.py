@@ -9,19 +9,19 @@ class ConfigRequest(BaseModel):
 async def manual_cleanup():
     try:
         cleanup_db()
-        return {"success": True, "message": "Limpeza manual executada com sucesso ✅"}
+        return {"success": True, "message": "Manual cleanup completed successfully."}
     except Exception as e:
-        logger.error(f"Erro na limpeza manual: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Manual cleanup error: {e}")
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 async def update_config(data: ConfigRequest):
     try:
         set_cleanup_interval(data.interval)
-        logger.info(f"⚙️ Intervalo de limpeza atualizado para {data.interval} minutos")
-        return {"success": True, "message": f"Intervalo atualizado para {data.interval} minutos"}
+        logger.info(f"⚙️ Cleanup interval updated to {data.interval} minutes")
+        return {"success": True, "message": f"Cleanup interval updated to {data.interval} minutes."}
     except Exception as e:
-        logger.error(f"Erro ao atualizar config: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Failed to update config: {e}")
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 async def get_status():
     state = get_cleanup_state()

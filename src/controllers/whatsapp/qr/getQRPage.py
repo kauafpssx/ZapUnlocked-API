@@ -26,14 +26,14 @@ async def get_qr_page(request: Request):
         template_path = Path(BASE_DIR) / "src" / "views" / "qr.html"
 
         if not template_path.exists():
-            return HTMLResponse("<h1>Template não encontrado</h1>", status_code=500)
+            return HTMLResponse("<h1>Template not found</h1>", status_code=500)
 
         with open(template_path, "r", encoding="utf-8") as f:
             html = f.read()
 
         status_text = "Conectado" if is_connected else ("Aguardando Scan" if qr_data_url else "Inicializando")
         title_text = "Conectado!" if is_connected else ("📲 Escaneie o QR" if qr_data_url else "⏳ Inicializando...")
-        desc_text = "O assistente está pronto." if is_connected else "Abra o WhatsApp e escaneie o código abaixo."
+        desc_text = "The assistant is ready." if is_connected else "Open WhatsApp and scan the code below."
         qr_hidden_class = "hidden" if is_connected else ""
         instr_hidden_class = "" if not is_connected else "hidden"
         instr_hidden_class_inverse = "hidden" if not is_connected else ""

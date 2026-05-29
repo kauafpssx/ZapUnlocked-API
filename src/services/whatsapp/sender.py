@@ -25,7 +25,7 @@ def build_jid(phone_or_jid: str):
 def _ensure_client():
     client = get_sock()
     if not client or not get_is_ready():
-        raise Exception("WhatsApp não está conectado")
+        raise Exception("WhatsApp is not connected.")
     return client
 
 async def _save_to_history(jid: str, message_content: dict, res):
@@ -42,7 +42,7 @@ async def _save_to_history(jid: str, message_content: dict, res):
                 "id": res.ID
             },
             "messageTimestamp": int(time.time()),
-            "pushName": "Você",
+            "pushName": "You",
             "message": message_content
         }
         await storage.add_message_to_history(phone, msg_dict)
@@ -80,7 +80,7 @@ def _build_context_info(quoted_dict: dict):
             quotedMessage=msg_proto
         )
     except Exception as e:
-        logger.error(f"❌ Erro ao reconstruir ContextInfo para quote: {e}")
+        logger.error(f"❌ Failed to reconstruct ContextInfo for quote: {e}")
         return None
 
 def _build_message_info(quoted_dict: dict):
@@ -152,7 +152,7 @@ def _build_message_info(quoted_dict: dict):
             RetryCount=0
         )
     except Exception as e:
-        logger.error(f"❌ Erro ao reconstruir Neonize Message para quote: {e}")
+        logger.error(f"❌ Failed to reconstruct Neonize Message for quote: {e}")
         return None
 
 # ── Text ──────────────────────────────────────────────
@@ -162,7 +162,7 @@ async def send_message(jid: str, message: str, options: dict = None):
     # Appending AI Tag if enabled
     settings = settingsService.get_settings()
     
-    # DEBUG EXTREMO PARA A AI TAG
+    # EXTREME DEBUG FOR AI TAG
     from src.utils.logger import logger
     logger.info(f"🛠️ [SENDER DEBUG] ai_tag_enabled={settings.get('ai_tag_enabled')} (tipo: {type(settings.get('ai_tag_enabled'))}) | tag={settings.get('ai_tag_text')!r}")
     
@@ -171,7 +171,7 @@ async def send_message(jid: str, message: str, options: dict = None):
         if tag not in message:
             message += tag
 
-    logger.info(f"🛠️ [SENDER DEBUG] Texto final que vai pro WhatsApp: {message!r}")
+    logger.info(f"🛠️ [SENDER DEBUG] Final text being sent to WhatsApp: {message!r}")
 
     ci = _build_context_info(options.get("quoted")) if options else None
     
@@ -207,12 +207,12 @@ async def send_button_message(jid: str, text: str, buttons: list, options: dict 
     if image_url:
         interactive_msg.header.hasMediaAttachment = True
         try:
-            # build_image_message retorna um Message; .imageMessage é o sub-objeto ImageMessage
+            # build_image_message returns a Message; .imageMessage is the ImageMessage sub-object
             img_full = client.build_image_message(image_url)
             interactive_msg.header.imageMessage.CopyFrom(img_full.imageMessage)
         except Exception as e:
-            logger.warning(f"⚠️ Falha ao carregar imagem para o cabeçalho: {e}")
-            # Fallback: usa título textual no header
+            logger.warning(f"⚠️ Failed to load image for header: {e}")
+            # Fallback: use text title in header
             interactive_msg.header.hasMediaAttachment = False
             if title:
                 interactive_msg.header.title = title
@@ -308,12 +308,12 @@ async def send_button_message(jid: str, text: str, buttons: list, options: dict 
     # Unified standardization for ALL devices (iOS, Android, Web)
     # NativeFlow MUST be wrapped in viewOnceMessage for many modern devices
     
-    # 🎯 FIX: Se for NativeFlow e não houver título no header, garantimos um para o card de lista não sumir
+    # 🎯 FIX: If NativeFlow has no header title, set one to prevent the list card from disappearing
     if not interactive_msg.header.title and not interactive_msg.header.hasMediaAttachment:
         if title:
              interactive_msg.header.title = title
         else:
-             interactive_msg.header.title = "Ação Necessária"
+             interactive_msg.header.title = "Action Required"
 
     interactive_msg.nativeFlowMessage.messageVersion = 1
     
@@ -333,15 +333,15 @@ async def send_button_message(jid: str, text: str, buttons: list, options: dict 
     )
 
     # --- DEBUG LOGGING ---
-    logger.info(f"🛠️ [SENDER DEBUG] Enviando InteractiveMessage para {jid}")
-    logger.info(f"🛠️ [SENDER DEBUG] Texto: {text!r}")
+    logger.info(f"🛠️ [SENDER DEBUG] Sending InteractiveMessage to {jid}")
+    logger.info(f"🛠️ [SENDER DEBUG] Text: {text!r}")
     for i, b in enumerate(interactive_msg.nativeFlowMessage.buttons):
-        logger.info(f"🛠️ [SENDER DEBUG] Botão {i}: name={b.name} params={b.buttonParamsJSON}")
+        logger.info(f"🛠️ [SENDER DEBUG] Button {i}: name={b.name} params={b.buttonParamsJSON}")
     # --- END DEBUG LOGGING ---
 
     res = client.send_message(build_jid(jid), msg)
     
-    # Historico
+    # History
     await _save_to_history(jid, {
         "interactiveMessage": {
             "body": {"text": text},
@@ -359,7 +359,7 @@ async def send_button_message(jid: str, text: str, buttons: list, options: dict 
             "deviceListMetadataVersion": 2
         }
     }, res)
-    # gc.collect() — removido: GC automático do Python é suficiente
+    # gc.collect() — removed: Python's automatic GC is sufficient
     return res
 
 # ── Polls ──────────────────────────────────────────────
@@ -379,8 +379,8 @@ async def send_poll_message(jid: str, name: str, options: list, selectable_count
         quoted=_build_message_info(quoted_msg)
     )
     
-    # IMPORTANTE: add_msg_secret=True é ESSENCIAL para enquetes. 
-    # Sem isso, o WhatsApp não gera a chave de criptografia para os votos (original message secret key not found).
+    # IMPORTANT: add_msg_secret=True is ESSENTIAL for polls.
+    # Without it, WhatsApp does not generate the encryption key for votes (original message secret key not found).
     res = client.send_message(build_jid(jid), msg, add_msg_secret=True)
     
     await _save_to_history(jid, {
@@ -389,7 +389,7 @@ async def send_poll_message(jid: str, name: str, options: list, selectable_count
             "options": [{"optionName": opt} for opt in options]
         }
     }, res)
-    # gc.collect() — removido: GC automático do Python é suficiente
+    # gc.collect() — removed: Python's automatic GC is sufficient
     return res
 
 
@@ -449,7 +449,7 @@ async def send_poll_vote_message(jid: str, poll_id: str, poll_name: str, options
     vote_msg = client.build_poll_vote(msg_info, options)
     res = client.send_message(target_jid, vote_msg)
     
-    # gc.collect() — removido: GC automático do Python é suficiente
+    # gc.collect() — removed: Python's automatic GC is sufficient
     return res
 
 # ── Image ─────────────────────────────────────────────
@@ -466,7 +466,7 @@ async def send_image_message(jid: str, image_path: str, caption: str = "", as_do
     mimetype = magic.from_buffer(image_bytes, mime=True)
 
     if as_document:
-        # ── Enviar como Documento ──────────────────────────
+        # ── Send as Document ──────────────────────────
         upload = client.upload(image_bytes, MediaType.MediaDocument)
         final_name = file_name or Path(image_path).name or "imagem"
         msg = Message(
@@ -486,7 +486,7 @@ async def send_image_message(jid: str, image_path: str, caption: str = "", as_do
         res = client.send_message(build_jid(jid), msg)
         await _save_to_history(jid, {"documentMessage": {"fileName": final_name, "caption": caption}}, res)
     else:
-        # ── Enviar como Imagem ─────────────────────────────
+        # ── Send as Image ─────────────────────────────
         upload = client.upload(image_bytes, MediaType.MediaImage)
         msg = Message(
             imageMessage=ImageMessage(
@@ -547,7 +547,7 @@ async def send_audio_message(jid: str, audio_path: str, is_ptt: bool = False, du
     res = client.send_message(build_jid(jid), msg)
     await _save_to_history(jid, {"audioMessage": {}}, res)
     del audio_bytes
-    gc.collect()  # mantido: libera memória de audio_bytes
+    gc.collect()  # kept: frees audio_bytes memory
     return res
 
 # ── Video ─────────────────────────────────────────────
@@ -588,7 +588,7 @@ async def send_video_message(jid: str, video_path: str, caption: str = "", as_do
     res = client.send_message(build_jid(jid), msg)
     await _save_to_history(jid, {"videoMessage": {"caption": caption}}, res)
     del video_bytes
-    gc.collect()  # mantido: libera memória de video_bytes
+    gc.collect()  # kept: frees video_bytes memory
     return res
 
 # ── Document ──────────────────────────────────────────
@@ -621,26 +621,26 @@ async def send_document_message(jid: str, file_path: str, file_name: str, mimety
     res = client.send_message(build_jid(jid), msg)
     await _save_to_history(jid, {"documentMessage": {"title": file_name}}, res)
     del doc_bytes
-    gc.collect()  # mantido: libera memória de doc_bytes
+    gc.collect()  # kept: frees doc_bytes memory
     return res
 
 # ── Sticker ───────────────────────────────────────────
 async def send_sticker_message(jid: str, sticker_path: str, pack: str = "", author: str = "", options: dict = None):
     client = _ensure_client()
     
-    # Usar o método nativo do neonize que já lida com EXIF (metadata) e upload corretamente
-    # passthrough=False para garantir que o neonize adicione os metadados EXIF
+    # Use the native neonize method that handles EXIF metadata and upload correctly
+    # passthrough=False ensures neonize adds EXIF metadata
     res = client.send_sticker(
         to=build_jid(jid),
         file=sticker_path,
-        name=pack,         # O neonize mapeia 'name' para sticker-pack-name no EXIF
-        packname=author,   # O neonize mapeia 'packname' para sticker-pack-publisher no EXIF
-        passthrough=False, # Precisa ser False para o neonize processar o EXIF
+        name=pack,         # neonize maps 'name' to sticker-pack-name in EXIF
+        packname=author,   # neonize maps 'packname' to sticker-pack-publisher in EXIF
+        passthrough=False, # Must be False for neonize to process EXIF
         quoted=_build_message_info(options.get("quoted")) if options else None
     )
     
     await _save_to_history(jid, {"stickerMessage": {}}, res)
-    # gc.collect() — removido: GC automático do Python é suficiente
+    # gc.collect() — removed: Python's automatic GC is sufficient
     return res
 
 # ── Find Message ─────────────────────────────────────
@@ -702,7 +702,7 @@ async def send_reaction(jid: str, identifier: str, emoji: str, search_type: str 
         target_id = found.get("key", {}).get("id")
         from_me = found.get("key", {}).get("fromMe", False)
     elif search_type == "text":
-        raise Exception(f"Nenhuma mensagem recente encontrada com o texto: '{identifier}'")
+        raise Exception(f"No recent message found with text: '{identifier}'")
 
     target_jid = build_jid(jid)
     jid_str = Jid2String(target_jid)
@@ -719,7 +719,7 @@ async def send_reaction(jid: str, identifier: str, emoji: str, search_type: str 
         )
     )
     res = client.send_message(target_jid, msg)
-    # gc.collect() — removido: GC automático do Python é suficiente
+    # gc.collect() — removed: Python's automatic GC is sufficient
     return res
 
 # ── Location ───────────────────────────────────────────
@@ -738,7 +738,7 @@ async def send_location_message(jid: str, latitude: float, longitude: float, nam
     )
     res = client.send_message(build_jid(jid), msg)
     await _save_to_history(jid, {"locationMessage": {"lat": latitude, "lng": longitude, "name": name}}, res)
-    # gc.collect() — removido: GC automático do Python é suficiente
+    # gc.collect() — removed: Python's automatic GC is sufficient
     return res
 
 # ── Contact ────────────────────────────────────────────
@@ -763,7 +763,7 @@ async def send_contact_message(jid: str, contact_name: str, contact_phone: str, 
     )
     res = client.send_message(build_jid(jid), msg)
     await _save_to_history(jid, {"contactMessage": {"displayName": contact_name}}, res)
-    # gc.collect() — removido: GC automático do Python é suficiente
+    # gc.collect() — removed: Python's automatic GC is sufficient
     return res
 
 # ── Multiple Contacts ──────────────────────────────────
@@ -774,7 +774,7 @@ async def send_contacts_message(jid: str, contacts: list, options: dict = None):
     client = _ensure_client()
     contact_msgs = []
     for c in contacts:
-        name = c.get("name", "Contato")
+        name = c.get("name", "Contact")
         phone = c.get("phone", "").lstrip("+").replace(" ", "").replace("-", "")
         vcard = (
             f"BEGIN:VCARD\nVERSION:3.0\n"
@@ -787,14 +787,14 @@ async def send_contacts_message(jid: str, contacts: list, options: dict = None):
     
     msg = Message(
         contactsArrayMessage=ContactsArrayMessage(
-            displayName=f"{len(contacts)} contatos",
+            displayName=f"{len(contacts)} contacts",
             contacts=contact_msgs,
             contextInfo=_build_context_info(options.get("quoted")) if options else None
         )
     )
     res = client.send_message(build_jid(jid), msg)
     await _save_to_history(jid, {"contactsArrayMessage": {"count": len(contacts)}}, res)
-    # gc.collect() — removido: GC automático do Python é suficiente
+    # gc.collect() — removed: Python's automatic GC is sufficient
     return res
 
 # ── Delete Message ─────────────────────────────────────
@@ -808,7 +808,7 @@ async def delete_message(jid: str, message_id: str, is_from_me: bool = True):
     
     # Neonize revoke expects: (chat: JID, sender: JID, message_id: str)
     res = client.revoke_message(target_jid, sender_jid, message_id)
-    # gc.collect() — removido: GC automático do Python é suficiente
+    # gc.collect() — removed: Python's automatic GC is sufficient
     return res
 
 # ── Mark as Read ───────────────────────────────────────
@@ -827,7 +827,7 @@ async def mark_messages_read(jid: str, message_ids: list, sender: str = None):
         for mid in message_ids
     ]
     res = client.mark_read(keys, int(time.time()), target_jid, sender_jid)
-    # gc.collect() — removido: GC automático do Python é suficiente
+    # gc.collect() — removed: Python's automatic GC is sufficient
     return res
 
 # ── Link with Preview ──────────────────────────────────
@@ -879,7 +879,7 @@ async def send_link_message(jid: str, url: str, text: str = "", title: str = "",
                 r = await http.get(thumbnail_url)
             ext.JPEGThumbnail = r.content
         except Exception as e:
-            logger.warning(f"⚠️ Falha ao baixar thumbnail do link: {e}")
+            logger.warning(f"⚠️ Failed to download link thumbnail: {e}")
 
     msg = Message(extendedTextMessage=ext)
     res = client.send_message(build_jid(jid), msg)
@@ -895,12 +895,12 @@ async def edit_message(jid: str, message_id: str, new_text: str, is_from_me: boo
     client = _ensure_client()
     target_jid = build_jid(jid)
     
-    # Criar a nova mensagem que substituirá a antiga
+    # Build the new message that replaces the original
     new_msg = Message(conversation=new_text)
     
     # Neonize edit expects: (chat: JID, message_id: str, new_message_obj: Message)
     res = client.edit_message(target_jid, message_id, new_msg)
-    # Atualizar no histórico local se possível
+    # Update in local history if possible
     await _save_to_history(jid, {"conversation": new_text}, res)
-    # gc.collect() — removido: GC automático do Python é suficiente
+    # gc.collect() — removed: Python's automatic GC is sufficient
     return res

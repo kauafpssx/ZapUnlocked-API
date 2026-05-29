@@ -13,7 +13,7 @@ async def send_sticker(data: SendStickerRequest):
     logger.info(f"🔍 Request recebida em /send_sticker para {data.phone}")
 
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     try:
         async def process_task():
@@ -27,19 +27,19 @@ async def send_sticker(data: SendStickerRequest):
 
             url = data.sticker_url or data.image_url
             if not url:
-                raise Exception("sticker_url ou image_url é obrigatório")
+                raise Exception("'sticker_url' or 'image_url' is required.")
 
             file_path = await download_media(url)
             sticker_path = None
 
             try:
-                logger.info(f"🔄 Convertendo para sticker ({data.phone})...")
+                logger.info(f"🔄 Converting to sticker ({data.phone})...")
                 sticker_path = await convert_to_webp(file_path, {
                     "resizeMode": data.resizeMode,
                     "padColor": data.padColor,
                     "blurIntensity": data.blurIntensity
                 })
-                logger.info(f"📤 Enviando sticker para {data.phone}...")
+                logger.info(f"📤 Sending sticker to {data.phone}...")
                 await send_sticker_message(jid, sticker_path, data.pack or "", data.author or "", options=options)
             finally:
                 cleanup(file_path)
@@ -47,8 +47,8 @@ async def send_sticker(data: SendStickerRequest):
                     cleanup(sticker_path)
 
         await task_queue.enqueue(process_task())
-        return {"success": True, "message": "Figurinha enviada com sucesso ✅"}
+        return {"success": True, "message": "Sticker sent successfully."}
 
     except Exception as e:
         logger.error(f"❌ Erro ao enviar figurinha ({type(e).__name__}): {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Erro ({type(e).__name__}): {str(e)}")
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": f"({type(e).__name__}): {str(e)}"})

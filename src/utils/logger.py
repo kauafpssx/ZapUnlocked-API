@@ -1,29 +1,29 @@
-"""Configuração centralizada de logging com Loguru.
+"""Centralised logging configuration using Loguru.
 
-Fornece logger configurado com:
-- Saída em stdout (colorida, filtrada)
-- Persistência em arquivo (rotação diária, retenção de 30 dias)
+Provides a logger with:
+- stdout output (coloured, filtered)
+- File persistence (daily rotation, 30-day retention)
 """
 
 from loguru import logger
 import sys
 from pathlib import Path
 
-# Remove o handler padrão do Loguru
+# Remove default Loguru handler
 logger.remove()
 
-# Define diretório de logs na raiz do projeto
+# Log directory at project root
 LOG_DIR = Path(__file__).resolve().parent.parent.parent / "logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 LOG_FILE = LOG_DIR / "zapunlocked_{time:YYYY-MM-DD}.log"
 
 
 def _filter_lid_logs(record):
-    """Filtra mensagens de migração de LID (ruído do Neonize)."""
+    """Filter LID migration noise from Neonize."""
     return "Migrated to LID encryption" not in record["message"]
 
 
-# Handler para console (stdout) com filtro
+# Console handler (stdout) with filter
 logger.add(
     sys.stdout,
     filter=_filter_lid_logs,
@@ -31,7 +31,7 @@ logger.add(
     format="<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan> - <level>{message}</level>",
 )
 
-# Handler para arquivo com rotação diária e retenção de 30 dias
+# File handler with daily rotation and 30-day retention
 logger.add(
     str(LOG_FILE),
     rotation="1 day",

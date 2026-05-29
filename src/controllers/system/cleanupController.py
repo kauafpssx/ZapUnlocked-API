@@ -1,4 +1,4 @@
-"""Controller para operações de limpeza de disco e configurações."""
+"""Controller for disk cleanup and configuration operations."""
 
 from typing import Dict, Any
 from fastapi import HTTPException
@@ -10,7 +10,7 @@ import json
 
 
 async def force_cleanup():
-    """Remove todos os arquivos temporários de mídia."""
+    """Delete all temporary media files."""
     try:
         if temp_dir.exists():
             for filename in os.listdir(temp_dir):
@@ -20,15 +20,15 @@ async def force_cleanup():
                 elif filepath.is_dir():
                     shutil.rmtree(filepath)
 
-        return {"status": "success", "message": "Espaço em disco liberado com sucesso."}
+        return {"success": True, "message": "Temporary files cleared successfully."}
     except Exception as e:
         raise HTTPException(
-            status_code=500, detail=f"Erro ao executar limpeza forçada: {str(e)}"
+            status_code=500, detail={"error": "INTERNAL_ERROR", "message": f"Failed to run forced cleanup: {str(e)}"}
         )
 
 
 async def get_cleanup_settings():
-    """Retorna as configurações atuais de limpeza automática do banco."""
+    """Return current automatic database cleanup settings."""
     try:
         db_config_file = data_dir / "db_config.json"
 
@@ -42,12 +42,12 @@ async def get_cleanup_settings():
         return settings
     except Exception as e:
         raise HTTPException(
-            status_code=500, detail=f"Erro ao ler configs de limpeza: {str(e)}"
+            status_code=500, detail={"error": "INTERNAL_ERROR", "message": f"Failed to read cleanup settings: {str(e)}"}
         )
 
 
 async def update_cleanup_settings(settings: Dict[str, Any]):
-    """Atualiza o intervalo de limpeza automática do banco."""
+    """Update the automatic database cleanup interval."""
     try:
         db_config_file = data_dir / "db_config.json"
 
@@ -62,8 +62,8 @@ async def update_cleanup_settings(settings: Dict[str, Any]):
         with open(db_config_file, "w") as f:
             json.dump(current, f)
 
-        return {"status": "success", "settings": current}
+        return {"success": True, "settings": current}
     except Exception as e:
         raise HTTPException(
-            status_code=500, detail=f"Erro ao salvar configs de limpeza: {str(e)}"
+            status_code=500, detail={"error": "INTERNAL_ERROR", "message": f"Failed to save cleanup settings: {str(e)}"}
         )

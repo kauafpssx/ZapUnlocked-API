@@ -10,7 +10,7 @@ from ..schemas import SendButtonRequest
 
 async def send_with_buttons(data: SendButtonRequest):
     if not get_is_ready():
-        raise HTTPException(status_code=503, detail="WhatsApp ainda não conectado")
+        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     try:
         jid = f"{data.phone}@s.whatsapp.net"
@@ -44,7 +44,7 @@ async def send_with_buttons(data: SendButtonRequest):
 
                 btn_dict = {
                     **btn,
-                    "buttonText": format_text(btn.get("buttonText", btn.get("text", "Botão"))),
+                    "buttonText": format_text(btn.get("buttonText", btn.get("text", "Button"))),
                     "id": btn_id,
                 }
                 buttons_to_send.append(btn_dict)
@@ -52,14 +52,14 @@ async def send_with_buttons(data: SendButtonRequest):
             # OTP (Copy Code)
             buttons_to_send.append({
                 "type": "otp",
-                "text": data.button_text or "Copiar código",
+                "text": data.button_text or "Copy code",
                 "code": data.code
             })
         elif data.pixKey:
             # PIX
             buttons_to_send.append({
                 "type": "pix",
-                "text": data.button_text or "💰 Copiar PIX",
+                "text": data.button_text or "💰 Copy PIX",
                 "pixKey": data.pixKey,
                 "pixType": data.pixType or data.type or "EVP"
             })
@@ -79,7 +79,7 @@ async def send_with_buttons(data: SendButtonRequest):
             })
 
         if not buttons_to_send:
-            raise HTTPException(status_code=400, detail="Pelo menos um botão deve ser informado.")
+            raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "At least one button must be provided."})
 
 
         # 4. Auto-generate footer for PIX if missing
@@ -101,9 +101,9 @@ async def send_with_buttons(data: SendButtonRequest):
             footer=final_footer,
             image_url=data.image
         )
-        return {"success": True, "message": "Mensagem interativa enviada ✅"}
+        return {"success": True, "message": "Interactive message sent."}
     except Exception as e:
-        logger.error(f"❌ Erro ao enviar com botão: {str(e)}")
+        logger.error(f"❌ Failed to send button message: {str(e)}")
         if isinstance(e, HTTPException):
             raise e
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
