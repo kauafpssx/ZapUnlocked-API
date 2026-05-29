@@ -78,6 +78,7 @@ uname -r 2>/dev/null | grep -qi 'alwaysdata' && _ALWAYSDATA=true
 if $_ALWAYSDATA; then
     gum log --level info "Alwaysdata detectado — instalando sem pip (install_wheel.py)"
     rm -rf .venv
+else
     # Servidor normal: venv com pip interno
     gum log --level info "Criando ambiente virtual..."
     python3 -m venv .venv 2>/dev/null || {
