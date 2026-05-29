@@ -1,4 +1,4 @@
-﻿# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
+# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
@@ -253,31 +253,6 @@ mindmap
 
 إذا كان webhook يحتوي على `body` مخصص مع `{{placeholders}}`، فسيتم إرسال هذا body بدلاً من المغلف القياسي.
 
-### الأحداث المتاحة (20 نوعًا)
-
-| الحدث | الوصف |
-| :---- | :---- |
-| `message.text` | نص عادي / منسق |
-| `message.image` | صورة مستلمة |
-| `message.video` | فيديو مستلم |
-| `message.audio` | صوت / رسالة صوتية |
-| `message.document` | مستند / ملف |
-| `message.sticker` | ملصق |
-| `message.contact` | جهة اتصال مشتركة |
-| `message.location` | موقع |
-| `message.reaction` | رد فعل (رمز تعبيري) |
-| `message.poll_created` | استطلاع مستلم |
-| `message.poll_vote` | تصويت في استطلاع |
-| `message.button_reply` | نقرة على زر |
-| `message.list_reply` | اختيار من قائمة تفاعلية |
-| `message.deleted` | رسالة محذوفة بواسطة المرسل |
-| `message.unknown` | نوع رسالة غير معروف |
-| `message.sent` | رسالة مرسلة (يدوي) |
-| `connection.connected` | واتساب متصل |
-| `connection.disconnected` | واتساب غير متصل |
-| `connection.qr_ready` | تم إنشاء رمز QR |
-| `call.received` | مكالمة واردة |
-
 ### العناصر النائبة (body مخصص)
 
 | العنصر النائب | القيمة |
@@ -286,10 +261,18 @@ mindmap
 | `{{text}}` | نص الرسالة |
 | `{{phone}}` | نفس `{{from}}` |
 | `{{id}}` | معرف الرسالة |
+| `{{requested}}` | الكمية المطلوبة (fetchMessages) |
+| `{{found}}` | الكمية الموجودة (fetchMessages) |
 | `{{timestamp}}` | الطابع الزمني UTC الحالي |
+| `{{day}}` | اليوم الحالي (dd) |
+| `{{mon}}` | الشهر الحالي (MM) |
+| `{{yea}}` | السنة الحالية (yyyy) |
+| `{{hou}}` | الساعة الحالية (HH) |
+| `{{min}}` | الدقيقة الحالية (mm) |
+| `{{sec}}` | الثانية الحالية (ss) |
 
 <details>
-<summary><b>📦 أمثلة Payload حسب الحدث</b></summary>
+<summary><b>📥 الرسائل المستلمة</b> · 15 حدثاً</summary>
 
 الحقول الأساسية الموجودة في أحداث الرسائل المستلمة:
 
@@ -303,7 +286,9 @@ mindmap
 }
 ```
 
-#### `message.text`
+<details>
+<summary><code>message.text</code> - نص عادي / منسق</summary>
+
 ```json
 {
   "event": "message.text",
@@ -314,8 +299,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.image`
+<details>
+<summary><code>message.image</code> - صورة مستلمة</summary>
+
 ```json
 {
   "event": "message.image",
@@ -327,8 +315,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.video`
+<details>
+<summary><code>message.video</code> - فيديو مستلم</summary>
+
 ```json
 {
   "event": "message.video",
@@ -342,8 +333,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.audio`
+<details>
+<summary><code>message.audio</code> - صوت / رسالة صوتية</summary>
+
 ```json
 {
   "event": "message.audio",
@@ -356,8 +350,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.document`
+<details>
+<summary><code>message.document</code> - مستند / ملف</summary>
+
 ```json
 {
   "event": "message.document",
@@ -370,8 +367,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.sticker`
+<details>
+<summary><code>message.sticker</code> - ملصق</summary>
+
 ```json
 {
   "event": "message.sticker",
@@ -382,8 +382,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.contact`
+<details>
+<summary><code>message.contact</code> - جهة اتصال مشتركة</summary>
+
 ```json
 {
   "event": "message.contact",
@@ -394,8 +397,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.location`
+<details>
+<summary><code>message.location</code> - موقع</summary>
+
 ```json
 {
   "event": "message.location",
@@ -408,8 +414,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.reaction`
+<details>
+<summary><code>message.reaction</code> - رد فعل (رمز تعبيري)</summary>
+
 ```json
 {
   "event": "message.reaction",
@@ -421,8 +430,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.poll_created`
+<details>
+<summary><code>message.poll_created</code> - استطلاع مستلم</summary>
+
 ```json
 {
   "event": "message.poll_created",
@@ -433,8 +445,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.poll_vote`
+<details>
+<summary><code>message.poll_vote</code> - تصويت في استطلاع</summary>
+
 ```json
 {
   "event": "message.poll_vote",
@@ -445,8 +460,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.button_reply`
+<details>
+<summary><code>message.button_reply</code> - نقرة على زر</summary>
+
 ```json
 {
   "event": "message.button_reply",
@@ -458,8 +476,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.list_reply`
+<details>
+<summary><code>message.list_reply</code> - اختيار من قائمة تفاعلية</summary>
+
 ```json
 {
   "event": "message.list_reply",
@@ -471,8 +492,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.deleted`
+<details>
+<summary><code>message.deleted</code> - رسالة محذوفة بواسطة المرسل</summary>
+
 ```json
 {
   "event": "message.deleted",
@@ -481,8 +505,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.unknown`
+<details>
+<summary><code>message.unknown</code> - نوع غير معروف</summary>
+
 ```json
 {
   "event": "message.unknown",
@@ -492,8 +519,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.sent`
+</details>
+
+<details>
+<summary><b>📤 الرسائل المرسلة</b> · 1 حدث</summary>
+
+<details>
+<summary><code>message.sent</code> - رسالة مرسلة (يدوي)</summary>
+
 ```json
 {
   "event": "message.sent",
@@ -504,8 +539,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `connection.connected`
+</details>
+
+<details>
+<summary><b>🔗 الاتصال</b> · 3 أحداث</summary>
+
+<details>
+<summary><code>connection.connected</code> - واتساب متصل</summary>
+
 ```json
 {
   "event": "connection.connected",
@@ -514,16 +557,22 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `connection.disconnected`
+<details>
+<summary><code>connection.disconnected</code> - واتساب غير متصل</summary>
+
 ```json
 {
   "event": "connection.disconnected",
   "data": {}
 }
 ```
+</details>
 
-#### `connection.qr_ready`
+<details>
+<summary><code>connection.qr_ready</code> - تم إنشاء رمز QR</summary>
+
 ```json
 {
   "event": "connection.qr_ready",
@@ -532,8 +581,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `call.received`
+</details>
+
+<details>
+<summary><b>📞 المكالمة</b> · 1 حدث</summary>
+
+<details>
+<summary><code>call.received</code> - مكالمة واردة</summary>
+
 ```json
 {
   "event": "call.received",
@@ -544,6 +601,7 @@ mindmap
   }
 }
 ```
+</details>
 
 </details>
 

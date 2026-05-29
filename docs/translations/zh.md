@@ -1,4 +1,4 @@
-﻿# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
+# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
@@ -253,31 +253,6 @@ mindmap
 
 如果 webhook 有带有 `{{placeholders}}` 的自定义 `body`，则将发送该 body 而不是标准信封。
 
-### 可用事件（20种）
-
-| 事件 | 描述 |
-| :--- | :--- |
-| `message.text` | 纯文本 / 格式化文本 |
-| `message.image` | 收到图片 |
-| `message.video` | 收到视频 |
-| `message.audio` | 音频 / 语音消息 |
-| `message.document` | 文档 / 文件 |
-| `message.sticker` | 贴纸 |
-| `message.contact` | 分享的联系人 |
-| `message.location` | 位置 |
-| `message.reaction` | 反应（表情符号） |
-| `message.poll_created` | 收到投票 |
-| `message.poll_vote` | 投票 |
-| `message.button_reply` | 按钮点击 |
-| `message.list_reply` | 交互式列表选择 |
-| `message.deleted` | 发送者删除的消息 |
-| `message.unknown` | 未映射的消息类型 |
-| `message.sent` | 已发送消息（手动） |
-| `connection.connected` | WhatsApp 已连接 |
-| `connection.disconnected` | WhatsApp 已断开 |
-| `connection.qr_ready` | 二维码已生成 |
-| `call.received` | 收到来电 |
-
 ### 占位符（自定义 body）
 
 | 占位符 | 值 |
@@ -286,10 +261,18 @@ mindmap
 | `{{text}}` | 消息文本 |
 | `{{phone}}` | 同 `{{from}}` |
 | `{{id}}` | 消息 ID |
+| `{{requested}}` | 请求数量 (fetchMessages) |
+| `{{found}}` | 找到数量 (fetchMessages) |
 | `{{timestamp}}` | 当前 UTC 时间戳 |
+| `{{day}}` | 当前日 (dd) |
+| `{{mon}}` | 当前月 (MM) |
+| `{{yea}}` | 当前年 (yyyy) |
+| `{{hou}}` | 当前时 (HH) |
+| `{{min}}` | 当前分 (mm) |
+| `{{sec}}` | 当前秒 (ss) |
 
 <details>
-<summary><b>📦 各事件的 Payload 示例</b></summary>
+<summary><b>📥 收到的消息</b> · 15个事件</summary>
 
 收到的消息事件中的基础字段：
 
@@ -303,7 +286,9 @@ mindmap
 }
 ```
 
-#### `message.text`
+<details>
+<summary><code>message.text</code> - 纯文本 / 格式化文本</summary>
+
 ```json
 {
   "event": "message.text",
@@ -314,8 +299,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.image`
+<details>
+<summary><code>message.image</code> - 收到图片</summary>
+
 ```json
 {
   "event": "message.image",
@@ -327,8 +315,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.video`
+<details>
+<summary><code>message.video</code> - 收到视频</summary>
+
 ```json
 {
   "event": "message.video",
@@ -342,8 +333,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.audio`
+<details>
+<summary><code>message.audio</code> - 音频 / 语音消息</summary>
+
 ```json
 {
   "event": "message.audio",
@@ -356,8 +350,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.document`
+<details>
+<summary><code>message.document</code> - 文档 / 文件</summary>
+
 ```json
 {
   "event": "message.document",
@@ -370,8 +367,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.sticker`
+<details>
+<summary><code>message.sticker</code> - 贴纸</summary>
+
 ```json
 {
   "event": "message.sticker",
@@ -382,8 +382,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.contact`
+<details>
+<summary><code>message.contact</code> - 分享的联系人</summary>
+
 ```json
 {
   "event": "message.contact",
@@ -394,8 +397,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.location`
+<details>
+<summary><code>message.location</code> - 位置</summary>
+
 ```json
 {
   "event": "message.location",
@@ -408,8 +414,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.reaction`
+<details>
+<summary><code>message.reaction</code> - 反应（表情符号）</summary>
+
 ```json
 {
   "event": "message.reaction",
@@ -421,8 +430,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.poll_created`
+<details>
+<summary><code>message.poll_created</code> - 收到投票</summary>
+
 ```json
 {
   "event": "message.poll_created",
@@ -433,8 +445,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.poll_vote`
+<details>
+<summary><code>message.poll_vote</code> - 投票</summary>
+
 ```json
 {
   "event": "message.poll_vote",
@@ -445,8 +460,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.button_reply`
+<details>
+<summary><code>message.button_reply</code> - 按钮点击</summary>
+
 ```json
 {
   "event": "message.button_reply",
@@ -458,8 +476,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.list_reply`
+<details>
+<summary><code>message.list_reply</code> - 交互式列表选择</summary>
+
 ```json
 {
   "event": "message.list_reply",
@@ -471,8 +492,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.deleted`
+<details>
+<summary><code>message.deleted</code> - 发送者删除的消息</summary>
+
 ```json
 {
   "event": "message.deleted",
@@ -481,8 +505,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.unknown`
+<details>
+<summary><code>message.unknown</code> - 未映射类型</summary>
+
 ```json
 {
   "event": "message.unknown",
@@ -492,8 +519,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.sent`
+</details>
+
+<details>
+<summary><b>📤 已发送的消息</b> · 1个事件</summary>
+
+<details>
+<summary><code>message.sent</code> - 已发送消息（手动）</summary>
+
 ```json
 {
   "event": "message.sent",
@@ -504,8 +539,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `connection.connected`
+</details>
+
+<details>
+<summary><b>🔗 连接</b> · 3个事件</summary>
+
+<details>
+<summary><code>connection.connected</code> - WhatsApp 已连接</summary>
+
 ```json
 {
   "event": "connection.connected",
@@ -514,16 +557,22 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `connection.disconnected`
+<details>
+<summary><code>connection.disconnected</code> - WhatsApp 已断开</summary>
+
 ```json
 {
   "event": "connection.disconnected",
   "data": {}
 }
 ```
+</details>
 
-#### `connection.qr_ready`
+<details>
+<summary><code>connection.qr_ready</code> - 二维码已生成</summary>
+
 ```json
 {
   "event": "connection.qr_ready",
@@ -532,8 +581,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `call.received`
+</details>
+
+<details>
+<summary><b>📞 通话</b> · 1个事件</summary>
+
+<details>
+<summary><code>call.received</code> - 收到来电</summary>
+
 ```json
 {
   "event": "call.received",
@@ -544,6 +601,7 @@ mindmap
   }
 }
 ```
+</details>
 
 </details>
 

@@ -1,4 +1,4 @@
-﻿# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
+# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
@@ -253,31 +253,6 @@ Tutti i webhook ricevono una busta standard:
 
 Se il webhook ha un `body` personalizzato con `{{placeholders}}`, quel body viene inviato al posto della busta standard.
 
-### Eventi Disponibili (20 tipi)
-
-| Evento | Descrizione |
-| :----- | :---------- |
-| `message.text` | Testo semplice / formattato |
-| `message.image` | Immagine ricevuta |
-| `message.video` | Video ricevuto |
-| `message.audio` | Audio / nota vocale |
-| `message.document` | Documento / file |
-| `message.sticker` | Sticker |
-| `message.contact` | Contatto condiviso |
-| `message.location` | Posizione |
-| `message.reaction` | Reazione (emoji) |
-| `message.poll_created` | Sondaggio ricevuto |
-| `message.poll_vote` | Voto nel sondaggio |
-| `message.button_reply` | Click su pulsante |
-| `message.list_reply` | Selezione in lista interattiva |
-| `message.deleted` | Messaggio eliminato dal mittente |
-| `message.unknown` | Tipo di messaggio non mappato |
-| `message.sent` | Messaggio inviato (manuale) |
-| `connection.connected` | WhatsApp connesso |
-| `connection.disconnected` | WhatsApp disconnesso |
-| `connection.qr_ready` | Codice QR generato |
-| `call.received` | Chiamata ricevuta |
-
 ### Placeholder (body personalizzato)
 
 | Placeholder | Valore |
@@ -286,10 +261,18 @@ Se il webhook ha un `body` personalizzato con `{{placeholders}}`, quel body vien
 | `{{text}}` | Testo del messaggio |
 | `{{phone}}` | Uguale a `{{from}}` |
 | `{{id}}` | ID del messaggio |
+| `{{requested}}` | Quantità richiesta (fetchMessages) |
+| `{{found}}` | Quantità trovata (fetchMessages) |
 | `{{timestamp}}` | Timestamp UTC corrente |
+| `{{day}}` | Giorno corrente (dd) |
+| `{{mon}}` | Mese corrente (MM) |
+| `{{yea}}` | Anno corrente (yyyy) |
+| `{{hou}}` | Ora corrente (HH) |
+| `{{min}}` | Minuto corrente (mm) |
+| `{{sec}}` | Secondo corrente (ss) |
 
 <details>
-<summary><b>📦 Esempi di Payload per Evento</b></summary>
+<summary><b>📥 Messaggi Ricevuti</b> · 15 eventi</summary>
 
 Campi base presenti negli eventi di messaggio ricevuto:
 
@@ -303,7 +286,9 @@ Campi base presenti negli eventi di messaggio ricevuto:
 }
 ```
 
-#### `message.text`
+<details>
+<summary><code>message.text</code> - Testo semplice / formattato</summary>
+
 ```json
 {
   "event": "message.text",
@@ -314,8 +299,11 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.image`
+<details>
+<summary><code>message.image</code> - Immagine ricevuta</summary>
+
 ```json
 {
   "event": "message.image",
@@ -327,8 +315,11 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.video`
+<details>
+<summary><code>message.video</code> - Video ricevuto</summary>
+
 ```json
 {
   "event": "message.video",
@@ -342,8 +333,11 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.audio`
+<details>
+<summary><code>message.audio</code> - Audio / nota vocale</summary>
+
 ```json
 {
   "event": "message.audio",
@@ -356,8 +350,11 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.document`
+<details>
+<summary><code>message.document</code> - Documento / file</summary>
+
 ```json
 {
   "event": "message.document",
@@ -370,8 +367,11 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.sticker`
+<details>
+<summary><code>message.sticker</code> - Sticker</summary>
+
 ```json
 {
   "event": "message.sticker",
@@ -382,8 +382,11 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.contact`
+<details>
+<summary><code>message.contact</code> - Contatto condiviso</summary>
+
 ```json
 {
   "event": "message.contact",
@@ -394,8 +397,11 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.location`
+<details>
+<summary><code>message.location</code> - Posizione</summary>
+
 ```json
 {
   "event": "message.location",
@@ -408,8 +414,11 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.reaction`
+<details>
+<summary><code>message.reaction</code> - Reazione (emoji)</summary>
+
 ```json
 {
   "event": "message.reaction",
@@ -421,8 +430,11 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.poll_created`
+<details>
+<summary><code>message.poll_created</code> - Sondaggio ricevuto</summary>
+
 ```json
 {
   "event": "message.poll_created",
@@ -433,8 +445,11 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.poll_vote`
+<details>
+<summary><code>message.poll_vote</code> - Voto nel sondaggio</summary>
+
 ```json
 {
   "event": "message.poll_vote",
@@ -445,8 +460,11 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.button_reply`
+<details>
+<summary><code>message.button_reply</code> - Click su pulsante</summary>
+
 ```json
 {
   "event": "message.button_reply",
@@ -458,8 +476,11 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.list_reply`
+<details>
+<summary><code>message.list_reply</code> - Selezione in lista interattiva</summary>
+
 ```json
 {
   "event": "message.list_reply",
@@ -471,8 +492,11 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.deleted`
+<details>
+<summary><code>message.deleted</code> - Messaggio eliminato dal mittente</summary>
+
 ```json
 {
   "event": "message.deleted",
@@ -481,8 +505,11 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.unknown`
+<details>
+<summary><code>message.unknown</code> - Tipo non mappato</summary>
+
 ```json
 {
   "event": "message.unknown",
@@ -492,8 +519,16 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `message.sent`
+</details>
+
+<details>
+<summary><b>📤 Messaggi Inviati</b> · 1 evento</summary>
+
+<details>
+<summary><code>message.sent</code> - Messaggio inviato (manuale)</summary>
+
 ```json
 {
   "event": "message.sent",
@@ -504,8 +539,16 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `connection.connected`
+</details>
+
+<details>
+<summary><b>🔗 Connessione</b> · 3 eventi</summary>
+
+<details>
+<summary><code>connection.connected</code> - WhatsApp connesso</summary>
+
 ```json
 {
   "event": "connection.connected",
@@ -514,16 +557,22 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `connection.disconnected`
+<details>
+<summary><code>connection.disconnected</code> - WhatsApp disconnesso</summary>
+
 ```json
 {
   "event": "connection.disconnected",
   "data": {}
 }
 ```
+</details>
 
-#### `connection.qr_ready`
+<details>
+<summary><code>connection.qr_ready</code> - Codice QR generato</summary>
+
 ```json
 {
   "event": "connection.qr_ready",
@@ -532,8 +581,16 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
-#### `call.received`
+</details>
+
+<details>
+<summary><b>📞 Chiamata</b> · 1 evento</summary>
+
+<details>
+<summary><code>call.received</code> - Chiamata ricevuta</summary>
+
 ```json
 {
   "event": "call.received",
@@ -544,6 +601,7 @@ Campi base presenti negli eventi di messaggio ricevuto:
   }
 }
 ```
+</details>
 
 </details>
 

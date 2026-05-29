@@ -1,4 +1,4 @@
-﻿# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
+# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
@@ -253,31 +253,6 @@ mindmap
 
 यदि webhook में `{{placeholders}}` के साथ कस्टम `body` है, तो मानक लिफाफे के बजाय यह body भेजा जाता है।
 
-### उपलब्ध इवेंट्स (20 प्रकार)
-
-| इवेंट | विवरण |
-| :---- | :----- |
-| `message.text` | सादा / फ़ॉर्मेटेड टेक्स्ट |
-| `message.image` | प्राप्त छवि |
-| `message.video` | प्राप्त वीडियो |
-| `message.audio` | ऑडियो / वॉइस नोट |
-| `message.document` | दस्तावेज़ / फ़ाइल |
-| `message.sticker` | स्टिकर |
-| `message.contact` | साझा संपर्क |
-| `message.location` | स्थान |
-| `message.reaction` | प्रतिक्रिया (इमोजी) |
-| `message.poll_created` | प्राप्त पोल |
-| `message.poll_vote` | पोल में वोट |
-| `message.button_reply` | बटन क्लिक |
-| `message.list_reply` | इंटरैक्टिव सूची चयन |
-| `message.deleted` | प्रेषक द्वारा हटाया गया संदेश |
-| `message.unknown` | अमैप्ड संदेश प्रकार |
-| `message.sent` | भेजा गया संदेश (मैन्युअल) |
-| `connection.connected` | WhatsApp कनेक्टेड |
-| `connection.disconnected` | WhatsApp डिस्कनेक्टेड |
-| `connection.qr_ready` | QR कोड जनरेटेड |
-| `call.received` | कॉल प्राप्त हुई |
-
 ### प्लेसहोल्डर (कस्टम body)
 
 | प्लेसहोल्डर | मान |
@@ -286,10 +261,18 @@ mindmap
 | `{{text}}` | संदेश टेक्स्ट |
 | `{{phone}}` | `{{from}}` के समान |
 | `{{id}}` | संदेश ID |
+| `{{requested}}` | अनुरोधित मात्रा (fetchMessages) |
+| `{{found}}` | मिली मात्रा (fetchMessages) |
 | `{{timestamp}}` | वर्तमान UTC टाइमस्टैंप |
+| `{{day}}` | वर्तमान दिन (dd) |
+| `{{mon}}` | वर्तमान माह (MM) |
+| `{{yea}}` | वर्तमान वर्ष (yyyy) |
+| `{{hou}}` | वर्तमान घंटा (HH) |
+| `{{min}}` | वर्तमान मिनट (mm) |
+| `{{sec}}` | वर्तमान सेकंड (ss) |
 
 <details>
-<summary><b>📦 इवेंट के अनुसार Payload उदाहरण</b></summary>
+<summary><b>📥 प्राप्त संदेश</b> · 15 इवेंट्स</summary>
 
 प्राप्त संदेश इवेंट्स में मौजूद आधार फ़ील्ड:
 
@@ -303,7 +286,9 @@ mindmap
 }
 ```
 
-#### `message.text`
+<details>
+<summary><code>message.text</code> - सादा / फ़ॉर्मेटेड टेक्स्ट</summary>
+
 ```json
 {
   "event": "message.text",
@@ -314,8 +299,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.image`
+<details>
+<summary><code>message.image</code> - प्राप्त छवि</summary>
+
 ```json
 {
   "event": "message.image",
@@ -327,8 +315,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.video`
+<details>
+<summary><code>message.video</code> - प्राप्त वीडियो</summary>
+
 ```json
 {
   "event": "message.video",
@@ -342,8 +333,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.audio`
+<details>
+<summary><code>message.audio</code> - ऑडियो / वॉइस नोट</summary>
+
 ```json
 {
   "event": "message.audio",
@@ -356,8 +350,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.document`
+<details>
+<summary><code>message.document</code> - दस्तावेज़ / फ़ाइल</summary>
+
 ```json
 {
   "event": "message.document",
@@ -370,8 +367,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.sticker`
+<details>
+<summary><code>message.sticker</code> - स्टिकर</summary>
+
 ```json
 {
   "event": "message.sticker",
@@ -382,8 +382,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.contact`
+<details>
+<summary><code>message.contact</code> - साझा संपर्क</summary>
+
 ```json
 {
   "event": "message.contact",
@@ -394,8 +397,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.location`
+<details>
+<summary><code>message.location</code> - स्थान</summary>
+
 ```json
 {
   "event": "message.location",
@@ -408,8 +414,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.reaction`
+<details>
+<summary><code>message.reaction</code> - प्रतिक्रिया (इमोजी)</summary>
+
 ```json
 {
   "event": "message.reaction",
@@ -421,8 +430,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.poll_created`
+<details>
+<summary><code>message.poll_created</code> - प्राप्त पोल</summary>
+
 ```json
 {
   "event": "message.poll_created",
@@ -433,8 +445,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.poll_vote`
+<details>
+<summary><code>message.poll_vote</code> - पोल में वोट</summary>
+
 ```json
 {
   "event": "message.poll_vote",
@@ -445,8 +460,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.button_reply`
+<details>
+<summary><code>message.button_reply</code> - बटन क्लिक</summary>
+
 ```json
 {
   "event": "message.button_reply",
@@ -458,8 +476,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.list_reply`
+<details>
+<summary><code>message.list_reply</code> - इंटरैक्टिव सूची चयन</summary>
+
 ```json
 {
   "event": "message.list_reply",
@@ -471,8 +492,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.deleted`
+<details>
+<summary><code>message.deleted</code> - प्रेषक द्वारा हटाया गया संदेश</summary>
+
 ```json
 {
   "event": "message.deleted",
@@ -481,8 +505,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.unknown`
+<details>
+<summary><code>message.unknown</code> - अमैप्ड प्रकार</summary>
+
 ```json
 {
   "event": "message.unknown",
@@ -492,8 +519,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.sent`
+</details>
+
+<details>
+<summary><b>📤 भेजे गए संदेश</b> · 1 इवेंट</summary>
+
+<details>
+<summary><code>message.sent</code> - भेजा गया संदेश (मैन्युअल)</summary>
+
 ```json
 {
   "event": "message.sent",
@@ -504,8 +539,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `connection.connected`
+</details>
+
+<details>
+<summary><b>🔗 कनेक्शन</b> · 3 इवेंट्स</summary>
+
+<details>
+<summary><code>connection.connected</code> - WhatsApp कनेक्टेड</summary>
+
 ```json
 {
   "event": "connection.connected",
@@ -514,16 +557,22 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `connection.disconnected`
+<details>
+<summary><code>connection.disconnected</code> - WhatsApp डिस्कनेक्टेड</summary>
+
 ```json
 {
   "event": "connection.disconnected",
   "data": {}
 }
 ```
+</details>
 
-#### `connection.qr_ready`
+<details>
+<summary><code>connection.qr_ready</code> - QR कोड जनरेटेड</summary>
+
 ```json
 {
   "event": "connection.qr_ready",
@@ -532,8 +581,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `call.received`
+</details>
+
+<details>
+<summary><b>📞 कॉल</b> · 1 इवेंट</summary>
+
+<details>
+<summary><code>call.received</code> - कॉल प्राप्त हुई</summary>
+
 ```json
 {
   "event": "call.received",
@@ -544,6 +601,7 @@ mindmap
   }
 }
 ```
+</details>
 
 </details>
 

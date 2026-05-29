@@ -1,4 +1,4 @@
-﻿# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
+# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
@@ -253,31 +253,6 @@ mindmap
 
 `{{placeholders}}` を含むカスタム `body` が設定されている場合、標準のエンベロープの代わりにそのbodyが送信されます。
 
-### 利用可能なイベント（20種類）
-
-| イベント | 説明 |
-| :------- | :--- |
-| `message.text` | プレーンテキスト / 書式付きテキスト |
-| `message.image` | 受信した画像 |
-| `message.video` | 受信した動画 |
-| `message.audio` | 音声 / ボイスメモ |
-| `message.document` | ドキュメント / ファイル |
-| `message.sticker` | ステッカー |
-| `message.contact` | 共有された連絡先 |
-| `message.location` | 位置情報 |
-| `message.reaction` | リアクション（絵文字） |
-| `message.poll_created` | 受信した投票 |
-| `message.poll_vote` | 投票 |
-| `message.button_reply` | ボタンクリック |
-| `message.list_reply` | インタラクティブリスト選択 |
-| `message.deleted` | 送信者によって削除されたメッセージ |
-| `message.unknown` | 未マッピングのメッセージタイプ |
-| `message.sent` | 送信済みメッセージ（手動） |
-| `connection.connected` | WhatsApp接続完了 |
-| `connection.disconnected` | WhatsApp切断 |
-| `connection.qr_ready` | QRコード生成完了 |
-| `call.received` | 着信 |
-
 ### プレースホルダー（カスタムbody）
 
 | プレースホルダー | 値 |
@@ -286,10 +261,18 @@ mindmap
 | `{{text}}` | メッセージテキスト |
 | `{{phone}}` | `{{from}}` と同じ |
 | `{{id}}` | メッセージID |
+| `{{requested}}` | 要求数 (fetchMessages) |
+| `{{found}}` | 見つかった数 (fetchMessages) |
 | `{{timestamp}}` | 現在のUTCタイムスタンプ |
+| `{{day}}` | 現在の日 (dd) |
+| `{{mon}}` | 現在の月 (MM) |
+| `{{yea}}` | 現在の年 (yyyy) |
+| `{{hou}}` | 現在の時 (HH) |
+| `{{min}}` | 現在の分 (mm) |
+| `{{sec}}` | 現在の秒 (ss) |
 
 <details>
-<summary><b>📦 イベント別ペイロード例</b></summary>
+<summary><b>📥 受信メッセージ</b> · 15イベント</summary>
 
 受信メッセージイベントに含まれる基本フィールド：
 
@@ -303,7 +286,9 @@ mindmap
 }
 ```
 
-#### `message.text`
+<details>
+<summary><code>message.text</code> - プレーンテキスト / 書式付きテキスト</summary>
+
 ```json
 {
   "event": "message.text",
@@ -314,8 +299,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.image`
+<details>
+<summary><code>message.image</code> - 受信した画像</summary>
+
 ```json
 {
   "event": "message.image",
@@ -327,8 +315,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.video`
+<details>
+<summary><code>message.video</code> - 受信した動画</summary>
+
 ```json
 {
   "event": "message.video",
@@ -342,8 +333,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.audio`
+<details>
+<summary><code>message.audio</code> - 音声 / ボイスメモ</summary>
+
 ```json
 {
   "event": "message.audio",
@@ -356,8 +350,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.document`
+<details>
+<summary><code>message.document</code> - ドキュメント / ファイル</summary>
+
 ```json
 {
   "event": "message.document",
@@ -370,8 +367,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.sticker`
+<details>
+<summary><code>message.sticker</code> - ステッカー</summary>
+
 ```json
 {
   "event": "message.sticker",
@@ -382,8 +382,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.contact`
+<details>
+<summary><code>message.contact</code> - 共有された連絡先</summary>
+
 ```json
 {
   "event": "message.contact",
@@ -394,8 +397,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.location`
+<details>
+<summary><code>message.location</code> - 位置情報</summary>
+
 ```json
 {
   "event": "message.location",
@@ -408,8 +414,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.reaction`
+<details>
+<summary><code>message.reaction</code> - リアクション（絵文字）</summary>
+
 ```json
 {
   "event": "message.reaction",
@@ -421,8 +430,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.poll_created`
+<details>
+<summary><code>message.poll_created</code> - 受信した投票</summary>
+
 ```json
 {
   "event": "message.poll_created",
@@ -433,8 +445,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.poll_vote`
+<details>
+<summary><code>message.poll_vote</code> - 投票</summary>
+
 ```json
 {
   "event": "message.poll_vote",
@@ -445,8 +460,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.button_reply`
+<details>
+<summary><code>message.button_reply</code> - ボタンクリック</summary>
+
 ```json
 {
   "event": "message.button_reply",
@@ -458,8 +476,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.list_reply`
+<details>
+<summary><code>message.list_reply</code> - インタラクティブリスト選択</summary>
+
 ```json
 {
   "event": "message.list_reply",
@@ -471,8 +492,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.deleted`
+<details>
+<summary><code>message.deleted</code> - 送信者によって削除されたメッセージ</summary>
+
 ```json
 {
   "event": "message.deleted",
@@ -481,8 +505,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.unknown`
+<details>
+<summary><code>message.unknown</code> - 未マッピングタイプ</summary>
+
 ```json
 {
   "event": "message.unknown",
@@ -492,8 +519,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.sent`
+</details>
+
+<details>
+<summary><b>📤 送信メッセージ</b> · 1イベント</summary>
+
+<details>
+<summary><code>message.sent</code> - 送信済みメッセージ（手動）</summary>
+
 ```json
 {
   "event": "message.sent",
@@ -504,8 +539,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `connection.connected`
+</details>
+
+<details>
+<summary><b>🔗 接続</b> · 3イベント</summary>
+
+<details>
+<summary><code>connection.connected</code> - WhatsApp接続完了</summary>
+
 ```json
 {
   "event": "connection.connected",
@@ -514,16 +557,22 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `connection.disconnected`
+<details>
+<summary><code>connection.disconnected</code> - WhatsApp切断</summary>
+
 ```json
 {
   "event": "connection.disconnected",
   "data": {}
 }
 ```
+</details>
 
-#### `connection.qr_ready`
+<details>
+<summary><code>connection.qr_ready</code> - QRコード生成完了</summary>
+
 ```json
 {
   "event": "connection.qr_ready",
@@ -532,8 +581,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `call.received`
+</details>
+
+<details>
+<summary><b>📞 通話</b> · 1イベント</summary>
+
+<details>
+<summary><code>call.received</code> - 着信</summary>
+
 ```json
 {
   "event": "call.received",
@@ -544,6 +601,7 @@ mindmap
   }
 }
 ```
+</details>
 
 </details>
 

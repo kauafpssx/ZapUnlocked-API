@@ -1,4 +1,4 @@
-﻿# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
+# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
@@ -253,31 +253,6 @@ All webhooks receive a standard envelope:
 
 If the webhook has a custom `body` with `{{placeholders}}`, this body is sent instead of the standard envelope.
 
-### Available Events (20 types)
-
-| Event | Description |
-| :---- | :---------- |
-| `message.text` | Plain / formatted text |
-| `message.image` | Image received |
-| `message.video` | Video received |
-| `message.audio` | Audio / voice note |
-| `message.document` | Document / file |
-| `message.sticker` | Sticker |
-| `message.contact` | Shared contact |
-| `message.location` | Location |
-| `message.reaction` | Reaction (emoji) |
-| `message.poll_created` | Poll received |
-| `message.poll_vote` | Poll vote |
-| `message.button_reply` | Button click |
-| `message.list_reply` | Interactive list selection |
-| `message.deleted` | Message deleted by sender |
-| `message.unknown` | Unmapped message type |
-| `message.sent` | Message sent (manual) |
-| `connection.connected` | WhatsApp connected |
-| `connection.disconnected` | WhatsApp disconnected |
-| `connection.qr_ready` | QR Code generated |
-| `call.received` | Call received |
-
 ### Placeholders (custom body)
 
 | Placeholder | Value |
@@ -286,10 +261,18 @@ If the webhook has a custom `body` with `{{placeholders}}`, this body is sent in
 | `{{text}}` | Message text |
 | `{{phone}}` | Same as `{{from}}` |
 | `{{id}}` | Message ID |
+| `{{requested}}` | Requested amount (fetchMessages) |
+| `{{found}}` | Found amount (fetchMessages) |
 | `{{timestamp}}` | Current UTC timestamp |
+| `{{day}}` | Current day (dd) |
+| `{{mon}}` | Current month (MM) |
+| `{{yea}}` | Current year (yyyy) |
+| `{{hou}}` | Current hour (HH) |
+| `{{min}}` | Current minute (mm) |
+| `{{sec}}` | Current second (ss) |
 
 <details>
-<summary><b>📦 Payload Examples by Event</b></summary>
+<summary><b>📥 Messages Received</b> · 15 events</summary>
 
 Base fields present in received message events:
 
@@ -303,7 +286,9 @@ Base fields present in received message events:
 }
 ```
 
-#### `message.text`
+<details>
+<summary><code>message.text</code> - Plain / formatted text</summary>
+
 ```json
 {
   "event": "message.text",
@@ -314,8 +299,11 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.image`
+<details>
+<summary><code>message.image</code> - Image received</summary>
+
 ```json
 {
   "event": "message.image",
@@ -327,8 +315,11 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.video`
+<details>
+<summary><code>message.video</code> - Video received</summary>
+
 ```json
 {
   "event": "message.video",
@@ -342,8 +333,11 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.audio`
+<details>
+<summary><code>message.audio</code> - Audio / voice note</summary>
+
 ```json
 {
   "event": "message.audio",
@@ -356,8 +350,11 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.document`
+<details>
+<summary><code>message.document</code> - Document / file</summary>
+
 ```json
 {
   "event": "message.document",
@@ -370,8 +367,11 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.sticker`
+<details>
+<summary><code>message.sticker</code> - Sticker</summary>
+
 ```json
 {
   "event": "message.sticker",
@@ -382,8 +382,11 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.contact`
+<details>
+<summary><code>message.contact</code> - Shared contact</summary>
+
 ```json
 {
   "event": "message.contact",
@@ -394,8 +397,11 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.location`
+<details>
+<summary><code>message.location</code> - Location</summary>
+
 ```json
 {
   "event": "message.location",
@@ -408,8 +414,11 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.reaction`
+<details>
+<summary><code>message.reaction</code> - Reaction (emoji)</summary>
+
 ```json
 {
   "event": "message.reaction",
@@ -421,8 +430,11 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.poll_created`
+<details>
+<summary><code>message.poll_created</code> - Poll received</summary>
+
 ```json
 {
   "event": "message.poll_created",
@@ -433,8 +445,11 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.poll_vote`
+<details>
+<summary><code>message.poll_vote</code> - Poll vote</summary>
+
 ```json
 {
   "event": "message.poll_vote",
@@ -445,8 +460,11 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.button_reply`
+<details>
+<summary><code>message.button_reply</code> - Button click</summary>
+
 ```json
 {
   "event": "message.button_reply",
@@ -458,8 +476,11 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.list_reply`
+<details>
+<summary><code>message.list_reply</code> - Interactive list selection</summary>
+
 ```json
 {
   "event": "message.list_reply",
@@ -471,8 +492,11 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.deleted`
+<details>
+<summary><code>message.deleted</code> - Message deleted by sender</summary>
+
 ```json
 {
   "event": "message.deleted",
@@ -481,8 +505,11 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.unknown`
+<details>
+<summary><code>message.unknown</code> - Unmapped message type</summary>
+
 ```json
 {
   "event": "message.unknown",
@@ -492,8 +519,16 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `message.sent`
+</details>
+
+<details>
+<summary><b>📤 Messages Sent</b> · 1 event</summary>
+
+<details>
+<summary><code>message.sent</code> - Message sent (manual)</summary>
+
 ```json
 {
   "event": "message.sent",
@@ -504,8 +539,16 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `connection.connected`
+</details>
+
+<details>
+<summary><b>🔗 Connection</b> · 3 events</summary>
+
+<details>
+<summary><code>connection.connected</code> - WhatsApp connected</summary>
+
 ```json
 {
   "event": "connection.connected",
@@ -514,16 +557,22 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `connection.disconnected`
+<details>
+<summary><code>connection.disconnected</code> - WhatsApp disconnected</summary>
+
 ```json
 {
   "event": "connection.disconnected",
   "data": {}
 }
 ```
+</details>
 
-#### `connection.qr_ready`
+<details>
+<summary><code>connection.qr_ready</code> - QR Code generated</summary>
+
 ```json
 {
   "event": "connection.qr_ready",
@@ -532,8 +581,16 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
-#### `call.received`
+</details>
+
+<details>
+<summary><b>📞 Call</b> · 1 event</summary>
+
+<details>
+<summary><code>call.received</code> - Call received</summary>
+
 ```json
 {
   "event": "call.received",
@@ -544,6 +601,7 @@ Base fields present in received message events:
   }
 }
 ```
+</details>
 
 </details>
 

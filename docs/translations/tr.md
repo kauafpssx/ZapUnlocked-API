@@ -253,31 +253,6 @@ Tüm webhook'lar standart bir zarf alır:
 
 Webhook'un `{{placeholders}}` içeren özel bir `body`'si varsa, standart zarf yerine bu body gönderilir.
 
-### Kullanılabilir Olaylar (20 tür)
-
-| Olay | Açıklama |
-| :--- | :------- |
-| `message.text` | Düz / biçimlendirilmiş metin |
-| `message.image` | Alınan resim |
-| `message.video` | Alınan video |
-| `message.audio` | Ses / sesli not |
-| `message.document` | Belge / dosya |
-| `message.sticker` | Çıkartma |
-| `message.contact` | Paylaşılan kişi |
-| `message.location` | Konum |
-| `message.reaction` | Tepki (emoji) |
-| `message.poll_created` | Alınan anket |
-| `message.poll_vote` | Anket oyu |
-| `message.button_reply` | Buton tıklaması |
-| `message.list_reply` | Etkileşimli liste seçimi |
-| `message.deleted` | Gönderen tarafından silinen mesaj |
-| `message.unknown` | Eşleşmeyen mesaj türü |
-| `message.sent` | Gönderilen mesaj (manuel) |
-| `connection.connected` | WhatsApp bağlandı |
-| `connection.disconnected` | WhatsApp bağlantısı kesildi |
-| `connection.qr_ready` | QR Kodu oluşturuldu |
-| `call.received` | Gelen arama |
-
 ### Yer Tutucular (özel body)
 
 | Yer Tutucu | Değer |
@@ -286,10 +261,18 @@ Webhook'un `{{placeholders}}` içeren özel bir `body`'si varsa, standart zarf y
 | `{{text}}` | Mesaj metni |
 | `{{phone}}` | `{{from}}` ile aynı |
 | `{{id}}` | Mesaj ID'si |
+| `{{requested}}` | İstenen miktar (fetchMessages) |
+| `{{found}}` | Bulunan miktar (fetchMessages) |
 | `{{timestamp}}` | Geçerli UTC zaman damgası |
+| `{{day}}` | Geçerli gün (gg) |
+| `{{mon}}` | Geçerli ay (AA) |
+| `{{yea}}` | Geçerli yıl (yyyy) |
+| `{{hou}}` | Geçerli saat (SS) |
+| `{{min}}` | Geçerli dakika (dd) |
+| `{{sec}}` | Geçerli saniye (ss) |
 
 <details>
-<summary><b>📦 Olaya Göre Payload Örnekleri</b></summary>
+<summary><b>📥 Alınan Mesajlar</b> · 15 olay</summary>
 
 Alınan mesaj olaylarında bulunan temel alanlar:
 
@@ -303,7 +286,9 @@ Alınan mesaj olaylarında bulunan temel alanlar:
 }
 ```
 
-#### `message.text`
+<details>
+<summary><code>message.text</code> - Düz / biçimlendirilmiş metin</summary>
+
 ```json
 {
   "event": "message.text",
@@ -314,8 +299,11 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.image`
+<details>
+<summary><code>message.image</code> - Alınan resim</summary>
+
 ```json
 {
   "event": "message.image",
@@ -327,8 +315,11 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.video`
+<details>
+<summary><code>message.video</code> - Alınan video</summary>
+
 ```json
 {
   "event": "message.video",
@@ -342,8 +333,11 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.audio`
+<details>
+<summary><code>message.audio</code> - Ses / sesli not</summary>
+
 ```json
 {
   "event": "message.audio",
@@ -356,8 +350,11 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.document`
+<details>
+<summary><code>message.document</code> - Belge / dosya</summary>
+
 ```json
 {
   "event": "message.document",
@@ -370,8 +367,11 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.sticker`
+<details>
+<summary><code>message.sticker</code> - Çıkartma</summary>
+
 ```json
 {
   "event": "message.sticker",
@@ -382,8 +382,11 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.contact`
+<details>
+<summary><code>message.contact</code> - Paylaşılan kişi</summary>
+
 ```json
 {
   "event": "message.contact",
@@ -394,8 +397,11 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.location`
+<details>
+<summary><code>message.location</code> - Konum</summary>
+
 ```json
 {
   "event": "message.location",
@@ -408,8 +414,11 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.reaction`
+<details>
+<summary><code>message.reaction</code> - Tepki (emoji)</summary>
+
 ```json
 {
   "event": "message.reaction",
@@ -421,8 +430,11 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.poll_created`
+<details>
+<summary><code>message.poll_created</code> - Alınan anket</summary>
+
 ```json
 {
   "event": "message.poll_created",
@@ -433,8 +445,11 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.poll_vote`
+<details>
+<summary><code>message.poll_vote</code> - Anket oyu</summary>
+
 ```json
 {
   "event": "message.poll_vote",
@@ -445,8 +460,11 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.button_reply`
+<details>
+<summary><code>message.button_reply</code> - Buton tıklaması</summary>
+
 ```json
 {
   "event": "message.button_reply",
@@ -458,8 +476,11 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.list_reply`
+<details>
+<summary><code>message.list_reply</code> - Etkileşimli liste seçimi</summary>
+
 ```json
 {
   "event": "message.list_reply",
@@ -471,8 +492,11 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.deleted`
+<details>
+<summary><code>message.deleted</code> - Gönderen tarafından silinen mesaj</summary>
+
 ```json
 {
   "event": "message.deleted",
@@ -481,8 +505,11 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.unknown`
+<details>
+<summary><code>message.unknown</code> - Eşleşmeyen tür</summary>
+
 ```json
 {
   "event": "message.unknown",
@@ -492,8 +519,16 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `message.sent`
+</details>
+
+<details>
+<summary><b>📤 Gönderilen Mesajlar</b> · 1 olay</summary>
+
+<details>
+<summary><code>message.sent</code> - Gönderilen mesaj (manuel)</summary>
+
 ```json
 {
   "event": "message.sent",
@@ -504,8 +539,16 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `connection.connected`
+</details>
+
+<details>
+<summary><b>🔗 Bağlantı</b> · 3 olay</summary>
+
+<details>
+<summary><code>connection.connected</code> - WhatsApp bağlandı</summary>
+
 ```json
 {
   "event": "connection.connected",
@@ -514,16 +557,22 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `connection.disconnected`
+<details>
+<summary><code>connection.disconnected</code> - WhatsApp bağlantısı kesildi</summary>
+
 ```json
 {
   "event": "connection.disconnected",
   "data": {}
 }
 ```
+</details>
 
-#### `connection.qr_ready`
+<details>
+<summary><code>connection.qr_ready</code> - QR Kodu oluşturuldu</summary>
+
 ```json
 {
   "event": "connection.qr_ready",
@@ -532,8 +581,16 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
-#### `call.received`
+</details>
+
+<details>
+<summary><b>📞 Arama</b> · 1 olay</summary>
+
+<details>
+<summary><code>call.received</code> - Gelen arama</summary>
+
 ```json
 {
   "event": "call.received",
@@ -544,6 +601,7 @@ Alınan mesaj olaylarında bulunan temel alanlar:
   }
 }
 ```
+</details>
 
 </details>
 

@@ -253,31 +253,6 @@ Alle webhooks ontvangen een standaard envelop:
 
 Als de webhook een aangepaste `body` met `{{placeholders}}` heeft, wordt deze body verzonden in plaats van de standaard envelop.
 
-### Beschikbare Evenementen (20 types)
-
-| Evenement | Beschrijving |
-| :-------- | :----------- |
-| `message.text` | Platte / opgemaakte tekst |
-| `message.image` | Ontvangen afbeelding |
-| `message.video` | Ontvangen video |
-| `message.audio` | Audio / spraakbericht |
-| `message.document` | Document / bestand |
-| `message.sticker` | Sticker |
-| `message.contact` | Gedeeld contact |
-| `message.location` | Locatie |
-| `message.reaction` | Reactie (emoji) |
-| `message.poll_created` | Ontvangen poll |
-| `message.poll_vote` | Poll-stem |
-| `message.button_reply` | Knopklik |
-| `message.list_reply` | Interactieve lijstselectie |
-| `message.deleted` | Bericht verwijderd door afzender |
-| `message.unknown` | Niet-gemapt berichttype |
-| `message.sent` | Verzonden bericht (handmatig) |
-| `connection.connected` | WhatsApp verbonden |
-| `connection.disconnected` | WhatsApp verbinding verbroken |
-| `connection.qr_ready` | QR-code gegenereerd |
-| `call.received` | Oproep ontvangen |
-
 ### Placeholders (aangepaste body)
 
 | Placeholder | Waarde |
@@ -286,10 +261,18 @@ Als de webhook een aangepaste `body` met `{{placeholders}}` heeft, wordt deze bo
 | `{{text}}` | Berichttekst |
 | `{{phone}}` | Zelfde als `{{from}}` |
 | `{{id}}` | Bericht-ID |
+| `{{requested}}` | Aangevraagde hoeveelheid (fetchMessages) |
+| `{{found}}` | Gevonden hoeveelheid (fetchMessages) |
 | `{{timestamp}}` | Huidige UTC-timestamp |
+| `{{day}}` | Huidige dag (dd) |
+| `{{mon}}` | Huidige maand (MM) |
+| `{{yea}}` | Huidig jaar (yyyy) |
+| `{{hou}}` | Huidig uur (HH) |
+| `{{min}}` | Huidige minuut (mm) |
+| `{{sec}}` | Huidige seconde (ss) |
 
 <details>
-<summary><b>📦 Payload Voorbeelden per Evenement</b></summary>
+<summary><b>📥 Ontvangen Berichten</b> · 15 evenementen</summary>
 
 Basisvelden in ontvangen berichtgebeurtenissen:
 
@@ -303,7 +286,9 @@ Basisvelden in ontvangen berichtgebeurtenissen:
 }
 ```
 
-#### `message.text`
+<details>
+<summary><code>message.text</code> - Platte / opgemaakte tekst</summary>
+
 ```json
 {
   "event": "message.text",
@@ -314,8 +299,11 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.image`
+<details>
+<summary><code>message.image</code> - Ontvangen afbeelding</summary>
+
 ```json
 {
   "event": "message.image",
@@ -327,8 +315,11 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.video`
+<details>
+<summary><code>message.video</code> - Ontvangen video</summary>
+
 ```json
 {
   "event": "message.video",
@@ -342,8 +333,11 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.audio`
+<details>
+<summary><code>message.audio</code> - Audio / spraakbericht</summary>
+
 ```json
 {
   "event": "message.audio",
@@ -356,8 +350,11 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.document`
+<details>
+<summary><code>message.document</code> - Document / bestand</summary>
+
 ```json
 {
   "event": "message.document",
@@ -370,8 +367,11 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.sticker`
+<details>
+<summary><code>message.sticker</code> - Sticker</summary>
+
 ```json
 {
   "event": "message.sticker",
@@ -382,8 +382,11 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.contact`
+<details>
+<summary><code>message.contact</code> - Gedeeld contact</summary>
+
 ```json
 {
   "event": "message.contact",
@@ -394,8 +397,11 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.location`
+<details>
+<summary><code>message.location</code> - Locatie</summary>
+
 ```json
 {
   "event": "message.location",
@@ -408,8 +414,11 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.reaction`
+<details>
+<summary><code>message.reaction</code> - Reactie (emoji)</summary>
+
 ```json
 {
   "event": "message.reaction",
@@ -421,8 +430,11 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.poll_created`
+<details>
+<summary><code>message.poll_created</code> - Ontvangen poll</summary>
+
 ```json
 {
   "event": "message.poll_created",
@@ -433,8 +445,11 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.poll_vote`
+<details>
+<summary><code>message.poll_vote</code> - Poll-stem</summary>
+
 ```json
 {
   "event": "message.poll_vote",
@@ -445,8 +460,11 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.button_reply`
+<details>
+<summary><code>message.button_reply</code> - Knopklik</summary>
+
 ```json
 {
   "event": "message.button_reply",
@@ -458,8 +476,11 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.list_reply`
+<details>
+<summary><code>message.list_reply</code> - Interactieve lijstselectie</summary>
+
 ```json
 {
   "event": "message.list_reply",
@@ -471,8 +492,11 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.deleted`
+<details>
+<summary><code>message.deleted</code> - Bericht verwijderd door afzender</summary>
+
 ```json
 {
   "event": "message.deleted",
@@ -481,8 +505,11 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.unknown`
+<details>
+<summary><code>message.unknown</code> - Niet-gemapt type</summary>
+
 ```json
 {
   "event": "message.unknown",
@@ -492,8 +519,16 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `message.sent`
+</details>
+
+<details>
+<summary><b>📤 Verzonden Berichten</b> · 1 evenement</summary>
+
+<details>
+<summary><code>message.sent</code> - Verzonden bericht (handmatig)</summary>
+
 ```json
 {
   "event": "message.sent",
@@ -504,8 +539,16 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `connection.connected`
+</details>
+
+<details>
+<summary><b>🔗 Verbinding</b> · 3 evenementen</summary>
+
+<details>
+<summary><code>connection.connected</code> - WhatsApp verbonden</summary>
+
 ```json
 {
   "event": "connection.connected",
@@ -514,16 +557,22 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `connection.disconnected`
+<details>
+<summary><code>connection.disconnected</code> - WhatsApp verbinding verbroken</summary>
+
 ```json
 {
   "event": "connection.disconnected",
   "data": {}
 }
 ```
+</details>
 
-#### `connection.qr_ready`
+<details>
+<summary><code>connection.qr_ready</code> - QR-code gegenereerd</summary>
+
 ```json
 {
   "event": "connection.qr_ready",
@@ -532,8 +581,16 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
-#### `call.received`
+</details>
+
+<details>
+<summary><b>📞 Oproep</b> · 1 evenement</summary>
+
+<details>
+<summary><code>call.received</code> - Oproep ontvangen</summary>
+
 ```json
 {
   "event": "call.received",
@@ -544,6 +601,7 @@ Basisvelden in ontvangen berichtgebeurtenissen:
   }
 }
 ```
+</details>
 
 </details>
 

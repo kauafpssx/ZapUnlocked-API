@@ -1,4 +1,4 @@
-﻿# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
+# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
@@ -253,31 +253,6 @@ mindmap
 
 Если у вебхука есть пользовательский `body` с `{{placeholders}}`, этот body отправляется вместо стандартного конверта.
 
-### Доступные события (20 типов)
-
-| Событие | Описание |
-| :------ | :------- |
-| `message.text` | Обычный / форматированный текст |
-| `message.image` | Полученное изображение |
-| `message.video` | Полученное видео |
-| `message.audio` | Аудио / голосовое сообщение |
-| `message.document` | Документ / файл |
-| `message.sticker` | Стикер |
-| `message.contact` | Поделились контактом |
-| `message.location` | Местоположение |
-| `message.reaction` | Реакция (эмодзи) |
-| `message.poll_created` | Полученный опрос |
-| `message.poll_vote` | Голос в опросе |
-| `message.button_reply` | Нажатие кнопки |
-| `message.list_reply` | Выбор в интерактивном списке |
-| `message.deleted` | Сообщение удалено отправителем |
-| `message.unknown` | Неотображенный тип сообщения |
-| `message.sent` | Отправленное сообщение (вручную) |
-| `connection.connected` | WhatsApp подключён |
-| `connection.disconnected` | WhatsApp отключён |
-| `connection.qr_ready` | QR-код сгенерирован |
-| `call.received` | Получен звонок |
-
 ### Плейсхолдеры (пользовательский body)
 
 | Плейсхолдер | Значение |
@@ -286,10 +261,18 @@ mindmap
 | `{{text}}` | Текст сообщения |
 | `{{phone}}` | То же, что `{{from}}` |
 | `{{id}}` | ID сообщения |
+| `{{requested}}` | Запрошенное количество (fetchMessages) |
+| `{{found}}` | Найденное количество (fetchMessages) |
 | `{{timestamp}}` | Текущая метка UTC |
+| `{{day}}` | Текущий день (дд) |
+| `{{mon}}` | Текущий месяц (ММ) |
+| `{{yea}}` | Текущий год (гггг) |
+| `{{hou}}` | Текущий час (ЧЧ) |
+| `{{min}}` | Текущая минута (мм) |
+| `{{sec}}` | Текущая секунда (сс) |
 
 <details>
-<summary><b>📦 Примеры Payload по событиям</b></summary>
+<summary><b>📥 Полученные сообщения</b> · 15 событий</summary>
 
 Базовые поля в событиях полученных сообщений:
 
@@ -303,7 +286,9 @@ mindmap
 }
 ```
 
-#### `message.text`
+<details>
+<summary><code>message.text</code> - Обычный / форматированный текст</summary>
+
 ```json
 {
   "event": "message.text",
@@ -314,8 +299,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.image`
+<details>
+<summary><code>message.image</code> - Полученное изображение</summary>
+
 ```json
 {
   "event": "message.image",
@@ -327,8 +315,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.video`
+<details>
+<summary><code>message.video</code> - Полученное видео</summary>
+
 ```json
 {
   "event": "message.video",
@@ -342,8 +333,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.audio`
+<details>
+<summary><code>message.audio</code> - Аудио / голосовое сообщение</summary>
+
 ```json
 {
   "event": "message.audio",
@@ -356,8 +350,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.document`
+<details>
+<summary><code>message.document</code> - Документ / файл</summary>
+
 ```json
 {
   "event": "message.document",
@@ -370,8 +367,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.sticker`
+<details>
+<summary><code>message.sticker</code> - Стикер</summary>
+
 ```json
 {
   "event": "message.sticker",
@@ -382,8 +382,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.contact`
+<details>
+<summary><code>message.contact</code> - Поделились контактом</summary>
+
 ```json
 {
   "event": "message.contact",
@@ -394,8 +397,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.location`
+<details>
+<summary><code>message.location</code> - Местоположение</summary>
+
 ```json
 {
   "event": "message.location",
@@ -408,8 +414,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.reaction`
+<details>
+<summary><code>message.reaction</code> - Реакция (эмодзи)</summary>
+
 ```json
 {
   "event": "message.reaction",
@@ -421,8 +430,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.poll_created`
+<details>
+<summary><code>message.poll_created</code> - Полученный опрос</summary>
+
 ```json
 {
   "event": "message.poll_created",
@@ -433,8 +445,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.poll_vote`
+<details>
+<summary><code>message.poll_vote</code> - Голос в опросе</summary>
+
 ```json
 {
   "event": "message.poll_vote",
@@ -445,8 +460,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.button_reply`
+<details>
+<summary><code>message.button_reply</code> - Нажатие кнопки</summary>
+
 ```json
 {
   "event": "message.button_reply",
@@ -458,8 +476,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.list_reply`
+<details>
+<summary><code>message.list_reply</code> - Выбор в интерактивном списке</summary>
+
 ```json
 {
   "event": "message.list_reply",
@@ -471,8 +492,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.deleted`
+<details>
+<summary><code>message.deleted</code> - Сообщение удалено отправителем</summary>
+
 ```json
 {
   "event": "message.deleted",
@@ -481,8 +505,11 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.unknown`
+<details>
+<summary><code>message.unknown</code> - Неотображенный тип</summary>
+
 ```json
 {
   "event": "message.unknown",
@@ -492,8 +519,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `message.sent`
+</details>
+
+<details>
+<summary><b>📤 Отправленные сообщения</b> · 1 событие</summary>
+
+<details>
+<summary><code>message.sent</code> - Отправленное сообщение (вручную)</summary>
+
 ```json
 {
   "event": "message.sent",
@@ -504,8 +539,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `connection.connected`
+</details>
+
+<details>
+<summary><b>🔗 Подключение</b> · 3 события</summary>
+
+<details>
+<summary><code>connection.connected</code> - WhatsApp подключён</summary>
+
 ```json
 {
   "event": "connection.connected",
@@ -514,16 +557,22 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `connection.disconnected`
+<details>
+<summary><code>connection.disconnected</code> - WhatsApp отключён</summary>
+
 ```json
 {
   "event": "connection.disconnected",
   "data": {}
 }
 ```
+</details>
 
-#### `connection.qr_ready`
+<details>
+<summary><code>connection.qr_ready</code> - QR-код сгенерирован</summary>
+
 ```json
 {
   "event": "connection.qr_ready",
@@ -532,8 +581,16 @@ mindmap
   }
 }
 ```
+</details>
 
-#### `call.received`
+</details>
+
+<details>
+<summary><b>📞 Звонок</b> · 1 событие</summary>
+
+<details>
+<summary><code>call.received</code> - Получен звонок</summary>
+
 ```json
 {
   "event": "call.received",
@@ -544,6 +601,7 @@ mindmap
   }
 }
 ```
+</details>
 
 </details>
 
@@ -604,7 +662,7 @@ cd ZapUnlocked-API
 
 ### ☁️ Хостинг: Alwaysdata (Бесплатно 24/7)
 
-**Alwaysdata** — это рекомендуемый вариант для стабильного и бесплатного хостинга API без необходимости держать сервер включенным.
+**Alwaysdata** - это рекомендуемый вариант для стабильного и бесплатного хостинга API без необходимости держать сервер включенным.
 
 #### 📊 Ресурсы бесплатного плана
 
