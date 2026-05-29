@@ -51,19 +51,17 @@ def _best_version(data, ver_spec: str) -> str:
 
 def _fetch_json(pkg: str):
     url = f'https://pypi.org/pypi/{pkg}/json'
-    return json.loads(urllib.request.urlopen(url).read())
+    with urllib.request.urlopen(url) as resp:
+        return json.loads(resp.read())
 
 
 def _non_extra_deps(data) -> list:
-    """Return list of 'pkg>=ver' specs for non-extras dependencies."""
     rd = data['info'].get('requires_dist') or []
     out = []
     for dep in rd:
         dep = dep.strip()
-        # skip extras-only deps
         if 'extra ==' in dep:
             continue
-        # strip environment markers after ;
         if ';' in dep:
             dep = dep.split(';')[0].strip()
         out.append(dep)
@@ -71,17 +69,14 @@ def _non_extra_deps(data) -> list:
 
 
 def _wheel_url(data, version: str):
-    # data['urls'] always has the 'version' key
     for f in data.get('urls') or []:
         if f.get('packagetype') == 'bdist_wheel' and f.get('version') == version:
             if f.get('python_version', '') in ('py3', 'py2.py3', 'none', ''):
                 return f['url']
-    # data['releases'][version] entries may lack 'version' key (implicit)
     for f in data.get('releases', {}).get(version, []):
         if f.get('packagetype') == 'bdist_wheel':
             if f.get('python_version', '') in ('py3', 'py2.py3', 'none', ''):
                 return f['url']
-    # Fallback
     for f in data.get('urls') or []:
         if f.get('packagetype') == 'bdist_wheel' and f.get('version') == version:
             return f['url']
@@ -98,7 +93,7 @@ def _install_wheel(url: str, target: Path) -> None:
         urllib.request.urlretrieve(url, whl)
         with zipfile.ZipFile(whl) as zf:
             zf.extractall(target)
-        print(f'    extraido para {target}', file=sys.stderr)
+        print(f'    extraido', file=sys.stderr)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
@@ -107,12 +102,10 @@ def install(pkg_spec: str, target: Path, _seen: set = None) -> bool:
     if _seen is None:
         _seen = set()
     pkg, ver_spec = _parse_spec(pkg_spec)
-
     if pkg in _seen:
         return True
     _seen.add(pkg)
 
-    # Fetch package info
     try:
         data = _fetch_json(pkg)
     except Exception as e:
@@ -121,7 +114,6 @@ def install(pkg_spec: str, target: Path, _seen: set = None) -> bool:
 
     version = _best_version(data, ver_spec)
 
-    # Check if already installed
     dist_dir = target / f'{pkg}-{version}.dist-info'
     if dist_dir.is_dir():
         print(f'  {pkg}=={version}  ja instalado', file=sys.stderr)
@@ -132,14 +124,18 @@ def install(pkg_spec: str, target: Path, _seen: set = None) -> bool:
         print(f'  Sem wheel para {pkg} {version}', file=sys.stderr)
         return False
 
+    deps = _non_extra_deps(data)
+    del data  # libera JSON antes de baixar/extrair/recurse
+
+    target.mkdir(parents=True, exist_ok=True)
+
     print(f'  {pkg}=={version}', file=sys.stderr)
     _install_wheel(url, target)
 
-    # Install non-extras deps
-    deps = _non_extra_deps(data)
+    # Instala deps apos liberar data
     for dep in deps:
-        install(dep, target, _seen)
-
+        if not install(dep, target, _seen):
+            return False
     return True
 
 
