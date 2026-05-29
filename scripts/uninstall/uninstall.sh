@@ -11,24 +11,29 @@ ui_sep
 ui_task "Uninstalling ZapUnlocked API"
 
 # ── Confirm ───────────────────────────────────────────────────────────
-gum confirm "Remover ambiente virtual e cache?" || {
+gum confirm "Remover ambiente virtual, vendor e cache?" || {
     ui_log_info "Operação cancelada"
     exit 0
 }
 
 # ── Venv ───────────────────────────────────────────────────────────────
-ui_progress 30 "Removendo ambiente virtual..."
-gum spin --spinner dot --title "Removendo .venv..." -- rm -rf .venv
-ui_log_ok "Ambiente virtual removido"
+if [ -d ".venv" ]; then
+    gum spin --spinner dot --title "Removendo .venv..." -- rm -rf .venv
+    ui_log_ok "Ambiente virtual removido"
+fi
+
+# ── Vendor (internal method) ──────────────────────────────────────────
+if [ -d "vendor" ]; then
+    gum spin --spinner dot --title "Removendo vendor..." -- rm -rf vendor
+    ui_log_ok "vendor removido"
+fi
 
 # ── Cache ──────────────────────────────────────────────────────────────
-ui_progress 70 "Limpando cache Python..."
 gum spin --spinner dot --title "Limpando __pycache__..." -- \
     bash -c "find . -type d -name '__pycache__' -not -path './.git/*' -exec rm -rf {} + 2>/dev/null; \
              find . -name '*.pyc' -not -path './.git/*' -delete 2>/dev/null; true"
 ui_log_ok "Cache limpo"
 
 # ── Done ───────────────────────────────────────────────────────────────
-ui_progress 100 "Uninstall complete"
 ui_sep
 ui_footer "Desinstalação concluída!"

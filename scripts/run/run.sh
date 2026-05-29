@@ -18,28 +18,29 @@ if [ -n "$PID" ]; then
 fi
 ui_log_ok "Porta 8300 livre"
 
-# ── Alwaysdata: configura antes da deteccao de uvicorn ────────────────
+# ── Detect installation method ────────────────────────────────────────
 _RELOAD="--reload"
-_IS_AD=false
-__alwaysdata_check && _IS_AD=true
 
-if $_IS_AD; then
+if __alwaysdata_check; then
     _RELOAD=""
     export MALLOC_ARENA_MAX=1
     export PYTHONMALLOC=malloc
-    export PYTHONPATH="$ROOT/vendor${PYTHONPATH:+:$PYTHONPATH}"
+fi
+
+if [ -d "$ROOT_DIR/vendor" ]; then
+    export PYTHONPATH="$ROOT_DIR/vendor${PYTHONPATH:+:$PYTHONPATH}"
 fi
 
 # ── Detectar comando uvicorn ──────────────────────────────────────────
-if [ -f ".venv/bin/uvicorn" ]; then
+if python3 -c "import uvicorn" &>/dev/null; then
+    CMD="python3 -m uvicorn"
+    ui_log_ok "Usando python3 -m uvicorn ($(python3 -c 'import uvicorn; print(uvicorn.__file__)'))"
+elif [ -f ".venv/bin/uvicorn" ]; then
     CMD=".venv/bin/uvicorn"
     ui_log_ok "Usando .venv/bin/uvicorn"
 elif command -v uvicorn &>/dev/null; then
     CMD="uvicorn"
     ui_log_ok "Usando uvicorn global"
-elif python3 -c "import uvicorn" &>/dev/null; then
-    CMD="python3 -m uvicorn"
-    ui_log_ok "Usando python3 -m uvicorn"
 else
     ui_log_err "uvicorn não encontrado — execute install.sh primeiro"
     exit 1

@@ -39,23 +39,18 @@ function Get-PyVer {
 }
 
 function Get-UpTime {
-    try {
-        $os = Get-CimInstance -ClassName Win32_OperatingSystem -ErrorAction Stop
-        $up = (Get-Date) - $os.LastBootUpTime
-        if ($up.Days -gt 0) { return "$($up.Days)d $($up.Hours)h" }
-        if ($up.Hours -gt 0) { return "$($up.Hours)h $($up.Minutes)m" }
-        return "$($up.Minutes)m $($up.Seconds)s"
-    } catch { return "N/A" }
+    return Get-Elapsed
 }
 
 function Show-Banner {
+    $P = @{ForegroundColor = "DarkMagenta" }
     Write-Host ""
-    Write-Host "███████╗ █████╗ ██████╗ ██╗   ██╗███╗   ██╗██╗      ██████╗  ██████╗██╗  ██╗███████╗██████╗        █████╗ ██████╗ ██╗"
-    Write-Host "╚══███╔╝██╔══██╗██╔══██╗██║   ██║████╗  ██║██║     ██╔═══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗      ██╔══██╗██╔══██╗██║"
-    Write-Host "  ███╔╝ ███████║██████╔╝██║   ██║██╔██╗ ██║██║     ██║   ██║██║     █████╔╝ █████╗  ██║  ██║█████╗███████║██████╔╝██║"
-    Write-Host " ███╔╝  ██╔══██║██╔═══╝ ██║   ██║██║╚██╗██║██║     ██║   ██║██║     ██╔═██╗ ██╔══╝  ██║  ██║╚════╝██╔══██║██╔═══╝ ██║"
-    Write-Host "███████╗██║  ██║██║     ╚██████╔╝██║ ╚████║███████╗╚██████╔╝╚██████╗██║  ██╗███████╗██████╔╝      ██║  ██║██║     ██║"
-    Write-Host "╚══════╝╚═╝  ╚═╝╚═╝      ╚═════╝ ╚═╝  ╚═══╝╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝╚═════╝       ╚═╝  ╚═╝╚═╝     ╚═╝"
+    Write-Host "███████╗ █████╗ ██████╗ ██╗   ██╗███╗   ██╗██╗      ██████╗  ██████╗██╗  ██╗███████╗██████╗        █████╗ ██████╗ ██╗" @P
+    Write-Host "╚══███╔╝██╔══██╗██╔══██╗██║   ██║████╗  ██║██║     ██╔═══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗      ██╔══██╗██╔══██╗██║" @P
+    Write-Host "  ███╔╝ ███████║██████╔╝██║   ██║██╔██╗ ██║██║     ██║   ██║██║     █████╔╝ █████╗  ██║  ██║█████╗███████║██████╔╝██║" @P
+    Write-Host " ███╔╝  ██╔══██║██╔═══╝ ██║   ██║██║╚██╗██║██║     ██║   ██║██║     ██╔═██╗ ██╔══╝  ██║  ██║╚════╝██╔══██║██╔═══╝ ██║" @P
+    Write-Host "███████╗██║  ██║██║     ╚██████╔╝██║ ╚████║███████╗╚██████╔╝╚██████╗██║  ██╗███████╗██████╔╝      ██║  ██║██║     ██║" @P
+    Write-Host "╚══════╝╚═╝  ╚═╝╚═╝      ╚═════╝ ╚═╝  ╚═══╝╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝╚═════╝       ╚═╝  ╚═╝╚═╝     ╚═╝" @P
     Write-Host ""
 }
 
@@ -92,20 +87,6 @@ function Show-Task {
     param([string]$Label)
     Write-Host ""
     & gum style --foreground "#E9D5FF" --bold "  $Label"
-}
-
-function Show-Progress {
-    param([int]$Percent, [string]$Label)
-    if ($Label) {
-        & gum style --foreground "#6B7280" "  $Label"
-    }
-    $w = 50
-    $fill = [math]::Min([math]::Round($Percent * $w / 100), $w)
-    $empty = $w - $fill
-    $bar = "█" * $fill + "░" * $empty
-    Write-Host ""
-    & gum style --foreground "#8B3DFF" "  ${bar}  ${Percent}%"
-    Write-Host ""
 }
 
 function Write-Info  { & gum style --foreground "#A855F7" "  ◉ $args" }

@@ -9,15 +9,13 @@ ui_banner
 ui_tags "$ICON_INSTALL" "INSTALL"
 ui_sep
 ui_task "Installing ZapUnlocked API"
-ui_progress 5 "Starting installation..."
 
-# Detect OS silently
+# Detect OS
 if [[ "$OSTYPE" == "darwin"* ]]; then OS="macos"
 elif [ -f /etc/os-release ]; then . /etc/os-release; OS=$ID
 else OS=$(uname -s); fi
 
 # ── Python ─────────────────────────────────────────────────────────────
-ui_progress 10 "Checking Python..."
 if command -v python3 &>/dev/null; then
     ui_log_ok "Python $(python3 --version 2>&1 | awk '{print $2}')"
 else
@@ -47,107 +45,37 @@ else
     ui_log_ok "Python instalado"
 fi
 
-# ── Alwaysdata detection ──────────────────────────────────────────────
+# ── Installation method ──────────────────────────────────────────────
+_USE_INTERNAL=false
 _ALWAYSDATA=false
+
 __alwaysdata_check && _ALWAYSDATA=true
 
-# ── Venv + Requirements ──────────────────────────────────────────────
-ui_progress 25 "Creating virtual environment..."
 if $_ALWAYSDATA; then
-    ui_log_info "Alwaysdata detectado — instalando sem pip (install_wheel.py)"
-    rm -rf .venv
-else
-    python3 -m venv .venv 2>/dev/null || {
-        ui_log_err "Falha ao criar ambiente virtual"
-        exit 1
-    }
-    ui_log_ok "Ambiente virtual criado"
-    _PIP=.venv/bin/python -m pip
-    $_PIP install --upgrade pip -q
+    _USE_INTERNAL=true
+    ui_log_info "Ambiente Alwaysdata — modo offline (wheels diretos)"
+elif [[ "$OS" != "macos" ]]; then
+    ui_log_step "Escolha o método de instalação:"
+    METHOD=$(gum choose \
+        "📦 Offline (wheels diretos, sem venv)" \
+        "🐍 pip (via ambiente virtual)")
+    echo ""
+    if [[ "$METHOD" == *"Offline"* ]]; then
+        _USE_INTERNAL=true
+        ui_log_info "Modo offline selecionado"
+    else
+        ui_log_info "Modo pip selecionado"
+    fi
 fi
 
-# ── Helpers ────────────────────────────────────────────────────────────
-_resolve_ver() {
-    local pkg=$1 constraint=$2 min_ver name_pat
-    if echo "$constraint" | grep -qE '^[[:space:]]*=='; then
-        echo "$constraint" | sed 's/.*==//' | tr -d '[:space:]'
-        return
-    fi
-    if echo "$constraint" | grep -q '>='; then
-        min_ver=$(echo "$constraint" | sed 's/.*>=//' | sed 's/[^0-9.]//g' | sed 's/\.$//')
-    else
-        min_ver="0.0.0"
-    fi
-    name_pat=$(echo "$pkg" | sed 's/-/[-_]/g')
-    curl -sS "https://pypi.org/simple/$pkg/" 2>/dev/null | \
-        grep -oP "${name_pat}-\K\d[\d.]*[a-zA-Z0-9]*(?=-py|-cp|-none)" | \
-        sort -V | \
-        awk -v min="$min_ver" 'BEGIN{split(min,a,"."); m=a[1]*1000000+a[2]*1000+a[3]} {split($0,b,"."); v=b[1]*1000000+b[2]*1000+b[3]} v >= m' | \
-        tail -1
-}
+# ── Internal method (offline wheels) ─────────────────────────────────
+if $_USE_INTERNAL; then
+    rm -rf .venv
+    SITE_PKG="$ROOT_DIR/vendor"
+    rm -rf "$SITE_PKG" "$ROOT_DIR/wheels"
+    mkdir -p "$SITE_PKG" "$ROOT_DIR/wheels"
 
-_get_json_field() {
-    local pkg=$1 ver=$2 expr=$3
-    curl -sS "https://pypi.org/pypi/$pkg/$ver/json" 2>/dev/null | \
-        python3 -c "import sys,json; print($(echo "$expr" | sed "s/{ver}/'$ver'/"))"
-}
-
-_get_wheel_url() {
-    local pkg=$1 ver=$2
-    curl -sS "https://pypi.org/pypi/$pkg/$ver/json" 2>/dev/null | \
-        python3 -c "
-import sys,json,platform
-d=json.load(sys.stdin)
-pv=sys.version_info
-cp='cp%d%d'%(pv.major,pv.minor)
-mach=platform.machine().lower()
-plat_pats=['x86_64','amd64'] if mach in('x86_64','amd64') else (['aarch64','arm64'] if mach in('aarch64','arm64') else [mach])
-def ok(fn):
-    fn=fn.lower()
-    return 'linux' in fn and any(p in fn for p in plat_pats)
-files=[f for f in(d.get('urls') or []) if f.get('packagetype')=='bdist_wheel']
-for f in files:
-    fn=f.get('filename','')
-    if f.get('python_version','')==cp and ok(fn): print(f['url']);sys.exit(0)
-for f in files:
-    fn=f.get('filename','')
-    if 'abi3' in fn and ok(fn): print(f['url']);sys.exit(0)
-for f in files:
-    if f.get('python_version','') in('py3','py2.py3','none',''): print(f['url']);sys.exit(0)
-for f in files:
-    print(f['url']);sys.exit(0)
-"
-}
-
-_get_deps() {
-    local pkg=$1 ver=$2
-    curl -sS "https://pypi.org/pypi/$pkg/$ver/json" 2>/dev/null | \
-        python3 -c "
-import sys,json
-d=json.load(sys.stdin)
-for r in d['info'].get('requires_dist') or []:
-    r=r.strip()
-    if 'extra ==' in r: continue
-    if ';' in r: r=r.split(';')[0].strip()
-    if r: print(r)
-"
-}
-
-_instalar_um() {
-    local pkg=$1 ver=$2 url
-    url=$(_get_wheel_url "$pkg" "$ver")
-    [ -z "$url" ] && { ui_log_warn "Sem wheel para $pkg $ver"; return 1; }
-    python3 "$ROOT/scripts/install/install_wheel.py" "$url" "$SITE_PKG"
-}
-
-# ── Instala requirements ────────────────────────────────────────────
-ui_progress 50 "Installing dependencies..."
-if $_ALWAYSDATA; then
-    SITE_PKG="$ROOT/vendor"
-    rm -rf "$SITE_PKG" "$ROOT/wheels"
-    mkdir -p "$SITE_PKG" "$ROOT/wheels"
-
-    python3 - "$SITE_PKG" "$ROOT/wheels" <<'PY'
+    python3 - "$SITE_PKG" "$ROOT_DIR/wheels" <<'PY'
 import json, os, subprocess, sys, urllib.request
 from pathlib import Path
 
@@ -246,10 +174,9 @@ if failed:
     print(f"AVISOS: falharam {failed}", flush=True)
 PY
 
-    rm -rf "$ROOT/wheels"
+    rm -rf "$ROOT_DIR/wheels"
     ui_log_ok "Requirements instalados"
 
-    ui_progress 75 "Checking system dependencies..."
     if ! command -v ffmpeg &>/dev/null; then
         TMP_DIR=$(mktemp -d "$HOME/.ffmpeg_extract_XXXXX")
         gum spin --spinner dot --title "Baixando ffmpeg estatico (~120 MB)..." -- \
@@ -262,7 +189,17 @@ PY
     else
         ui_log_ok "ffmpeg ja no sistema"
     fi
+
+# ── Standard pip method ──────────────────────────────────────────────
 else
+    python3 -m venv .venv 2>/dev/null || {
+        ui_log_err "Falha ao criar ambiente virtual"
+        exit 1
+    }
+    ui_log_ok "Ambiente virtual criado"
+    _PIP=.venv/bin/python -m pip
+    $_PIP install --upgrade pip -q
+
     gum spin --spinner dot --title "Instalando requirements..." -- \
         $_PIP install -r requirements.txt --no-cache-dir -q || {
         ui_log_err "Falha ao instalar requirements"
@@ -272,6 +209,5 @@ else
 fi
 
 # ── Done ───────────────────────────────────────────────────────────────
-ui_progress 100 "Installation complete"
 ui_sep
-ui_footer "Instalação concluída!" "bash scripts/run/run.sh"
+ui_footer "Instalação concluída!"

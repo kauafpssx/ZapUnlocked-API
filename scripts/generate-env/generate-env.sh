@@ -11,7 +11,6 @@ ui_sep
 ui_task "Generating environment secrets"
 
 # ── Gerar secrets ─────────────────────────────────────────────────────
-ui_progress 20 "Generating API keys..."
 gen_hex() {
     if command -v openssl &>/dev/null; then
         openssl rand -hex 32
@@ -37,13 +36,12 @@ _sed_inplace() {
 }
 
 # ── Exibir secrets ────────────────────────────────────────────────────
-ui_progress 50 "Displaying secrets..."
 echo ""
-gum style --foreground 240 "  API_KEY"
-gum style --foreground 42 --bold "  $API_KEY"
+gum style --foreground "#6B7280" "  API_KEY"
+gum style --foreground "#42C292" --bold "  $API_KEY"
 echo ""
-gum style --foreground 240 "  INTERNAL_SECRET"
-gum style --foreground 42 --bold "  $INTERNAL_SECRET"
+gum style --foreground "#6B7280" "  INTERNAL_SECRET"
+gum style --foreground "#42C292" --bold "  $INTERNAL_SECRET"
 echo ""
 
 # ── Salvar no .env ────────────────────────────────────────────────────
@@ -54,7 +52,6 @@ gum confirm "Salvar no arquivo .env?" || {
     exit 0
 }
 
-ui_progress 70 "Writing to .env..."
 if [ -f ".env" ]; then
     if grep -q "^API_KEY=" .env; then
         _sed_inplace "s|^API_KEY=.*|API_KEY=$API_KEY|" .env
@@ -81,6 +78,5 @@ else
 fi
 
 # ── Done ───────────────────────────────────────────────────────────────
-ui_progress 100 "Done"
 ui_sep
 ui_footer "Secrets salvas em .env"
