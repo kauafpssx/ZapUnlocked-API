@@ -72,13 +72,20 @@ gum spin --spinner dot --title "Criando ambiente virtual..." -- \
     python3 -m venv .venv 2>/dev/null
 rc=$?
 if [ $rc -ne 0 ]; then
-    gum log --level debug "Tentando sem ensurepip..."
-    python3 -m venv .venv --without-pip 2>/dev/null
-    if [ $? -ne 0 ]; then
+    gum spin --spinner dot --title "Tentando sem ensurepip..." -- \
+        python3 -m venv .venv --without-pip 2>/dev/null
+    pip_ok=false
+    if [ $? -eq 0 ] && command -v curl &>/dev/null; then
+        curl -fsSL -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py
+        if [ $? -eq 0 ]; then
+            .venv/bin/python3 /tmp/get-pip.py -q && pip_ok=true
+            rm -f /tmp/get-pip.py
+        fi
+    fi
+    if ! $pip_ok; then
         gum log --level error "Falha ao criar ambiente virtual"
         exit 1
     fi
-    curl -fsSL https://bootstrap.pypa.io/get-pip.py | .venv/bin/python3 -q
 fi
 gum log --level info "Ambiente virtual criado"
 
