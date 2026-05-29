@@ -27,13 +27,16 @@ if [ -n "$PID" ]; then
 fi
 gum log --level info "Porta 8300 livre"
 
-# ── Detectar bin do uvicorn ──────────────────────────────────────────────────
+# ── Detectar comando uvicorn ────────────────────────────────────────────────
 if [ -f ".venv/bin/uvicorn" ]; then
-    UVICORN=".venv/bin/uvicorn"
+    CMD=".venv/bin/uvicorn"
     gum log --level info "Usando .venv"
 elif command -v uvicorn &>/dev/null; then
-    UVICORN="uvicorn"
+    CMD="uvicorn"
     gum log --level info "Usando uvicorn global"
+elif python3 -c "import uvicorn" &>/dev/null; then
+    CMD="python3 -m uvicorn"
+    gum log --level info "Usando python3 -m uvicorn"
 else
     gum log --level error "uvicorn nao encontrado — execute install.sh primeiro"
     exit 1
@@ -44,4 +47,4 @@ echo ""
 gum style --foreground "240" "  Iniciando servidor..."
 echo ""
 
-$UVICORN main:app --host '::' --port 8300 --proxy-headers --forwarded-allow-ips '::1' --reload --log-level info
+$CMD main:app --host '::' --port 8300 --proxy-headers --forwarded-allow-ips '::1' --reload --log-level info
