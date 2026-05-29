@@ -17,8 +17,8 @@ if ! command -v gum &>/dev/null; then
     esac
     curl -fsSL \
       "https://github.com/charmbracelet/gum/releases/download/${GUM_TAG}/gum_${GUM_VER}_Linux_${ARCH}.tar.gz" \
-      | tar -xz -C /tmp/ gum 2>/dev/null
-    mv /tmp/gum "$HOME/.local/bin/gum"
+      | tar -xz -C /tmp/ 2>/dev/null
+    mv /tmp/gum_*/gum "$HOME/.local/bin/gum"
     export PATH="$HOME/.local/bin:$PATH"
 fi
 
