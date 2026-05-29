@@ -1,5 +1,15 @@
 import sys
+import os
 import asyncio
+
+# ── Auto-venv: reexecuta com o Python do .venv se chamado diretamente ──────
+if __name__ == "__main__":
+    VENV_PYTHON = os.path.join(os.path.dirname(__file__), ".venv", "bin", "python")
+    if sys.platform == "win32":
+        VENV_PYTHON = os.path.join(os.path.dirname(__file__), ".venv", "Scripts", "python.exe")
+    if not sys.executable.startswith(os.path.join(os.path.dirname(__file__), ".venv")):
+        if os.path.isfile(VENV_PYTHON):
+            os.execv(VENV_PYTHON, [VENV_PYTHON, __file__, *sys.argv[1:]])
 
 from src.utils.startup_validator import validate_dependencies
 validate_dependencies()
