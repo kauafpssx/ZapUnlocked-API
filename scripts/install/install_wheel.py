@@ -71,16 +71,22 @@ def _non_extra_deps(data) -> list:
 
 
 def _wheel_url(data, version: str):
-    # Try latest release urls first (fast path)
-    candidates = data.get('urls') or []
-    # Also search in releases[version] if not latest
-    candidates += data.get('releases', {}).get(version, [])
-    for f in candidates:
+    # data['urls'] always has the 'version' key
+    for f in data.get('urls') or []:
         if f.get('packagetype') == 'bdist_wheel' and f.get('version') == version:
             if f.get('python_version', '') in ('py3', 'py2.py3', 'none', ''):
                 return f['url']
-    for f in candidates:
+    # data['releases'][version] entries may lack 'version' key (implicit)
+    for f in data.get('releases', {}).get(version, []):
+        if f.get('packagetype') == 'bdist_wheel':
+            if f.get('python_version', '') in ('py3', 'py2.py3', 'none', ''):
+                return f['url']
+    # Fallback
+    for f in data.get('urls') or []:
         if f.get('packagetype') == 'bdist_wheel' and f.get('version') == version:
+            return f['url']
+    for f in data.get('releases', {}).get(version, []):
+        if f.get('packagetype') == 'bdist_wheel':
             return f['url']
     return None
 
