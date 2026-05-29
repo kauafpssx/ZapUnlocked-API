@@ -87,39 +87,38 @@ gum spin --spinner dot --title "Atualizando pip..." -- .venv/bin/pip install --u
 if $_ALWAYSDATA; then
     gum log --level info "Alwaysdata detectado — instalando em modo economia de RAM"
 
-    # Passo 1: pacotes principais sem dependencias (leve)
-    while IFS= read -r pkg || [ -n "$pkg" ]; do
-        pkg=$(echo "$pkg" | sed 's/#.*//' | xargs)
-        [ -z "$pkg" ] && continue
-        if [ "$pkg" = "Pillow" ]; then
-            gum spin --spinner dot --title "$pkg (binário)" -- \
-                .venv/bin/pip install "$pkg" --no-cache-dir --only-binary :all: -q || exit 1
-        elif echo "$pkg" | grep -q "imageio-ffmpeg"; then
-            if command -v ffmpeg &>/dev/null; then
-                gum log --level info "ffmpeg ja no sistema — pulando $pkg"
-            else
-                TMP_DIR=$(mktemp -d "$HOME/.ffmpeg_extract_XXXXX")
-                gum spin --spinner dot --title "Baixando ffmpeg estatico (~120 MB)..." -- \
-                    bash -c "curl -fsSL 'https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz' | tar -xJ -C '$TMP_DIR'" || exit 1
-                find "$TMP_DIR" -name 'ffmpeg' -type f -exec mv {} "$HOME/.local/bin/ffmpeg" \;
-                find "$TMP_DIR" -name 'ffprobe' -type f -exec mv {} "$HOME/.local/bin/ffprobe" \;
-                rm -rf "$TMP_DIR"
-                chmod +x "$HOME/.local/bin/ffmpeg" "$HOME/.local/bin/ffprobe"
-            fi
-        else
-            gum spin --spinner dot --title "$pkg" -- \
-                .venv/bin/pip install "$pkg" --no-cache-dir --no-deps -q || exit 1
-        fi
-    done < <(grep -v '^\s*#' requirements.txt)
+    # 1. Instala todos os pacotes principais sem dependencias (leve)
+    gum spin --spinner dot --title "Instalando pacotes (sem dependencias)..." -- \
+        .venv/bin/pip install --no-cache-dir --no-deps -r requirements.txt -q
+    [ $? -ne 0 ] && gum log --level error "Falha na instalacao inicial" && exit 1
 
-    # Passo 2: dependencias faltantes (cada pacote ja instalado, so baixa o que falta)
+    # 2. ffmpeg estatico se necessario
+    if ! command -v ffmpeg &>/dev/null; then
+        TMP_DIR=$(mktemp -d "$HOME/.ffmpeg_extract_XXXXX")
+        gum spin --spinner dot --title "Baixando ffmpeg estatico (~120 MB)..." -- \
+            bash -c "curl -fsSL 'https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz' | tar -xJ -C '$TMP_DIR'" || exit 1
+        find "$TMP_DIR" -name 'ffmpeg' -type f -exec mv {} "$HOME/.local/bin/ffmpeg" \;
+        find "$TMP_DIR" -name 'ffprobe' -type f -exec mv {} "$HOME/.local/bin/ffprobe" \;
+        rm -rf "$TMP_DIR"
+        chmod +x "$HOME/.local/bin/ffmpeg" "$HOME/.local/bin/ffprobe"
+    else
+        gum log --level info "ffmpeg ja no sistema"
+    fi
+
+    # 3. Resolve dependencias faltantes via pip check
     gum log --level info "Resolvendo dependencias..."
-    while IFS= read -r pkg || [ -n "$pkg" ]; do
-        pkg=$(echo "$pkg" | sed 's/#.*//' | xargs)
-        [ -z "$pkg" ] && continue
-        gum spin --spinner dot --title "  deps de $pkg" -- \
-            .venv/bin/pip install "$pkg" --no-cache-dir -q || exit 1
-    done < <(grep -v '^\s*#' requirements.txt)
+    while true; do
+        missing=$(.venv/bin/pip check 2>/dev/null | grep 'requires')
+        [ -z "$missing" ] && break
+        echo "$missing" | while IFS= read -r line; do
+            # Extrai cada dependencia (ex: "fastapi 0.136.3 requires starlette>=0.46.0" -> "starlette")
+            for dep in $(echo "$line" | sed 's/.*requires //' | tr ',' '\n' | sed 's/\[.*\]//' | sed 's/[<>=!~].*//' | xargs); do
+                [ -z "$dep" ] && continue
+                gum spin --spinner dot --title "  $dep" -- \
+                    .venv/bin/pip install --no-cache-dir "$dep" -q || exit 1
+            done
+        done
+    done
 
     gum log --level info "Requirements instalados"
 else
