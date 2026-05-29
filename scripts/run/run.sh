@@ -19,10 +19,6 @@ fi
 ui_log_ok "Port 8300 free"
 
 # ── Detect installation method ────────────────────────────────────────
-# Marks that the app was launched via the official run script, not directly.
-# main.py uses this to allow the Alwaysdata guard to pass on interactive SSH sessions.
-export _ZAPUNLOCKED_LAUNCHER=1
-
 _RELOAD="--reload"
 
 if __alwaysdata_check; then

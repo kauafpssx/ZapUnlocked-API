@@ -48,7 +48,7 @@ from src.utils.startup_validator import is_alwaysdata, validate_dependencies
 
 validate_dependencies()
 
-if is_alwaysdata() and sys.stdin.isatty() and not os.getenv("_ZAPUNLOCKED_LAUNCHER"):
+if is_alwaysdata() and sys.stdin.isatty():
     msg = (
         "\n"
         "╔══════════════════════════════════════════════════════╗\n"
