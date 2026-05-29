@@ -11,8 +11,25 @@ if __name__ == "__main__":
         if os.path.isfile(VENV_PYTHON):
             os.execv(VENV_PYTHON, [VENV_PYTHON, __file__, *sys.argv[1:]])
 
-from src.utils.startup_validator import validate_dependencies
+from src.utils.startup_validator import validate_dependencies, is_alwaysdata
 validate_dependencies()
+
+# ── No Alwaysdata, a porta 8300-8499 so fica acessivel via Service ─────
+if is_alwaysdata() and sys.stdin.isatty():
+    msg = (
+        "\n"
+        "=" * 60 + "\n"
+        "  ATENCAO: Voce esta no Alwaysdata.\n"
+        "  A porta 8300-8499 so fica acessivel\n"
+        "  atraves de um Service registrado no painel:\n"
+        "    Advanced > Services > Add a service\n"
+        "    Command: bash scripts/run/run.sh\n"
+        "    Bind: :: (IPv6)\n"
+        "  Veja: https://help.alwaysdata.com/en/services\n"
+        "=" * 60 + "\n"
+    )
+    print(msg, file=sys.stderr)
+    sys.exit(1)
 
 # FIX: Configura o ProactorEventLoop como global para suporte a subprocessos no Windows
 if sys.platform == "win32":
