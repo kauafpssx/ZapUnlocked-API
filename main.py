@@ -12,15 +12,15 @@ ENABLE_FFMPEG_WARMUP = os.getenv("ENABLE_FFMPEG_WARMUP", "1") == "1"
 
 _THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Vendor local usado no AlwaysData
-_VENDOR_DIR = os.path.join(_THIS_DIR, "vendor")
-if os.path.isdir(_VENDOR_DIR):
-    sys.path.insert(0, _VENDOR_DIR)
-
-# .local_lib antigo
+# .local_lib legado (menor prioridade)
 _LOCAL_LIB = os.path.join(_THIS_DIR, ".local_lib")
 if os.path.isdir(_LOCAL_LIB):
     sys.path.insert(0, _LOCAL_LIB)
+
+# vendor tem prioridade maxima (inserido por ultimo = sys.path[0])
+_VENDOR_DIR = os.path.join(_THIS_DIR, "vendor")
+if os.path.isdir(_VENDOR_DIR):
+    sys.path.insert(0, _VENDOR_DIR)
 
 # Auto-venv apenas se existir
 _VENV_DIR = os.path.join(_THIS_DIR, ".venv")
