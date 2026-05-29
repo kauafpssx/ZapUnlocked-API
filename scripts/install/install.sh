@@ -74,8 +74,9 @@ rc=$?
 if [ $rc -ne 0 ]; then
     gum spin --spinner dot --title "Tentando sem ensurepip..." -- \
         python3 -m venv .venv --without-pip 2>/dev/null
+    venv_rc=$?
     pip_ok=false
-    if [ $? -eq 0 ] && command -v curl &>/dev/null; then
+    if [ $venv_rc -eq 0 ] && command -v curl &>/dev/null; then
         curl -fsSL -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py
         if [ $? -eq 0 ]; then
             .venv/bin/python /tmp/get-pip.py -q && pip_ok=true
