@@ -699,14 +699,14 @@ bash scripts/generate-env/generate-env.sh
 | Campo | Valor |
 | :---- | :---- |
 | **Name** | `ZapUnlocked-API` |
-| **Command** | `bash /home/[usuario]/ZapUnlocked-API/scripts/run/run.sh` |
-| **Working directory** | `/home/[usuario]/ZapUnlocked-API` |
+| **Command** | `python3 main.py` |
+| **Working directory** | `ZapUnlocked-API` |
 | **Environment variables** | `PORT=8300` |
 
 **6.** Acesse via:
 
 ```
-http://[usuario].alwaysdata.net:8300/
+http://services-[usuario].alwaysdata.net:8300/
 ```
 
 > [!TIP]
@@ -719,7 +719,7 @@ http://[usuario].alwaysdata.net:8300/
 Após o deploy, conecte sua conta do WhatsApp acessando no navegador:
 
 ```text
-http://[usuario].alwaysdata.net:8300/qr?API_KEY=SUA_SENHA_SECRETA
+http://services-[usuario].alwaysdata.net:8300/qr?API_KEY=SUA_SENHA_SECRETA
 ```
 
 ---
