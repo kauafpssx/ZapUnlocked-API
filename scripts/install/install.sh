@@ -20,6 +20,7 @@ else
 fi
 
 # ── Start ──────────────────────────────────────────────────────────────
+clear
 ui_banner
 ui_tags "$ICON_INSTALL" "INSTALL" "$OS_LABEL"
 ui_sep
@@ -29,29 +30,28 @@ ui_init_header "$ICON_INSTALL" "INSTALL" "$OS_LABEL"
 if ! command -v python3 &>/dev/null; then
     case $OS in
         macos)
-            command -v brew &>/dev/null || gum spin --spinner dot --title "Instalando Homebrew..." -- \
+            command -v brew &>/dev/null ||             gum spin --spinner dot --title "Installing Homebrew..." -- \
                 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            gum spin --spinner dot --title "Instalando Python..." -- brew install python
+            gum spin --spinner dot --title "Installing Python..." -- brew install python
             ;;
         ubuntu|debian|raspbian)
-            gum spin --spinner dot --title "Instalando Python..." -- \
+            gum spin --spinner dot --title "Installing Python..." -- \
                 sudo apt-get install -y python3 python3-pip python3-full
             ;;
         fedora|centos|rhel)
-            gum spin --spinner dot --title "Instalando Python..." -- \
+            gum spin --spinner dot --title "Installing Python..." -- \
                 sudo dnf install -y python3 python3-pip
             ;;
         arch|manjaro)
-            gum spin --spinner dot --title "Instalando Python..." -- \
+            gum spin --spinner dot --title "Installing Python..." -- \
                 sudo pacman -S --noconfirm python python-pip
             ;;
         *)
-            ui_log_err "Python não encontrado — instale Python 3.10+ manualmente"
+            ui_log_err "Python not found — install Python 3.10+ manually"
             exit 1
             ;;
     esac
-    ui_log_ok "Python instalado"
-    ui_refresh_header
+    ui_log_ok "Python installed"
 fi
 
 # ── Installation method ──────────────────────────────────────────────
@@ -60,16 +60,16 @@ _USE_INTERNAL=false
 if $_ALWAYSDATA; then
     _USE_INTERNAL=true
 elif [[ "$OS" != "macos" ]]; then
-    ui_log_step "Escolha o método de instalação:"
+    ui_log_step "Choose installation method:"
     METHOD=$(gum choose \
-        "📦 Offline (wheels diretos, sem venv)" \
-        "🐍 pip (via ambiente virtual)")
+        "📦 Offline (direct wheels, no venv)" \
+        "🐍 pip (via virtual environment)")
     echo ""
     if [[ "$METHOD" == *"Offline"* ]]; then
         _USE_INTERNAL=true
-        echo -e "  \e[38;2;66;194;146m✓\e[0m Offline selecionado"
+        echo -e "  \e[38;2;66;194;146m✓\e[0m Offline selected"
     else
-        echo -e "  \e[38;2;66;194;146m✓\e[0m pip selecionado"
+        echo -e "  \e[38;2;66;194;146m✓\e[0m pip selected"
     fi
 fi
 
@@ -145,7 +145,7 @@ def pick(pkg, ver, tag):
     for f in urls:
         if f["filename"].endswith(".whl"):
             return f["url"], f["filename"]
-    raise RuntimeError(f"sem wheel: {pkg}=={ver}")
+    raise RuntimeError(f"no wheel: {pkg}=={ver}")
 
 G = '\033[92m'
 Y = '\033[93m'
@@ -180,46 +180,51 @@ for f in data["urls"]:
         break
 
 if failed:
-    print(f"  {Y}⚠{R} Falharam: {', '.join(failed)}", flush=True)
+    print(f"  {Y}⚠{R} Failed: {', '.join(failed)}", flush=True)
 PY
 
     rm -rf "$ROOT_DIR/wheels"
-    ui_log_ok "Requirements instalados"
-    ui_refresh_header
+    ui_log_ok "Requirements installed"
 
     if ! command -v ffmpeg &>/dev/null; then
         TMP_DIR=$(mktemp -d "$HOME/.ffmpeg_extract_XXXXX")
-        gum spin --spinner dot --title "Baixando ffmpeg estatico (~120 MB)..." -- \
+        gum spin --spinner dot --title "Downloading static ffmpeg (~120 MB)..." -- \
             bash -c "curl -fsSL 'https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz' | tar -xJ -C '$TMP_DIR'" || exit 1
         find "$TMP_DIR" -name 'ffmpeg' -type f -exec mv {} "$HOME/.local/bin/ffmpeg" \;
         find "$TMP_DIR" -name 'ffprobe' -type f -exec mv {} "$HOME/.local/bin/ffprobe" \;
         rm -rf "$TMP_DIR"
         chmod +x "$HOME/.local/bin/ffmpeg" "$HOME/.local/bin/ffprobe"
-        ui_log_ok "ffmpeg instalado"
+        ui_log_ok "ffmpeg installed"
     else
-        ui_log_ok "ffmpeg ja no sistema"
+        ui_log_ok "ffmpeg already on system"
     fi
-    ui_refresh_header
 
 # ── Standard pip method ──────────────────────────────────────────────
 else
     python3 -m venv .venv 2>/dev/null || {
-        ui_log_err "Falha ao criar ambiente virtual"
+        ui_log_err "Failed to create virtual environment"
         exit 1
     }
-    ui_log_ok "Ambiente virtual criado"
+    ui_log_ok "Virtual environment created"
     _PIP=.venv/bin/python -m pip
     $_PIP install --upgrade pip -q
 
-    gum spin --spinner dot --title "Instalando requirements..." -- \
+    gum spin --spinner dot --title "Installing requirements..." -- \
         $_PIP install -r requirements.txt --no-cache-dir -q || {
-        ui_log_err "Falha ao instalar requirements"
+        ui_log_err "Failed to install requirements"
         exit 1
     }
-    ui_log_ok "Requirements instalados"
-    ui_refresh_header
+    ui_log_ok "Requirements installed"
+fi
+
+# ── Generate env ────────────────────────────────────────────────────────
+ui_sep
+echo ""
+if gum confirm "Generate .env file now?" --default=false --affirmative "Yes" --negative "No"; then
+    bash scripts/generate-env/generate-env.sh
+    exit 0
 fi
 
 # ── Done ───────────────────────────────────────────────────────────────
 ui_sep
-ui_footer "Instalação concluída!"
+ui_footer "Installation complete!"

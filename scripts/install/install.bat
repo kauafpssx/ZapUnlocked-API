@@ -1,62 +1,53 @@
 @echo off
 setlocal enabledelayedexpansion
-title ZapUnlocked API - Instalacao
+title ZapUnlocked API - Installation
 cd /d "%~dp0..\.."
 
-:: ── UI Header ─────────────────────────────────────────────────────────
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  ". '%~dp0..\lib\common.ps1'; Show-Banner; Show-Tags -Icon '⬇' -Label 'INSTALL' -OsLabel 'Windows'; Show-Sep; Init-Header -Icon '⬇' -Label 'INSTALL' -OsLabel 'Windows'"
+cls
+:: -- UI Header --
+powershell -NoProfile -ExecutionPolicy Bypass -Command ". '%~dp0..\lib\common.ps1'; Show-Banner; Show-Tags -Task install -OsLabel Windows; Show-Sep; Init-Header -Task install -OsLabel Windows"
 
-:: ── gum auto-install ──────────────────────────────────────────────────
-where gum >nul 2>&1
-if %errorlevel% neq 0 (
-    echo Instalando gum...
-    winget install charmbracelet.gum --silent --accept-package-agreements --accept-source-agreements >nul 2>&1
-)
-
-:: ── Python ────────────────────────────────────────────────────────────
+:: -- Python --
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
-    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-      ". '%~dp0..\lib\common.ps1'; Write-Info 'Instalando Python...'"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command ". '%~dp0..\lib\common.ps1'; Write-Info 'Installing Python...'"
     winget install -e --id Python.Python.3.12 --silent --accept-package-agreements --accept-source-agreements >nul 2>&1
     if !errorlevel! equ 0 (
-        powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-          ". '%~dp0..\lib\common.ps1'; Write-Ok 'Python instalado'; Refresh-Header"
+        powershell -NoProfile -ExecutionPolicy Bypass -Command ". '%~dp0..\lib\common.ps1'; Write-Ok 'Python installed'"
     ) else (
-        powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-          ". '%~dp0..\lib\common.ps1'; Write-Err 'Python nao encontrado — instale em python.org'"
+        powershell -NoProfile -ExecutionPolicy Bypass -Command ". '%~dp0..\lib\common.ps1'; Write-Err 'Python not found - install from python.org'"
         pause & exit /b 1
     )
 )
 
-:: ── Venv ──────────────────────────────────────────────────────────────
-gum spin --spinner dot --title "Criando ambiente virtual..." -- python -m venv .venv
+:: -- Venv --
+gum spin --spinner dot --title "Creating virtual environment..." -- python -m venv .venv
 if %errorlevel% neq 0 (
-    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-      ". '%~dp0..\lib\common.ps1'; Write-Err 'Falha ao criar ambiente virtual'"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command ". '%~dp0..\lib\common.ps1'; Write-Err 'Failed to create virtual environment'"
     pause & exit /b 1
 )
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  ". '%~dp0..\lib\common.ps1'; Write-Ok 'Ambiente virtual criado'"
+powershell -NoProfile -ExecutionPolicy Bypass -Command ". '%~dp0..\lib\common.ps1'; Write-Ok 'Virtual environment created'"
 
-:: ── Requirements ──────────────────────────────────────────────────────
-gum spin --spinner dot --title "Installing ZapUnlocked API" --show-output -- ^
-    .venv\Scripts\python.exe -m pip install --upgrade pip -r requirements.txt -q
+:: -- Requirements --
+.venv\Scripts\python.exe -m pip install --upgrade pip -r requirements.txt -q
 if %errorlevel% neq 0 (
-    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-      ". '%~dp0..\lib\common.ps1'; Write-Err 'Falha ao instalar requirements'"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command ". '%~dp0..\lib\common.ps1'; Write-Err 'Failed to install requirements'"
     pause & exit /b 1
 )
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  ". '%~dp0..\lib\common.ps1'; Write-Ok 'Requirements instalados'; Refresh-Header"
+.venv\Scripts\python.exe scripts\install\install_pip_ui.py
 
-:: ── Windows-Specific: python-magic-bin ────────────────────────────────
-gum spin --spinner dot --title "Instalando python-magic-bin..." -- .venv\Scripts\python.exe -m pip install python-magic-bin>=0.4.14 -q
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  ". '%~dp0..\lib\common.ps1'; Write-Ok 'python-magic-bin instalado'; Refresh-Header"
+:: -- Windows-Specific: python-magic-bin --
+.venv\Scripts\python.exe -m pip install python-magic-bin>=0.4.14 -q
+.venv\Scripts\python.exe scripts\install\install_pip_ui.py --magic
 
-:: ── Done ──────────────────────────────────────────────────────────────
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  ". '%~dp0..\lib\common.ps1'; Show-Sep; Show-Footer 'Instalacao concluida!'"
+:: -- Generate env --
+powershell -NoProfile -ExecutionPolicy Bypass -Command ". '%~dp0..\lib\common.ps1'; Show-Sep"
+gum confirm "Generate .env file now?" --default=false --affirmative "Yes" --negative "No"
+if %errorlevel% equ 0 (
+    call scripts\generate-env\generate-env.bat
+    goto :eof
+)
+
+:: -- Done --
+powershell -NoProfile -ExecutionPolicy Bypass -Command ". '%~dp0..\lib\common.ps1'; Show-Sep; Show-Footer 'Installation complete!'"
 pause

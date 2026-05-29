@@ -14,7 +14,7 @@ ROOT_DIR="$(cd "$_LIB_DIR/../.." && pwd)"
 # ── Gum auto-install ──────────────────────────────────────────────────
 export PATH="$HOME/.local/bin:$PATH"
 if ! command -v gum &>/dev/null; then
-    echo "Instalando gum..."
+    echo "Installing gum..."
     mkdir -p "$HOME/.local/bin"
     GUM_TAG=$(curl -fsSL https://api.github.com/repos/charmbracelet/gum/releases/latest \
               | grep '"tag_name"' | cut -d'"' -f4)
@@ -27,7 +27,7 @@ if ! command -v gum &>/dev/null; then
       "https://github.com/charmbracelet/gum/releases/download/${GUM_TAG}/gum_${GUM_VER}_Linux_${ARCH}.tar.gz" \
       | tar -xz -C /tmp/ 2>/dev/null
     mv /tmp/gum_*/gum "$HOME/.local/bin/gum"
-    echo "gum instalado"
+    echo "gum installed"
 fi
 
 # ── Time tracking ─────────────────────────────────────────────────────
@@ -48,28 +48,8 @@ ICON_REMOVE="✕"
 ICON_GEN="⚙"
 
 # ── System info ───────────────────────────────────────────────────────
-__ram() {
-    if command -v free &>/dev/null; then
-        free -m 2>/dev/null | awk '/^Mem:/{printf "%d", $3/$2 * 100}'
-    else
-        echo "?"
-    fi
-}
-
-__cpu() {
-    if [[ "$OSTYPE" != "darwin"* ]] && command -v top &>/dev/null; then
-        top -bn1 2>/dev/null | grep -i "cpu(s)" | awk '{printf "%d", 100 - $8}' || echo "?"
-    else
-        echo "?"
-    fi
-}
-
 __py() {
     command -v python3 &>/dev/null && python3 --version 2>&1 | awk '{print $2}' || echo "N/A"
-}
-
-__up() {
-    __elapsed
 }
 
 __alwaysdata_check() {
@@ -132,17 +112,7 @@ ui_init_header() {
 }
 
 ui_refresh_header() {
-    echo -ne "\e[5A\e[J"
-    local args=()
-    args+=("$(gum style --border rounded --padding "0 1" --foreground "#C084FC" "PY $(__py)")")
-    args+=("  ")
-    args+=("$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" --bold "${__header_icon} ${__header_label}")")
-    if [ -n "$__header_os" ]; then
-        args+=("  ")
-        args+=("$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "$__header_os")")
-    fi
-    gum join --horizontal "${args[@]}"
-    ui_sep
+    : # deprecated - no longer used
 }
 
 ui_log_info()  { echo -e "  \e[38;2;168;85;247m◉\e[0m $1"; }

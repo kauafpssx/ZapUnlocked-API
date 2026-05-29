@@ -3,6 +3,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../lib/common.sh"
 cd "$ROOT_DIR"
+clear
 
 # ── Start ──────────────────────────────────────────────────────────────
 ui_banner
@@ -10,7 +11,7 @@ ui_tags "$ICON_GEN" "GEN ENV"
 ui_sep
 ui_task "Generating environment secrets"
 
-# ── Gerar secrets ─────────────────────────────────────────────────────
+# ── Generate secrets ─────────────────────────────────────────────────────
 gen_hex() {
     if command -v openssl &>/dev/null; then
         openssl rand -hex 32
@@ -35,7 +36,7 @@ _sed_inplace() {
     fi
 }
 
-# ── Exibir secrets ────────────────────────────────────────────────────
+# ── Display secrets ────────────────────────────────────────────────────
 echo ""
 gum style --foreground "#6B7280" "  API_KEY"
 gum style --foreground "#42C292" --bold "  $API_KEY"
@@ -44,11 +45,11 @@ gum style --foreground "#6B7280" "  INTERNAL_SECRET"
 gum style --foreground "#42C292" --bold "  $INTERNAL_SECRET"
 echo ""
 
-# ── Salvar no .env ────────────────────────────────────────────────────
-gum confirm "Salvar no arquivo .env?" || {
-    ui_log_info "Secrets exibidas mas não salvas"
+# ── Save to .env ────────────────────────────────────────────────────
+gum confirm "Save to .env file?" || {
+    ui_log_info "Secrets displayed but not saved"
     ui_sep
-    ui_footer "Operação cancelada"
+    ui_footer "Operation canceled"
     exit 0
 }
 
@@ -79,4 +80,4 @@ fi
 
 # ── Done ───────────────────────────────────────────────────────────────
 ui_sep
-ui_footer "Secrets salvas em .env"
+ui_footer "Secrets saved to .env"
