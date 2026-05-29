@@ -84,11 +84,21 @@ while IFS= read -r pkg || [ -n "$pkg" ]; do
     if [ "$pkg" = "Pillow" ]; then
         gum spin --spinner dot --title "$pkg (binário)" -- \
             .venv/bin/pip install "$pkg" --no-cache-dir --only-binary :all: -q
+        rc=$?
+    elif echo "$pkg" | grep -q "imageio-ffmpeg"; then
+        if command -v ffmpeg &>/dev/null; then
+            gum log --level info "ffmpeg já instalado no sistema — pulando $pkg"
+            rc=0
+        else
+            gum spin --spinner dot --title "$pkg" -- \
+                .venv/bin/pip install "$pkg" --no-cache-dir -q
+            rc=$?
+        fi
     else
         gum spin --spinner dot --title "$pkg" -- \
             .venv/bin/pip install "$pkg" --no-cache-dir -q
+        rc=$?
     fi
-    rc=$?
     if [ $rc -ne 0 ]; then
         gum log --level error "Falha ao instalar: $pkg"
         exit $rc
