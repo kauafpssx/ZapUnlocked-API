@@ -211,6 +211,14 @@ PKGS = [
     ("ffmpeg-python",       "0.2.0",    "py3-none-any"),
     ("future",              "1.0.0",    "py3-none-any"),
     ("neonize",             "0.3.18.post0", None),
+
+    # Deps do neonize (nao instaladas automaticamente)
+    ("protobuf",            "6.32.1",   None),
+    ("linkpreview",         "0.11.0",   "py3-none-any"),
+    ("phonenumbers",        "8.13.52",  "py3-none-any"),
+    ("segno",               "1.6.1",    "py3-none-any"),
+    ("tqdm",                "4.67.1",   "py3-none-any"),
+    ("aiocontextvars",      "0.2.2",    "py3-none-any"),
 ]
 
 def fetch(url):
