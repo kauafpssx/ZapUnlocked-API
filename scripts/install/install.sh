@@ -78,7 +78,7 @@ if [ $rc -ne 0 ]; then
     if [ $? -eq 0 ] && command -v curl &>/dev/null; then
         curl -fsSL -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py
         if [ $? -eq 0 ]; then
-            .venv/bin/python3 /tmp/get-pip.py -q && pip_ok=true
+            .venv/bin/python /tmp/get-pip.py -q && pip_ok=true
             rm -f /tmp/get-pip.py
         fi
     fi
