@@ -100,8 +100,10 @@ print(sp if os.access(sp, os.W_OK) else site.getusersitepackages())
     while IFS= read -r pkg || [ -n "$pkg" ]; do
         pkg=$(echo "$pkg" | sed 's/#.*//' | xargs)
         [ -z "$pkg" ] && continue
+        # imageio-ffmpeg eh opcional (embute ffmpeg) — pula no Alwaysdata
+        echo "$pkg" | grep -qi 'imageio-ffmpeg' && continue
         gum log --level info "  $pkg"
-        python3 "$ROOT/scripts/install/install_wheel.py" "$pkg" "$SITE_PKG" || exit 1
+        python3 "$ROOT/scripts/install/install_wheel.py" "$pkg" "$SITE_PKG" || gum log --level warn "  Pulado (falhou): $pkg"
     done < <(grep -v '^[[:space:]]*#' requirements.txt)
     gum log --level info "Requirements instalados"
 
