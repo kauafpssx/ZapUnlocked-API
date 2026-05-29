@@ -58,6 +58,7 @@ if $_IS_AD; then
     _RELOAD=""
     export MALLOC_ARENA_MAX=1
     export PYTHONMALLOC=malloc
+    export PYTHONPATH="$ROOT/vendor${PYTHONPATH:+:$PYTHONPATH}"
 fi
 
 $CMD main:app --host '::' --port 8300 --proxy-headers --forwarded-allow-ips '::1' $_RELOAD --log-level info

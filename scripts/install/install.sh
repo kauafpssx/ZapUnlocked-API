@@ -173,57 +173,107 @@ _instalar_um() {
 
 # ── Instala requirements ────────────────────────────────────────────────────
 if $_ALWAYSDATA; then
-    SITE_PKG="$ROOT/.local_lib"
-    mkdir -p "$SITE_PKG"
-    _QUEUE=()
-    _SEEN=""
+    SITE_PKG="$ROOT/vendor"
+    rm -rf "$SITE_PKG" "$ROOT/wheels"
+    mkdir -p "$SITE_PKG" "$ROOT/wheels"
 
-    _enqueue() {
-        local spec=$1
-        echo "$_SEEN" | tr ' ' '\n' | grep -qxF "$spec" && return
-        _SEEN="$_SEEN $spec"
-        _QUEUE+=("$spec")
-    }
+    # Versoes fixas testadas no Alwaysdata (pydantic 1.x evita pydantic-core v2)
+    python3 - "$SITE_PKG" "$ROOT/wheels" <<'PY'
+import json, os, subprocess, sys, urllib.request
+from pathlib import Path
 
-    # Popula fila inicial com os requisitos de requirements.txt
-    while IFS= read -r line; do
-        line=$(echo "$line" | sed 's/#.*//' | xargs)
-        [ -z "$line" ] && continue
-        echo "$line" | grep -qi 'imageio-ffmpeg' && continue
-        _enqueue "$line"
-    done < <(grep -v '^[[:space:]]*#' requirements.txt)
+TARGET = Path(sys.argv[1])
+WHEELS = Path(sys.argv[2])
 
-    # Processa fila
-    i=0
-    while [ $i -lt ${#_QUEUE[@]} ]; do
-        spec="${_QUEUE[$i]}"
-        ((i++))
-        gum log --level info "  $spec"
+# Lista curada: versoes testadas, sem imageio-ffmpeg (117 MB), sem pydantic-core v2
+PKGS = [
+    ("fastapi",             "0.115.14", "py3-none-any"),
+    ("starlette",           "0.46.2",   "py3-none-any"),
+    ("pydantic",            "1.10.24",  "cp313"),
+    ("typing-extensions",   "4.15.0",   "py3-none-any"),
+    ("anyio",               "4.9.0",    "py3-none-any"),
+    ("sniffio",             "1.3.1",    "py3-none-any"),
+    ("idna",                "3.10",     "py3-none-any"),
+    ("uvicorn",             "0.34.3",   "py3-none-any"),
+    ("click",               "8.2.1",    "py3-none-any"),
+    ("h11",                 "0.16.0",   "py3-none-any"),
+    ("python-dotenv",       "1.1.1",    "py3-none-any"),
+    ("requests",            "2.32.4",   "py3-none-any"),
+    ("urllib3",             "2.5.0",    "py3-none-any"),
+    ("certifi",             "2025.6.15","py3-none-any"),
+    ("charset-normalizer",  "3.4.2",    "cp313"),
+    ("httpx",               "0.28.1",   "py3-none-any"),
+    ("httpcore",            "1.0.9",    "py3-none-any"),
+    ("loguru",              "0.7.3",    "py3-none-any"),
+    ("qrcode",              "8.2",      "py3-none-any"),
+    ("Pillow",              "11.3.0",   "cp313"),
+    ("python-magic",        "0.4.27",   "py3-none-any"),
+    ("ffmpeg-python",       "0.2.0",    "py3-none-any"),
+    ("future",              "1.0.0",    "py3-none-any"),
+    ("neonize",             "0.3.18.post0", None),
+]
 
-        # Extrai nome da spec
-        pkg=$(echo "$spec" | sed 's/\[.*\]//' | sed 's/[><=!~].*//' | xargs)
+def fetch(url):
+    with urllib.request.urlopen(url, timeout=30) as r:
+        return json.load(r)
 
-        # Resolve versao (curl + grep — sem Python carregar JSON grande)
-        constraint=$(echo "$spec" | sed 's/^[a-zA-Z0-9._-]*//')
-        ver=$(_resolve_ver "$pkg" "$constraint")
-        [ -z "$ver" ] && { gum log --level warn "  Nao resolveu versao para $spec"; continue; }
+def pick(pkg, ver, tag):
+    urls = fetch(f"https://pypi.org/pypi/{pkg}/{ver}/json")["urls"]
+    # 1. tag especifico + linux x86_64
+    if tag:
+        for f in urls:
+            n = f["filename"]
+            if n.endswith(".whl") and tag in n and "x86_64" in n and ("manylinux" in n or "musllinux" in n):
+                return f["url"], n
+        for f in urls:
+            n = f["filename"]
+            if n.endswith(".whl") and tag in n:
+                return f["url"], n
+    # 2. pure python
+    for f in urls:
+        n = f["filename"]
+        if n.endswith(".whl") and "py3-none-any" in n:
+            return f["url"], n
+    # 3. qualquer wheel
+    for f in urls:
+        if f["filename"].endswith(".whl"):
+            return f["url"], f["filename"]
+    raise RuntimeError(f"sem wheel: {pkg}=={ver}")
 
-        # Verifica se ja instalado
-        [ -d "$SITE_PKG/${pkg}-${ver}.dist-info" ] && { gum log --level info "  $pkg==$ver  ja instalado"; continue; }
+failed = []
+for pkg, ver, tag in PKGS:
+    try:
+        url, name = pick(pkg, ver, tag)
+        out = WHEELS / name
+        print(f"  {pkg}=={ver}", flush=True)
+        subprocess.check_call(["curl", "-fsSL", "--retry", "3", "--retry-delay", "2", "-o", str(out), url])
+        subprocess.check_call(["unzip", "-q", "-o", str(out), "-d", str(TARGET)])
+        out.unlink(missing_ok=True)
+    except Exception as e:
+        print(f"  FALHOU {pkg}=={ver}: {e}", flush=True)
+        failed.append(pkg)
 
-        # Instala
-        for attempt in 1 2 3; do
-            if _instalar_um "$pkg" "$ver"; then
-                # Depois de instalar, coleta deps e enfileira
-                while IFS= read -r dep; do
-                    [ -n "$dep" ] && _enqueue "$dep"
-                done < <(_get_deps "$pkg" "$ver")
-                break
-            fi
-            gum log --level warn "  Tentativa $attempt/3 falhou, retentando..."
-        done || gum log --level warn "  Pulado apos 3 tentativas: $spec"
-    done
+# psutil: abi3 especifico (cp313t causa _Py_MergeZeroLocalRefcount)
+import subprocess as sp, shutil
+shutil.rmtree(str(TARGET / "psutil"), ignore_errors=True)
+for d in TARGET.glob("psutil-*.dist-info"):
+    shutil.rmtree(str(d), ignore_errors=True)
+data = fetch("https://pypi.org/pypi/psutil/7.0.0/json")
+for f in data["urls"]:
+    n = f["filename"]
+    if n.endswith(".whl") and "abi3" in n and "manylinux" in n and "x86_64" in n:
+        out = WHEELS / n
+        print(f"  psutil==7.0.0 (abi3)", flush=True)
+        sp.check_call(["curl", "-fsSL", "--retry", "3", "--retry-delay", "2", "-o", str(out), f["url"]])
+        sp.check_call(["unzip", "-q", "-o", str(out), "-d", str(TARGET)])
+        out.unlink(missing_ok=True)
+        break
 
+if failed:
+    print(f"AVISOS: falharam {failed}", flush=True)
+PY
+
+    rm -rf "$ROOT/wheels"
     gum log --level info "Requirements instalados"
 
     # ffmpeg estatico
