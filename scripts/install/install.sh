@@ -215,6 +215,8 @@ PKGS = [
     # Deps do neonize (nao instaladas automaticamente)
     ("protobuf",            "6.32.1",   None),
     ("linkpreview",         "0.11.0",   "py3-none-any"),
+    ("beautifulsoup4",      "4.13.4",   "py3-none-any"),
+    ("soupsieve",           "2.7",      "py3-none-any"),
     ("phonenumbers",        "8.13.52",  "py3-none-any"),
     ("segno",               "1.6.1",    "py3-none-any"),
     ("tqdm",                "4.67.1",   "py3-none-any"),
