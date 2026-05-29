@@ -68,12 +68,13 @@ else
 fi
 
 # ── Venv ─────────────────────────────────────────────────────────────────────
-gum spin --spinner dot --title "Criando ambiente virtual..." -- \
-    python3 -m venv .venv 2>/dev/null
+gum log --level info "Criando ambiente virtual..."
+python3 -m venv .venv 2>/tmp/venv_debug.log
 rc=$?
 if [ $rc -ne 0 ]; then
-    gum spin --spinner dot --title "Tentando sem ensurepip..." -- \
-        python3 -m venv .venv --without-pip 2>/dev/null
+    gum log --level debug "venv falhou — debug: $(cat /tmp/venv_debug.log | tr '\n' ';')"
+    gum log --level info "Tentando --without-pip..."
+    python3 -m venv .venv --without-pip 2>/tmp/venv_debug2.log
     venv_rc=$?
     pip_ok=false
     if [ $venv_rc -eq 0 ] && command -v curl &>/dev/null; then
@@ -85,9 +86,11 @@ if [ $rc -ne 0 ]; then
     fi
     if ! $pip_ok; then
         gum log --level error "Falha ao criar ambiente virtual"
+        [ -f /tmp/venv_debug2.log ] && gum log --level debug "--without-pip: $(cat /tmp/venv_debug2.log | tr '\n' ';')"
         exit 1
     fi
 fi
+rm -f /tmp/venv_debug.log /tmp/venv_debug2.log
 gum log --level info "Ambiente virtual criado"
 
 # ── Alwaysdata detection ───────────────────────────────────────────────────
