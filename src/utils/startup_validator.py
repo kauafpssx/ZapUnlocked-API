@@ -41,6 +41,11 @@ def validate_dependencies() -> None:
             pass
 
     if missing:
+        install_cmd = (
+            "bash scripts/install/install.sh"
+            if is_alwaysdata()
+            else ".venv/bin/pip install -r requirements.txt"
+        )
         lines = [
             "",
             "=" * 60,
@@ -52,7 +57,7 @@ def validate_dependencies() -> None:
         lines += [
             "",
             "Execute para instalar tudo:",
-            "  .venv/bin/pip install -r requirements.txt",
+            f"  {install_cmd}",
             "",
             "Depois inicie com:",
             "  bash scripts/run/run.sh",

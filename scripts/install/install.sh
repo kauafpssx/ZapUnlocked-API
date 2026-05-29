@@ -94,6 +94,11 @@ fi
 # Resolve a melhor versao via Simple API HTML (curl+grep, sem Python carregar JSON grande)
 _resolve_ver() {
     local pkg=$1 constraint=$2 min_ver name_pat
+    # Versao exata: retorna diretamente sem consultar Simple API
+    if echo "$constraint" | grep -qE '^[[:space:]]*=='; then
+        echo "$constraint" | sed 's/.*==//' | tr -d '[:space:]'
+        return
+    fi
     # Extrai a versao minima do constraint (ex: ">=0.115.0" → "0.115.0")
     if echo "$constraint" | grep -q '>='; then
         min_ver=$(echo "$constraint" | sed 's/.*>=//' | sed 's/[^0-9.]//g' | sed 's/\.$//')
@@ -116,22 +121,31 @@ _get_json_field() {
         python3 -c "import sys,json; print($(echo "$expr" | sed "s/{ver}/'$ver'/"))"
 }
 
-# Pega URL da wheel (prioriza py3)
+# Pega URL da wheel compativel com Python/plataforma atual
 _get_wheel_url() {
     local pkg=$1 ver=$2
     curl -sS "https://pypi.org/pypi/$pkg/$ver/json" 2>/dev/null | \
         python3 -c "
-import sys,json
+import sys,json,platform
 d=json.load(sys.stdin)
-for f in d.get('urls') or []:
-    if f.get('packagetype')=='bdist_wheel' and f.get('python_version','') in ('py3','py2.py3','none',''):
-        print(f['url']); sys.exit(0)
-for f in d.get('urls') or []:
-    if f.get('packagetype')=='bdist_wheel':
-        print(f['url']); sys.exit(0)
-for f in d.get('releases',{}).get('$ver',[]):
-    if f.get('packagetype')=='bdist_wheel':
-        print(f['url']); sys.exit(0)
+pv=sys.version_info
+cp='cp%d%d'%(pv.major,pv.minor)
+mach=platform.machine().lower()
+plat_pats=['x86_64','amd64'] if mach in('x86_64','amd64') else (['aarch64','arm64'] if mach in('aarch64','arm64') else [mach])
+def ok(fn):
+    fn=fn.lower()
+    return 'linux' in fn and any(p in fn for p in plat_pats)
+files=[f for f in(d.get('urls') or []) if f.get('packagetype')=='bdist_wheel']
+for f in files:
+    fn=f.get('filename','')
+    if cp in fn and ok(fn): print(f['url']);sys.exit(0)
+for f in files:
+    fn=f.get('filename','')
+    if 'abi3' in fn and ok(fn): print(f['url']);sys.exit(0)
+for f in files:
+    if f.get('python_version','') in('py3','py2.py3','none',''): print(f['url']);sys.exit(0)
+for f in files:
+    print(f['url']);sys.exit(0)
 "
 }
 
