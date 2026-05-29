@@ -92,11 +92,7 @@ fi
 
 # ── Instala requirements ────────────────────────────────────────────────────
 if $_ALWAYSDATA; then
-    SITE_PKG=$(python3 -c "
-import site, os
-sp = site.getsitepackages()[-1]
-print(sp if os.access(sp, os.W_OK) else site.getusersitepackages())
-")
+    SITE_PKG="$ROOT/.local_lib"
     mkdir -p "$SITE_PKG"
     while IFS= read -r pkg || [ -n "$pkg" ]; do
         pkg=$(echo "$pkg" | sed 's/#.*//' | xargs)

@@ -2,15 +2,13 @@ import sys
 import os
 import asyncio
 
-# ── Garante que user site-packages esteja no path (Alwaysdata) ──────────────
-import site as _site
-try:
-    _site.addsitedir(_site.getusersitepackages())
-except Exception:
-    pass
+# ── .local_lib: diretorio local de pacotes (usado no Alwaysdata) ───────────
+_THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+_LOCAL_LIB = os.path.join(_THIS_DIR, ".local_lib")
+if os.path.isdir(_LOCAL_LIB):
+    sys.path.insert(0, _LOCAL_LIB)
 
 # ── Auto-venv: reexecuta com o Python do .venv se chamado diretamente ──────
-_THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 _VENV_DIR = os.path.join(_THIS_DIR, ".venv")
 if __name__ == "__main__":
     VENV_PYTHON = os.path.join(_VENV_DIR, "bin", "python")
