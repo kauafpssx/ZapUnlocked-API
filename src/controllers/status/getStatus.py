@@ -4,7 +4,7 @@ import sys
 import psutil
 from datetime import datetime, timezone
 
-from src.services.whatsapp.client import get_is_ready, get_qr
+from src.services.whatsapp.client import get_is_ready, get_qr, get_qr_expires_in
 
 _START_TIME = time.time()
 
@@ -100,6 +100,7 @@ async def stream_status_generator(request):
             "state": "CONNECTED" if is_ready else "AWAITING_QR",
             "qr_string": qr if qr else None,
             "qr": None,
+            "qr_expires_in": get_qr_expires_in() if qr and not is_ready else None,
         }
 
         if qr and not is_ready:

@@ -1,17 +1,17 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-cd "$ROOT"
+source "$SCRIPT_DIR/../lib/common.sh"
+cd "$ROOT_DIR"
 
-export PATH="$HOME/.local/bin:$PATH"
+# ── Start ──────────────────────────────────────────────────────────────
+ui_banner
+ui_tags "$ICON_GEN" "GEN ENV"
+ui_sep
+ui_task "Generating environment secrets"
 
-if ! command -v gum &>/dev/null; then
-    echo "[ERRO] gum nao encontrado — execute scripts/install/install.sh primeiro"
-    exit 1
-fi
-
-# ── Gerar secrets ─────────────────────────────────────────────────────────────
+# ── Gerar secrets ─────────────────────────────────────────────────────
+ui_progress 20 "Generating API keys..."
 gen_hex() {
     if command -v openssl &>/dev/null; then
         openssl rand -hex 32
@@ -23,59 +23,64 @@ gen_hex() {
 API_KEY="zu_$(gen_hex)"
 INTERNAL_SECRET="zu_sec_$(gen_hex)"
 
-# ── Header ────────────────────────────────────────────────────────────────────
+ui_log_ok "API_KEY generated"
+ui_log_ok "INTERNAL_SECRET generated"
+
+# ── Portable sed in-place ─────────────────────────────────────────────
+_sed_inplace() {
+    local pattern=$1 file=$2
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "$pattern" "$file"
+    else
+        sed -i "$pattern" "$file"
+    fi
+}
+
+# ── Exibir secrets ────────────────────────────────────────────────────
+ui_progress 50 "Displaying secrets..."
 echo ""
-gum style \
-    --foreground "212" --border-foreground "212" \
-    --border rounded --align center \
-    --width 42 --padding "0 2" \
-    "ZapUnlocked API  ·  Gerar Secrets"
+gum style --foreground 240 "  API_KEY"
+gum style --foreground 42 --bold "  $API_KEY"
+echo ""
+gum style --foreground 240 "  INTERNAL_SECRET"
+gum style --foreground 42 --bold "  $INTERNAL_SECRET"
 echo ""
 
-# ── Exibir secrets ────────────────────────────────────────────────────────────
-gum style --foreground "240" "  API_KEY"
-gum style --foreground "42" --bold "  $API_KEY"
-echo ""
-gum style --foreground "240" "  INTERNAL_SECRET"
-gum style --foreground "42" --bold "  $INTERNAL_SECRET"
-echo ""
-
-# ── Salvar no .env ────────────────────────────────────────────────────────────
+# ── Salvar no .env ────────────────────────────────────────────────────
 gum confirm "Salvar no arquivo .env?" || {
-    echo ""
-    gum style --foreground "240" "  Secrets exibidas mas não salvas."
-    echo ""
+    ui_log_info "Secrets exibidas mas não salvas"
+    ui_sep
+    ui_footer "Operação cancelada"
     exit 0
 }
 
+ui_progress 70 "Writing to .env..."
 if [ -f ".env" ]; then
-    # Substituir se já existir
     if grep -q "^API_KEY=" .env; then
-        sed -i "s|^API_KEY=.*|API_KEY=$API_KEY|" .env
+        _sed_inplace "s|^API_KEY=.*|API_KEY=$API_KEY|" .env
     else
         echo "API_KEY=$API_KEY" >> .env
     fi
 
     if grep -q "^INTERNAL_SECRET=" .env; then
-        sed -i "s|^INTERNAL_SECRET=.*|INTERNAL_SECRET=$INTERNAL_SECRET|" .env
+        _sed_inplace "s|^INTERNAL_SECRET=.*|INTERNAL_SECRET=$INTERNAL_SECRET|" .env
     else
         echo "INTERNAL_SECRET=$INTERNAL_SECRET" >> .env
     fi
+    ui_log_ok "Existing .env updated"
 else
-    # Criar .env do zero
     if [ -f ".env.example" ]; then
         cp .env.example .env
-        sed -i "s|^API_KEY=.*|API_KEY=$API_KEY|" .env
-        sed -i "s|^INTERNAL_SECRET=.*|INTERNAL_SECRET=$INTERNAL_SECRET|" .env
+        _sed_inplace "s|^API_KEY=.*|API_KEY=$API_KEY|" .env
+        _sed_inplace "s|^INTERNAL_SECRET=.*|INTERNAL_SECRET=$INTERNAL_SECRET|" .env
+        ui_log_ok "Created from .env.example"
     else
         printf "API_KEY=%s\nINTERNAL_SECRET=%s\n" "$API_KEY" "$INTERNAL_SECRET" > .env
+        ui_log_ok "Created new .env"
     fi
 fi
 
-echo ""
-gum style \
-    --foreground "42" --border-foreground "42" \
-    --border rounded --align center \
-    --width 42 --padding "0 2" \
-    "✔ Secrets salvas em .env"
-echo ""
+# ── Done ───────────────────────────────────────────────────────────────
+ui_progress 100 "Done"
+ui_sep
+ui_footer "Secrets salvas em .env"

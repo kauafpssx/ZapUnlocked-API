@@ -33,6 +33,12 @@ reaction_cache: dict = {}
 START_TIME = time.time()
 main_loop: asyncio.AbstractEventLoop | None = None
 
+# QR generation gating: only store QR after someone accesses /qr with valid key
+qr_generation_active: bool = False
+qr_last_generated_at: float | None = None
+QR_EXPIRY_SECONDS: int = 20
+_keep_qr_active_on_restart: bool = False
+
 DB_CONFIG_FILE = Path(DATA_DIR) / "db_config.json"
 DEFAULT_INTERVAL = 1440
 last_cleanup_time = 0
@@ -65,6 +71,28 @@ def get_pair_code():
 def reset_pair_code():
     global current_pair_code
     current_pair_code = None
+
+
+def activate_qr():
+    """Autoriza armazenamento de QR. Chamar após auth válida em /qr ou /qr/image.
+    Se já conectado: no-op. Se QR expirou (current_qr=None): reinicia bot para gerar novo."""
+    global qr_generation_active, _keep_qr_active_on_restart
+    if is_ready:
+        return
+    qr_generation_active = True
+    if current_qr is None and main_loop and main_loop.is_running():
+        _keep_qr_active_on_restart = True
+        main_loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(start_bot())
+        )
+
+
+def get_qr_expires_in() -> int | None:
+    """Segundos restantes do QR atual. None se sem QR."""
+    if current_qr is None or qr_last_generated_at is None:
+        return None
+    remaining = QR_EXPIRY_SECONDS - int(time.time() - qr_last_generated_at)
+    return max(remaining, 0)
 
 
 def get_store():
@@ -323,8 +351,12 @@ def get_contact_name(client, jid: str, push_name: str = None) -> str:
 # ══════════════════════════════════════════════════════════
 
 def _on_qr(c: NewClient, qr_bytes: bytes):
-    global current_qr
+    global current_qr, qr_last_generated_at
+    if not qr_generation_active:
+        logger.debug("🔒 QR ignorado — aguardando acesso autenticado em /qr")
+        return
     current_qr = qr_bytes.decode("utf-8")
+    qr_last_generated_at = time.time()
 
     # ── Monta URL pública dinâmica ──────────────────────────────────
     public_url = os.getenv("PUBLIC_URL")                        # 1. env var explicita (ex: http://meudominio.com:8080)
@@ -350,10 +382,12 @@ def _on_qr(c: NewClient, qr_bytes: bytes):
 
 
 def _on_connected(c: NewClient, event: "ConnectedEv"):
-    global is_ready, current_qr, current_pair_code
+    global is_ready, current_qr, current_pair_code, qr_generation_active, qr_last_generated_at
     is_ready = True
     current_qr = None
     current_pair_code = None
+    qr_generation_active = False
+    qr_last_generated_at = None
     logger.info("✅ WhatsApp conectado e pronto")
     if main_loop and main_loop.is_running():
         phone = ""
@@ -554,7 +588,15 @@ async def start_bot():
 
 def _reset_state():
     """Reseta variáveis de estado globais para uma nova conexão."""
+    global qr_generation_active, qr_last_generated_at, current_qr, _keep_qr_active_on_restart
     reset_pair_code()
+    qr_last_generated_at = None
+    current_qr = None
+    if _keep_qr_active_on_restart:
+        qr_generation_active = True
+        _keep_qr_active_on_restart = False
+    else:
+        qr_generation_active = False
 
 
 def _disconnect_existing():

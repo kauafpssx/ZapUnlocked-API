@@ -322,6 +322,10 @@
                 <div class="visual-container" id="qr-container">
                     {{QR_CONTENT}}
                 </div>
+                <div id="qr-timer" style="margin-top: -16px; margin-bottom: 24px; font-size: 13px; color: var(--text-muted); display: none;">
+                    <i class="ph-bold ph-clock"></i>
+                    Expira em <span id="qr-countdown" style="color: var(--warning); font-weight: 700;"></span>s
+                </div>
             </div>
 
             <!-- Pairing Tab -->
@@ -369,6 +373,8 @@
     <script>
         const apiKey = "{{API_KEY}}";
         let isConnected = "{{IS_CONNECTED}}" === "true";
+        let qrCountdownValue = {{QR_EXPIRES_IN}};
+        let qrCountdownInterval = null;
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -383,6 +389,21 @@
             }
         }
 
+        function startQrCountdown(seconds) {
+            clearInterval(qrCountdownInterval);
+            const timer = document.getElementById('qr-timer');
+            const countdown = document.getElementById('qr-countdown');
+            if (seconds == null || seconds <= 0) { timer.style.display = 'none'; return; }
+            qrCountdownValue = seconds;
+            timer.style.display = 'block';
+            countdown.innerText = qrCountdownValue;
+            qrCountdownInterval = setInterval(() => {
+                qrCountdownValue--;
+                countdown.innerText = Math.max(qrCountdownValue, 0);
+                if (qrCountdownValue <= 0) { clearInterval(qrCountdownInterval); timer.style.display = 'none'; }
+            }, 1000);
+        }
+
         function updateUI(data) {
             const statusDot = document.getElementById('status-dot');
             const statusText = document.getElementById('status-text');
@@ -395,6 +416,8 @@
                 statusText.innerText = 'Conectado';
                 setupView.classList.add('hidden');
                 connectedView.classList.remove('hidden');
+                clearInterval(qrCountdownInterval);
+                document.getElementById('qr-timer').style.display = 'none';
                 isConnected = true;
             } else {
                 statusDot.classList.remove('online');
@@ -404,8 +427,11 @@
 
                 if (data.qr) {
                     qrContainer.innerHTML = `<img src="data:image/png;base64,${data.qr}" id="qr-img">`;
+                    startQrCountdown(data.qr_expires_in);
                 } else if (!data.qr_string) {
                     qrContainer.innerHTML = '<div class="loader"></div>';
+                    clearInterval(qrCountdownInterval);
+                    document.getElementById('qr-timer').style.display = 'none';
                 }
                 isConnected = false;
             }
@@ -473,6 +499,7 @@
         }
 
         if (isConnected) updateUI({ state: 'CONNECTED' });
+        if (!isConnected && qrCountdownValue != null) startQrCountdown(qrCountdownValue);
         startStatusStream();
     </script>
 </body>

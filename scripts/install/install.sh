@@ -1,45 +1,25 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-cd "$ROOT"
+source "$SCRIPT_DIR/../lib/common.sh"
+cd "$ROOT_DIR"
 
-# ── gum auto-install ─────────────────────────────────────────────────────────
-export PATH="$HOME/.local/bin:$PATH"
-if ! command -v gum &>/dev/null; then
-    echo "Instalando gum..."
-    mkdir -p "$HOME/.local/bin"
-    GUM_TAG=$(curl -fsSL https://api.github.com/repos/charmbracelet/gum/releases/latest \
-              | grep '"tag_name"' | cut -d'"' -f4)
-    GUM_VER="${GUM_TAG#v}"
-    case "$(uname -m)" in
-        aarch64|arm64) ARCH="arm64" ;;
-        *)             ARCH="x86_64" ;;
-    esac
-    curl -fsSL \
-      "https://github.com/charmbracelet/gum/releases/download/${GUM_TAG}/gum_${GUM_VER}_Linux_${ARCH}.tar.gz" \
-      | tar -xz -C /tmp/ 2>/dev/null
-    mv /tmp/gum_*/gum "$HOME/.local/bin/gum"
-fi
-
-# ─────────────────────────────────────────────────────────────────────────────
-
-echo ""
-gum style \
-    --foreground "212" --border-foreground "212" \
-    --border rounded --align center \
-    --width 42 --padding "0 2" \
-    "ZapUnlocked API  ·  Instalação"
-echo ""
+# ── Start ──────────────────────────────────────────────────────────────
+ui_banner
+ui_tags "$ICON_INSTALL" "INSTALL"
+ui_sep
+ui_task "Installing ZapUnlocked API"
+ui_progress 5 "Starting installation..."
 
 # Detect OS silently
 if [[ "$OSTYPE" == "darwin"* ]]; then OS="macos"
 elif [ -f /etc/os-release ]; then . /etc/os-release; OS=$ID
 else OS=$(uname -s); fi
 
-# ── Python ───────────────────────────────────────────────────────────────────
+# ── Python ─────────────────────────────────────────────────────────────
+ui_progress 10 "Checking Python..."
 if command -v python3 &>/dev/null; then
-    gum log --level info "Python encontrado"
+    ui_log_ok "Python $(python3 --version 2>&1 | awk '{print $2}')"
 else
     case $OS in
         macos)
@@ -60,52 +40,44 @@ else
                 sudo pacman -S --noconfirm python python-pip
             ;;
         *)
-            gum log --level error "Python não encontrado — instale Python 3.10+ manualmente"
+            ui_log_err "Python não encontrado — instale Python 3.10+ manualmente"
             exit 1
             ;;
     esac
-    gum log --level info "Python instalado"
+    ui_log_ok "Python instalado"
 fi
 
-# ── Alwaysdata detection ───────────────────────────────────────────────────
+# ── Alwaysdata detection ──────────────────────────────────────────────
 _ALWAYSDATA=false
-[ -n "$ALWAYSDATA_ACCOUNT" ] && _ALWAYSDATA=true
-[ -f /etc/alwaysdata ] && _ALWAYSDATA=true
-hostname -f 2>/dev/null | grep -qi 'alwaysdata' && _ALWAYSDATA=true
-uname -r 2>/dev/null | grep -qi 'alwaysdata' && _ALWAYSDATA=true
+__alwaysdata_check && _ALWAYSDATA=true
 
-# ── Venv + Requirements ─────────────────────────────────────────────────────
+# ── Venv + Requirements ──────────────────────────────────────────────
+ui_progress 25 "Creating virtual environment..."
 if $_ALWAYSDATA; then
-    gum log --level info "Alwaysdata detectado — instalando sem pip (install_wheel.py)"
+    ui_log_info "Alwaysdata detectado — instalando sem pip (install_wheel.py)"
     rm -rf .venv
 else
-    # Servidor normal: venv com pip interno
-    gum log --level info "Criando ambiente virtual..."
     python3 -m venv .venv 2>/dev/null || {
-        gum log --level error "Falha ao criar ambiente virtual"
+        ui_log_err "Falha ao criar ambiente virtual"
         exit 1
     }
-    gum log --level info "Ambiente virtual criado"
+    ui_log_ok "Ambiente virtual criado"
     _PIP=.venv/bin/python -m pip
     $_PIP install --upgrade pip -q
 fi
 
-# ── Helpers ──────────────────────────────────────────────────────────────────
-# Resolve a melhor versao via Simple API HTML (curl+grep, sem Python carregar JSON grande)
+# ── Helpers ────────────────────────────────────────────────────────────
 _resolve_ver() {
     local pkg=$1 constraint=$2 min_ver name_pat
-    # Versao exata: retorna diretamente sem consultar Simple API
     if echo "$constraint" | grep -qE '^[[:space:]]*=='; then
         echo "$constraint" | sed 's/.*==//' | tr -d '[:space:]'
         return
     fi
-    # Extrai a versao minima do constraint (ex: ">=0.115.0" → "0.115.0")
     if echo "$constraint" | grep -q '>='; then
         min_ver=$(echo "$constraint" | sed 's/.*>=//' | sed 's/[^0-9.]//g' | sed 's/\.$//')
     else
         min_ver="0.0.0"
     fi
-    # Normaliza nome: wheel usa _ no lugar de -
     name_pat=$(echo "$pkg" | sed 's/-/[-_]/g')
     curl -sS "https://pypi.org/simple/$pkg/" 2>/dev/null | \
         grep -oP "${name_pat}-\K\d[\d.]*[a-zA-Z0-9]*(?=-py|-cp|-none)" | \
@@ -114,14 +86,12 @@ _resolve_ver() {
         tail -1
 }
 
-# Pega um campo do JSON de versao especifica (JSON pequeno, so 1 versao)
 _get_json_field() {
     local pkg=$1 ver=$2 expr=$3
     curl -sS "https://pypi.org/pypi/$pkg/$ver/json" 2>/dev/null | \
         python3 -c "import sys,json; print($(echo "$expr" | sed "s/{ver}/'$ver'/"))"
 }
 
-# Pega URL da wheel compativel com Python/plataforma atual
 _get_wheel_url() {
     local pkg=$1 ver=$2
     curl -sS "https://pypi.org/pypi/$pkg/$ver/json" 2>/dev/null | \
@@ -149,7 +119,6 @@ for f in files:
 "
 }
 
-# Pega deps (non-extra)
 _get_deps() {
     local pkg=$1 ver=$2
     curl -sS "https://pypi.org/pypi/$pkg/$ver/json" 2>/dev/null | \
@@ -167,17 +136,17 @@ for r in d['info'].get('requires_dist') or []:
 _instalar_um() {
     local pkg=$1 ver=$2 url
     url=$(_get_wheel_url "$pkg" "$ver")
-    [ -z "$url" ] && { gum log --level warn "  Sem wheel para $pkg $ver"; return 1; }
+    [ -z "$url" ] && { ui_log_warn "Sem wheel para $pkg $ver"; return 1; }
     python3 "$ROOT/scripts/install/install_wheel.py" "$url" "$SITE_PKG"
 }
 
-# ── Instala requirements ────────────────────────────────────────────────────
+# ── Instala requirements ────────────────────────────────────────────
+ui_progress 50 "Installing dependencies..."
 if $_ALWAYSDATA; then
     SITE_PKG="$ROOT/vendor"
     rm -rf "$SITE_PKG" "$ROOT/wheels"
     mkdir -p "$SITE_PKG" "$ROOT/wheels"
 
-    # Versoes fixas testadas no Alwaysdata (pydantic 1.x evita pydantic-core v2)
     python3 - "$SITE_PKG" "$ROOT/wheels" <<'PY'
 import json, os, subprocess, sys, urllib.request
 from pathlib import Path
@@ -185,7 +154,6 @@ from pathlib import Path
 TARGET = Path(sys.argv[1])
 WHEELS = Path(sys.argv[2])
 
-# Lista curada: versoes testadas, sem imageio-ffmpeg (117 MB), sem pydantic-core v2
 PKGS = [
     ("fastapi",             "0.115.14", "py3-none-any"),
     ("starlette",           "0.46.2",   "py3-none-any"),
@@ -212,7 +180,6 @@ PKGS = [
     ("future",              "1.0.0",    "py3-none-any"),
     ("neonize",             "0.3.18.post0", None),
 
-    # Deps do neonize (nao instaladas automaticamente)
     ("protobuf",            "7.34.1",   None),
     ("linkpreview",         "0.11.0",   "py3-none-any"),
     ("beautifulsoup4",      "4.13.4",   "py3-none-any"),
@@ -229,7 +196,6 @@ def fetch(url):
 
 def pick(pkg, ver, tag):
     urls = fetch(f"https://pypi.org/pypi/{pkg}/{ver}/json")["urls"]
-    # 1. tag especifico + linux x86_64
     if tag:
         for f in urls:
             n = f["filename"]
@@ -239,12 +205,10 @@ def pick(pkg, ver, tag):
             n = f["filename"]
             if n.endswith(".whl") and tag in n:
                 return f["url"], n
-    # 2. pure python
     for f in urls:
         n = f["filename"]
         if n.endswith(".whl") and "py3-none-any" in n:
             return f["url"], n
-    # 3. qualquer wheel
     for f in urls:
         if f["filename"].endswith(".whl"):
             return f["url"], f["filename"]
@@ -263,7 +227,6 @@ for pkg, ver, tag in PKGS:
         print(f"  FALHOU {pkg}=={ver}: {e}", flush=True)
         failed.append(pkg)
 
-# psutil: abi3 especifico (cp313t causa _Py_MergeZeroLocalRefcount)
 import subprocess as sp, shutil
 shutil.rmtree(str(TARGET / "psutil"), ignore_errors=True)
 for d in TARGET.glob("psutil-*.dist-info"):
@@ -284,9 +247,9 @@ if failed:
 PY
 
     rm -rf "$ROOT/wheels"
-    gum log --level info "Requirements instalados"
+    ui_log_ok "Requirements instalados"
 
-    # ffmpeg estatico
+    ui_progress 75 "Checking system dependencies..."
     if ! command -v ffmpeg &>/dev/null; then
         TMP_DIR=$(mktemp -d "$HOME/.ffmpeg_extract_XXXXX")
         gum spin --spinner dot --title "Baixando ffmpeg estatico (~120 MB)..." -- \
@@ -295,24 +258,20 @@ PY
         find "$TMP_DIR" -name 'ffprobe' -type f -exec mv {} "$HOME/.local/bin/ffprobe" \;
         rm -rf "$TMP_DIR"
         chmod +x "$HOME/.local/bin/ffmpeg" "$HOME/.local/bin/ffprobe"
+        ui_log_ok "ffmpeg instalado"
     else
-        gum log --level info "ffmpeg ja no sistema"
+        ui_log_ok "ffmpeg ja no sistema"
     fi
 else
     gum spin --spinner dot --title "Instalando requirements..." -- \
         $_PIP install -r requirements.txt --no-cache-dir -q || {
-        gum log --level error "Falha ao instalar requirements"
+        ui_log_err "Falha ao instalar requirements"
         exit 1
     }
-    gum log --level info "Requirements instalados"
+    ui_log_ok "Requirements instalados"
 fi
 
-# ── Done ─────────────────────────────────────────────────────────────────────
-echo ""
-gum style \
-    --foreground "42" --border-foreground "42" \
-    --border rounded --align center \
-    --width 42 --padding "0 2" \
-    "✔ Instalação concluída!" \
-    "Execute: bash scripts/run/run.sh"
-echo ""
+# ── Done ───────────────────────────────────────────────────────────────
+ui_progress 100 "Installation complete"
+ui_sep
+ui_footer "Instalação concluída!" "bash scripts/run/run.sh"

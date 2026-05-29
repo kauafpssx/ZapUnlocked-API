@@ -1,38 +1,27 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-cd "$ROOT"
+source "$SCRIPT_DIR/../lib/common.sh"
+cd "$ROOT_DIR"
 
-export PATH="$HOME/.local/bin:$PATH"
+# ── Start ──────────────────────────────────────────────────────────────
+ui_banner
+ui_tags "$ICON_RUN" "RUN"
+ui_sep
+ui_task "Starting ZapUnlocked API server"
 
-if ! command -v gum &>/dev/null; then
-    echo "[ERRO] gum nao encontrado — execute install.sh primeiro"
-    exit 1
-fi
-
-echo ""
-gum style \
-    --foreground "39" --border-foreground "39" \
-    --border rounded --align center \
-    --width 42 --padding "0 2" \
-    "ZapUnlocked API  ·  Servidor"
-echo ""
-
-# ── Port ─────────────────────────────────────────────────────────────────────
+# ── Port ───────────────────────────────────────────────────────────────
 PID=$(lsof -t -i:8300 2>/dev/null)
 if [ -n "$PID" ]; then
     kill -9 "$PID" 2>/dev/null
     sleep 1
 fi
-gum log --level info "Porta 8300 livre"
+ui_log_ok "Porta 8300 livre"
 
-# ── Alwaysdata: configura antes da deteccao de uvicorn ───────────────────────
+# ── Alwaysdata: configura antes da deteccao de uvicorn ────────────────
 _RELOAD="--reload"
 _IS_AD=false
-[ -n "$ALWAYSDATA_ACCOUNT" ] && _IS_AD=true
-[ -f /etc/alwaysdata ] && _IS_AD=true
-hostname -f 2>/dev/null | grep -qi 'alwaysdata' && _IS_AD=true
+__alwaysdata_check && _IS_AD=true
 
 if $_IS_AD; then
     _RELOAD=""
@@ -41,24 +30,26 @@ if $_IS_AD; then
     export PYTHONPATH="$ROOT/vendor${PYTHONPATH:+:$PYTHONPATH}"
 fi
 
-# ── Detectar comando uvicorn ────────────────────────────────────────────────
+# ── Detectar comando uvicorn ──────────────────────────────────────────
 if [ -f ".venv/bin/uvicorn" ]; then
     CMD=".venv/bin/uvicorn"
-    gum log --level info "Usando .venv"
+    ui_log_ok "Usando .venv/bin/uvicorn"
 elif command -v uvicorn &>/dev/null; then
     CMD="uvicorn"
-    gum log --level info "Usando uvicorn global"
+    ui_log_ok "Usando uvicorn global"
 elif python3 -c "import uvicorn" &>/dev/null; then
     CMD="python3 -m uvicorn"
-    gum log --level info "Usando python3 -m uvicorn"
+    ui_log_ok "Usando python3 -m uvicorn"
 else
-    gum log --level error "uvicorn nao encontrado — execute install.sh primeiro"
+    ui_log_err "uvicorn não encontrado — execute install.sh primeiro"
     exit 1
 fi
 
-# ── Start ─────────────────────────────────────────────────────────────────────
+# ── Start ──────────────────────────────────────────────────────────────
+ui_sep
+ui_log_info "Servidor ouvindo em http://[::]:8300"
+ui_log_info "Pressione Ctrl+C para parar"
 echo ""
-gum style --foreground "240" "  Iniciando servidor..."
 echo ""
 
 $CMD main:app --host '::' --port 8300 --proxy-headers --forwarded-allow-ips '::1' $_RELOAD --log-level info

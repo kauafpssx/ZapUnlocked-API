@@ -1,9 +1,10 @@
 from fastapi import HTTPException, Response
 import io
 import qrcode
-from src.services.whatsapp.client import get_qr, get_is_ready
+from src.services.whatsapp.client import get_qr, get_is_ready, activate_qr, get_qr_expires_in
 
 async def get_qr_image():
+    activate_qr()
     qr = get_qr()
 
     if not qr:
@@ -15,6 +16,11 @@ async def get_qr_image():
         buf = io.BytesIO()
         img.save(buf, format="PNG")
 
-        return Response(content=buf.getvalue(), media_type="image/png", headers={"Cache-Control": "no-cache, no-store, must-revalidate"})
+        expires_in = get_qr_expires_in()
+        headers = {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "X-QR-Expires-In": str(expires_in) if expires_in is not None else "0",
+        }
+        return Response(content=buf.getvalue(), media_type="image/png", headers=headers)
     except Exception as e:
         raise HTTPException(status_code=500, detail={"error": "Erro ao gerar QR Code", "message": str(e)})
