@@ -2,7 +2,7 @@ import sys
 import os
 import socket
 from pathlib import Path
-import importlib
+import importlib.util
 
 # (pip_name, import_name)
 _REQUIRED = [
@@ -29,16 +29,8 @@ _OPTIONAL = [
 def validate_dependencies() -> None:
     missing = []
     for pip_name, import_name in _REQUIRED:
-        try:
-            importlib.import_module(import_name)
-        except ImportError:
+        if importlib.util.find_spec(import_name) is None:
             missing.append(pip_name)
-
-    for pip_name, import_name in _OPTIONAL:
-        try:
-            importlib.import_module(import_name)
-        except ImportError:
-            pass
 
     if missing:
         install_cmd = (

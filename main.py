@@ -2,6 +2,10 @@ import sys
 import os
 import asyncio
 
+# Limita arenas de malloc — reduz uso de memoria em servidores com restricao (ex: Alwaysdata 256MB)
+if "MALLOC_ARENA_MAX" not in os.environ:
+    os.environ["MALLOC_ARENA_MAX"] = "1"
+
 # ── .local_lib: diretorio local de pacotes (usado no Alwaysdata) ───────────
 _THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 _LOCAL_LIB = os.path.join(_THIS_DIR, ".local_lib")
