@@ -141,10 +141,10 @@ def install(pkg_spec: str, target: Path, _seen: set = None) -> bool:
     print(f'  {pkg}=={version}', file=sys.stderr)
     _install_wheel(url, target)
 
-    # Instala deps apos liberar data
+    # Instala deps apos liberar data (falhas de dep nao marcam o pkg como falho)
     for dep in deps:
         if not install(dep, target, _seen):
-            return False
+            print(f'    AVISO: dependencia {dep} falhou', file=sys.stderr)
     return True
 
 
