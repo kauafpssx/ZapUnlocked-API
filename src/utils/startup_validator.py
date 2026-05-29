@@ -93,4 +93,10 @@ def is_alwaysdata() -> bool:
             return True
     except Exception:
         pass
+    # 6. Kernel version contem "alwaysdata" (ex: 6.18.30-alwaysdata)
+    try:
+        if "alwaysdata" in os.uname().release.lower():
+            return True
+    except Exception:
+        pass
     return False

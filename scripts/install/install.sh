@@ -80,6 +80,7 @@ _ALWAYSDATA=false
 [ -n "$ALWAYSDATA_ACCOUNT" ] && _ALWAYSDATA=true
 [ -f /etc/alwaysdata ] && _ALWAYSDATA=true
 hostname -f 2>/dev/null | grep -qi 'alwaysdata' && _ALWAYSDATA=true
+uname -r 2>/dev/null | grep -qi 'alwaysdata' && _ALWAYSDATA=true
 
 # ── Requirements ─────────────────────────────────────────────────────────────
 gum spin --spinner dot --title "Atualizando pip..." -- .venv/bin/pip install --upgrade pip -q
