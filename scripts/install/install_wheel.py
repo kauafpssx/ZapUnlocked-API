@@ -128,23 +128,23 @@ def install(pkg_spec: str, target: Path, _seen: set = None) -> bool:
         print(f'  {pkg}=={version}  ja instalado', file=sys.stderr)
         return True
 
+    deps = _non_extra_deps(data)
     url = _wheel_url(data, version)
+    del data  # libera JSON
+
     if not url:
         print(f'  Sem wheel para {pkg} {version}', file=sys.stderr)
         return False
 
-    deps = _non_extra_deps(data)
-    del data  # libera JSON antes de baixar/extrair/recurse
-
     target.mkdir(parents=True, exist_ok=True)
 
-    print(f'  {pkg}=={version}', file=sys.stderr)
-    _install_wheel(url, target)
-
-    # Instala deps apos liberar data (falhas de dep nao marcam o pkg como falho)
+    # Instala deps PRIMEIRO — se morrer, o pkg principal nao fica "half-installed"
     for dep in deps:
         if not install(dep, target, _seen):
             print(f'    AVISO: dependencia {dep} falhou', file=sys.stderr)
+
+    print(f'  {pkg}=={version}', file=sys.stderr)
+    _install_wheel(url, target)
     return True
 
 
