@@ -138,7 +138,7 @@ def ok(fn):
 files=[f for f in(d.get('urls') or []) if f.get('packagetype')=='bdist_wheel']
 for f in files:
     fn=f.get('filename','')
-    if cp in fn and ok(fn): print(f['url']);sys.exit(0)
+    if f.get('python_version','')==cp and ok(fn): print(f['url']);sys.exit(0)
 for f in files:
     fn=f.get('filename','')
     if 'abi3' in fn and ok(fn): print(f['url']);sys.exit(0)
