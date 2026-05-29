@@ -64,7 +64,7 @@ if is_alwaysdata() and sys.stdin.isatty():
         "║  Field           Value                               ║\n"
         "║  ─────────────   ─────────────────────────────────   ║\n"
         "║  Name            ZapUnlocked-API                     ║\n"
-        "║  Command         python3 main.py                     ║\n"
+        "║  Command         bash scripts/run/run.sh             ║\n"
         "║  Working dir     ZapUnlocked-API                     ║\n"
         "║  Env vars        PORT=8300                           ║\n"
         "║                                                      ║\n"
@@ -92,7 +92,7 @@ if is_alwaysdata() and sys.stdin.isatty():
                 "Field           Value",
                 "─────────────   ─────────────────────────────",
                 "Name            ZapUnlocked-API",
-                "Command         python3 main.py",
+                "Command         bash scripts/run/run.sh",
                 "Working dir     ZapUnlocked-API",
                 "Env vars        PORT=8300",
             ],
