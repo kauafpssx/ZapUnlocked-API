@@ -3,11 +3,13 @@ import os
 import asyncio
 
 # ── Auto-venv: reexecuta com o Python do .venv se chamado diretamente ──────
+_THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+_VENV_DIR = os.path.join(_THIS_DIR, ".venv")
 if __name__ == "__main__":
-    VENV_PYTHON = os.path.join(os.path.dirname(__file__), ".venv", "bin", "python")
+    VENV_PYTHON = os.path.join(_VENV_DIR, "bin", "python")
     if sys.platform == "win32":
-        VENV_PYTHON = os.path.join(os.path.dirname(__file__), ".venv", "Scripts", "python.exe")
-    if not sys.executable.startswith(os.path.join(os.path.dirname(__file__), ".venv")):
+        VENV_PYTHON = os.path.join(_VENV_DIR, "Scripts", "python.exe")
+    if not os.path.realpath(sys.executable).startswith(os.path.realpath(_VENV_DIR)):
         if os.path.isfile(VENV_PYTHON):
             os.execv(VENV_PYTHON, [VENV_PYTHON, __file__, *sys.argv[1:]])
 
@@ -16,19 +18,25 @@ validate_dependencies()
 
 # ── No Alwaysdata, a porta 8300-8499 so fica acessivel via Service ─────
 if is_alwaysdata() and sys.stdin.isatty():
-    msg = (
-        "\n"
-        "=" * 60 + "\n"
-        "  ATENCAO: Voce esta no Alwaysdata.\n"
-        "  A porta 8300-8499 so fica acessivel\n"
-        "  atraves de um Service registrado no painel:\n"
-        "    Advanced > Services > Add a service\n"
-        "    Command: bash scripts/run/run.sh\n"
-        "    Bind: :: (IPv6)\n"
-        "  Veja: https://help.alwaysdata.com/en/services\n"
-        "=" * 60 + "\n"
-    )
-    print(msg, file=sys.stderr)
+    msg_title="ATENCAO: Voce esta no Alwaysdata"
+    msg_body="A porta 8300-8499 so fica acessivel atraves de um Service"
+    msg_hint="Advanced > Services > Add a service  |  Command: bash scripts/run/run.sh  |  Bind :: (IPv6)"
+    msg_docs="https://help.alwaysdata.com/en/services"
+    try:
+        import subprocess
+        subprocess.run(
+            ["gum", "style",
+             "--foreground", "196",
+             "--border-foreground", "196",
+             "--border", "rounded",
+             "--align", "center",
+             "--width", "60",
+             "--padding", "1 2",
+             msg_title, msg_body, msg_hint, msg_docs],
+            stderr=subprocess.DEVNULL,
+        )
+    except Exception:
+        print(f"\n{'='*60}\n  {msg_title}\n  {msg_body}\n  {msg_hint}\n  {msg_docs}\n{'='*60}\n", file=sys.stderr)
     sys.exit(1)
 
 # FIX: Configura o ProactorEventLoop como global para suporte a subprocessos no Windows
