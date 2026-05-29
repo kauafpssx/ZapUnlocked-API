@@ -100,6 +100,19 @@ if $_ALWAYSDATA; then
         python3 -m pip install --no-cache-dir --no-deps "$pkg" -q || exit 1
     done < <(grep -v '^[[:space:]]*#' requirements.txt)
     gum log --level info "Requirements instalados (global)"
+
+    # ffmpeg estatico
+    if ! command -v ffmpeg &>/dev/null; then
+        TMP_DIR=$(mktemp -d "$HOME/.ffmpeg_extract_XXXXX")
+        gum spin --spinner dot --title "Baixando ffmpeg estatico (~120 MB)..." -- \
+            bash -c "curl -fsSL 'https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz' | tar -xJ -C '$TMP_DIR'" || exit 1
+        find "$TMP_DIR" -name 'ffmpeg' -type f -exec mv {} "$HOME/.local/bin/ffmpeg" \;
+        find "$TMP_DIR" -name 'ffprobe' -type f -exec mv {} "$HOME/.local/bin/ffprobe" \;
+        rm -rf "$TMP_DIR"
+        chmod +x "$HOME/.local/bin/ffmpeg" "$HOME/.local/bin/ffprobe"
+    else
+        gum log --level info "ffmpeg ja no sistema"
+    fi
 else
     gum spin --spinner dot --title "Instalando requirements..." -- \
         $_PIP install -r requirements.txt --no-cache-dir -q || {
