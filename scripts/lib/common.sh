@@ -98,13 +98,7 @@ ui_banner() {
 ui_tags() {
     local icon=$1 label=$2 os_label=$3
     local args=()
-    args+=("$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "RAM $(__ram)%")")
-    args+=("  ")
-    args+=("$(gum style --border rounded --padding "0 1" --foreground "#A855F7" "CPU $(__cpu)%")")
-    args+=("  ")
     args+=("$(gum style --border rounded --padding "0 1" --foreground "#C084FC" "PY $(__py)")")
-    args+=("  ")
-    args+=("$(gum style --border rounded --padding "0 1" --foreground "#6B7280" "UP $(__up)")")
     args+=("  ")
     args+=("$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" --bold "${icon} ${label}")")
     if [ -n "$os_label" ]; then
@@ -140,13 +134,7 @@ ui_init_header() {
 ui_refresh_header() {
     echo -ne "\e[5A\e[J"
     local args=()
-    args+=("$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "RAM $(__ram)%")")
-    args+=("  ")
-    args+=("$(gum style --border rounded --padding "0 1" --foreground "#A855F7" "CPU $(__cpu)%")")
-    args+=("  ")
     args+=("$(gum style --border rounded --padding "0 1" --foreground "#C084FC" "PY $(__py)")")
-    args+=("  ")
-    args+=("$(gum style --border rounded --padding "0 1" --foreground "#6B7280" "UP $(__elapsed)")")
     args+=("  ")
     args+=("$(gum style --border rounded --padding "0 1" --foreground "#8B3DFF" --bold "${__header_icon} ${__header_label}")")
     if [ -n "$__header_os" ]; then

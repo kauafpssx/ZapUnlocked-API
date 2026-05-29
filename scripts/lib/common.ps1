@@ -56,19 +56,10 @@ function Show-Banner {
 
 function Show-Tags {
     param([string]$Icon, [string]$Label, [string]$OsLabel = "")
-    $ram = Get-RamPct
-    $cpu = Get-CpuPct
     $py  = Get-PyVer
-    $up  = Get-UpTime
 
     $items = @()
-    $items += & gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "RAM ${ram}%"
-    $items += "  "
-    $items += & gum style --border rounded --padding "0 1" --foreground "#A855F7" "CPU ${cpu}%"
-    $items += "  "
     $items += & gum style --border rounded --padding "0 1" --foreground "#C084FC" "PY ${py}"
-    $items += "  "
-    $items += & gum style --border rounded --padding "0 1" --foreground "#6B7280" "UP ${up}"
     $items += "  "
     $items += & gum style --border rounded --padding "0 1" --foreground "#8B3DFF" --bold "${Icon} ${Label}"
     if ($OsLabel) {
@@ -92,19 +83,10 @@ function Init-Header {
 }
 
 function Refresh-Header {
-    $ram = Get-RamPct
-    $cpu = Get-CpuPct
     $py  = Get-PyVer
-    $up  = Get-Elapsed
 
     $items = @()
-    $items += & gum style --border rounded --padding "0 1" --foreground "#8B3DFF" "RAM ${ram}%"
-    $items += "  "
-    $items += & gum style --border rounded --padding "0 1" --foreground "#A855F7" "CPU ${cpu}%"
-    $items += "  "
     $items += & gum style --border rounded --padding "0 1" --foreground "#C084FC" "PY ${py}"
-    $items += "  "
-    $items += & gum style --border rounded --padding "0 1" --foreground "#6B7280" "UP ${up}"
     $items += "  "
     $items += & gum style --border rounded --padding "0 1" --foreground "#8B3DFF" --bold "${script:HeaderIcon} ${script:HeaderLabel}"
     if ($script:HeaderOs) {
