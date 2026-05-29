@@ -14,7 +14,8 @@ neonize>=0.3.18.post0
 
 # ── Processamento de Mídia ────────────────────────────────
 Pillow>=11.0.0
-python-magic-bin>=0.4.14          # MIME detection no Windows
+python-magic>=0.4.14              # MIME detection (Linux/macOS)
+                                      # Windows: python-magic-bin (instalado pelo install.bat)
 ffmpeg-python>=0.2.0
 imageio-ffmpeg>=0.5.1              # Binário ffmpeg embutido (sem instalação manual)
 

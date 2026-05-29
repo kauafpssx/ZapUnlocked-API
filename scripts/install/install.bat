@@ -45,6 +45,9 @@ if %errorlevel% neq 0 (
 )
 gum log --level info "Requirements instalados"
 
+:: ── Windows-Specific: python-magic-bin ────────────────────────────────────────
+gum spin --spinner dot --title "Instalando python-magic-bin..." -- .venv\Scripts\python.exe -m pip install python-magic-bin>=0.4.14 -q
+
 :: ── Done ────────────────────────────────────────────────────────────────────
 echo.
 gum style --foreground "42" --border-foreground "42" --border rounded --align center --width 42 --padding "0 2" "Instalacao concluida!" "Execute: scripts\run\run.bat"
