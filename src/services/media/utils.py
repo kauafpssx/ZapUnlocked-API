@@ -3,6 +3,7 @@ import shutil
 import sys
 from pathlib import Path
 from src.utils.logger import logger
+from src.utils.startup_validator import is_alwaysdata
 
 _ffmpeg_path: str | None = None
 _ffprobe_path: str | None = None
@@ -35,7 +36,13 @@ def get_ffmpeg_path() -> str:
         _ffmpeg_path = found
         return _ffmpeg_path
 
-    # 3. Caminhos comuns no Windows
+    # 3. $HOME/.local/bin (instalação automática do install.sh)
+    home_local = Path.home() / ".local" / "bin" / "ffmpeg"
+    if home_local.exists():
+        _ffmpeg_path = str(home_local)
+        return _ffmpeg_path
+
+    # 4. Caminhos comuns no Windows
     exe = "ffmpeg.exe" if sys.platform == "win32" else "ffmpeg"
     for base in _WINDOWS_EXTRA_PATHS:
         candidate = Path(base) / exe
@@ -88,7 +95,10 @@ def warm_up_ffmpeg() -> None:
         path = get_ffmpeg_path()
         logger.info(f"🎬 ffmpeg pronto: {path}")
     except FileNotFoundError as e:
-        logger.warning(f"⚠️ {e}")
+        hint = ""
+        if is_alwaysdata():
+            hint = " Rode: bash scripts/install/install.sh (baixa ffmpeg estatico em ~/.local/bin)"
+        logger.warning(f"⚠️ {e}{hint}")
 
 
 def run_ffmpeg_sync(cmd):

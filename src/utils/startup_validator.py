@@ -1,4 +1,6 @@
 import sys
+import os
+import socket
 import importlib
 
 # (pip_name, import_name)
@@ -58,3 +60,25 @@ def validate_dependencies() -> None:
         ]
         print("\n".join(lines), file=sys.stderr)
         sys.exit(1)
+
+
+def is_alwaysdata() -> bool:
+    """
+    Detecta se estamos rodando em um servidor Alwaysdata.
+    Usado pelo install.sh e pelo warm_up_ffmpeg para decidir
+    se instala imageio-ffmpeg (normal) ou baixa ffmpeg estatico.
+    """
+    # 1. Variavel de ambiente tipica do Alwaysdata
+    if os.getenv("ALWAYSDATA_ACCOUNT"):
+        return True
+    # 2. Arquivo marcador
+    if os.path.isfile("/etc/alwaysdata"):
+        return True
+    # 3. Hostname termina com alwaysdata.net ou alwaysdata.com
+    try:
+        fqdn = socket.getfqdn().lower()
+        if fqdn.endswith((".alwaysdata.net", ".alwaysdata.com")):
+            return True
+    except Exception:
+        pass
+    return False

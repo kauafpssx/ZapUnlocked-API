@@ -17,9 +17,11 @@ from neonize.utils import log as neonize_logger
 import sys
 import re
 import threading
+import os
+import socket
 
 from src.utils.logger import logger
-from src.config.constants import AUTH_DIR, DATA_DIR, RECONNECT_DELAY
+from src.config.constants import AUTH_DIR, DATA_DIR, RECONNECT_DELAY, PORT, API_KEY
 from src.services.whatsapp import storage
 
 # ── Estado global ──────────────────────────────────────
@@ -323,7 +325,24 @@ def get_contact_name(client, jid: str, push_name: str = None) -> str:
 def _on_qr(c: NewClient, qr_bytes: bytes):
     global current_qr
     current_qr = qr_bytes.decode("utf-8")
-    logger.info("📲 QR Code gerado! Acesse /qr no navegador para escanear")
+
+    # ── Monta URL pública dinâmica ──────────────────────────────────
+    public_url = os.getenv("PUBLIC_URL")                        # 1. env var explicita (ex: http://meudominio.com:8080)
+    if not public_url:
+        user = os.getenv("USER", "")
+        if user:
+            public_url = f"http://services-{user}.alwaysdata.net:{PORT}"
+        else:
+            hostname = socket.gethostname()
+            public_url = f"http://{hostname}:{PORT}"
+    else:
+        # Se a env var nao veio com :porta, adiciona
+        if ":" not in public_url.split("/")[-1]:
+            public_url = f"{public_url}:{PORT}"
+    qr_url = f"{public_url}/qr"
+    if API_KEY:
+        qr_url += f"?API_KEY={API_KEY}"
+    logger.info(f"📲 QR Code gerado! Acesse: {qr_url}")
     if main_loop and main_loop.is_running():
         main_loop.call_soon_threadsafe(
             lambda: asyncio.create_task(_fire("connection.qr_ready", {"qr": current_qr}))
