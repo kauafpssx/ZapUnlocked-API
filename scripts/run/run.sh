@@ -11,9 +11,16 @@ ui_sep
 ui_task "Starting ZapUnlocked API server"
 
 # ── Port ───────────────────────────────────────────────────────────────
-PID=$(lsof -t -i:8300 2>/dev/null)
-if [ -n "$PID" ]; then
-    kill -9 "$PID" 2>/dev/null
+# lsof may not be available on shared hosting; fall back to ss or fuser
+if command -v lsof &>/dev/null; then
+    PID=$(lsof -t -i:8300 2>/dev/null || true)
+elif command -v ss &>/dev/null; then
+    PID=$(ss -tlnp 2>/dev/null | awk '/8300/{match($NF,/pid=([0-9]+)/,a); if(a[1]) print a[1]}' || true)
+elif command -v fuser &>/dev/null; then
+    PID=$(fuser 8300/tcp 2>/dev/null || true)
+fi
+if [ -n "${PID:-}" ]; then
+    kill -9 "$PID" 2>/dev/null || true
     sleep 1
 fi
 ui_log_ok "Port 8300 free"
@@ -41,13 +48,13 @@ fi
 # ── Detect uvicorn command ──────────────────────────────────────────
 if python3 -c "import uvicorn" &>/dev/null; then
     CMD="python3 -m uvicorn"
-    ui_log_ok "Usando python3 -m uvicorn ($(python3 -c 'import uvicorn; print(uvicorn.__file__)'))"
+    ui_log_ok "Using python3 -m uvicorn"
 elif [ -f ".venv/bin/uvicorn" ]; then
     CMD=".venv/bin/uvicorn"
-    ui_log_ok "Usando .venv/bin/uvicorn"
+    ui_log_ok "Using .venv/bin/uvicorn"
 elif command -v uvicorn &>/dev/null; then
     CMD="uvicorn"
-    ui_log_ok "Usando uvicorn global"
+    ui_log_ok "Using uvicorn (global)"
 else
     ui_log_err "uvicorn not found — run install.sh first"
     exit 1
