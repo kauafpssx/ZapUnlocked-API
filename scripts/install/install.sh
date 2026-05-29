@@ -67,14 +67,6 @@ else
     gum log --level info "Python instalado"
 fi
 
-# ── Venv ─────────────────────────────────────────────────────────────────────
-gum log --level info "Criando ambiente virtual..."
-python3 -m venv .venv 2>/dev/null || python3 -m venv .venv --without-pip --system-site-packages 2>/dev/null || {
-    gum log --level error "Falha ao criar ambiente virtual"
-    exit 1
-}
-gum log --level info "Ambiente virtual criado"
-
 # ── Alwaysdata detection ───────────────────────────────────────────────────
 _ALWAYSDATA=false
 [ -n "$ALWAYSDATA_ACCOUNT" ] && _ALWAYSDATA=true
@@ -82,59 +74,39 @@ _ALWAYSDATA=false
 hostname -f 2>/dev/null | grep -qi 'alwaysdata' && _ALWAYSDATA=true
 uname -r 2>/dev/null | grep -qi 'alwaysdata' && _ALWAYSDATA=true
 
-# ── Requirements ─────────────────────────────────────────────────────────────
-gum spin --spinner dot --title "Atualizando pip..." -- .venv/bin/python -m pip install --upgrade pip -q
-
+# ── Venv + Requirements ─────────────────────────────────────────────────────
 if $_ALWAYSDATA; then
-    gum log --level info "Alwaysdata detectado — instalando em modo economia de RAM"
+    # Alwaysdata: sem venv (causa OOM). Instala global com pip do sistema.
+    gum log --level info "Alwaysdata detectado — instalando pacotes globalmente"
+    _PIP="python3 -m pip"
+else
+    # Servidor normal: venv com pip interno
+    gum log --level info "Criando ambiente virtual..."
+    python3 -m venv .venv 2>/dev/null || {
+        gum log --level error "Falha ao criar ambiente virtual"
+        exit 1
+    }
+    gum log --level info "Ambiente virtual criado"
+    _PIP=.venv/bin/python -m pip
+    $_PIP install --upgrade pip -q
+fi
 
-    # 1. Instala cada pacote sem dependencias (um por vez, evita OOM)
+# ── Instala requirements ────────────────────────────────────────────────────
+if $_ALWAYSDATA; then
     while IFS= read -r pkg || [ -n "$pkg" ]; do
         pkg=$(echo "$pkg" | sed 's/#.*//' | xargs)
         [ -z "$pkg" ] && continue
         gum log --level info "  $pkg"
-        .venv/bin/python -m pip install --no-cache-dir --no-deps "$pkg" -q || exit 1
+        python3 -m pip install --no-cache-dir --no-deps "$pkg" -q || exit 1
     done < <(grep -v '^[[:space:]]*#' requirements.txt)
-
-    # 2. ffmpeg estatico se necessario
-    if ! command -v ffmpeg &>/dev/null; then
-        TMP_DIR=$(mktemp -d "$HOME/.ffmpeg_extract_XXXXX")
-        gum spin --spinner dot --title "Baixando ffmpeg estatico (~120 MB)..." -- \
-            bash -c "curl -fsSL 'https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz' | tar -xJ -C '$TMP_DIR'" || exit 1
-        find "$TMP_DIR" -name 'ffmpeg' -type f -exec mv {} "$HOME/.local/bin/ffmpeg" \;
-        find "$TMP_DIR" -name 'ffprobe' -type f -exec mv {} "$HOME/.local/bin/ffprobe" \;
-        rm -rf "$TMP_DIR"
-        chmod +x "$HOME/.local/bin/ffmpeg" "$HOME/.local/bin/ffprobe"
-    else
-        gum log --level info "ffmpeg ja no sistema"
-    fi
-
-    # 3. Resolve dependencias faltantes via pip check
-    gum log --level info "Resolvendo dependencias..."
-    while true; do
-        missing=$(.venv/bin/python -m pip check 2>/dev/null | grep 'requires')
-        [ -z "$missing" ] && break
-        echo "$missing" | while IFS= read -r line; do
-            # Extrai cada dependencia (ex: "fastapi 0.136.3 requires starlette>=0.46.0" -> "starlette")
-            for dep in $(echo "$line" | sed 's/.*requires //' | tr ',' '\n' | sed 's/\[.*\]//' | sed 's/[<>=!~].*//' | xargs); do
-                [ -z "$dep" ] && continue
-                gum spin --spinner dot --title "  $dep" -- \
-                    .venv/bin/python -m pip install --no-cache-dir "$dep" -q || exit 1
-            done
-        done
-    done
-
-    gum log --level info "Requirements instalados"
+    gum log --level info "Requirements instalados (global)"
 else
-    # Servidor normal: instala tudo de uma vez (rapido)
     gum spin --spinner dot --title "Instalando requirements..." -- \
-        .venv/bin/python -m pip install -r requirements.txt --no-cache-dir -q
-    if [ $? -eq 0 ]; then
-        gum log --level info "Requirements instalados"
-    else
+        $_PIP install -r requirements.txt --no-cache-dir -q || {
         gum log --level error "Falha ao instalar requirements"
         exit 1
-    fi
+    }
+    gum log --level info "Requirements instalados"
 fi
 
 # ── Done ─────────────────────────────────────────────────────────────────────
