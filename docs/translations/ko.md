@@ -239,6 +239,316 @@ mindmap
 
 ---
 
+## 📡 Webhook 이벤트
+
+모든 webhook은 표준 봉투를 수신합니다:
+
+```json
+{
+  "event": "message.text",
+  "timestamp": "2025-01-01T12:00:00Z",
+  "data": { ... }
+}
+```
+
+webhook에 `{{placeholders}}`가 포함된 커스텀 `body`가 있는 경우, 표준 봉투 대신 해당 body가 전송됩니다.
+
+### 사용 가능한 이벤트 (20가지 유형)
+
+| 이벤트 | 설명 |
+| :----- | :--- |
+| `message.text` | 일반 / 포맷된 텍스트 |
+| `message.image` | 수신된 이미지 |
+| `message.video` | 수신된 비디오 |
+| `message.audio` | 오디오 / 음성 메모 |
+| `message.document` | 문서 / 파일 |
+| `message.sticker` | 스티커 |
+| `message.contact` | 공유된 연락처 |
+| `message.location` | 위치 |
+| `message.reaction` | 반응 (이모지) |
+| `message.poll_created` | 수신된 투표 |
+| `message.poll_vote` | 투표 |
+| `message.button_reply` | 버튼 클릭 |
+| `message.list_reply` | 대화형 목록 선택 |
+| `message.deleted` | 발신자가 삭제한 메시지 |
+| `message.unknown` | 매핑되지 않은 메시지 유형 |
+| `message.sent` | 전송된 메시지 (수동) |
+| `connection.connected` | WhatsApp 연결됨 |
+| `connection.disconnected` | WhatsApp 연결 끊김 |
+| `connection.qr_ready` | QR 코드 생성됨 |
+| `call.received` | 수신 전화 |
+
+### 플레이스홀더 (커스텀 body)
+
+| 플레이스홀더 | 값 |
+| :----------- | :-- |
+| `{{from}}` | 발신자 번호 |
+| `{{text}}` | 메시지 텍스트 |
+| `{{phone}}` | `{{from}}`과 동일 |
+| `{{id}}` | 메시지 ID |
+| `{{timestamp}}` | 현재 UTC 타임스탬프 |
+
+<details>
+<summary><b>📦 이벤트별 Payload 예시</b></summary>
+
+수신된 메시지 이벤트에 포함된 기본 필드:
+
+```json
+{
+  "messageId": "3EB0ABCDEF123456",
+  "from": "5511999999999",
+  "fromName": "João Silva",
+  "fromJid": "5511999999999@s.whatsapp.net",
+  "isGroup": false
+}
+```
+
+#### `message.text`
+```json
+{
+  "event": "message.text",
+  "data": {
+    "...base": "...",
+    "text": "Olá! Como posso ajudar?",
+    "quoted": { "id": "3EB0...", "fromMe": true }
+  }
+}
+```
+
+#### `message.image`
+```json
+{
+  "event": "message.image",
+  "data": {
+    "...base": "...",
+    "caption": "Foto do produto",
+    "mimetype": "image/jpeg",
+    "fileLength": 204800
+  }
+}
+```
+
+#### `message.video`
+```json
+{
+  "event": "message.video",
+  "data": {
+    "...base": "...",
+    "caption": "Veja esse vídeo!",
+    "mimetype": "video/mp4",
+    "fileLength": 5242880,
+    "isPTT": false,
+    "isGif": false
+  }
+}
+```
+
+#### `message.audio`
+```json
+{
+  "event": "message.audio",
+  "data": {
+    "...base": "...",
+    "mimetype": "audio/ogg; codecs=opus",
+    "fileLength": 30720,
+    "isPTT": true,
+    "durationSeconds": 8
+  }
+}
+```
+
+#### `message.document`
+```json
+{
+  "event": "message.document",
+  "data": {
+    "...base": "...",
+    "fileName": "contrato.pdf",
+    "caption": "Segue o contrato",
+    "mimetype": "application/pdf",
+    "fileLength": 102400
+  }
+}
+```
+
+#### `message.sticker`
+```json
+{
+  "event": "message.sticker",
+  "data": {
+    "...base": "...",
+    "mimetype": "image/webp",
+    "isAnimated": false
+  }
+}
+```
+
+#### `message.contact`
+```json
+{
+  "event": "message.contact",
+  "data": {
+    "...base": "...",
+    "displayName": "Maria Souza",
+    "vcard": "BEGIN:VCARD\nVERSION:3.0\n..."
+  }
+}
+```
+
+#### `message.location`
+```json
+{
+  "event": "message.location",
+  "data": {
+    "...base": "...",
+    "lat": -23.5505,
+    "lng": -46.6333,
+    "name": "Av. Paulista",
+    "address": "Av. Paulista, 1000 - São Paulo"
+  }
+}
+```
+
+#### `message.reaction`
+```json
+{
+  "event": "message.reaction",
+  "data": {
+    "...base": "...",
+    "emoji": "❤️",
+    "targetMessageId": "3EB0ABCDEF123456",
+    "isRemoved": false
+  }
+}
+```
+
+#### `message.poll_created`
+```json
+{
+  "event": "message.poll_created",
+  "data": {
+    "...base": "...",
+    "pollName": "Qual o melhor sabor?",
+    "options": ["Chocolate", "Morango", "Baunilha"]
+  }
+}
+```
+
+#### `message.poll_vote`
+```json
+{
+  "event": "message.poll_vote",
+  "data": {
+    "...base": "...",
+    "pollId": "3EB0ABCDEF123456",
+    "selectedOptions": ["Chocolate"]
+  }
+}
+```
+
+#### `message.button_reply`
+```json
+{
+  "event": "message.button_reply",
+  "data": {
+    "...base": "...",
+    "buttonId": "opcao_sim",
+    "displayText": "Sim",
+    "type": "quick_reply"
+  }
+}
+```
+
+#### `message.list_reply`
+```json
+{
+  "event": "message.list_reply",
+  "data": {
+    "...base": "...",
+    "rowId": "1",
+    "title": "X-Burguer",
+    "description": "R$ 18,90"
+  }
+}
+```
+
+#### `message.deleted`
+```json
+{
+  "event": "message.deleted",
+  "data": {
+    "...base": "..."
+  }
+}
+```
+
+#### `message.unknown`
+```json
+{
+  "event": "message.unknown",
+  "data": {
+    "...base": "...",
+    "rawType": "senderKeyDistributionMessage"
+  }
+}
+```
+
+#### `message.sent`
+```json
+{
+  "event": "message.sent",
+  "data": {
+    "to": "5511999999999",
+    "type": "text",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+
+#### `connection.connected`
+```json
+{
+  "event": "connection.connected",
+  "data": {
+    "phone": "5511999999999"
+  }
+}
+```
+
+#### `connection.disconnected`
+```json
+{
+  "event": "connection.disconnected",
+  "data": {}
+}
+```
+
+#### `connection.qr_ready`
+```json
+{
+  "event": "connection.qr_ready",
+  "data": {
+    "qr": "2@abc123..."
+  }
+}
+```
+
+#### `call.received`
+```json
+{
+  "event": "call.received",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "callId": "ABC123DEF456"
+  }
+}
+```
+
+</details>
+
+---
+
 ## 🛠️ 설치 및 호스팅
 
 > 전문 WhatsApp API를 **ZapUnlocked-API**로 **5분 이내에** 실행하세요.

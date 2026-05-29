@@ -239,6 +239,316 @@ mindmap
 
 ---
 
+## 📡 أحداث Webhook
+
+جميع webhook تتلقى مغلفًا قياسيًا:
+
+```json
+{
+  "event": "message.text",
+  "timestamp": "2025-01-01T12:00:00Z",
+  "data": { ... }
+}
+```
+
+إذا كان webhook يحتوي على `body` مخصص مع `{{placeholders}}`، فسيتم إرسال هذا body بدلاً من المغلف القياسي.
+
+### الأحداث المتاحة (20 نوعًا)
+
+| الحدث | الوصف |
+| :---- | :---- |
+| `message.text` | نص عادي / منسق |
+| `message.image` | صورة مستلمة |
+| `message.video` | فيديو مستلم |
+| `message.audio` | صوت / رسالة صوتية |
+| `message.document` | مستند / ملف |
+| `message.sticker` | ملصق |
+| `message.contact` | جهة اتصال مشتركة |
+| `message.location` | موقع |
+| `message.reaction` | رد فعل (رمز تعبيري) |
+| `message.poll_created` | استطلاع مستلم |
+| `message.poll_vote` | تصويت في استطلاع |
+| `message.button_reply` | نقرة على زر |
+| `message.list_reply` | اختيار من قائمة تفاعلية |
+| `message.deleted` | رسالة محذوفة بواسطة المرسل |
+| `message.unknown` | نوع رسالة غير معروف |
+| `message.sent` | رسالة مرسلة (يدوي) |
+| `connection.connected` | واتساب متصل |
+| `connection.disconnected` | واتساب غير متصل |
+| `connection.qr_ready` | تم إنشاء رمز QR |
+| `call.received` | مكالمة واردة |
+
+### العناصر النائبة (body مخصص)
+
+| العنصر النائب | القيمة |
+| :------------ | :----- |
+| `{{from}}` | رقم المرسل |
+| `{{text}}` | نص الرسالة |
+| `{{phone}}` | نفس `{{from}}` |
+| `{{id}}` | معرف الرسالة |
+| `{{timestamp}}` | الطابع الزمني UTC الحالي |
+
+<details>
+<summary><b>📦 أمثلة Payload حسب الحدث</b></summary>
+
+الحقول الأساسية الموجودة في أحداث الرسائل المستلمة:
+
+```json
+{
+  "messageId": "3EB0ABCDEF123456",
+  "from": "5511999999999",
+  "fromName": "João Silva",
+  "fromJid": "5511999999999@s.whatsapp.net",
+  "isGroup": false
+}
+```
+
+#### `message.text`
+```json
+{
+  "event": "message.text",
+  "data": {
+    "...base": "...",
+    "text": "Olá! Como posso ajudar?",
+    "quoted": { "id": "3EB0...", "fromMe": true }
+  }
+}
+```
+
+#### `message.image`
+```json
+{
+  "event": "message.image",
+  "data": {
+    "...base": "...",
+    "caption": "Foto do produto",
+    "mimetype": "image/jpeg",
+    "fileLength": 204800
+  }
+}
+```
+
+#### `message.video`
+```json
+{
+  "event": "message.video",
+  "data": {
+    "...base": "...",
+    "caption": "Veja esse vídeo!",
+    "mimetype": "video/mp4",
+    "fileLength": 5242880,
+    "isPTT": false,
+    "isGif": false
+  }
+}
+```
+
+#### `message.audio`
+```json
+{
+  "event": "message.audio",
+  "data": {
+    "...base": "...",
+    "mimetype": "audio/ogg; codecs=opus",
+    "fileLength": 30720,
+    "isPTT": true,
+    "durationSeconds": 8
+  }
+}
+```
+
+#### `message.document`
+```json
+{
+  "event": "message.document",
+  "data": {
+    "...base": "...",
+    "fileName": "contrato.pdf",
+    "caption": "Segue o contrato",
+    "mimetype": "application/pdf",
+    "fileLength": 102400
+  }
+}
+```
+
+#### `message.sticker`
+```json
+{
+  "event": "message.sticker",
+  "data": {
+    "...base": "...",
+    "mimetype": "image/webp",
+    "isAnimated": false
+  }
+}
+```
+
+#### `message.contact`
+```json
+{
+  "event": "message.contact",
+  "data": {
+    "...base": "...",
+    "displayName": "Maria Souza",
+    "vcard": "BEGIN:VCARD\nVERSION:3.0\n..."
+  }
+}
+```
+
+#### `message.location`
+```json
+{
+  "event": "message.location",
+  "data": {
+    "...base": "...",
+    "lat": -23.5505,
+    "lng": -46.6333,
+    "name": "Av. Paulista",
+    "address": "Av. Paulista, 1000 - São Paulo"
+  }
+}
+```
+
+#### `message.reaction`
+```json
+{
+  "event": "message.reaction",
+  "data": {
+    "...base": "...",
+    "emoji": "❤️",
+    "targetMessageId": "3EB0ABCDEF123456",
+    "isRemoved": false
+  }
+}
+```
+
+#### `message.poll_created`
+```json
+{
+  "event": "message.poll_created",
+  "data": {
+    "...base": "...",
+    "pollName": "Qual o melhor sabor?",
+    "options": ["Chocolate", "Morango", "Baunilha"]
+  }
+}
+```
+
+#### `message.poll_vote`
+```json
+{
+  "event": "message.poll_vote",
+  "data": {
+    "...base": "...",
+    "pollId": "3EB0ABCDEF123456",
+    "selectedOptions": ["Chocolate"]
+  }
+}
+```
+
+#### `message.button_reply`
+```json
+{
+  "event": "message.button_reply",
+  "data": {
+    "...base": "...",
+    "buttonId": "opcao_sim",
+    "displayText": "Sim",
+    "type": "quick_reply"
+  }
+}
+```
+
+#### `message.list_reply`
+```json
+{
+  "event": "message.list_reply",
+  "data": {
+    "...base": "...",
+    "rowId": "1",
+    "title": "X-Burguer",
+    "description": "R$ 18,90"
+  }
+}
+```
+
+#### `message.deleted`
+```json
+{
+  "event": "message.deleted",
+  "data": {
+    "...base": "..."
+  }
+}
+```
+
+#### `message.unknown`
+```json
+{
+  "event": "message.unknown",
+  "data": {
+    "...base": "...",
+    "rawType": "senderKeyDistributionMessage"
+  }
+}
+```
+
+#### `message.sent`
+```json
+{
+  "event": "message.sent",
+  "data": {
+    "to": "5511999999999",
+    "type": "text",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+
+#### `connection.connected`
+```json
+{
+  "event": "connection.connected",
+  "data": {
+    "phone": "5511999999999"
+  }
+}
+```
+
+#### `connection.disconnected`
+```json
+{
+  "event": "connection.disconnected",
+  "data": {}
+}
+```
+
+#### `connection.qr_ready`
+```json
+{
+  "event": "connection.qr_ready",
+  "data": {
+    "qr": "2@abc123..."
+  }
+}
+```
+
+#### `call.received`
+```json
+{
+  "event": "call.received",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "callId": "ABC123DEF456"
+  }
+}
+```
+
+</details>
+
+---
+
 ## 🛠️ التثبيت والاستضافة
 
 > ضع واجهة WhatsApp الاحترافية الخاصة بك على الإنترنت في أقل من **5 دقائق** مع **ZapUnlocked-API**.

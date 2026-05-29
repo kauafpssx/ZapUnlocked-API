@@ -239,6 +239,316 @@ mindmap
 
 ---
 
+## 📡 Webhook イベント
+
+すべてのWebhookは標準のエンベロープを受け取ります：
+
+```json
+{
+  "event": "message.text",
+  "timestamp": "2025-01-01T12:00:00Z",
+  "data": { ... }
+}
+```
+
+`{{placeholders}}` を含むカスタム `body` が設定されている場合、標準のエンベロープの代わりにそのbodyが送信されます。
+
+### 利用可能なイベント（20種類）
+
+| イベント | 説明 |
+| :------- | :--- |
+| `message.text` | プレーンテキスト / 書式付きテキスト |
+| `message.image` | 受信した画像 |
+| `message.video` | 受信した動画 |
+| `message.audio` | 音声 / ボイスメモ |
+| `message.document` | ドキュメント / ファイル |
+| `message.sticker` | ステッカー |
+| `message.contact` | 共有された連絡先 |
+| `message.location` | 位置情報 |
+| `message.reaction` | リアクション（絵文字） |
+| `message.poll_created` | 受信した投票 |
+| `message.poll_vote` | 投票 |
+| `message.button_reply` | ボタンクリック |
+| `message.list_reply` | インタラクティブリスト選択 |
+| `message.deleted` | 送信者によって削除されたメッセージ |
+| `message.unknown` | 未マッピングのメッセージタイプ |
+| `message.sent` | 送信済みメッセージ（手動） |
+| `connection.connected` | WhatsApp接続完了 |
+| `connection.disconnected` | WhatsApp切断 |
+| `connection.qr_ready` | QRコード生成完了 |
+| `call.received` | 着信 |
+
+### プレースホルダー（カスタムbody）
+
+| プレースホルダー | 値 |
+| :--------------- | :-- |
+| `{{from}}` | 送信者番号 |
+| `{{text}}` | メッセージテキスト |
+| `{{phone}}` | `{{from}}` と同じ |
+| `{{id}}` | メッセージID |
+| `{{timestamp}}` | 現在のUTCタイムスタンプ |
+
+<details>
+<summary><b>📦 イベント別ペイロード例</b></summary>
+
+受信メッセージイベントに含まれる基本フィールド：
+
+```json
+{
+  "messageId": "3EB0ABCDEF123456",
+  "from": "5511999999999",
+  "fromName": "João Silva",
+  "fromJid": "5511999999999@s.whatsapp.net",
+  "isGroup": false
+}
+```
+
+#### `message.text`
+```json
+{
+  "event": "message.text",
+  "data": {
+    "...base": "...",
+    "text": "Olá! Como posso ajudar?",
+    "quoted": { "id": "3EB0...", "fromMe": true }
+  }
+}
+```
+
+#### `message.image`
+```json
+{
+  "event": "message.image",
+  "data": {
+    "...base": "...",
+    "caption": "Foto do produto",
+    "mimetype": "image/jpeg",
+    "fileLength": 204800
+  }
+}
+```
+
+#### `message.video`
+```json
+{
+  "event": "message.video",
+  "data": {
+    "...base": "...",
+    "caption": "Veja esse vídeo!",
+    "mimetype": "video/mp4",
+    "fileLength": 5242880,
+    "isPTT": false,
+    "isGif": false
+  }
+}
+```
+
+#### `message.audio`
+```json
+{
+  "event": "message.audio",
+  "data": {
+    "...base": "...",
+    "mimetype": "audio/ogg; codecs=opus",
+    "fileLength": 30720,
+    "isPTT": true,
+    "durationSeconds": 8
+  }
+}
+```
+
+#### `message.document`
+```json
+{
+  "event": "message.document",
+  "data": {
+    "...base": "...",
+    "fileName": "contrato.pdf",
+    "caption": "Segue o contrato",
+    "mimetype": "application/pdf",
+    "fileLength": 102400
+  }
+}
+```
+
+#### `message.sticker`
+```json
+{
+  "event": "message.sticker",
+  "data": {
+    "...base": "...",
+    "mimetype": "image/webp",
+    "isAnimated": false
+  }
+}
+```
+
+#### `message.contact`
+```json
+{
+  "event": "message.contact",
+  "data": {
+    "...base": "...",
+    "displayName": "Maria Souza",
+    "vcard": "BEGIN:VCARD\nVERSION:3.0\n..."
+  }
+}
+```
+
+#### `message.location`
+```json
+{
+  "event": "message.location",
+  "data": {
+    "...base": "...",
+    "lat": -23.5505,
+    "lng": -46.6333,
+    "name": "Av. Paulista",
+    "address": "Av. Paulista, 1000 - São Paulo"
+  }
+}
+```
+
+#### `message.reaction`
+```json
+{
+  "event": "message.reaction",
+  "data": {
+    "...base": "...",
+    "emoji": "❤️",
+    "targetMessageId": "3EB0ABCDEF123456",
+    "isRemoved": false
+  }
+}
+```
+
+#### `message.poll_created`
+```json
+{
+  "event": "message.poll_created",
+  "data": {
+    "...base": "...",
+    "pollName": "Qual o melhor sabor?",
+    "options": ["Chocolate", "Morango", "Baunilha"]
+  }
+}
+```
+
+#### `message.poll_vote`
+```json
+{
+  "event": "message.poll_vote",
+  "data": {
+    "...base": "...",
+    "pollId": "3EB0ABCDEF123456",
+    "selectedOptions": ["Chocolate"]
+  }
+}
+```
+
+#### `message.button_reply`
+```json
+{
+  "event": "message.button_reply",
+  "data": {
+    "...base": "...",
+    "buttonId": "opcao_sim",
+    "displayText": "Sim",
+    "type": "quick_reply"
+  }
+}
+```
+
+#### `message.list_reply`
+```json
+{
+  "event": "message.list_reply",
+  "data": {
+    "...base": "...",
+    "rowId": "1",
+    "title": "X-Burguer",
+    "description": "R$ 18,90"
+  }
+}
+```
+
+#### `message.deleted`
+```json
+{
+  "event": "message.deleted",
+  "data": {
+    "...base": "..."
+  }
+}
+```
+
+#### `message.unknown`
+```json
+{
+  "event": "message.unknown",
+  "data": {
+    "...base": "...",
+    "rawType": "senderKeyDistributionMessage"
+  }
+}
+```
+
+#### `message.sent`
+```json
+{
+  "event": "message.sent",
+  "data": {
+    "to": "5511999999999",
+    "type": "text",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+
+#### `connection.connected`
+```json
+{
+  "event": "connection.connected",
+  "data": {
+    "phone": "5511999999999"
+  }
+}
+```
+
+#### `connection.disconnected`
+```json
+{
+  "event": "connection.disconnected",
+  "data": {}
+}
+```
+
+#### `connection.qr_ready`
+```json
+{
+  "event": "connection.qr_ready",
+  "data": {
+    "qr": "2@abc123..."
+  }
+}
+```
+
+#### `call.received`
+```json
+{
+  "event": "call.received",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "callId": "ABC123DEF456"
+  }
+}
+```
+
+</details>
+
+---
+
 ## 🛠️ インストールとホスティング
 
 > **ZapUnlocked-API** を使えば、**5分以内**にプロフェッショナルなWhatsApp APIを稼働させられます。

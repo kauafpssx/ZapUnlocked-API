@@ -239,6 +239,316 @@ mindmap
 
 ---
 
+## 📡 Webhook-Ereignisse
+
+Alle Webhooks erhalten eine Standardhülle:
+
+```json
+{
+  "event": "message.text",
+  "timestamp": "2025-01-01T12:00:00Z",
+  "data": { ... }
+}
+```
+
+Wenn der Webhook einen benutzerdefinierten `body` mit `{{placeholders}}` hat, wird dieser Body anstelle der Standardhülle gesendet.
+
+### Verfügbare Ereignisse (20 Typen)
+
+| Ereignis | Beschreibung |
+| :------- | :----------- |
+| `message.text` | Einfacher / formatierter Text |
+| `message.image` | Empfangenes Bild |
+| `message.video` | Empfangenes Video |
+| `message.audio` | Audio / Sprachnotiz |
+| `message.document` | Dokument / Datei |
+| `message.sticker` | Sticker |
+| `message.contact` | Geteilter Kontakt |
+| `message.location` | Standort |
+| `message.reaction` | Reaktion (Emoji) |
+| `message.poll_created` | Empfangene Umfrage |
+| `message.poll_vote` | Umfrage-Stimme |
+| `message.button_reply` | Button-Klick |
+| `message.list_reply` | Auswahl in interaktiver Liste |
+| `message.deleted` | Vom Absender gelöschte Nachricht |
+| `message.unknown` | Nicht zugeordneter Nachrichtentyp |
+| `message.sent` | Gesendete Nachricht (manuell) |
+| `connection.connected` | WhatsApp verbunden |
+| `connection.disconnected` | WhatsApp getrennt |
+| `connection.qr_ready` | QR-Code generiert |
+| `call.received` | Anruf erhalten |
+
+### Platzhalter (benutzerdefinierter Body)
+
+| Platzhalter | Wert |
+| :---------- | :--- |
+| `{{from}}` | Absendernummer |
+| `{{text}}` | Nachrichtentext |
+| `{{phone}}` | Gleich wie `{{from}}` |
+| `{{id}}` | Nachrichten-ID |
+| `{{timestamp}}` | Aktueller UTC-Zeitstempel |
+
+<details>
+<summary><b>📦 Payload-Beispiele nach Ereignis</b></summary>
+
+Basisfelder in empfangenen Nachrichtenereignissen:
+
+```json
+{
+  "messageId": "3EB0ABCDEF123456",
+  "from": "5511999999999",
+  "fromName": "João Silva",
+  "fromJid": "5511999999999@s.whatsapp.net",
+  "isGroup": false
+}
+```
+
+#### `message.text`
+```json
+{
+  "event": "message.text",
+  "data": {
+    "...base": "...",
+    "text": "Olá! Como posso ajudar?",
+    "quoted": { "id": "3EB0...", "fromMe": true }
+  }
+}
+```
+
+#### `message.image`
+```json
+{
+  "event": "message.image",
+  "data": {
+    "...base": "...",
+    "caption": "Foto do produto",
+    "mimetype": "image/jpeg",
+    "fileLength": 204800
+  }
+}
+```
+
+#### `message.video`
+```json
+{
+  "event": "message.video",
+  "data": {
+    "...base": "...",
+    "caption": "Veja esse vídeo!",
+    "mimetype": "video/mp4",
+    "fileLength": 5242880,
+    "isPTT": false,
+    "isGif": false
+  }
+}
+```
+
+#### `message.audio`
+```json
+{
+  "event": "message.audio",
+  "data": {
+    "...base": "...",
+    "mimetype": "audio/ogg; codecs=opus",
+    "fileLength": 30720,
+    "isPTT": true,
+    "durationSeconds": 8
+  }
+}
+```
+
+#### `message.document`
+```json
+{
+  "event": "message.document",
+  "data": {
+    "...base": "...",
+    "fileName": "contrato.pdf",
+    "caption": "Segue o contrato",
+    "mimetype": "application/pdf",
+    "fileLength": 102400
+  }
+}
+```
+
+#### `message.sticker`
+```json
+{
+  "event": "message.sticker",
+  "data": {
+    "...base": "...",
+    "mimetype": "image/webp",
+    "isAnimated": false
+  }
+}
+```
+
+#### `message.contact`
+```json
+{
+  "event": "message.contact",
+  "data": {
+    "...base": "...",
+    "displayName": "Maria Souza",
+    "vcard": "BEGIN:VCARD\nVERSION:3.0\n..."
+  }
+}
+```
+
+#### `message.location`
+```json
+{
+  "event": "message.location",
+  "data": {
+    "...base": "...",
+    "lat": -23.5505,
+    "lng": -46.6333,
+    "name": "Av. Paulista",
+    "address": "Av. Paulista, 1000 - São Paulo"
+  }
+}
+```
+
+#### `message.reaction`
+```json
+{
+  "event": "message.reaction",
+  "data": {
+    "...base": "...",
+    "emoji": "❤️",
+    "targetMessageId": "3EB0ABCDEF123456",
+    "isRemoved": false
+  }
+}
+```
+
+#### `message.poll_created`
+```json
+{
+  "event": "message.poll_created",
+  "data": {
+    "...base": "...",
+    "pollName": "Qual o melhor sabor?",
+    "options": ["Chocolate", "Morango", "Baunilha"]
+  }
+}
+```
+
+#### `message.poll_vote`
+```json
+{
+  "event": "message.poll_vote",
+  "data": {
+    "...base": "...",
+    "pollId": "3EB0ABCDEF123456",
+    "selectedOptions": ["Chocolate"]
+  }
+}
+```
+
+#### `message.button_reply`
+```json
+{
+  "event": "message.button_reply",
+  "data": {
+    "...base": "...",
+    "buttonId": "opcao_sim",
+    "displayText": "Sim",
+    "type": "quick_reply"
+  }
+}
+```
+
+#### `message.list_reply`
+```json
+{
+  "event": "message.list_reply",
+  "data": {
+    "...base": "...",
+    "rowId": "1",
+    "title": "X-Burguer",
+    "description": "R$ 18,90"
+  }
+}
+```
+
+#### `message.deleted`
+```json
+{
+  "event": "message.deleted",
+  "data": {
+    "...base": "..."
+  }
+}
+```
+
+#### `message.unknown`
+```json
+{
+  "event": "message.unknown",
+  "data": {
+    "...base": "...",
+    "rawType": "senderKeyDistributionMessage"
+  }
+}
+```
+
+#### `message.sent`
+```json
+{
+  "event": "message.sent",
+  "data": {
+    "to": "5511999999999",
+    "type": "text",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+
+#### `connection.connected`
+```json
+{
+  "event": "connection.connected",
+  "data": {
+    "phone": "5511999999999"
+  }
+}
+```
+
+#### `connection.disconnected`
+```json
+{
+  "event": "connection.disconnected",
+  "data": {}
+}
+```
+
+#### `connection.qr_ready`
+```json
+{
+  "event": "connection.qr_ready",
+  "data": {
+    "qr": "2@abc123..."
+  }
+}
+```
+
+#### `call.received`
+```json
+{
+  "event": "call.received",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "callId": "ABC123DEF456"
+  }
+}
+```
+
+</details>
+
+---
+
 ## 🛠️ Installation und Hosting
 
 > Bringen Sie Ihre professionelle WhatsApp-API in weniger als **5 Minuten** mit **ZapUnlocked-API** zum Laufen.

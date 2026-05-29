@@ -239,6 +239,316 @@ mindmap
 
 ---
 
+## 📡 Webhook Events
+
+All webhooks receive a standard envelope:
+
+```json
+{
+  "event": "message.text",
+  "timestamp": "2025-01-01T12:00:00Z",
+  "data": { ... }
+}
+```
+
+If the webhook has a custom `body` with `{{placeholders}}`, this body is sent instead of the standard envelope.
+
+### Available Events (20 types)
+
+| Event | Description |
+| :---- | :---------- |
+| `message.text` | Plain / formatted text |
+| `message.image` | Image received |
+| `message.video` | Video received |
+| `message.audio` | Audio / voice note |
+| `message.document` | Document / file |
+| `message.sticker` | Sticker |
+| `message.contact` | Shared contact |
+| `message.location` | Location |
+| `message.reaction` | Reaction (emoji) |
+| `message.poll_created` | Poll received |
+| `message.poll_vote` | Poll vote |
+| `message.button_reply` | Button click |
+| `message.list_reply` | Interactive list selection |
+| `message.deleted` | Message deleted by sender |
+| `message.unknown` | Unmapped message type |
+| `message.sent` | Message sent (manual) |
+| `connection.connected` | WhatsApp connected |
+| `connection.disconnected` | WhatsApp disconnected |
+| `connection.qr_ready` | QR Code generated |
+| `call.received` | Call received |
+
+### Placeholders (custom body)
+
+| Placeholder | Value |
+| :---------- | :---- |
+| `{{from}}` | Sender number |
+| `{{text}}` | Message text |
+| `{{phone}}` | Same as `{{from}}` |
+| `{{id}}` | Message ID |
+| `{{timestamp}}` | Current UTC timestamp |
+
+<details>
+<summary><b>📦 Payload Examples by Event</b></summary>
+
+Base fields present in received message events:
+
+```json
+{
+  "messageId": "3EB0ABCDEF123456",
+  "from": "5511999999999",
+  "fromName": "João Silva",
+  "fromJid": "5511999999999@s.whatsapp.net",
+  "isGroup": false
+}
+```
+
+#### `message.text`
+```json
+{
+  "event": "message.text",
+  "data": {
+    "...base": "...",
+    "text": "Olá! Como posso ajudar?",
+    "quoted": { "id": "3EB0...", "fromMe": true }
+  }
+}
+```
+
+#### `message.image`
+```json
+{
+  "event": "message.image",
+  "data": {
+    "...base": "...",
+    "caption": "Foto do produto",
+    "mimetype": "image/jpeg",
+    "fileLength": 204800
+  }
+}
+```
+
+#### `message.video`
+```json
+{
+  "event": "message.video",
+  "data": {
+    "...base": "...",
+    "caption": "Veja esse vídeo!",
+    "mimetype": "video/mp4",
+    "fileLength": 5242880,
+    "isPTT": false,
+    "isGif": false
+  }
+}
+```
+
+#### `message.audio`
+```json
+{
+  "event": "message.audio",
+  "data": {
+    "...base": "...",
+    "mimetype": "audio/ogg; codecs=opus",
+    "fileLength": 30720,
+    "isPTT": true,
+    "durationSeconds": 8
+  }
+}
+```
+
+#### `message.document`
+```json
+{
+  "event": "message.document",
+  "data": {
+    "...base": "...",
+    "fileName": "contrato.pdf",
+    "caption": "Segue o contrato",
+    "mimetype": "application/pdf",
+    "fileLength": 102400
+  }
+}
+```
+
+#### `message.sticker`
+```json
+{
+  "event": "message.sticker",
+  "data": {
+    "...base": "...",
+    "mimetype": "image/webp",
+    "isAnimated": false
+  }
+}
+```
+
+#### `message.contact`
+```json
+{
+  "event": "message.contact",
+  "data": {
+    "...base": "...",
+    "displayName": "Maria Souza",
+    "vcard": "BEGIN:VCARD\nVERSION:3.0\n..."
+  }
+}
+```
+
+#### `message.location`
+```json
+{
+  "event": "message.location",
+  "data": {
+    "...base": "...",
+    "lat": -23.5505,
+    "lng": -46.6333,
+    "name": "Av. Paulista",
+    "address": "Av. Paulista, 1000 - São Paulo"
+  }
+}
+```
+
+#### `message.reaction`
+```json
+{
+  "event": "message.reaction",
+  "data": {
+    "...base": "...",
+    "emoji": "❤️",
+    "targetMessageId": "3EB0ABCDEF123456",
+    "isRemoved": false
+  }
+}
+```
+
+#### `message.poll_created`
+```json
+{
+  "event": "message.poll_created",
+  "data": {
+    "...base": "...",
+    "pollName": "Qual o melhor sabor?",
+    "options": ["Chocolate", "Morango", "Baunilha"]
+  }
+}
+```
+
+#### `message.poll_vote`
+```json
+{
+  "event": "message.poll_vote",
+  "data": {
+    "...base": "...",
+    "pollId": "3EB0ABCDEF123456",
+    "selectedOptions": ["Chocolate"]
+  }
+}
+```
+
+#### `message.button_reply`
+```json
+{
+  "event": "message.button_reply",
+  "data": {
+    "...base": "...",
+    "buttonId": "opcao_sim",
+    "displayText": "Sim",
+    "type": "quick_reply"
+  }
+}
+```
+
+#### `message.list_reply`
+```json
+{
+  "event": "message.list_reply",
+  "data": {
+    "...base": "...",
+    "rowId": "1",
+    "title": "X-Burguer",
+    "description": "R$ 18,90"
+  }
+}
+```
+
+#### `message.deleted`
+```json
+{
+  "event": "message.deleted",
+  "data": {
+    "...base": "..."
+  }
+}
+```
+
+#### `message.unknown`
+```json
+{
+  "event": "message.unknown",
+  "data": {
+    "...base": "...",
+    "rawType": "senderKeyDistributionMessage"
+  }
+}
+```
+
+#### `message.sent`
+```json
+{
+  "event": "message.sent",
+  "data": {
+    "to": "5511999999999",
+    "type": "text",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+
+#### `connection.connected`
+```json
+{
+  "event": "connection.connected",
+  "data": {
+    "phone": "5511999999999"
+  }
+}
+```
+
+#### `connection.disconnected`
+```json
+{
+  "event": "connection.disconnected",
+  "data": {}
+}
+```
+
+#### `connection.qr_ready`
+```json
+{
+  "event": "connection.qr_ready",
+  "data": {
+    "qr": "2@abc123..."
+  }
+}
+```
+
+#### `call.received`
+```json
+{
+  "event": "call.received",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "callId": "ABC123DEF456"
+  }
+}
+```
+
+</details>
+
+---
+
 ## 🛠️ Installation & Hosting
 
 > Get your professional WhatsApp API up and running in less than **5 minutes** with **ZapUnlocked-API**.

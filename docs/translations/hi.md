@@ -239,6 +239,316 @@ mindmap
 
 ---
 
+## 📡 Webhook इवेंट्स
+
+सभी webhook एक मानक लिफाफा प्राप्त करते हैं:
+
+```json
+{
+  "event": "message.text",
+  "timestamp": "2025-01-01T12:00:00Z",
+  "data": { ... }
+}
+```
+
+यदि webhook में `{{placeholders}}` के साथ कस्टम `body` है, तो मानक लिफाफे के बजाय यह body भेजा जाता है।
+
+### उपलब्ध इवेंट्स (20 प्रकार)
+
+| इवेंट | विवरण |
+| :---- | :----- |
+| `message.text` | सादा / फ़ॉर्मेटेड टेक्स्ट |
+| `message.image` | प्राप्त छवि |
+| `message.video` | प्राप्त वीडियो |
+| `message.audio` | ऑडियो / वॉइस नोट |
+| `message.document` | दस्तावेज़ / फ़ाइल |
+| `message.sticker` | स्टिकर |
+| `message.contact` | साझा संपर्क |
+| `message.location` | स्थान |
+| `message.reaction` | प्रतिक्रिया (इमोजी) |
+| `message.poll_created` | प्राप्त पोल |
+| `message.poll_vote` | पोल में वोट |
+| `message.button_reply` | बटन क्लिक |
+| `message.list_reply` | इंटरैक्टिव सूची चयन |
+| `message.deleted` | प्रेषक द्वारा हटाया गया संदेश |
+| `message.unknown` | अमैप्ड संदेश प्रकार |
+| `message.sent` | भेजा गया संदेश (मैन्युअल) |
+| `connection.connected` | WhatsApp कनेक्टेड |
+| `connection.disconnected` | WhatsApp डिस्कनेक्टेड |
+| `connection.qr_ready` | QR कोड जनरेटेड |
+| `call.received` | कॉल प्राप्त हुई |
+
+### प्लेसहोल्डर (कस्टम body)
+
+| प्लेसहोल्डर | मान |
+| :----------- | :-- |
+| `{{from}}` | प्रेषक संख्या |
+| `{{text}}` | संदेश टेक्स्ट |
+| `{{phone}}` | `{{from}}` के समान |
+| `{{id}}` | संदेश ID |
+| `{{timestamp}}` | वर्तमान UTC टाइमस्टैंप |
+
+<details>
+<summary><b>📦 इवेंट के अनुसार Payload उदाहरण</b></summary>
+
+प्राप्त संदेश इवेंट्स में मौजूद आधार फ़ील्ड:
+
+```json
+{
+  "messageId": "3EB0ABCDEF123456",
+  "from": "5511999999999",
+  "fromName": "João Silva",
+  "fromJid": "5511999999999@s.whatsapp.net",
+  "isGroup": false
+}
+```
+
+#### `message.text`
+```json
+{
+  "event": "message.text",
+  "data": {
+    "...base": "...",
+    "text": "Olá! Como posso ajudar?",
+    "quoted": { "id": "3EB0...", "fromMe": true }
+  }
+}
+```
+
+#### `message.image`
+```json
+{
+  "event": "message.image",
+  "data": {
+    "...base": "...",
+    "caption": "Foto do produto",
+    "mimetype": "image/jpeg",
+    "fileLength": 204800
+  }
+}
+```
+
+#### `message.video`
+```json
+{
+  "event": "message.video",
+  "data": {
+    "...base": "...",
+    "caption": "Veja esse vídeo!",
+    "mimetype": "video/mp4",
+    "fileLength": 5242880,
+    "isPTT": false,
+    "isGif": false
+  }
+}
+```
+
+#### `message.audio`
+```json
+{
+  "event": "message.audio",
+  "data": {
+    "...base": "...",
+    "mimetype": "audio/ogg; codecs=opus",
+    "fileLength": 30720,
+    "isPTT": true,
+    "durationSeconds": 8
+  }
+}
+```
+
+#### `message.document`
+```json
+{
+  "event": "message.document",
+  "data": {
+    "...base": "...",
+    "fileName": "contrato.pdf",
+    "caption": "Segue o contrato",
+    "mimetype": "application/pdf",
+    "fileLength": 102400
+  }
+}
+```
+
+#### `message.sticker`
+```json
+{
+  "event": "message.sticker",
+  "data": {
+    "...base": "...",
+    "mimetype": "image/webp",
+    "isAnimated": false
+  }
+}
+```
+
+#### `message.contact`
+```json
+{
+  "event": "message.contact",
+  "data": {
+    "...base": "...",
+    "displayName": "Maria Souza",
+    "vcard": "BEGIN:VCARD\nVERSION:3.0\n..."
+  }
+}
+```
+
+#### `message.location`
+```json
+{
+  "event": "message.location",
+  "data": {
+    "...base": "...",
+    "lat": -23.5505,
+    "lng": -46.6333,
+    "name": "Av. Paulista",
+    "address": "Av. Paulista, 1000 - São Paulo"
+  }
+}
+```
+
+#### `message.reaction`
+```json
+{
+  "event": "message.reaction",
+  "data": {
+    "...base": "...",
+    "emoji": "❤️",
+    "targetMessageId": "3EB0ABCDEF123456",
+    "isRemoved": false
+  }
+}
+```
+
+#### `message.poll_created`
+```json
+{
+  "event": "message.poll_created",
+  "data": {
+    "...base": "...",
+    "pollName": "Qual o melhor sabor?",
+    "options": ["Chocolate", "Morango", "Baunilha"]
+  }
+}
+```
+
+#### `message.poll_vote`
+```json
+{
+  "event": "message.poll_vote",
+  "data": {
+    "...base": "...",
+    "pollId": "3EB0ABCDEF123456",
+    "selectedOptions": ["Chocolate"]
+  }
+}
+```
+
+#### `message.button_reply`
+```json
+{
+  "event": "message.button_reply",
+  "data": {
+    "...base": "...",
+    "buttonId": "opcao_sim",
+    "displayText": "Sim",
+    "type": "quick_reply"
+  }
+}
+```
+
+#### `message.list_reply`
+```json
+{
+  "event": "message.list_reply",
+  "data": {
+    "...base": "...",
+    "rowId": "1",
+    "title": "X-Burguer",
+    "description": "R$ 18,90"
+  }
+}
+```
+
+#### `message.deleted`
+```json
+{
+  "event": "message.deleted",
+  "data": {
+    "...base": "..."
+  }
+}
+```
+
+#### `message.unknown`
+```json
+{
+  "event": "message.unknown",
+  "data": {
+    "...base": "...",
+    "rawType": "senderKeyDistributionMessage"
+  }
+}
+```
+
+#### `message.sent`
+```json
+{
+  "event": "message.sent",
+  "data": {
+    "to": "5511999999999",
+    "type": "text",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+
+#### `connection.connected`
+```json
+{
+  "event": "connection.connected",
+  "data": {
+    "phone": "5511999999999"
+  }
+}
+```
+
+#### `connection.disconnected`
+```json
+{
+  "event": "connection.disconnected",
+  "data": {}
+}
+```
+
+#### `connection.qr_ready`
+```json
+{
+  "event": "connection.qr_ready",
+  "data": {
+    "qr": "2@abc123..."
+  }
+}
+```
+
+#### `call.received`
+```json
+{
+  "event": "call.received",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "callId": "ABC123DEF456"
+  }
+}
+```
+
+</details>
+
+---
+
 ## 🛠️ इंस्टॉलेशन और होस्टिंग
 
 > अपनी पेशेवर व्हाट्सएप एपीआई को **5 मिनट** से भी कम समय में **ZapUnlocked-API** के साथ चालू करें।
