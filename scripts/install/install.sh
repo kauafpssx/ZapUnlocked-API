@@ -132,9 +132,9 @@ if $_ALWAYSDATA; then
     while IFS= read -r pkg || [ -n "$pkg" ]; do
         pkg=$(echo "$pkg" | sed 's/#.*//' | xargs)
         [ -z "$pkg" ] && continue
-        gum spin --spinner dot --title "$pkg" -- \
-            .venv/bin/pip install --no-cache-dir --no-deps "$pkg" -q || exit 1
-    done < <(grep -v '^\s*#' requirements.txt)
+        gum log --level info "  $pkg"
+        .venv/bin/pip install --no-cache-dir --no-deps "$pkg" -q || exit 1
+    done < <(grep -v '^[[:space:]]*#' requirements.txt)
 
     # 2. ffmpeg estatico se necessario
     if ! command -v ffmpeg &>/dev/null; then
