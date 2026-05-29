@@ -90,9 +90,11 @@ while IFS= read -r pkg || [ -n "$pkg" ]; do
             gum log --level info "ffmpeg já instalado no sistema — pulando $pkg"
             rc=0
         else
-            gum spin --spinner dot --title "$pkg" -- \
-                .venv/bin/pip install "$pkg" --no-cache-dir -q
+            gum log --level info "Baixando ffmpeg estático (~120 MB)..."
+            curl -fsSL "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz" \
+                | tar -xJ -C "$HOME/.local/bin/" --strip-components=1 "*/ffmpeg" "*/ffprobe"
             rc=$?
+            chmod +x "$HOME/.local/bin/ffmpeg" "$HOME/.local/bin/ffprobe"
         fi
     else
         gum spin --spinner dot --title "$pkg" -- \
