@@ -16,7 +16,7 @@ if [ -n "$PID" ]; then
     kill -9 "$PID" 2>/dev/null
     sleep 1
 fi
-ui_log_ok "Porta 8300 livre"
+ui_log_ok "Port 8300 free"
 
 # ── Detect installation method ────────────────────────────────────────
 _RELOAD="--reload"
@@ -25,13 +25,20 @@ if __alwaysdata_check; then
     _RELOAD=""
     export MALLOC_ARENA_MAX=1
     export PYTHONMALLOC=malloc
+    # Ensure libmagic.so.1 is on the dynamic linker path (needed by python-magic / neonize)
+    for _libdir in /usr/lib/x86_64-linux-gnu /usr/lib/aarch64-linux-gnu /usr/lib /usr/local/lib; do
+        if [ -f "$_libdir/libmagic.so.1" ]; then
+            export LD_LIBRARY_PATH="$_libdir${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+            break
+        fi
+    done
 fi
 
 if [ -d "$ROOT_DIR/vendor" ]; then
     export PYTHONPATH="$ROOT_DIR/vendor${PYTHONPATH:+:$PYTHONPATH}"
 fi
 
-# ── Detectar comando uvicorn ──────────────────────────────────────────
+# ── Detect uvicorn command ──────────────────────────────────────────
 if python3 -c "import uvicorn" &>/dev/null; then
     CMD="python3 -m uvicorn"
     ui_log_ok "Usando python3 -m uvicorn ($(python3 -c 'import uvicorn; print(uvicorn.__file__)'))"
@@ -42,14 +49,14 @@ elif command -v uvicorn &>/dev/null; then
     CMD="uvicorn"
     ui_log_ok "Usando uvicorn global"
 else
-    ui_log_err "uvicorn não encontrado — execute install.sh primeiro"
+    ui_log_err "uvicorn not found — run install.sh first"
     exit 1
 fi
 
 # ── Start ──────────────────────────────────────────────────────────────
 ui_sep
-ui_log_info "Servidor ouvindo em http://[::]:8300"
-ui_log_info "Pressione Ctrl+C para parar"
+ui_log_info "Server listening on http://[::]:8300"
+ui_log_info "Press Ctrl+C to stop"
 echo ""
 echo ""
 

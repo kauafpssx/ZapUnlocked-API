@@ -186,6 +186,35 @@ PY
     rm -rf "$ROOT_DIR/wheels"
     ui_log_ok "Requirements installed"
 
+    # Verify python-magic can load libmagic.so.1 (needed by neonize)
+    _MAGIC_OK=false
+    PYTHONPATH="$SITE_PKG" python3 -c "import magic" &>/dev/null && _MAGIC_OK=true
+
+    if ! $_MAGIC_OK; then
+        # Search common Debian/Ubuntu library paths
+        _LIBMAGIC_DIR=""
+        for _d in /usr/lib/x86_64-linux-gnu /usr/lib/aarch64-linux-gnu /usr/lib /usr/local/lib; do
+            if [ -f "$_d/libmagic.so.1" ]; then
+                _LIBMAGIC_DIR="$_d"
+                break
+            fi
+        done
+
+        if [ -n "$_LIBMAGIC_DIR" ]; then
+            # Persist so run.sh and the app can pick it up
+            grep -q "^LD_LIBRARY_PATH=" "$ROOT_DIR/.env" 2>/dev/null \
+                || echo "LD_LIBRARY_PATH=$_LIBMAGIC_DIR" >> "$ROOT_DIR/.env"
+            export LD_LIBRARY_PATH="$_LIBMAGIC_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+            PYTHONPATH="$SITE_PKG" python3 -c "import magic" &>/dev/null \
+                && ui_log_ok "libmagic found at $_LIBMAGIC_DIR" \
+                || ui_log_warn "libmagic found at $_LIBMAGIC_DIR but magic still fails — check installation"
+        else
+            ui_log_warn "libmagic not found — run: sudo apt-get install libmagic1"
+        fi
+    else
+        ui_log_ok "python-magic OK"
+    fi
+
     if ! command -v ffmpeg &>/dev/null; then
         TMP_DIR=$(mktemp -d "$HOME/.ffmpeg_extract_XXXXX")
         gum spin --spinner dot --title "Downloading static ffmpeg (~120 MB)..." -- \
