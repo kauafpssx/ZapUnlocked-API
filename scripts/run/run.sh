@@ -27,6 +27,20 @@ if [ -n "$PID" ]; then
 fi
 gum log --level info "Porta 8300 livre"
 
+# ── Alwaysdata: configura antes da deteccao de uvicorn ───────────────────────
+_RELOAD="--reload"
+_IS_AD=false
+[ -n "$ALWAYSDATA_ACCOUNT" ] && _IS_AD=true
+[ -f /etc/alwaysdata ] && _IS_AD=true
+hostname -f 2>/dev/null | grep -qi 'alwaysdata' && _IS_AD=true
+
+if $_IS_AD; then
+    _RELOAD=""
+    export MALLOC_ARENA_MAX=1
+    export PYTHONMALLOC=malloc
+    export PYTHONPATH="$ROOT/vendor${PYTHONPATH:+:$PYTHONPATH}"
+fi
+
 # ── Detectar comando uvicorn ────────────────────────────────────────────────
 if [ -f ".venv/bin/uvicorn" ]; then
     CMD=".venv/bin/uvicorn"
@@ -46,19 +60,5 @@ fi
 echo ""
 gum style --foreground "240" "  Iniciando servidor..."
 echo ""
-
-# --reload usa watcher subprocess que dobra uso de memoria; desativa no Alwaysdata
-_RELOAD="--reload"
-_IS_AD=false
-[ -n "$ALWAYSDATA_ACCOUNT" ] && _IS_AD=true
-[ -f /etc/alwaysdata ] && _IS_AD=true
-hostname -f 2>/dev/null | grep -qi 'alwaysdata' && _IS_AD=true
-
-if $_IS_AD; then
-    _RELOAD=""
-    export MALLOC_ARENA_MAX=1
-    export PYTHONMALLOC=malloc
-    export PYTHONPATH="$ROOT/vendor${PYTHONPATH:+:$PYTHONPATH}"
-fi
 
 $CMD main:app --host '::' --port 8300 --proxy-headers --forwarded-allow-ips '::1' $_RELOAD --log-level info
