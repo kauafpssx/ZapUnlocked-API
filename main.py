@@ -18,10 +18,22 @@ validate_dependencies()
 
 # ── No Alwaysdata, a porta 8300-8499 so fica acessivel via Service ─────
 if is_alwaysdata() and sys.stdin.isatty():
-    msg_title="ATENCAO: Voce esta no Alwaysdata"
-    msg_body="A porta 8300-8499 so fica acessivel atraves de um Service"
-    msg_hint="Advanced > Services > Add a service  |  Command: bash scripts/run/run.sh  |  Bind :: (IPv6)"
-    msg_docs="https://help.alwaysdata.com/en/services"
+    msg = (
+        "\n"
+        "╔══════════════════════════════════════════════════╗\n"
+        "║   ATENCAO: Alwaysdata detectado                  ║\n"
+        "║   A porta 8300-8499 so fica acessivel           ║\n"
+        "║   apos registrar um Service no painel:           ║\n"
+        "║     Advanced > Services > Add a service          ║\n"
+        "║                                                  ║\n"
+        "║   Name          ZapUnlocked-API                  ║\n"
+        "║   Command       python3 main.py                  ║\n"
+        "║   Working dir   ZapUnlocked-API                  ║\n"
+        "║   Env vars      PORT=8300                        ║\n"
+        "║                                                  ║\n"
+        "║   Veja: README.md secao Alwaysdata               ║\n"
+        "╚══════════════════════════════════════════════════╝\n"
+    )
     try:
         import subprocess
         subprocess.run(
@@ -30,13 +42,23 @@ if is_alwaysdata() and sys.stdin.isatty():
              "--border-foreground", "196",
              "--border", "rounded",
              "--align", "center",
-             "--width", "60",
-             "--padding", "1 2",
-             msg_title, msg_body, msg_hint, msg_docs],
+             "--width", "56",
+             "--padding", "1 1",
+             "ATENCAO: Alwaysdata detectado",
+             "A porta 8300-8499 so fica acessivel",
+             "apos registrar um Service no painel:",
+             "Advanced > Services > Add a service",
+             "",
+             "Name......... ZapUnlocked-API",
+             "Command...... python3 main.py",
+             "Working dir.. ZapUnlocked-API",
+             "Env vars..... PORT=8300",
+             "",
+             "Veja: README.md secao Alwaysdata"],
             stderr=subprocess.DEVNULL,
         )
     except Exception:
-        print(f"\n{'='*60}\n  {msg_title}\n  {msg_body}\n  {msg_hint}\n  {msg_docs}\n{'='*60}\n", file=sys.stderr)
+        print(msg, file=sys.stderr)
     sys.exit(1)
 
 # FIX: Configura o ProactorEventLoop como global para suporte a subprocessos no Windows

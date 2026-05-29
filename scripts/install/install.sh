@@ -75,42 +75,64 @@ if [ $? -ne 0 ]; then
 fi
 gum log --level info "Ambiente virtual criado"
 
+# ── Alwaysdata detection ───────────────────────────────────────────────────
+_ALWAYSDATA=false
+[ -n "$ALWAYSDATA_ACCOUNT" ] && _ALWAYSDATA=true
+[ -f /etc/alwaysdata ] && _ALWAYSDATA=true
+hostname -f 2>/dev/null | grep -qi 'alwaysdata' && _ALWAYSDATA=true
+
 # ── Requirements ─────────────────────────────────────────────────────────────
 gum spin --spinner dot --title "Atualizando pip..." -- .venv/bin/pip install --upgrade pip -q
 
-while IFS= read -r pkg || [ -n "$pkg" ]; do
-    pkg=$(echo "$pkg" | sed 's/#.*//' | xargs)
-    [ -z "$pkg" ] && continue
-    if [ "$pkg" = "Pillow" ]; then
-        gum spin --spinner dot --title "$pkg (binário)" -- \
-            .venv/bin/pip install "$pkg" --no-cache-dir --only-binary :all: -q
-        rc=$?
-    elif echo "$pkg" | grep -q "imageio-ffmpeg"; then
-        if command -v ffmpeg &>/dev/null; then
-            gum log --level info "ffmpeg já instalado no sistema — pulando $pkg"
-            rc=0
-        else
-            TMP_DIR=$(mktemp -d "$HOME/.ffmpeg_extract_XXXXX")
-            gum spin --spinner dot --title "Baixando ffmpeg estático (~120 MB)..." -- \
-                bash -c "curl -fsSL 'https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz' | tar -xJ -C '$TMP_DIR'"
-            find "$TMP_DIR" -name 'ffmpeg' -type f -exec mv {} "$HOME/.local/bin/ffmpeg" \;
-            find "$TMP_DIR" -name 'ffprobe' -type f -exec mv {} "$HOME/.local/bin/ffprobe" \;
-            rm -rf "$TMP_DIR"
-            rc=$?
-            chmod +x "$HOME/.local/bin/ffmpeg" "$HOME/.local/bin/ffprobe"
-        fi
-    else
-        gum spin --spinner dot --title "$pkg" -- \
-            .venv/bin/pip install "$pkg" --no-cache-dir -q
-        rc=$?
-    fi
-    if [ $rc -ne 0 ]; then
-        gum log --level error "Falha ao instalar: $pkg"
-        exit $rc
-    fi
-done < <(grep -v '^\s*#' requirements.txt)
+if $_ALWAYSDATA; then
+    gum log --level info "Alwaysdata detectado — instalando em modo economia de RAM"
 
-gum log --level info "Requirements instalados"
+    # Passo 1: pacotes principais sem dependencias (leve)
+    while IFS= read -r pkg || [ -n "$pkg" ]; do
+        pkg=$(echo "$pkg" | sed 's/#.*//' | xargs)
+        [ -z "$pkg" ] && continue
+        if [ "$pkg" = "Pillow" ]; then
+            gum spin --spinner dot --title "$pkg (binário)" -- \
+                .venv/bin/pip install "$pkg" --no-cache-dir --only-binary :all: -q || exit 1
+        elif echo "$pkg" | grep -q "imageio-ffmpeg"; then
+            if command -v ffmpeg &>/dev/null; then
+                gum log --level info "ffmpeg ja no sistema — pulando $pkg"
+            else
+                TMP_DIR=$(mktemp -d "$HOME/.ffmpeg_extract_XXXXX")
+                gum spin --spinner dot --title "Baixando ffmpeg estatico (~120 MB)..." -- \
+                    bash -c "curl -fsSL 'https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz' | tar -xJ -C '$TMP_DIR'" || exit 1
+                find "$TMP_DIR" -name 'ffmpeg' -type f -exec mv {} "$HOME/.local/bin/ffmpeg" \;
+                find "$TMP_DIR" -name 'ffprobe' -type f -exec mv {} "$HOME/.local/bin/ffprobe" \;
+                rm -rf "$TMP_DIR"
+                chmod +x "$HOME/.local/bin/ffmpeg" "$HOME/.local/bin/ffprobe"
+            fi
+        else
+            gum spin --spinner dot --title "$pkg" -- \
+                .venv/bin/pip install "$pkg" --no-cache-dir --no-deps -q || exit 1
+        fi
+    done < <(grep -v '^\s*#' requirements.txt)
+
+    # Passo 2: dependencias faltantes (cada pacote ja instalado, so baixa o que falta)
+    gum log --level info "Resolvendo dependencias..."
+    while IFS= read -r pkg || [ -n "$pkg" ]; do
+        pkg=$(echo "$pkg" | sed 's/#.*//' | xargs)
+        [ -z "$pkg" ] && continue
+        gum spin --spinner dot --title "  deps de $pkg" -- \
+            .venv/bin/pip install "$pkg" --no-cache-dir -q || exit 1
+    done < <(grep -v '^\s*#' requirements.txt)
+
+    gum log --level info "Requirements instalados"
+else
+    # Servidor normal: instala tudo de uma vez (rapido)
+    gum spin --spinner dot --title "Instalando requirements..." -- \
+        .venv/bin/pip install -r requirements.txt --no-cache-dir -q
+    if [ $? -eq 0 ]; then
+        gum log --level info "Requirements instalados"
+    else
+        gum log --level error "Falha ao instalar requirements"
+        exit 1
+    fi
+fi
 
 # ── Done ─────────────────────────────────────────────────────────────────────
 echo ""
