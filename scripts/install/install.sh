@@ -213,7 +213,7 @@ PKGS = [
     ("neonize",             "0.3.18.post0", None),
 
     # Deps do neonize (nao instaladas automaticamente)
-    ("protobuf",            "6.32.1",   None),
+    ("protobuf",            "7.34.1",   None),
     ("linkpreview",         "0.11.0",   "py3-none-any"),
     ("beautifulsoup4",      "4.13.4",   "py3-none-any"),
     ("soupsieve",           "2.7",      "py3-none-any"),
