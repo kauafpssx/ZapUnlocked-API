@@ -90,10 +90,9 @@ while IFS= read -r pkg || [ -n "$pkg" ]; do
             gum log --level info "ffmpeg já instalado no sistema — pulando $pkg"
             rc=0
         else
-            gum log --level info "Baixando ffmpeg estático (~120 MB)..."
             TMP_DIR=$(mktemp -d "$HOME/.ffmpeg_extract_XXXXX")
-            curl -fsSL "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz" \
-                | tar -xJ -C "$TMP_DIR"
+            gum spin --spinner dot --title "Baixando ffmpeg estático (~120 MB)..." -- \
+                bash -c "curl -fsSL 'https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz' | tar -xJ -C '$TMP_DIR'"
             find "$TMP_DIR" -name 'ffmpeg' -type f -exec mv {} "$HOME/.local/bin/ffmpeg" \;
             find "$TMP_DIR" -name 'ffprobe' -type f -exec mv {} "$HOME/.local/bin/ffprobe" \;
             rm -rf "$TMP_DIR"
