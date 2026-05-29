@@ -5,7 +5,7 @@ Bypasses pip entirely to avoid OOM on Alwaysdata's 256 MB RAM.
 Installs transitive deps by parsing requires_dist from the PyPI JSON API.
 """
 
-import json, re, shutil, sys, tempfile, urllib.request, zipfile
+import gc, json, re, shutil, sys, tempfile, urllib.request, zipfile
 from pathlib import Path
 
 
@@ -61,7 +61,7 @@ def _best_version(data, ver_spec: str) -> str:
 def _fetch_json(pkg: str):
     url = f'https://pypi.org/pypi/{pkg}/json'
     with urllib.request.urlopen(url) as resp:
-        return json.loads(resp.read())
+        return json.load(resp)
 
 
 def _non_extra_deps(data) -> list:
@@ -142,6 +142,7 @@ def install(pkg_spec: str, target: Path, _seen: set = None) -> bool:
     for dep in deps:
         if not install(dep, target, _seen):
             print(f'    AVISO: dependencia {dep} falhou', file=sys.stderr)
+        gc.collect()
 
     print(f'  {pkg}=={version}', file=sys.stderr)
     _install_wheel(url, target)

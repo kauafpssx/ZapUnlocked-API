@@ -101,7 +101,7 @@ if $_ALWAYSDATA; then
         echo "$pkg" | grep -qi 'imageio-ffmpeg' && continue
         gum log --level info "  $pkg"
         for attempt in 1 2 3; do
-            python3 "$ROOT/scripts/install/install_wheel.py" "$pkg" "$SITE_PKG" && break
+            MALLOC_ARENA_MAX=1 PYTHONMALLOC=malloc python3 "$ROOT/scripts/install/install_wheel.py" "$pkg" "$SITE_PKG" && break
             gum log --level warn "  Tentativa $attempt/3 falhou, retentando..."
         done || gum log --level warn "  Pulado apos 3 tentativas: $pkg"
     done < <(grep -v '^[[:space:]]*#' requirements.txt)
