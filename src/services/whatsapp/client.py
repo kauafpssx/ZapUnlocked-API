@@ -38,6 +38,7 @@ qr_generation_active: bool = False
 qr_last_generated_at: float | None = None
 QR_EXPIRY_SECONDS: int = 20
 _keep_qr_active_on_restart: bool = False
+_qr_url_logged: bool = False  # log dashboard URL only once per session
 
 DB_CONFIG_FILE = Path(DATA_DIR) / "db_config.json"
 DEFAULT_INTERVAL = 1440
@@ -350,16 +351,9 @@ def get_contact_name(client, jid: str, push_name: str = None) -> str:
 # EVENT HANDLERS (registered in start_bot)
 # ══════════════════════════════════════════════════════════
 
-def _on_qr(c: NewClient, qr_bytes: bytes):
-    global current_qr, qr_last_generated_at
-    if not qr_generation_active:
-        logger.debug("🔒 QR ignored — waiting for authenticated access on /qr")
-        return
-    current_qr = qr_bytes.decode("utf-8")
-    qr_last_generated_at = time.time()
-
-    # ── Build public URL dynamically ──────────────────────────────────
-    public_url = os.getenv("PUBLIC_URL")                        # 1. explicit env var (e.g.: http://mydomain.com:8080)
+def _build_qr_url() -> str:
+    """Build the public /qr dashboard URL."""
+    public_url = os.getenv("PUBLIC_URL")
     if not public_url:
         user = os.getenv("USER", "")
         if user:
@@ -368,13 +362,30 @@ def _on_qr(c: NewClient, qr_bytes: bytes):
             hostname = socket.gethostname()
             public_url = f"http://{hostname}:{PORT}"
     else:
-        # If env var did not include :port, append it
         if ":" not in public_url.split("/")[-1]:
             public_url = f"{public_url}:{PORT}"
     qr_url = f"{public_url}/qr"
     if API_KEY:
         qr_url += f"?API_KEY={API_KEY}"
-    logger.info(f"📲 QR Code generated! Access: {qr_url}")
+    return qr_url
+
+
+def _on_qr(c: NewClient, qr_bytes: bytes):
+    global current_qr, qr_last_generated_at, _qr_url_logged
+
+    # Always log the dashboard URL on the first QR event so the user knows where to go,
+    # regardless of whether generation is active yet.
+    if not _qr_url_logged:
+        _qr_url_logged = True
+        logger.info(f"📲 QR dashboard: {_build_qr_url()}")
+
+    if not qr_generation_active:
+        logger.debug("🔒 QR ignored — waiting for authenticated access on /qr")
+        return
+
+    current_qr = qr_bytes.decode("utf-8")
+    qr_last_generated_at = time.time()
+    logger.info(f"📲 QR Code ready! Access: {_build_qr_url()}")
     if main_loop and main_loop.is_running():
         main_loop.call_soon_threadsafe(
             lambda: asyncio.create_task(_fire("connection.qr_ready", {"qr": current_qr}))
@@ -382,12 +393,13 @@ def _on_qr(c: NewClient, qr_bytes: bytes):
 
 
 def _on_connected(c: NewClient, event: "ConnectedEv"):
-    global is_ready, current_qr, current_pair_code, qr_generation_active, qr_last_generated_at
+    global is_ready, current_qr, current_pair_code, qr_generation_active, qr_last_generated_at, _qr_url_logged
     is_ready = True
     current_qr = None
     current_pair_code = None
     qr_generation_active = False
     qr_last_generated_at = None
+    _qr_url_logged = False
     logger.info("✅ WhatsApp connected and ready")
     if main_loop and main_loop.is_running():
         phone = ""
@@ -588,10 +600,11 @@ async def start_bot():
 
 def _reset_state():
     """Reset global state variables for a new connection."""
-    global qr_generation_active, qr_last_generated_at, current_qr, _keep_qr_active_on_restart
+    global qr_generation_active, qr_last_generated_at, current_qr, _keep_qr_active_on_restart, _qr_url_logged
     reset_pair_code()
     qr_last_generated_at = None
     current_qr = None
+    _qr_url_logged = False
     if _keep_qr_active_on_restart:
         qr_generation_active = True
         _keep_qr_active_on_restart = False
