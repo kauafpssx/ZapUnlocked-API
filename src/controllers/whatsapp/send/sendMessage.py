@@ -14,7 +14,7 @@ async def send_message(data: SendMessageRequest):
     if not data.phone or not data.message:
         raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'phone' and 'message' are required."})
 
-    logger.info(f"📥 Recebido em POST /send: texto={data.message!r}")
+    logger.debug(f"📥 POST /send: text={data.message!r}")
 
     try:
         jid = f"{data.phone}@s.whatsapp.net"

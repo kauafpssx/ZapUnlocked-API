@@ -162,16 +162,10 @@ async def send_message(jid: str, message: str, options: dict = None):
     # Appending AI Tag if enabled
     settings = settingsService.get_settings()
     
-    # EXTREME DEBUG FOR AI TAG
-    from src.utils.logger import logger
-    logger.info(f"🛠️ [SENDER DEBUG] ai_tag_enabled={settings.get('ai_tag_enabled')} (tipo: {type(settings.get('ai_tag_enabled'))}) | tag={settings.get('ai_tag_text')!r}")
-    
     if settings.get("ai_tag_enabled"):
         tag = settings.get("ai_tag_text", " (ZapUnlocked AI)")
         if tag not in message:
             message += tag
-
-    logger.info(f"🛠️ [SENDER DEBUG] Final text being sent to WhatsApp: {message!r}")
 
     ci = _build_context_info(options.get("quoted")) if options else None
     
@@ -332,12 +326,6 @@ async def send_button_message(jid: str, text: str, buttons: list, options: dict 
         )
     )
 
-    # --- DEBUG LOGGING ---
-    logger.info(f"🛠️ [SENDER DEBUG] Sending InteractiveMessage to {jid}")
-    logger.info(f"🛠️ [SENDER DEBUG] Text: {text!r}")
-    for i, b in enumerate(interactive_msg.nativeFlowMessage.buttons):
-        logger.info(f"🛠️ [SENDER DEBUG] Button {i}: name={b.name} params={b.buttonParamsJSON}")
-    # --- END DEBUG LOGGING ---
 
     res = client.send_message(build_jid(jid), msg)
     

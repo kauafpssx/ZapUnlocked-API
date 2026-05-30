@@ -373,8 +373,11 @@ def _build_qr_url() -> str:
 def _on_qr(c: NewClient, qr_bytes: bytes):
     global current_qr, qr_last_generated_at, _qr_url_logged
 
-    # Always log the dashboard URL on the first QR event so the user knows where to go,
-    # regardless of whether generation is active yet.
+    # Neonize may fire QR events briefly after connection — ignore them.
+    if is_ready:
+        return
+
+    # Log the dashboard URL once per session so the user knows where to go.
     if not _qr_url_logged:
         _qr_url_logged = True
         logger.info(f"📲 QR dashboard: {_build_qr_url()}")
