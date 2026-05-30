@@ -10,7 +10,7 @@ from src.utils.quote import resolve_quote
 from ..schemas import SendStickerRequest
 
 async def send_sticker(data: SendStickerRequest):
-    logger.info(f"🔍 Request recebida em /send_sticker para {data.phone}")
+    logger.debug(f"🔍 POST /send_sticker: phone={data.phone}")
 
     if not get_is_ready():
         raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})

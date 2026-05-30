@@ -11,7 +11,7 @@ from src.utils.quote import resolve_quote
 from ..schemas import SendAudioRequest
 
 async def send_audio(data: SendAudioRequest):
-    logger.info(f"🔍 Request recebida em /send_audio para {data.phone}")
+    logger.debug(f"🔍 POST /send_audio: phone={data.phone}")
 
     if not get_is_ready():
         raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})

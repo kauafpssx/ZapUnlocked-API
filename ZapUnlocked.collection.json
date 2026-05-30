@@ -1,0 +1,2470 @@
+{
+  "info": {
+    "name": "ZapUnlocked-API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Todos os endpoints da ZapUnlocked API. Base URL: http://localhost:8000"
+  },
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "API_KEY",
+      "value": ""
+    },
+    {
+      "key": "PHONE",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Status",
+      "item": [
+        {
+          "name": "Status da API",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/status",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "status"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "SSE Stream (logs em tempo real)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/status/stream",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "status",
+                "stream"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              },
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "QR Code / Conexão",
+      "item": [
+        {
+          "name": "Página do QR Code (HTML)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/qr/",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "qr",
+                ""
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Imagem do QR Code",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/qr/image",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "qr",
+                "image"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Parear via código",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/qr/pair",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "qr",
+                "pair"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Logout / Desconectar",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/qr/logout",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "qr",
+                "logout"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Instância",
+      "item": [
+        {
+          "name": "Dados do número conectado (me)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/instance/me",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "instance",
+                "me"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Info do dispositivo",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/instance/device",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "instance",
+                "device"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Renomear Instância + WhatsApp Pushname",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{BASE_URL}}/instance/update-name",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "instance",
+                "update-name"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Nova Instancia\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Configurações da Instância",
+      "item": [
+        {
+          "name": "Ativar rejeição automática de chamadas",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/instance/call-reject-auto",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "instance",
+                "call-reject-auto"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"value\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Desativar rejeição automática de chamadas",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/instance/call-reject-auto",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "instance",
+                "call-reject-auto"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"value\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Definir mensagem de chamada rejeitada",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/instance/call-reject-message",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "instance",
+                "call-reject-message"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"value\": \"No momento não posso atender. Por favor, envie uma mensagem.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Ativar leitura automática",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/instance/auto-read-message",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "instance",
+                "auto-read-message"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"value\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Desativar leitura automática",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/instance/auto-read-message",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "instance",
+                "auto-read-message"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"value\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Gerar código de pareamento por número",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/phone-code/{{PHONE}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "phone-code",
+                "{{PHONE}}"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mensagens",
+      "item": [
+        {
+          "name": "Enviar texto",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Olá! Isso é um teste.\",\n\n    // --- OPCIONAIS (responder msg) ---\n    // \"reply\": \"Texto da mensagem a responder\",\n    // \"type\": \"text\",              // \"text\" | \"id\" (padrão: \"id\")\n    // \"quoted_id\": \"ID_DA_MSG\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar texto (Respondendo via texto)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Sim! Isso é uma resposta.\",\n    \"reply\": \"Olá! Isso é um teste.\",\n    \"type\": \"text\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar imagem",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_image",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_image"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"image_url\": \"https://picsum.photos/800/600\",\n\n    // --- OPCIONAIS ---\n    \"caption\": \"Legenda da imagem\",\n    // \"asDocument\": false,       // true = enviar como documento (PDF/arquivo)\n    // \"fileName\": \"imagem.jpg\", // nome do arquivo (se asDocument=true)\n    // \"reply\": \"Texto da msg a responder\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"ID_DA_MSG\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar imagem como documento",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_image",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_image"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"image_url\": \"https://picsum.photos/800/600\",\n    \"caption\": \"Imagem enviada como documento\",\n    \"asDocument\": true,\n    \"fileName\": \"minha-imagem.jpg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar áudio",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_audio",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_audio"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"audio_url\": \"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3\",\n\n    // --- OPCIONAIS ---\n    \"ptt\": false,               // true = mensagem de voz (circle audio)\n    // \"asDocument\": false,     // true = enviar como arquivo\n    // \"format\": \"m4a\",        // \"m4a\" | \"mp3\" | \"ogg\" | \"wav\" (padrão: \"m4a\")\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar áudio como PTT (mensagem de voz)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_audio",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_audio"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"audio_url\": \"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3\",\n    \"ptt\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar vídeo",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_video",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_video"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"video_url\": \"https://file-examples.com/storage/fe4d6f538767234d29c4e0e/2017/04/file_example_MP4_480_1_5MG.mp4\",\n\n    // --- OPCIONAIS ---\n    \"caption\": \"Legenda do vídeo\",\n    // \"gifPlayback\": false,   // true = enviar como GIF animado\n    // \"ptv\": false,           // true = enviar como vídeo redondo (PIP)\n    // \"asDocument\": false,    // true = enviar como documento (se >15MB, automático)\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar vídeo como GIF",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_video",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_video"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"video_url\": \"https://file-examples.com/storage/fe4d6f538767234d29c4e0e/2017/04/file_example_MP4_480_1_5MG.mp4\",\n    \"gifPlayback\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar vídeo como PTV (vídeo redondo)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_video",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_video"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"video_url\": \"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4\",\n    \"ptv\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar documento",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_document",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_document"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"document_url\": \"https://www.w3.org/WAI/WCAG21/Techniques/pdf/PDF2.pdf\",\n\n    // --- OPCIONAIS ---\n    \"fileName\": \"documento.pdf\",\n    // \"caption\": \"\",\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar sticker",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_sticker",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_sticker"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO (pelo menos uma URL) ---\n    \"phone\": \"{{PHONE}}\",\n    \"sticker_url\": \"https://www.gstatic.com/webp/gallery/1.webp\",\n    // \"image_url\": \"https://...\",   // alternativa ao sticker_url\n\n    // --- OPCIONAIS ---\n    // \"pack\": \"Meu Pack\",\n    // \"author\": \"ZapUnlocked\",\n    // \"resizeMode\": \"pad\",       // \"pad\" | \"crop\" | \"stretch\" (padrão: \"pad\")\n    // \"padColor\": \"black\",       // cor do fundo se resizeMode=\"pad\" (padrão: \"black\")\n    // \"blurIntensity\": 20,         // desfoque do fundo (0-100, padrão: 20)\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar reação",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_reaction",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_reaction"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\",\n    \"emoji\": \"👍\",\n\n    // --- OPCIONAIS ---\n    // \"reaction\": null,        // força remoção da reação\n    // \"text\": null,\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar localização",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_location",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_location"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"lat\": -23.550520,\n    \"lng\": -46.633308,\n\n    // --- OPCIONAIS ---\n    \"name\": \"Praça da Sé\",\n    \"address\": \"São Paulo, SP\",\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar contato (vCard)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_contact",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_contact"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"Suporte ZapUnlocked\",\n    \"contactPhone\": \"5511999999999\",\n\n    // --- OPCIONAIS ---\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar vários contatos",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_contacts",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_contacts"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"contacts\": [\n        {\n            \"name\": \"João Silva\",\n            \"phone\": \"5511988888888\"\n        },\n        {\n            \"name\": \"Maria Souza\",\n            \"phone\": \"5511977777777\"\n        }\n    ],\n\n    // --- OPCIONAIS ---\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar link com preview",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_link",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_link"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"url\": \"https://github.com\",\n\n    // --- OPCIONAIS ---\n    \"text\": \"Confira este repositório incrível!\",\n    \"title\": \"GitHub\",\n    \"description\": \"Onde o mundo desenvolve software\",\n    \"thumbnailUrl\": \"https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png\",\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Deletar mensagem",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/messages/delete",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "messages",
+                "delete"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\",\n\n    // --- OPCIONAIS ---\n    // \"fromMe\": true,        // true = deletar msg própria (padrão: true)\n    // \"type\": \"id\"          // \"id\" | \"text\" (padrão: \"id\")\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Editar mensagem",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/messages/edit",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "messages",
+                "edit"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"Mensagem original a ser editada\",\n    \"message\": \"Conteúdo editado aqui!\",\n\n    // --- OPCIONAIS ---\n    // \"reply\": \"...\",\n    \"type\": \"text\",       // \"text\" | \"id\" (padrão: \"id\")\n    // \"quoted_id\": \"...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Marcar mensagens como lidas",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/messages/read",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "messages",
+                "read"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageIds\": [\n        \"ID_PRIMEIRA_MSG\",\n        \"ID_SEGUNDA_MSG\"\n    ],\n\n    // --- OPCIONAIS ---\n    // \"sender\": \"5511999999999@s.whatsapp.net\",  // JID do remetente\n    // \"type\": \"id\"                                 // \"id\" | \"text\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mensagens Interativas",
+      "item": [
+        {
+          "name": "Botões: Quick Reply (Respostas Rápidas)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/messages/send-button-list",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "messages",
+                "send-button-list"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Clique em uma das opções abaixo:\",\n    \"title\": \"Escolha uma opção\",\n    \"buttons\": [\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"Sim\",\n            \"id\": \"opcao_sim\"\n        },\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"Não\",\n            \"id\": \"opcao_nao\"\n        }\n    ],\n\n    // --- OPCIONAIS ---\n    // \"footer\": \"ZapUnlocked API\",\n    // \"body\": null,\n    // \"button_text\": null,\n    // \"button_id\": null,\n    // \"button_value\": null,\n    // \"webhook\": {},\n    // \"reaction\": null,\n    // \"image\": null,\n    // \"code\": null,               // OTP (botão de copiar código)\n    // \"pixKey\": null,             // PIX\n    // \"pixType\": null,\n    // \"merchantName\": null,\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Botões: URL + Ligação",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/messages/send-button-actions",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "messages",
+                "send-button-actions"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Entre em contato\",\n    \"message\": \"Escolha como deseja falar conosco:\",\n    \"footer\": \"ZapUnlocked API\",\n    \"buttons\": [\n        {\n            \"type\": \"url\",\n            \"buttonText\": \"Acessar Site\",\n            \"url\": \"https://zapunlocked.com\"\n        },\n        {\n            \"type\": \"call\",\n            \"buttonText\": \"Ligar Agora\",\n            \"phoneNumber\": \"+5511999999999\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Botões: OTP (Copiar Código) — via buttons[]",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/messages/send-button-otp",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "messages",
+                "send-button-otp"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Verificação de Segurança\",\n    \"message\": \"Seu código de acesso é: 591823\",\n    \"footer\": \"Válido por 5 minutos.\",\n    \"buttons\": [\n        {\n            \"type\": \"otp\",\n            \"buttonText\": \"Copiar Código\",\n            \"code\": \"591823\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Botões: OTP via campo direto ",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/messages/send-button-otp",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "messages",
+                "send-button-otp"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Seu código de acesso chegou!\",\n    \"code\": \"591823\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Pagamento PIX (Copia-e-Cola)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/messages/send-button-pix",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "messages",
+                "send-button-pix"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Pagamento PIX\",\n    \"message\": \"Utilize o botão abaixo para pagar via PIX:\",\n    \"buttons\": [\n        {\n            \"type\": \"pix\",\n            \"buttonText\": \"Copiar PIX\",\n            \"pixKey\": \"suachave@email.com\",\n            \"pixType\": \"EMAIL\",\n            \"merchantName\": \"Minha Loja\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Botões: Lista (Menu com seções)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/messages/send-option-list",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "messages",
+                "send-option-list"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Cardápio Digital\",\n    \"message\": \"Confira nossas opções:\",\n    \"footer\": \"Delivery em 30 min\",\n    \"buttons\": [\n        {\n            \"type\": \"list\",\n            \"buttonText\": \"Ver Cardápio\",\n            \"sections\": [\n                {\n                    \"title\": \"Lanches\",\n                    \"rows\": [\n                        { \"rowID\": \"1\", \"title\": \"X-Burguer\", \"description\": \"R$ 18,90\" },\n                        { \"rowID\": \"2\", \"title\": \"X-Salada\", \"description\": \"R$ 20,90\" }\n                    ]\n                },\n                {\n                    \"title\": \"Bebidas\",\n                    \"rows\": [\n                        { \"rowID\": \"3\", \"title\": \"Coca-Cola 350ml\", \"description\": \"R$ 6,00\" },\n                        { \"rowID\": \"4\", \"title\": \"Suco de Laranja\", \"description\": \"R$ 8,00\" }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Botões: Mistos (URL + Quick Reply)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/messages/send-button-actions",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "messages",
+                "send-button-actions"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Oferta Especial\",\n    \"message\": \"Aproveite nossa promoção hoje!\",\n    \"footer\": \"Válido até meia-noite\",\n    \"buttons\": [\n        {\n            \"type\": \"url\",\n            \"buttonText\": \"Comprar Agora\",\n            \"url\": \"https://loja.com/promo\"\n        },\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"Me lembrar depois\",\n            \"id\": \"lembrar\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar enquete",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/messages/send-poll",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "messages",
+                "send-poll"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"Qual sua cor favorita?\",\n    \"options\": [\"Vermelho\", \"Azul\", \"Verde\", \"Amarelo\"],\n\n    // --- OPCIONAIS ---\n    // \"selectableCount\": 1,       // qtd de opções que o usuário pode escolher (padrão: 1)\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enviar voto para enquete",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/messages/send-poll-vote",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "messages",
+                "send-poll-vote"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"options\": [\"Azul\"],\n\n    // --- OPCIONAIS ---\n    // \"pollName\": \"Qual sua cor favorita?\",   // nome da enquete (busca)\n    // \"pollId\": \"ID_DA_ENQUETE\",              // id da mensagem da enquete\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contatos",
+      "item": [
+        {
+          "name": "Info do contato",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/contacts/info",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "contacts",
+                "info"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Bloquear contato (via settings/block)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/block",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "block"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"action\": \"block\"       // \"block\" | \"unblock\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Desbloquear contato (via settings/block)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/block",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "block"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"action\": \"unblock\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Configurações",
+      "item": [
+        {
+          "name": "Privacidade: Todos os campos",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/privacy",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "privacy"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- CONFIGURAÇÕES DE PRIVACIDADE ---\n    // Valores possíveis: \"all\" | \"contacts\" | \"none\" | \"match_last_seen\"\n    \"lastSeen\": \"all\",\n    \"online\": \"all\",\n    \"profile\": \"contacts\",\n    \"status\": \"contacts\",\n    \"readReceipts\": \"all\",\n    \"groupsAdd\": \"contacts\",\n    \"callAdd\": \"all\",\n\n    // --- RECADO (about / status message) ---\n    \"about\": \"Disponível via ZapUnlocked Bot\",\n\n    // --- MENSAGENS TEMPORÁRIAS ---\n    // \"disappearingTimer\": 0    // 0=desligado | 24=1dia | 168=7dias | 4320=180dias\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Privacidade: Só lastSeen (exemplo único)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/privacy",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "privacy"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"lastSeen\": \"none\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Privacidade: Só disappearing + about",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/privacy",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "privacy"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"disappearingTimer\": 24,\n    \"about\": \"Mensagens temporárias ativadas!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Atualizar perfil (nome + foto via Neonize)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/profile",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "profile"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OPCIONAIS (pelo menos um) ---\n    \"name\": \"Meu Bot\",\n    \"newProfilePictureUrl\": \"https://picsum.photos/400/400\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Atualizar só o nome do perfil",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/profile",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "profile"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"ZapUnlocked Bot v2\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Configurar webhook",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/webhook",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "webhook"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"url\": \"https://meu-servidor.com/webhook\",\n\n    // --- OPCIONAIS ---\n    // \"enabled\": true,            // ativar/desativar (padrão: true)\n    // \"method\": \"POST\",         // método HTTP (padrão: \"POST\")\n    // \"headers\": {},             // headers customizados\n    // \"body\": {}                 // body customizado\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Toggle webhook (ligar/desligar)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/webhook/toggle",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "webhook",
+                "toggle"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"off\"       // \"on\" | \"off\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Remover webhook",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/webhook",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "webhook"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Ver configurações do bot",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/bot",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "bot"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Atualizar configurações do bot",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/settings/bot",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "bot"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- TODOS OPCIONAIS (envie só o que quiser mudar) ---\n    // \"ai_tag_enabled\": false,         // marcar msgs enviadas com tag\n    // \"ai_tag_text\": \" (ZapUnlocked)\", // texto da tag\n    // \"ip_control_enabled\": false,     // controle de IP\n    // \"ip_whitelist\": [],              // IPs permitidos\n    // \"ip_blacklist\": []               // IPs bloqueados\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gerenciamento",
+      "item": [
+        {
+          "name": "Buscar mensagens antigas (fetch)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/management/fetch_messages",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "management",
+                "fetch_messages"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n\n    // --- OPCIONAIS ---\n    \"limit\": 20,                     // qtd de msgs (padrão: 20)\n    // \"type\": \"all\",               // \"all\" | \"text\" | \"image\" | \"video\" | ...\n    // \"query\": \"palavra chave\",    // busca textual\n    // \"onlyReactions\": false,       // só msgs com reação\n    // \"reactionEmoji\": \"👍\",       // filtrar por emoji específico\n    // \"webhook\": {}                 // disparar webhook com resultado\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Chats recentes",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/management/recent_contacts",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "management",
+                "recent_contacts"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // --- OPCIONAIS ---\n    \"limit\": 20       // qtd de chats (padrão: 20)\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Stats de memória RAM",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/management/memory",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "management",
+                "memory"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Stats de disco",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/management/volume_stats",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "management",
+                "volume_stats"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Limpar cache/arquivos temporários",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{BASE_URL}}/management/cleanup",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "management",
+                "cleanup"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Status do banco SQLite",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/management/database/status",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "management",
+                "database",
+                "status"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Limpeza manual do banco SQLite",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/management/database/cleanup",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "management",
+                "database",
+                "cleanup"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Configurar intervalo de limpeza do banco",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/management/database/config",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "management",
+                "database",
+                "config"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"interval\": 1440       // minutos entre limpezas (1440 = 24h)\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sistema",
+      "item": [
+        {
+          "name": "Ver variáveis de ambiente (ofuscadas)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/system/env",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "system",
+                "env"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Atualizar variáveis de ambiente",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{BASE_URL}}/system/env",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "system",
+                "env"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    // Envie PARES chave:valor para alterar no .env\n    \"PORT\": \"8000\",\n    // \"API_KEY\": \"nova_key\",\n    // \"AUTH_DIR\": \"auth_info\",\n    // \"DATA_DIR\": \"data\",\n    // \"INTERNAL_SECRET\": \"novo_segredo\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Forçar limpeza de arquivos temporários",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/system/cleanup/force",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "system",
+                "cleanup",
+                "force"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Ver configurações de auto-cleanup",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/system/cleanup/settings",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "system",
+                "cleanup",
+                "settings"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Alterar configurações de auto-cleanup",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{BASE_URL}}/system/cleanup/settings",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "system",
+                "cleanup",
+                "settings"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"interval\": 1440,        // minutos (1440 = 24h)\n    // \"enabled\": true        // true | false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "Listar webhooks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/webhooks",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "webhooks"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar eventos disponíveis",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/webhooks/events",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "webhooks",
+                "events"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Criar webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/webhooks",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "webhooks"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"meu-webhook\",\n  \"url\": \"https://meuservidor.com/hook\",\n  \"method\": \"POST\",\n  \"events\": [\n    \"*\"\n  ],\n  \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Detalhes do webhook",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/webhooks/meu-webhook",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "webhooks",
+                "meu-webhook"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Editar webhook",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/webhooks/meu-webhook",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "webhooks",
+                "meu-webhook"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"https://meuservidor.com/hook-v2\",\n  \"events\": [\n    \"message.text\",\n    \"message.button_reply\",\n    \"message.list_reply\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Ativar/Desativar webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/webhooks/meu-webhook/toggle",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "webhooks",
+                "meu-webhook",
+                "toggle"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"active\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Testar webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/webhooks/meu-webhook/test",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "webhooks",
+                "meu-webhook",
+                "test"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Deletar webhook",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/webhooks/meu-webhook",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "webhooks",
+                "meu-webhook"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

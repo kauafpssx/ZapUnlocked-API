@@ -9,7 +9,7 @@ from src.utils.quote import resolve_quote
 from ..schemas import SendMediaRequest
 
 async def send_image(data: SendMediaRequest):
-    logger.info(f"🔍 Request recebida em /send_image para {data.phone}")
+    logger.debug(f"🔍 POST /send_image: phone={data.phone}")
 
     if not get_is_ready():
         raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
@@ -27,13 +27,13 @@ async def send_image(data: SendMediaRequest):
                 reply_type=data.type or "id",
             )
 
-            logger.info(f"📥 Baixando imagem para {data.phone}...")
+            logger.debug(f"📥 Downloading image for {data.phone}...")
             file_path = await download_media(data.image_url)
 
             try:
                 final_as_document = bool(data.asDocument)
                 final_file_name = data.fileName or None
-                logger.info(f"📤 Enviando imagem para {data.phone}{' como documento' if final_as_document else ''}...")
+                logger.debug(f"📤 Sending image to {data.phone}{' as document' if final_as_document else ''}...")
                 await send_image_message(
                     jid, file_path,
                     caption=data.caption or "",

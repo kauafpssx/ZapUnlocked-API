@@ -10,7 +10,7 @@ from src.utils.quote import resolve_quote
 from ..schemas import SendDocumentRequest
 
 async def send_document(data: SendDocumentRequest):
-    logger.info(f"🔍 Request recebida em /send_document para {data.phone}")
+    logger.debug(f"🔍 POST /send_document: phone={data.phone}")
 
     if not get_is_ready():
         raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})

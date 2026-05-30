@@ -4,6 +4,7 @@ from neonize.utils.enum import BlocklistAction
 
 from src.services.whatsapp.client import get_sock
 from src.controllers.whatsapp.schemas import BlockRequest
+from src.utils.logger import logger
 
 
 async def block_user(data: BlockRequest):
@@ -29,4 +30,5 @@ async def block_user(data: BlockRequest):
             "message": f"User {data.phone} {'blocked' if data.action == 'block' else 'unblocked'} successfully.",
         }
     except Exception as e:
+        logger.error(f"❌ Block/unblock failed for {data.phone}: {e}")
         raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})

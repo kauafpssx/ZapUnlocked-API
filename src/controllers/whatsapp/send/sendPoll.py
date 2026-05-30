@@ -51,7 +51,7 @@ async def send_poll_vote(data: SendPollVoteRequest):
         timestamp = 0
         target_type = data.type or "id"
 
-        logger.debug(f"🗳️ Iniciando voto para {jid}, dados: type={target_type}, pollId={data.pollId}, options={data.options}")
+        logger.debug(f"🗳️ Starting vote for {jid}: type={target_type}, pollId={data.pollId}, options={data.options}")
 
         if target_type == "text":
             search_query = data.pollId or data.pollName
@@ -71,7 +71,7 @@ async def send_poll_vote(data: SendPollVoteRequest):
             if "message" in found_msg and "pollCreationMessage" in found_msg["message"]:
                 poll_name = found_msg["message"]["pollCreationMessage"].get("name", poll_name)
 
-        logger.debug(f"🗳️ Enviando voto: ID={poll_id}, Options={data.options}, fromMe={from_me}")
+        logger.debug(f"🗳️ Sending vote: ID={poll_id}, options={data.options}, fromMe={from_me}")
 
         await send_poll_vote_message(
             jid, 
@@ -83,7 +83,7 @@ async def send_poll_vote(data: SendPollVoteRequest):
         )
         return {"success": True, "message": "Poll vote sent."}
     except Exception as e:
-        logger.error(f"❌ Erro ao enviar voto na enquete: {str(e)}")
+        logger.error(f"❌ Failed to send poll vote: {str(e)}")
         if isinstance(e, HTTPException):
             raise e
         raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})

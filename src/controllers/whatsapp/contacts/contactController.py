@@ -64,9 +64,9 @@ async def get_contact_info(data: ContactRequest):
                 info["firstName"] = contact.FirstName or None
                 info["pushName"] = contact.PushName or None
                 info["businessName"] = contact.BusinessName or None
-                # Prioridade: Full > Push > First > Business
+                # Priority: Full > Push > First > Business
                 info["name"] = info["fullName"] or info["pushName"] or info["firstName"] or info["businessName"]
-                logger.debug(f"✅ Dados da Store obtidos. Nome: {info['name']}")
+                logger.debug(f"✅ ContactStore data fetched. Name: {info['name']}")
     except Exception as e:
         logger.debug(f"⚠️ ContactStore fetch failed: {e}")
 
@@ -89,7 +89,7 @@ async def get_contact_info(data: ContactRequest):
 
     # 4. Foto de Perfil
     try:
-        logger.debug(f"📸 Obtendo foto de perfil...")
+        logger.debug("📸 Fetching profile picture...")
         res = await asyncio.wait_for(asyncio.to_thread(sock.get_profile_picture, jid), timeout=4.0)
         if res and res.URL:
             info["profilePictureUrl"] = res.URL
