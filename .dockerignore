@@ -1,0 +1,15 @@
+.venv
+vendor
+__pycache__
+**/__pycache__
+*.pyc
+*.pyo
+.git
+.gitignore
+logs
+tmp
+auth
+data
+*.env
+.env*
+wheels

@@ -1,0 +1,18 @@
+services:
+  zapunlocked:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8300:8300"
+    env_file:
+      - .env
+    volumes:
+      - ./auth:/app/auth
+      - ./data:/app/data
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8300/status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
