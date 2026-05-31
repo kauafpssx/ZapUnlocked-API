@@ -36,6 +36,14 @@ Registra um voto em uma enquete existente. Útil para simular participação do 
   Para remover voto, envie array vazio: `[]`.
 </ParamField>
 
+<ParamField body="reply" type="string">
+  ID ou texto da mensagem para responder.
+</ParamField>
+
+<ParamField body="quoted_id" type="string">
+  ID da mensagem a citar diretamente.
+</ParamField>
+
 
 <ResponseField name="success" type="boolean">
   Indica se o voto foi registrado com sucesso.

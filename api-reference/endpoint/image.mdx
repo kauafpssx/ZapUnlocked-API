@@ -24,6 +24,26 @@ Envia uma imagem a partir de uma URL pública.
   Legenda opcional para a imagem.
 </ParamField>
 
+<ParamField body="asDocument" type="boolean" default="false">
+  Se `true`, envia a imagem como arquivo/documento (não inline).
+</ParamField>
+
+<ParamField body="fileName" type="string">
+  Nome do arquivo exibido no WhatsApp (usado com `asDocument: true`, ex: `"foto.jpg"`).
+</ParamField>
+
+<ParamField body="reply" type="string">
+  ID ou texto da mensagem para responder.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
+</ParamField>
+
+<ParamField body="quoted_id" type="string">
+  ID da mensagem a citar diretamente.
+</ParamField>
+
 
 <ResponseExample>
 

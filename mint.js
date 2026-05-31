@@ -44,7 +44,7 @@
         if (apiBase) {
           const normalizedBase = apiBase.startsWith("http")
             ? apiBase
-            : `https://${apiBase}`;
+            : `http://${apiBase}`;
           const newUrl = urlStr.replace(
             /https?:\/\/(api\.)?example\.com/,
             normalizedBase,
@@ -93,7 +93,7 @@
         if (apiBase) {
           const normalizedBase = apiBase.startsWith("http")
             ? apiBase
-            : `https://${apiBase}`;
+            : `http://${apiBase}`;
           url = url.replace(/https?:\/\/(api\.)?example\.com/, normalizedBase);
           console.log("XHR Redirect:", url);
         }

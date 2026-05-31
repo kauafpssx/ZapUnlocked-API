@@ -13,11 +13,15 @@ Envia um sticker a partir de uma URL de imagem.
 ### Corpo da Requisição
 
 <ParamField body="phone" type="string" required>
-  Número do contato.
+  Número do contato com código do país (ex: `5511999999999`).
 </ParamField>
 
-<ParamField body="image_url" type="string" required>
-  URL pública da imagem a converter em sticker.
+<ParamField body="sticker_url" type="string">
+  URL pública do arquivo WebP de sticker. Use este campo ou `image_url` (ao menos um obrigatório).
+</ParamField>
+
+<ParamField body="image_url" type="string">
+  URL pública de imagem (JPG/PNG) a converter em sticker. Alternativa a `sticker_url`.
 </ParamField>
 
 <ParamField body="pack" type="string">
@@ -46,6 +50,18 @@ Envia um sticker a partir de uma URL de imagem.
 
 <ParamField body="blurIntensity" type="number" default="20">
   Intensidade do desfoque (somente para `blur`). 1 a 100.
+</ParamField>
+
+<ParamField body="reply" type="string">
+  ID ou texto da mensagem para responder.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
+</ParamField>
+
+<ParamField body="quoted_id" type="string">
+  ID da mensagem a citar diretamente.
 </ParamField>
 
 

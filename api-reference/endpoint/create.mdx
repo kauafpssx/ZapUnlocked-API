@@ -44,6 +44,10 @@ Você pode usar variáveis no texto da mensagem que são substituídas automatic
   - `text`: Encontra a mensagem mais recente com o texto exato fornecido (sem distinção de maiúsculas)
 </ParamField>
 
+<ParamField body="quoted_id" type="string">
+  ID da mensagem a citar diretamente.
+</ParamField>
+
 <Note>
   **Modo texto**: Quando `type: "text"`, a API busca no histórico local (últimas 100 mensagens) a mensagem mais recente que contenha exatamente o texto fornecido em `reply`. Útil quando você não tem o ID da mensagem.
 </Note>

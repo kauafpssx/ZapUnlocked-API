@@ -31,6 +31,18 @@ Envia uma enquete nativa do WhatsApp com múltiplas opções. Os participantes v
   Máximo de opções que o participante pode selecionar. `1` = escolha única, `0` = ilimitado.
 </ParamField>
 
+<ParamField body="reply" type="string">
+  ID ou texto da mensagem para responder.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
+</ParamField>
+
+<ParamField body="quoted_id" type="string">
+  ID da mensagem a citar diretamente.
+</ParamField>
+
 <Note>
   Os votos são recebidos via webhook com o evento `message.poll_vote`. Configure um webhook para processar os resultados em tempo real.
 </Note>

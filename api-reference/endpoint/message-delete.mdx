@@ -20,6 +20,10 @@ Deleta uma mensagem para todos os participantes do chat (equivalente ao "apagar 
   ID da mensagem a deletar (com `type: "id"`), ou texto exato (com `type: "text"`).
 </ParamField>
 
+<ParamField body="fromMe" type="boolean" default="true">
+  Se `true`, deleta a mensagem enviada pelo bot. Use `false` para deletar mensagem recebida (apenas local).
+</ParamField>
+
 <ParamField body="type" type="string" default="id">
   Como localizar a mensagem: `"id"` (pelo ID) ou `"text"` (pelo conteúdo).
 </ParamField>

@@ -2,16 +2,16 @@
 title: "Botões de Ação"
 icon: "bolt"
 api: "POST /messages/send-button-actions"
-description: "Envia uma mensagem com botões de resposta rápida."
+description: "Envia uma mensagem com botões de URL, ligação ou resposta rápida."
 ---
 
 <ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Envia botões do tipo **ação** (resposta rápida). Aparecem como chips abaixo da mensagem. Ao clicar, geram um evento `message.button_reply` com o ID e texto do botão.
+Envia botões do tipo **ação**: URL (abre link), ligação (inicia chamada) ou resposta rápida. Podem ser misturados na mesma mensagem.
 
-Os botões são **stateless** — as instruções de destino ficam criptografadas no ID do botão.
+Quando o usuário clica em um botão de **resposta rápida**, o evento `message.button_reply` é disparado para o(s) webhook(s) cadastrado(s) inscrito(s) nesse evento.
 
 ### Corpo da Requisição
 
@@ -19,39 +19,56 @@ Os botões são **stateless** — as instruções de destino ficam criptografada
   Número do destinatário com código do país (ex: `5511999999999`).
 </ParamField>
 
+<ParamField body="title" type="string">
+  Título exibido no topo da mensagem.
+</ParamField>
+
 <ParamField body="message" type="string">
   Texto principal exibido acima dos botões.
 </ParamField>
 
-<ParamField body="buttons" type="array" required>
-  Lista de botões de ação. Cada item:
+<ParamField body="footer" type="string">
+  Texto de rodapé exibido abaixo dos botões (ex: `"ZapUnlocked API"`).
+</ParamField>
 
-  <Expandable title="Estrutura do botão">
-    <ParamField body="id" type="string">
-      ID único do botão (gerado automaticamente se omitido).
+<ParamField body="buttons" type="array" required>
+  Lista de botões de ação. Cada item deve conter `type` e `buttonText`.
+
+  <Expandable title="Botão tipo url">
+    <ParamField body="type" type="string" required>
+      `"url"` — abre uma URL ao clicar.
     </ParamField>
-    <ParamField body="text" type="string" required>
+    <ParamField body="buttonText" type="string" required>
       Texto exibido no botão.
     </ParamField>
-    <ParamField body="webhook" type="object">
-      Configuração do webhook disparado ao clicar:
-      - `url`: URL de destino
-      - `method`: Método HTTP (padrão `POST`)
-      - `headers`: Cabeçalhos personalizados
-      - `body`: Corpo personalizado (suporta placeholders de webhook como `{{from}}`, `{{text}}`, `{{timestamp}}`, etc.)
-    </ParamField>
-    <ParamField body="reaction" type="string">
-      Emoji para reagir automaticamente ao clique.
+    <ParamField body="url" type="string" required>
+      URL a abrir (ex: `"https://zapunlocked.com"`).
     </ParamField>
   </Expandable>
-</ParamField>
 
-<ParamField body="reply" type="string">
-  ID ou texto da mensagem para responder.
-</ParamField>
+  <Expandable title="Botão tipo call">
+    <ParamField body="type" type="string" required>
+      `"call"` — inicia uma ligação ao clicar.
+    </ParamField>
+    <ParamField body="buttonText" type="string" required>
+      Texto exibido no botão.
+    </ParamField>
+    <ParamField body="phoneNumber" type="string" required>
+      Número a ligar (ex: `"+5511999999999"`).
+    </ParamField>
+  </Expandable>
 
-<ParamField body="type" type="string" default="id">
-  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
+  <Expandable title="Botão tipo quick_reply">
+    <ParamField body="type" type="string" required>
+      `"quick_reply"` — gera evento `message.button_reply` ao clicar.
+    </ParamField>
+    <ParamField body="buttonText" type="string" required>
+      Texto exibido no botão.
+    </ParamField>
+    <ParamField body="id" type="string">
+      ID retornado no evento de webhook (gerado automaticamente se omitido).
+    </ParamField>
+  </Expandable>
 </ParamField>
 
 <ResponseExample>

@@ -13,19 +13,27 @@ Reage a uma mensagem específica com um emoji.
 ### Corpo da Requisição
 
 <ParamField body="phone" type="string" required>
-  Número do contato.
+  Número do contato com código do país (ex: `5511999999999`).
 </ParamField>
 
-<ParamField body="reaction" type="string" required>
-  Texto exato da mensagem ou ID da mensagem para reagir.
+<ParamField body="messageId" type="string" required>
+  ID da mensagem a reagir (com `type: "id"`), ou texto exato (com `type: "text"`).
 </ParamField>
 
 <ParamField body="emoji" type="string" required>
-  Emoji de reação (ex: "💖"). Envie string vazia para remover.
+  Emoji de reação (ex: `"👍"`). Envie string vazia `""` para remover a reação.
 </ParamField>
 
-<ParamField body="type" type="string" default="text">
-  `text` (busca pelo conteúdo) ou `id` (busca pelo ID da mensagem).
+<ParamField body="type" type="string" default="id">
+  Como localizar a mensagem: `"id"` (pelo ID, padrão) ou `"text"` (pelo conteúdo).
+</ParamField>
+
+<ParamField body="reply" type="string">
+  ID ou texto da mensagem para responder.
+</ParamField>
+
+<ParamField body="quoted_id" type="string">
+  ID da mensagem a citar diretamente.
 </ParamField>
 
 <ResponseExample>

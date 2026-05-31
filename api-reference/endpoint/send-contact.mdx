@@ -24,6 +24,18 @@ Envia um contato como vCard. Use `/send_contact` para um único contato ou `/sen
   Número de telefone do contato a enviar (ex: `5511988887777`).
 </ParamField>
 
+<ParamField body="reply" type="string">
+  ID ou texto da mensagem para responder.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
+</ParamField>
+
+<ParamField body="quoted_id" type="string">
+  ID da mensagem a citar diretamente.
+</ParamField>
+
 <Note>
   **Múltiplos contatos**: Use `POST /send_contacts` com o campo `contacts` como lista de objetos com `phone` e `name`. O campo `phone` do destinatário ainda é obrigatório.
 </Note>

@@ -32,6 +32,18 @@ Envia uma localização geográfica para um contato ou grupo.
   Endereço completo (ex: `"Rua Principal, 1578 - Centro"`).
 </ParamField>
 
+<ParamField body="reply" type="string">
+  ID ou texto da mensagem para responder.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
+</ParamField>
+
+<ParamField body="quoted_id" type="string">
+  ID da mensagem a citar diretamente.
+</ParamField>
+
 
 <ResponseField name="success" type="boolean">
   Indica se a localização foi enviada com sucesso.

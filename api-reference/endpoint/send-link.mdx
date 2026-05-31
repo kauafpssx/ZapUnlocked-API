@@ -28,8 +28,24 @@ Envia um link com cartão de pré-visualização (Open Graph). O WhatsApp exibe 
   Descrição exibida na pré-visualização. Se omitida, usa o `og:description` da página.
 </ParamField>
 
-<ParamField body="caption" type="string">
+<ParamField body="text" type="string">
   Texto adicional enviado junto com o link.
+</ParamField>
+
+<ParamField body="thumbnailUrl" type="string">
+  URL de imagem personalizada para o thumbnail da pré-visualização.
+</ParamField>
+
+<ParamField body="reply" type="string">
+  ID ou texto da mensagem para responder.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
+</ParamField>
+
+<ParamField body="quoted_id" type="string">
+  ID da mensagem a citar diretamente.
 </ParamField>
 
 

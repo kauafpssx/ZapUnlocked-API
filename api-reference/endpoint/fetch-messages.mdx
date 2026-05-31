@@ -16,12 +16,12 @@ Busca mensagens armazenadas em disco (JSON GZIP) com filtros avançados.
   Número do telefone para buscar o histórico (ex: `5511999999999`).
 </ParamField>
 
-<ParamField body="limit" type="integer" default="50">
+<ParamField body="limit" type="integer" default="20">
   Número máximo de mensagens a retornar.
 </ParamField>
 
 <ParamField body="type" type="string" default="all">
-  Tipo de mensagem: `sent`, `received` ou `all` (padrão).
+  Filtra por tipo de mídia: `"all"`, `"text"`, `"image"`, `"video"`, `"audio"`, `"document"`, etc.
 </ParamField>
 
 <ParamField body="query" type="string">
@@ -34,6 +34,10 @@ Busca mensagens armazenadas em disco (JSON GZIP) com filtros avançados.
 
 <ParamField body="reactionEmoji" type="string">
   Filtrar mensagens reagidas com um emoji específico (ex: "👍").
+</ParamField>
+
+<ParamField body="webhook" type="object">
+  Configuração de webhook para disparar com o resultado da busca. Suporta placeholders como `{{requested}}` e `{{found}}`.
 </ParamField>
 
 <ResponseExample>

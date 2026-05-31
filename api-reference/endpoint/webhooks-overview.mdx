@@ -20,6 +20,22 @@ Registre múltiplos endpoints externos para receber eventos do WhatsApp em tempo
 
 ---
 
+## <Icon icon="hand-pointer" iconType="sharp-regular" color="#9d4fe6" size={22} /> Interações com Mensagens Interativas
+
+Toda interação do usuário com mensagens interativas enviadas pelo bot **gera um evento** que é disparado automaticamente para todos os webhooks cadastrados inscritos nesse tipo de evento.
+
+| Interação | Evento disparado |
+| :-------- | :--------------- |
+| Usuário clica em botão (Quick Reply, URL, Call) | `message.button_reply` |
+| Usuário seleciona item de lista | `message.list_reply` |
+| Usuário vota em enquete | `message.poll_vote` |
+
+<Note>
+  Não é necessário configurar nada extra nos endpoints de envio. Basta ter um webhook cadastrado com o evento correspondente (ex: `["message.button_reply"]` ou `["*"]`) e todas as interações serão entregues automaticamente.
+</Note>
+
+---
+
 ## <Icon icon="envelope" iconType="sharp-regular" color="#9d4fe6" size={22} /> Envelope Padrão
 
 Todos os eventos entregues seguem a mesma estrutura:

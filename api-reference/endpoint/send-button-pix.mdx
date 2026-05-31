@@ -9,7 +9,7 @@ description: "Envia uma mensagem com botão de pagamento PIX."
   Chave de autenticação da API.
 </ParamField>
 
-Envia um botão de **pagamento PIX**. O WhatsApp exibe o valor e a chave PIX com um botão para iniciar o pagamento diretamente no app.
+Envia um botão de **pagamento PIX**. O WhatsApp exibe a chave PIX com um botão para o usuário copiar e pagar diretamente no app.
 
 ### Corpo da Requisição
 
@@ -17,28 +17,34 @@ Envia um botão de **pagamento PIX**. O WhatsApp exibe o valor e a chave PIX com
   Número do destinatário com código do país (ex: `5511999999999`).
 </ParamField>
 
-<ParamField body="pixKey" type="string" required>
-  Chave PIX de destino (CPF, e-mail, telefone, chave aleatória ou CNPJ).
-</ParamField>
-
-<ParamField body="pixType" type="string">
-  Tipo da chave PIX. Valores aceitos: `CPF`, `CNPJ`, `EMAIL`, `PHONE`, `EVP`.
-</ParamField>
-
-<ParamField body="merchantName" type="string">
-  Nome do beneficiário exibido na tela de pagamento.
+<ParamField body="title" type="string">
+  Título exibido no topo da mensagem.
 </ParamField>
 
 <ParamField body="message" type="string">
   Texto da mensagem exibido acima do botão.
 </ParamField>
 
-<ParamField body="reply" type="string">
-  ID ou texto da mensagem para responder.
-</ParamField>
+<ParamField body="buttons" type="array" required>
+  Array com **exatamente 1 botão** PIX:
 
-<ParamField body="type" type="string" default="id">
-  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
+  <Expandable title="Estrutura do botão PIX">
+    <ParamField body="type" type="string" required>
+      Deve ser `"pix"`.
+    </ParamField>
+    <ParamField body="buttonText" type="string" required>
+      Texto exibido no botão (ex: `"Copiar PIX"`).
+    </ParamField>
+    <ParamField body="pixKey" type="string" required>
+      Chave PIX de destino (CPF, e-mail, telefone, chave aleatória ou CNPJ).
+    </ParamField>
+    <ParamField body="pixType" type="string">
+      Tipo da chave PIX. Valores aceitos: `CPF`, `CNPJ`, `EMAIL`, `PHONE`, `EVP`.
+    </ParamField>
+    <ParamField body="merchantName" type="string">
+      Nome do beneficiário exibido na tela de pagamento.
+    </ParamField>
+  </Expandable>
 </ParamField>
 
 <ResponseExample>

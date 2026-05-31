@@ -2,16 +2,14 @@
 title: "Lista de Botões"
 icon: "list"
 api: "POST /messages/send-button-list"
-description: "Envia uma mensagem com botões de lista de opções nativas."
+description: "Envia uma mensagem com botões de resposta rápida."
 ---
 
 <ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Envia botões do tipo **lista**, onde cada botão é uma opção clicável com ID e texto. Quando o usuário clica, o bot recebe um evento `message.button_reply`.
-
-Os botões são **stateless** — as instruções de destino ficam embutidas em forma criptografada no ID do botão.
+Envia botões do tipo **resposta rápida**. Aparecem como chips abaixo da mensagem. Quando o usuário clica, o evento `message.button_reply` é disparado para o(s) webhook(s) cadastrado(s) inscrito(s) nesse evento.
 
 ### Corpo da Requisição
 
@@ -19,29 +17,30 @@ Os botões são **stateless** — as instruções de destino ficam embutidas em 
   Número do destinatário com código do país (ex: `5511999999999`).
 </ParamField>
 
-<ParamField body="message" type="string">
+<ParamField body="message" type="string" required>
   Texto principal exibido acima dos botões.
 </ParamField>
 
+<ParamField body="title" type="string" required>
+  Título da mensagem exibido no topo.
+</ParamField>
+
+<ParamField body="footer" type="string">
+  Texto de rodapé exibido abaixo dos botões.
+</ParamField>
+
 <ParamField body="buttons" type="array" required>
-  Lista de botões. Cada item pode conter:
+  Lista de botões de resposta rápida. Cada item:
 
   <Expandable title="Estrutura do botão">
-    <ParamField body="id" type="string">
-      ID único do botão (gerado automaticamente se omitido).
+    <ParamField body="type" type="string" required>
+      Deve ser `"quick_reply"`.
     </ParamField>
-    <ParamField body="text" type="string" required>
+    <ParamField body="buttonText" type="string" required>
       Texto exibido no botão.
     </ParamField>
-    <ParamField body="webhook" type="object">
-      Configuração do webhook disparado ao clicar:
-      - `url`: URL de destino
-      - `method`: Método HTTP (padrão `POST`)
-      - `headers`: Cabeçalhos personalizados
-      - `body`: Corpo personalizado (suporta placeholders de webhook como `{{from}}`, `{{text}}`, `{{timestamp}}`, etc.)
-    </ParamField>
-    <ParamField body="reaction" type="string">
-      Emoji para reagir automaticamente ao clique.
+    <ParamField body="id" type="string">
+      ID retornado no evento `message.button_reply` (gerado automaticamente se omitido).
     </ParamField>
   </Expandable>
 </ParamField>
@@ -54,9 +53,9 @@ Os botões são **stateless** — as instruções de destino ficam embutidas em 
   Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
 </ParamField>
 
-<Note>
-  Botões gerados expiram após **24 horas**. Após isso, cliques não disparam mais o webhook.
-</Note>
+<ParamField body="quoted_id" type="string">
+  ID da mensagem a citar diretamente.
+</ParamField>
 
 <ResponseExample>
 

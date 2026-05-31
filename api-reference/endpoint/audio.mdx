@@ -28,6 +28,22 @@ Envia um arquivo de áudio. Arquivos com menos de 15 MB são enviados como áudi
   Força o envio como anexo de arquivo.
 </ParamField>
 
+<ParamField body="format" type="string" default="m4a">
+  Formato de saída do áudio: `"m4a"`, `"mp3"`, `"ogg"` ou `"wav"`.
+</ParamField>
+
+<ParamField body="reply" type="string">
+  ID ou texto da mensagem para responder.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
+</ParamField>
+
+<ParamField body="quoted_id" type="string">
+  ID da mensagem a citar diretamente.
+</ParamField>
+
 
 <ResponseExample>
 

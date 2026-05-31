@@ -24,6 +24,22 @@ Envia qualquer tipo de arquivo (PDF, DOCX, ZIP, etc.). A API está configurada p
   Nome personalizado exibido no WhatsApp (ex: `documento_importante.pdf`).
 </ParamField>
 
+<ParamField body="caption" type="string">
+  Legenda exibida junto ao arquivo.
+</ParamField>
+
+<ParamField body="reply" type="string">
+  ID ou texto da mensagem para responder.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
+</ParamField>
+
+<ParamField body="quoted_id" type="string">
+  ID da mensagem a citar diretamente.
+</ParamField>
+
 
 <ResponseExample>
 ```json 200 Sucesso

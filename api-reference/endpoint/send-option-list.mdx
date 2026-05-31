@@ -8,7 +8,7 @@ api: "POST /messages/send-option-list"
   Chave de autenticação da API.
 </ParamField>
 
-Envia uma mensagem com uma lista de opções. O usuário abre a lista tocando no botão e seleciona um item. A seleção dispara um evento `message.list_reply` via webhook.
+Envia uma mensagem com uma lista de opções agrupadas em seções. O usuário abre a lista tocando no botão e seleciona um item. A seleção dispara o evento `message.list_reply` para o(s) webhook(s) cadastrado(s) inscrito(s) nesse evento.
 
 ### Corpo da Requisição
 
@@ -16,27 +16,57 @@ Envia uma mensagem com uma lista de opções. O usuário abre a lista tocando no
   Número do destinatário com código do país (ex: `5511999999999`).
 </ParamField>
 
-<ParamField body="message" type="string">
-  Texto da mensagem exibido acima da lista.
+<ParamField body="title" type="string">
+  Título da mensagem.
 </ParamField>
 
-<ParamField body="title" type="string">
-  Título da lista (exibido no cabeçalho do painel de seleção).
+<ParamField body="message" type="string">
+  Texto da mensagem exibido acima do botão de lista.
+</ParamField>
+
+<ParamField body="footer" type="string">
+  Texto de rodapé exibido abaixo do botão.
 </ParamField>
 
 <ParamField body="buttons" type="array" required>
-  Lista de opções. Cada item representa uma linha selecionável:
-  ```json
-  [
-    { "id": "prod_01", "text": "Camiseta", "description": "P, M, G" },
-    { "id": "prod_02", "text": "Calça", "description": "Tamanhos 38-46" }
-  ]
-  ```
-  Quando o usuário seleciona um item, o `id` é retornado no evento de webhook `message.list_reply`.
+  Lista com o botão de menu. Cada item:
+
+  <Expandable title="Estrutura do botão de lista">
+    <ParamField body="type" type="string" required>
+      Deve ser `"list"`.
+    </ParamField>
+    <ParamField body="buttonText" type="string" required>
+      Texto exibido no botão que abre a lista (ex: `"Ver Cardápio"`).
+    </ParamField>
+    <ParamField body="sections" type="array" required>
+      Grupos de opções dentro da lista.
+
+      <Expandable title="Estrutura de section">
+        <ParamField body="title" type="string">
+          Título da seção (exibido como cabeçalho do grupo).
+        </ParamField>
+        <ParamField body="rows" type="array" required>
+          Itens selecionáveis da seção.
+
+          <Expandable title="Estrutura de row">
+            <ParamField body="rowID" type="string" required>
+              ID retornado no evento `message.list_reply` quando o usuário seleciona.
+            </ParamField>
+            <ParamField body="title" type="string" required>
+              Texto principal do item.
+            </ParamField>
+            <ParamField body="description" type="string">
+              Descrição secundária do item (ex: preço, detalhe).
+            </ParamField>
+          </Expandable>
+        </ParamField>
+      </Expandable>
+    </ParamField>
+  </Expandable>
 </ParamField>
 
 <Note>
-  O `id` de cada item é retornado no webhook quando o usuário seleciona. Use-o para identificar a escolha sem banco de dados.
+  O `rowID` de cada item é retornado no evento `message.list_reply` quando o usuário seleciona. Use-o para identificar a escolha sem banco de dados.
 </Note>
 
 

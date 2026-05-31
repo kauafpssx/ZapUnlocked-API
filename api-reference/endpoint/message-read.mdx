@@ -23,6 +23,10 @@ Marca uma ou mais mensagens como lidas, enviando o duplo check azul para o remet
   ```
 </ParamField>
 
+<ParamField body="sender" type="string">
+  JID do remetente (ex: `"5511999999999@s.whatsapp.net"`). Necessário em alguns casos para confirmar a leitura corretamente.
+</ParamField>
+
 <ParamField body="type" type="string" default="id">
   Como localizar as mensagens: `"id"` (pelo ID) ou `"text"` (pelo conteúdo).
 </ParamField>
