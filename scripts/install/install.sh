@@ -90,7 +90,9 @@ WHEELS = Path(sys.argv[2])
 PKGS = [
     ("fastapi",             "0.115.14", "py3-none-any"),
     ("starlette",           "0.46.2",   "py3-none-any"),
-    ("pydantic",            "1.10.24",  "cp313"),
+    ("annotated-types",     "0.7.0",    "py3-none-any"),
+    ("pydantic-core",       "2.27.2",   "cp313"),
+    ("pydantic",            "2.10.0",   "py3-none-any"),
     ("typing-extensions",   "4.15.0",   "py3-none-any"),
     ("anyio",               "4.9.0",    "py3-none-any"),
     ("sniffio",             "1.3.1",    "py3-none-any"),
