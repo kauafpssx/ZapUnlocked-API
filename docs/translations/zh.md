@@ -796,8 +796,7 @@ bash scripts/generate-env/generate-env.sh
 
 | 字段 | 值 |
 | :-- | :-- |
-| **Name** | `ZapUnlocked-API` |
-| **Command** | `python3 main.py` |
+| **Command** | `bash scripts/run/run.sh` |
 | **Working directory** | `ZapUnlocked-API` |
 | **Environment variables** | `PORT=8300` |
 
