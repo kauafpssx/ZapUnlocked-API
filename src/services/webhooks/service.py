@@ -1,5 +1,5 @@
 import httpx
-from datetime import datetime
+from datetime import datetime, timezone
 
 from src.utils.logger import logger
 
@@ -13,7 +13,7 @@ async def trigger_webhook(config: dict, context: dict, default_payload: dict | N
     if not url:
         return
 
-    timestamp = datetime.utcnow().isoformat() + "Z"
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     def replace_placeholders(data):
         if isinstance(data, str):

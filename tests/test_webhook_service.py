@@ -19,7 +19,9 @@ class TestTriggerWebhook:
     async def test_sends_request(self, mock_client_cls):
         mock_client = AsyncMock()
         mock_client_cls.return_value.__aenter__.return_value = mock_client
-        mock_client.send.return_value = MagicMock(status_code=200)
+        mock_response = MagicMock(status_code=200)
+        mock_response.raise_for_status = MagicMock()
+        mock_client.send.return_value = mock_response
 
         await trigger_webhook(self.CONFIG, {"from": "5511999999999"})
         mock_client.send.assert_awaited_once()
@@ -28,6 +30,10 @@ class TestTriggerWebhook:
     async def test_uses_default_payload_when_no_body(self, mock_client_cls):
         mock_client = AsyncMock()
         mock_client_cls.return_value.__aenter__.return_value = mock_client
+        mock_client.build_request = MagicMock(return_value=MagicMock())
+        mock_response = MagicMock(status_code=200)
+        mock_response.raise_for_status = MagicMock()
+        mock_client.send.return_value = mock_response
 
         await trigger_webhook(
             {"url": "https://example.com", "method": "POST"},
@@ -41,6 +47,9 @@ class TestTriggerWebhook:
     async def test_replaces_placeholders(self, mock_client_cls):
         mock_client = AsyncMock()
         mock_client_cls.return_value.__aenter__.return_value = mock_client
+        mock_response = MagicMock(status_code=200)
+        mock_response.raise_for_status = MagicMock()
+        mock_client.send.return_value = mock_response
 
         config = {
             "url": "https://example.com",

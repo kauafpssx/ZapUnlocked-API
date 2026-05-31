@@ -45,7 +45,7 @@ def mock_state():
 
 @pytest.fixture(autouse=True)
 def mock_fire():
-    with patch("src.services.whatsapp.event_handlers._fire", new_callable=AsyncMock) as mock:
+    with patch("src.services.whatsapp.event_handlers._fire", new_callable=MagicMock) as mock:
         yield mock
 
 
