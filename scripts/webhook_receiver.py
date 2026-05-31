@@ -1,6 +1,6 @@
 """
-Webhook receiver de teste - printa payloads recebidos.
-Uso: python webhook_receiver.py [porta]
+Webhook receiver for testing - prints received payloads.
+Usage: python webhook_receiver.py [port]
 """
 import os
 import json
@@ -39,7 +39,7 @@ class WebhookHandler(BaseHTTPRequestHandler):
 
             try:
                 parsed = json.loads(body)
-                # Arquivo: UTF-8 real. Terminal: ensure_ascii evita garble no PowerShell
+                # File: real UTF-8. Terminal: ensure_ascii avoids garbled output in PowerShell
                 with open(LOG_FILE, "a", encoding="utf-8") as f:
                     f.write(json.dumps(parsed, indent=2, ensure_ascii=False) + "\n")
                 try:
@@ -52,7 +52,7 @@ class WebhookHandler(BaseHTTPRequestHandler):
             out(sep)
 
         except Exception as e:
-            out(f"[ERRO] {e}")
+            out(f"[ERROR] {e}")
 
     def log_message(self, *args):
         pass
@@ -62,6 +62,6 @@ if __name__ == "__main__":
     open(LOG_FILE, "w").close()
     server = HTTPServer(("0.0.0.0", PORT), WebhookHandler)
     out(f"[Webhook Receiver] http://localhost:{PORT}")
-    out(f"Log em: {LOG_FILE}")
-    out("Aguardando payloads...")
+    out(f"Log at: {LOG_FILE}")
+    out("Waiting for payloads...")
     server.serve_forever()

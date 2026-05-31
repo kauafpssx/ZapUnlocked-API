@@ -1,23 +1,23 @@
 ---
 name: Feature Request
-about: Sugira uma nova funcionalidade ou melhoria
+about: Suggest a new feature or improvement
 title: "[FEAT] "
 labels: enhancement
 assignees: kauafpssx
 ---
 
-## Problema ou necessidade
+## Problem or need
 
-Qual problema essa feature resolve? Descreva o contexto.
+What problem does this feature solve? Describe the context.
 
-## Solução proposta
+## Proposed solution
 
-Como você imagina que isso funcionaria? Endpoint, comportamento esperado, payload, etc.
+How do you envision this working? Endpoint, expected behavior, payload, etc.
 
-## Alternativas consideradas
+## Alternatives considered
 
-Você tentou alguma alternativa ou workaround? Descreva.
+Did you try any alternative or workaround? Describe.
 
-## Contexto adicional
+## Additional context
 
-Prints, exemplos de outros projetos ou qualquer referência útil.
+Screenshots, examples from other projects, or any useful references.

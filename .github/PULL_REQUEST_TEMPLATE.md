@@ -1,31 +1,31 @@
-## Descrição
+## Description
 
-Descreva o que esse PR faz e por que.
+Describe what this PR does and why.
 
-## Tipo de mudança
+## Type of change
 
 - [ ] Bug fix
-- [ ] Nova feature
-- [ ] Refatoração
-- [ ] Documentação
-- [ ] Outro: ___
+- [ ] New feature
+- [ ] Refactoring
+- [ ] Documentation
+- [ ] Other: ___
 
-## Como testar
+## How to test
 
-Descreva como reproduzir ou testar as mudanças deste PR.
+Describe how to reproduce or test the changes in this PR.
 
 ```bash
-# Exemplo de request ou comando
+# Example request or command
 ```
 
 ## Checklist
 
-- [ ] Minha branch está atualizada com `main`
-- [ ] O código segue o estilo do projeto (PEP 8)
-- [ ] Commits seguem o padrão Conventional Commits
-- [ ] Não deixei `print()` de debug ou código comentado
-- [ ] A documentação foi atualizada (se aplicável)
+- [ ] My branch is up to date with `main`
+- [ ] Code follows project style (PEP 8)
+- [ ] Commits follow Conventional Commits
+- [ ] No debug `print()` or commented-out code left
+- [ ] Documentation has been updated (if applicable)
 
-## Issues relacionadas
+## Related issues
 
 Closes #

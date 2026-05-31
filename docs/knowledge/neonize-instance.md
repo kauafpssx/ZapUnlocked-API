@@ -1,47 +1,47 @@
-# Neonize — Gerenciamento de Instância
+# Neonize — Instance Management
 
-> Como interagir com o cliente neonize para configurar e controlar a instância do WhatsApp.
+> How to interact with the neonize client to configure and control the WhatsApp instance.
 
 ---
 
-## 📞 Chamadas (CallOfferEv)
+## 📞 Calls (CallOfferEv)
 
-O neonize expõe o evento `CallOfferEv` para interceptar chamadas de voz/vídeo recebidas.
+Neonize exposes the `CallOfferEv` event to intercept incoming voice/video calls.
 
-### Importação
+### Import
 ```python
 from neonize.events import CallOfferEv
 ```
 
-### Registrar handler de chamada
+### Register call handler
 ```python
 from neonize.utils.jid import jid_is_lid, Jid2String
 
 @client.event(CallOfferEv)
 def on_call_offer(c: NewClient, event: CallOfferEv):
     meta = event.basicCallMeta
-    caller_jid = getattr(meta, "from")  # "from" é DECIMAL (minúsculo!) e keyword Python
+    caller_jid = getattr(meta, "from")  # "from" is lowercase, a Python keyword
     call_id = meta.callID
-    print(f"Chamada de {Jid2String(caller_jid)} | ID: {call_id}")
+    print(f"Call from {Jid2String(caller_jid)} | ID: {call_id}")
 ```
 
-### Campos disponíveis em CallOfferEv
+### Available fields in CallOfferEv
 
-> ⚠️ **NÃO existe `event.Caller`, `event.CallID` nem `event.basicCallMeta.From` (maiúsculo)!**
-> O campo protobuf chama-se `from` (minúsculo) e é acessado via `getattr(meta, "from")`.
+> ⚠️ **`event.Caller`, `event.CallID` and `event.basicCallMeta.From` (uppercase) DO NOT EXIST!**
+> The protobuf field is named `from` (lowercase) and is accessed via `getattr(meta, "from")`.
 
-| Campo | Acesso | Tipo | Description |
+| Field | Access | Type | Description |
 |---|---|---|---|
-| `basicCallMeta` | `event.basicCallMeta` | objeto | Container de metadados da chamada |
-| `from` (chamador) | `getattr(event.basicCallMeta, "from")` | JID | JID de quem está ligando |
-| `callID` | `event.basicCallMeta.callID` | str | ID único da chamada |
-| `callCreator` | `event.basicCallMeta.callCreator` | JID | Criador da chamada |
-| `timestamp` | `event.basicCallMeta.timestamp` | int | Unix timestamp da chamada |
+| `basicCallMeta` | `event.basicCallMeta` | object | Call metadata container |
+| `from` (caller) | `getattr(event.basicCallMeta, "from")` | JID | JID of the caller |
+| `callID` | `event.basicCallMeta.callID` | str | Unique call ID |
+| `callCreator` | `event.basicCallMeta.callCreator` | JID | Call creator |
+| `timestamp` | `event.basicCallMeta.timestamp` | int | Call unix timestamp |
 
-### LID JIDs em chamadas
+### LID JIDs in calls
 
-Quando um chamador usa multi-dispositivo, o `from` pode ser um **LID** (`@lid`) em vez de `@s.whatsapp.net`.
-O neonize fornece utilitários para detectar e resolver LID:
+When a caller uses multi-device, `from` may be an **LID** (`@lid`) instead of `@s.whatsapp.net`.
+Neonize provides utilities to detect and resolve LID:
 
 ```python
 from neonize.utils.jid import jid_is_lid, Jid2String
@@ -49,7 +49,7 @@ from neonize.utils.jid import jid_is_lid, Jid2String
 caller_jid = getattr(event.basicCallMeta, "from")
 
 if jid_is_lid(caller_jid):
-    # Resolver LID para JID real via get_user_info
+    # Resolve LID to real JID via get_user_info
     phone_jid = None
     try:
         user_info_list = c.get_user_info(caller_jid)
@@ -61,37 +61,36 @@ if jid_is_lid(caller_jid):
             if phone_jid:
                 break
     except Exception as e:
-        print(f"Falha ao resolver LID: {e}")
+        print(f"Failed to resolve LID: {e}")
 else:
     phone_jid = f"{caller_jid.User}@s.whatsapp.net"
 
-# Utilitários de JID:
-# jid_is_lid(jid)   → bool  — verifica se jid.Server == "lid"
-# Jid2String(jid)   → str   — serializa JID como string human-readable
+# JID Utilities:
+# jid_is_lid(jid)   → bool  — checks if jid.Server == "lid"
+# Jid2String(jid)   → str   — serializes JID as human-readable string
 ```
 
-### Não existe `reject_call` no neonize
+### `reject_call` does not exist in neonize
 
-> ⚠️ **`c.reject_call()` não existe no neonize!** A chamada cai por timeout naturalmente no chamador.
-
+> ⚠️ **`c.reject_call()` does not exist in neonize!** The call naturally times out on the caller's end.
 
 ---
 
-## 📱 Pareamento por Número (PairPhone)
+## 📱 Pair by Number (PairPhone)
 
-Alternativa ao QR Code — gera um código de 8 dígitos para inserir no WhatsApp.
+Alternative to QR Code — generates an 8-digit code to enter in WhatsApp.
 
-### Assinatura
+### Signature
 ```python
 def PairPhone(
-    phone: str,              # Número no formato internacional (554499999999)
-    show_push_notification: bool,  # Exibir notificação no celular
+    phone: str,              # Number in international format (554499999999)
+    show_push_notification: bool,  # Show notification on phone
     client_name: ClientName = ClientName.LINUX,
     client_type: Optional[ClientType] = None,
 ) -> str
 ```
 
-### Uso correto (síncrono dentro de asyncio.to_thread)
+### Correct usage (sync inside asyncio.to_thread)
 ```python
 import asyncio
 from neonize.client import NewClient
@@ -100,60 +99,60 @@ code = await asyncio.wait_for(
     asyncio.to_thread(client.PairPhone, "554499999999", True),
     timeout=15.0
 )
-print(f"Código: {code}")  # Ex: "ABCD-EFGH"
+print(f"Code: {code}")  # E.g., "ABCD-EFGH"
 ```
 
-### Pré-requisito
-- O cliente DEVE estar **aguardando conexão** (sem sessão autenticada ativa)
-- O número DEVE ter WhatsApp instalado
-- O código expira rapidamente (± 60 segundos)
+### Prerequisites
+- The client MUST be **awaiting connection** (no active authenticated session)
+- The number MUST have WhatsApp installed
+- The code expires quickly (± 60 seconds)
 
-### Como usar no WhatsApp
-1. Abra o WhatsApp no celular
-2. Vá em **Dispositivos** > **Conectar dispositivo**
-3. No celular, toque em **Conectar com número de telefone**
-4. Digite o código de 8 dígitos gerado pela API
+### How to use in WhatsApp
+1. Open WhatsApp on your phone
+2. Go to **Linked Devices** > **Link a Device**
+3. On your phone, tap **Link with phone number**
+4. Enter the 8-digit code generated by the API
 
 ---
 
-## ✅ Marcar Mensagem como Lida (mark_read)
+## ✅ Mark Message as Read (mark_read)
 
-### Assinatura correta
+### Correct signature
 ```python
 from neonize.utils.enum import ReceiptType
 
-# mark_read usa *args (variadic) para IDs e keyword-only args para o resto
+# mark_read uses *args (variadic) for IDs and keyword-only args for the rest
 client.mark_read(
-    message.Info.ID,          # ID da mensagem — passado como positional arg
-    chat=source.Chat,         # JID do chat (source = message.Info.MessageSource)
-    sender=source.Sender,     # JID do remetente
-    receipt=ReceiptType.READ, # Tipo do recibo (READ, PLAYED, etc.)
+    message.Info.ID,          # Message ID — passed as positional arg
+    chat=source.Chat,         # Chat JID (source = message.Info.MessageSource)
+    sender=source.Sender,     # Sender JID
+    receipt=ReceiptType.READ, # Receipt type (READ, PLAYED, etc.)
 )
 ```
 
-> ⚠️ `chat` e `sender` devem ser **JID objects** (vindo do evento), não strings.
-> Use `source.Chat` e `source.Sender` diretamente do `message.Info.MessageSource` em vez de `build_jid()`.
+> ⚠️ `chat` and `sender` must be **JID objects** (from the event), not strings.
+> Use `source.Chat` and `source.Sender` directly from `message.Info.MessageSource` instead of `build_jid()`.
 
 ---
 
-## 🔄 Eventos de Chamada Disponíveis
+## 🔄 Available Call Events
 
-| Evento | Descrição |
+| Event | Description |
 |---|---|
-| `CallOfferEv` | Chamada recebida (momento para rejeitar) |
-| `CallAcceptEv` | Chamada aceita |
-| `CallOfferNoticeEv` | Aviso de chamada chegando |
-| `CallPreAcceptEv` | Pré-aceitação de chamada |
-| `UnknownCallEventEV` | Evento de chamada desconhecido |
+| `CallOfferEv` | Incoming call (moment to reject) |
+| `CallAcceptEv` | Call accepted |
+| `CallOfferNoticeEv` | Call arriving notice |
+| `CallPreAcceptEv` | Call pre-acceptance |
+| `UnknownCallEventEV` | Unknown call event |
 
 ---
 
-## ⚙️ Configurações de Instância (settings.json)
+## ⚙️ Instance Settings (settings.json)
 
-Configurações persistidas em `data/settings.json` que controlam comportamentos automáticos:
+Settings persisted in `data/settings.json` that control automatic behaviors:
 
-| Chave | Tipo | Padrão | Descrição |
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `call_reject_auto` | bool | `false` | Rejeitar chamadas automaticamente |
-| `call_reject_message` | str | `"..."` | Mensagem enviada ao rejeitar |
-| `auto_read_message` | bool | `false` | Marcar mensagens como lidas automaticamente |
+| `call_reject_auto` | bool | `false` | Auto-reject calls |
+| `call_reject_message` | str | `"..."` | Message sent when rejecting |
+| `auto_read_message` | bool | `false` | Auto-mark messages as read |

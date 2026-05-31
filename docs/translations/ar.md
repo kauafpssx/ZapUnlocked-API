@@ -1,10 +1,12 @@
-# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
+# ⚡💬 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br/)(https://zapunlocked-api.kauafpss.com.br/)
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Free%20%26%20Open%20Source-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="Free & Open Source">
-  <img src="https://img.shields.io/badge/Self%20Hosted-A855F7?style=for-the-badge&logo=docker&logoColor=white" alt="Self Hosted">
+  <a href="https://downgit.github.io/#/home?url=https://github.com/kauafpssx/ZapUnlocked-API/blob/main/ZapUnlocked.collection.json" target="_blank">
+    <img src="https://img.shields.io/badge/Collection-A855F7?style=for-the-badge&logo=postman&logoColor=white" alt="Postman Collection">
+  </a>
   <img src="https://img.shields.io/badge/REST%20API-A855F7?style=for-the-badge&logo=fastapi&logoColor=white" alt="REST API">
   <img src="https://img.shields.io/badge/MIT%20License-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="MIT License">
   <img src="https://img.shields.io/badge/Python%203.10%2B-A855F7?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+">
@@ -16,7 +18,7 @@
 
 <table width="100%">
   <tr>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.MD"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg" width="40" title="Português (BR)"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg" width="40" title="Português (BR)"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/en.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/us.svg" width="40" title="English"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/es.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg" width="40" title="Español"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/fr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/fr.svg" width="40" title="Français"></a></td>
@@ -49,9 +51,10 @@
 
 ## 🗺️ نظرة عامة على API
 
+
 ```mermaid
 mindmap
-  root((📲 ZapUnlocked-API))
+  root((⚡💬 ZapUnlocked-API))
     📨 الرسائل
       نص / رد
       وسائط 📸🎥🎵
@@ -59,7 +62,8 @@ mindmap
       جهات اتصال / روابط
       تعديل / حذف / قراءة
     🔘 تفاعلية
-      أزرار عديمة الحالة
+      زر قائمة / إجراء
+      OTP / PIX
       قائمة خيارات
       استطلاعات
     🔍 استعلامات
@@ -67,26 +71,27 @@ mindmap
       السجل
       المحادثات الأخيرة
       الذاكرة / القرص
-      قاعدة البيانات
+      قاعدة البيانات / تنظيف
     🔗 الاتصال
       الحالة / SSE
-      رمز QR
+      رمز QR / PNG
       رمز الاقتران
       تسجيل الخروج
     📡 Webhooks
-      إنشاء / عرض
-      تعديل / حذف
-      تفعيل / اختبار
-      20 حدثاً
+       إنشاء / عرض
+       تعديل / حذف
+       تفعيل / اختبار
+       40 حدثاً
     ⚙️ الملف الشخصي والخصوصية
       الاسم / الصورة
       آخر ظهور
       الحظر
     🤖 البوت
       علامة الذكاء الاصطناعي
-      التحكم في IP
       رفض المكالمات
       القراءة التلقائية
+    🛡️ قواعد IP
+      القائمة البيضاء / السوداء
     📱 المثيل
       بيانات الحساب
       الجهاز
@@ -107,7 +112,7 @@ mindmap
 | 🔢 **الاقتران بدون رمز QR** | اتصل عبر رمز رقمي · مثالي للخوادم بدون واجهة رسومية |
 | 🎵 **تحويل الصوت التلقائي** | أرسل صوتاً يظهر كأنه مسجل (PTT) بشكل أصلي |
 | 📦 **طابور الوسائط الذكي** | إدارة تلقائية لتجنب الاستهلاك المفرط للذاكرة |
-| 🏷️ **البدائل الديناميكية** | خصص الرسائل و webhooks باستخدام `{{name}}` و `{{day}}` و `{{phone}}` |
+| 🏷️ **البدائل الديناميكية** | خصص الرسائل و webhooks باستخدام \`{{name}}\` و \`{{phone}}\` |
 
 > [!NOTE]
 > جميع الميزات **مجانية 100%** وتُصان بواسطة مجتمع المصادر المفتوحة.
@@ -117,125 +122,164 @@ mindmap
 ## 📋 مسارات API
 
 <details>
-<summary><b>📨 إرسال الرسائل</b> · 14 نقطة نهاية</summary>
+<summary><b>📨 إرسال الرسائل</b> · 15 نقطة نهاية</summary>
 
-| الطريقة | المسار | الوصف |
-| :------ | :----- | :---- |
-| `POST` | `/send` | إرسال رسالة نصية / رد |
-| `POST` | `/send_image` | إرسال صورة |
-| `POST` | `/send_video` | إرسال فيديو (يدعم GIF و PTV) |
-| `POST` | `/send_audio` | إرسال صوت (مع تحويل تلقائي إلى PTT) |
-| `POST` | `/send_document` | إرسال مستند |
-| `POST` | `/send_sticker` | إرسال ملصق |
-| `POST` | `/send_reaction` | إرسال رد فعل برمز تعبيري |
-| `POST` | `/send_location` | إرسال موقع |
-| `POST` | `/send_contact` | إرسال جهة اتصال |
-| `POST` | `/send_contacts` | إرسال جهات اتصال متعددة |
-| `POST` | `/send_link` | إرسال رابط مع معاينة |
-| `POST` | `/messages/delete` | حذف رسالة |
-| `POST` | `/messages/read` | وضع علامة كمقروء |
-| `POST` | `/messages/edit` | تعديل رسالة مرسلة |
+| الطريقة | المسار | الوصف | الجسم |
+| :------ | :----- | :---- | :--- |
+| `POST` | `/send` | إرسال رسالة نصية / رد | `phone`, `message` |
+| `POST` | `/send_image` | إرسال صورة | `phone`, `image_url` |
+| `POST` | `/send_video` | إرسال فيديو (يدعم GIF و PTV) | `phone`, `video_url` |
+| `POST` | `/send_audio` | إرسال صوت (مع تحويل تلقائي إلى PTT) | `phone`, `audio_url` |
+| `POST` | `/send_document` | إرسال مستند | `phone`, `document_url` |
+| `POST` | `/send_sticker` | إرسال ملصق | `phone`, `sticker_url` |
+| `POST` | `/send_reaction` | إرسال رد فعل برمز تعبيري | `phone`, `messageId`, `emoji` |
+| `POST` | `/send_location` | إرسال موقع | `phone`, `lat`, `lng` |
+| `POST` | `/send_contact` | إرسال جهة اتصال | `phone`, `name`, `contactPhone` |
+| `POST` | `/send_contacts` | إرسال جهات اتصال متعددة | `phone`, `contacts` |
+| `POST` | `/send_link` | إرسال رابط مع معاينة | `phone`, `url` |
+| `POST` | `/messages/delete` | حذف رسالة | `phone`, `messageId` |
+| `POST` | `/messages/read` | وضع علامة كمقروء | `phone`, `messageIds` |
+| `POST` | `/messages/edit` | تعديل رسالة مرسلة | `phone`, `messageId`, `message` |
 </details>
 
 <details>
-<summary><b>🔘 الرسائل التفاعلية</b> · 4 نقاط نهاية</summary>
+<summary><b>🔘 الرسائل التفاعلية</b> · 7 نقاط نهاية</summary>
 
-| الطريقة | المسار | الوصف |
-| :------ | :----- | :---- |
-| `POST` | `/send_wbuttons` | إرسال أزرار (قائمة، إجراء، OTP، PIX) |
-| `POST` | `/messages/send-option-list` | إرسال قائمة خيارات |
-| `POST` | `/messages/send-poll` | إرسال استطلاع |
-| `POST` | `/messages/send-poll-vote` | التصويت في استطلاع |
+| الطريقة | المسار | الوصف | الجسم |
+| :------ | :----- | :---- | :--- |
+| `POST` | `/messages/send-button-list` | زر قائمة الخيارات | `phone`, `buttons` |
+| `POST` | `/messages/send-button-actions` | زر إجراء | `phone`, `buttons` |
+| `POST` | `/messages/send-button-otp` | زر نسخ (OTP) | `phone`, `code` |
+| `POST` | `/messages/send-button-pix` | زر PIX | `phone`, `pixKey` |
+| `POST` | `/messages/send-option-list` | إرسال قائمة خيارات | `phone`, `buttons` |
+| `POST` | `/messages/send-poll` | إرسال استطلاع | `phone`, `name`, `options` |
+| `POST` | `/messages/send-poll-vote` | التصويت في استطلاع | `phone`, `options` |
 </details>
 
 <details>
-<summary><b>🔍 الاستعلامات والإدارة</b> · 7 نقاط نهاية</summary>
+<summary><b>🔍 الاستعلامات والإدارة</b> · 8 نقاط نهاية</summary>
 
-| الطريقة | المسار | الوصف |
-| :------ | :----- | :---- |
-| `POST` | `/contacts/info` | معلومات مفصلة لجهة الاتصال |
-| `POST` | `/management/fetch_messages` | جلب سجل الرسائل |
-| `POST` | `/management/recent_contacts` | عرض المحادثات الأخيرة |
-| `GET` | `/management/memory` | حالة استخدام الذاكرة |
-| `GET` | `/management/volume_stats` | التحقق من استخدام القرص |
-| `GET` | `/management/database/status` | حالة وإحصائيات قاعدة البيانات |
-| `POST` | `/management/database/cleanup` | تنظيف يدوي لقاعدة البيانات |
+| الطريقة | المسار | الوصف | الجسم |
+| :------ | :----- | :---- | :--- |
+| `POST` | `/management/fetch_messages` | جلب سجل الرسائل | `phone` |
+| `POST` | `/management/recent_contacts` | عرض المحادثات الأخيرة | ❌ |
+| `GET` | `/management/memory` | حالة استخدام الذاكرة | ❌ |
+| `GET` | `/management/volume_stats` | التحقق من استخدام القرص | ❌ |
+| `DELETE` | `/management/cleanup` | تنظيف الوسائط المؤقتة | ❌ |
+| `GET` | `/management/database/status` | حالة وإحصائيات قاعدة البيانات | ❌ |
+| `POST` | `/management/database/config` | تحديث إعدادات قاعدة البيانات | `interval` |
+| `POST` | `/management/database/cleanup` | تنظيف يدوي لقاعدة البيانات | ❌ |
 </details>
 
 <details>
-<summary><b>🔗 الاتصال والجلسة</b> · 8 نقاط نهاية</summary>
+<summary><b>👤 جهات الاتصال</b> · 1 نقطة نهاية</summary>
 
-| الطريقة | المسار | الوصف |
-| :------ | :----- | :---- |
-| `GET` | `/` | صفحة الترحيب (HTML) |
-| `GET` | `/status` | حالة الاتصال والجلسة |
-| `GET` | `/status/stream` | حالة في الوقت الفعلي (SSE) |
-| `GET` | `/qr` | عرض رمز QR تفاعلي |
-| `GET` | `/qr/image` | الحصول على صورة رمز QR (Base64) |
-| `POST` | `/qr/pair` | إنشاء رمز اقتران رقمي |
-| `GET` | `/settings/phone-code/{phone}` | إنشاء رمز عبر رقم الهاتف |
-| `POST` | `/qr/logout` | قطع الاتصال وإعادة تعيين الجلسة |
+| الطريقة | المسار | الوصف | الجسم |
+| :------ | :----- | :---- | :--- |
+| `POST` | `/contacts/info` | معلومات مفصلة لجهة الاتصال | `phone` |
 </details>
 
 <details>
-<summary><b>📡 Webhooks (CRUD)</b> · 7 نقاط نهاية</summary>
+<summary><b>🏠 عام</b> · 3 نقاط نهاية</summary>
 
-| الطريقة | المسار | الوصف |
-| :------ | :----- | :---- |
-| `POST` | `/webhooks` | إنشاء webhook مسمى |
-| `GET` | `/webhooks` | عرض جميع webhooks |
-| `PUT` | `/webhooks/{name}` | تعديل webhook |
-| `DELETE` | `/webhooks/{name}` | حذف webhook |
-| `POST` | `/webhooks/{name}/toggle` | تفعيل / إلغاء تفعيل |
-| `POST` | `/webhooks/{name}/test` | اختبار webhook |
-| `GET` | `/webhooks/events` | عرض أنواع الأحداث (20 نوعاً) |
+| الطريقة | المسار | الوصف | الجسم |
+| :------ | :----- | :---- | :--- |
+| `GET` | `/` | صفحة الترحيب (HTML) | ❌ |
+| `GET` | `/status` | حالة الاتصال والجلسة (JSON) | ❌ |
+| `GET` | `/status/stream` | حالة في الوقت الفعلي (SSE) | ❌ |
+</details>
+
+<details>
+<summary><b>🔗 الاتصال (QR)</b> · 2 نقاط نهاية</summary>
+
+| الطريقة | المسار | الوصف | الجسم |
+| :------ | :----- | :---- | :--- |
+| `GET` | `/qr` | عرض رمز QR تفاعلي (HTML) | ❌ |
+| `GET` | `/qr/image` | الحصول على صورة رمز QR (PNG) | ❌ |
+</details>
+
+<details>
+<summary><b>🔐 الجلسة</b> · 2 نقاط نهاية</summary>
+
+| الطريقة | المسار | الوصف | الجسم |
+| :------ | :----- | :---- | :--- |
+| `POST` | `/session/pair` | إنشاء رمز اقتران رقمي | `phone` |
+| `POST` | `/session/logout` | قطع الاتصال وإعادة تعيين الجلسة | ❌ |
+</details>
+
+<details>
+<summary><b>📡 Webhooks (CRUD)</b> · 8 نقاط نهاية</summary>
+
+| الطريقة | المسار | الوصف | الجسم |
+| :------ | :----- | :---- | :--- |
+| `POST` | `/webhooks` | إنشاء webhook مسمى | `name`, `url` |
+| `GET` | `/webhooks` | عرض جميع webhooks | ❌ |
+| `GET` | `/webhooks/{name}` | الحصول على webhook بالاسم | ❌ |
+| `PUT` | `/webhooks/{name}` | تعديل webhook | ❌ |
+| `DELETE` | `/webhooks/{name}` | حذف webhook | ❌ |
+| `POST` | `/webhooks/{name}/toggle` | تفعيل / إلغاء تفعيل | `active` |
+| `POST` | `/webhooks/{name}/test` | اختبار webhook | ❌ |
+| `GET` | `/webhooks/events` | عرض أنواع الأحداث (40 نوعاً) | ❌ |
 </details>
 
 <details>
 <summary><b>⚙️ الملف الشخصي والخصوصية</b> · 3 نقاط نهاية</summary>
 
-| الطريقة | المسار | الوصف |
-| :------ | :----- | :---- |
-| `POST` | `/settings/profile` | تغيير اسم وصورة البوت |
-| `POST` | `/settings/privacy` | ضبط الخصوصية (آخر ظهور، إلخ) |
-| `POST` | `/settings/block` | حظر / إلغاء حظر جهة اتصال |
+| الطريقة | المسار | الوصف | الجسم |
+| :------ | :----- | :---- | :--- |
+| `POST` | `/settings/profile` | تغيير اسم وصورة البوت | ❌ |
+| `POST` | `/settings/privacy` | ضبط الخصوصية (آخر ظهور، إلخ) | ❌ |
+| `POST` | `/settings/block` | حظر / إلغاء حظر جهة اتصال | `phone`, `action` |
 </details>
 
 <details>
-<summary><b>🤖 إعدادات البوت</b> · 5 نقاط نهاية</summary>
+<summary><b>🤖 إعدادات البوت</b> · 6 نقاط نهاية</summary>
 
-| الطريقة | المسار | الوصف |
-| :------ | :----- | :---- |
-| `GET` | `/settings/bot` | عرض إعدادات البوت |
-| `POST` | `/settings/bot` | تحديث إعدادات البوت (علامة AI، التحكم في IP) |
-| `PUT` | `/settings/instance/call-reject-auto` | رفض المكالمات تلقائياً |
-| `PUT` | `/settings/instance/call-reject-message` | رسالة رفض المكالمة |
-| `PUT` | `/settings/instance/auto-read-message` | القراءة التلقائية للرسائل |
+| الطريقة | المسار | الوصف | الجسم |
+| :------ | :----- | :---- | :--- |
+| `GET` | `/settings/bot` | عرض إعدادات البوت | ❌ |
+| `POST` | `/settings/bot` | تحديث إعدادات البوت (علامة AI، التحكم في IP) | ❌ |
+| `PUT` | `/settings/instance/call-reject-auto` | رفض المكالمات تلقائياً | `value` |
+| `PUT` | `/settings/instance/call-reject-message` | رسالة رفض المكالمة | `value` |
+| `PUT` | `/settings/instance/auto-read-message` | القراءة التلقائية للرسائل | `value` |
+| `GET` | `/settings/phone-code/{phone}` | إنشاء رمز اقتران عبر رقم الهاتف | ❌ |
 </details>
 
 <details>
 <summary><b>📱 المثيل</b> · 3 نقاط نهاية</summary>
 
-| الطريقة | المسار | الوصف |
-| :------ | :----- | :---- |
-| `GET` | `/instance/me` | بيانات الحساب المتصل |
-| `GET` | `/instance/device` | البيانات الفنية للجهاز |
-| `PUT` | `/instance/update-name` | إعادة تسمية المثيل |
+| الطريقة | المسار | الوصف | الجسم |
+| :------ | :----- | :---- | :--- |
+| `GET` | `/instance/me` | بيانات الحساب المتصل | ❌ |
+| `GET` | `/instance/device` | البيانات الفنية للجهاز | ❌ |
+| `PUT` | `/instance/update-name` | إعادة تسمية المثيل | `name` |
+</details>
+
+<details>
+<summary><b>🛡️ قواعد IP</b> · 5 نقاط نهاية</summary>
+
+| الطريقة | المسار | الوصف | الجسم |
+| :------ | :----- | :---- | :--- |
+| `GET` | `/settings/ip-rules` | عرض قواعد IP (القائمة البيضاء/السوداء) | ❌ |
+| `POST` | `/settings/ip-rules/whitelist` | إضافة IP إلى القائمة البيضاء | `ip` |
+| `POST` | `/settings/ip-rules/blacklist` | إضافة IP إلى القائمة السوداء | `ip` |
+| `DELETE` | `/settings/ip-rules/whitelist/{ip}` | إزالة IP من القائمة البيضاء | ❌ |
+| `DELETE` | `/settings/ip-rules/blacklist/{ip}` | إزالة IP من القائمة السوداء | ❌ |
 </details>
 
 <details>
 <summary><b>🖥️ النظام</b> · 5 نقاط نهاية</summary>
 
-| الطريقة | المسار | الوصف |
-| :------ | :----- | :---- |
-| `GET` | `/system/env` | عرض متغيرات البيئة |
-| `PUT` | `/system/env` | تحديث متغيرات البيئة |
-| `POST` | `/system/cleanup/force` | تنظيف إجباري للوسائط المؤقتة |
-| `GET` | `/system/cleanup/settings` | عرض إعدادات التنظيف التلقائي |
-| `PUT` | `/system/cleanup/settings` | تحديث فاصل التنظيف التلقائي |
+| الطريقة | المسار | الوصف | الجسم |
+| :------ | :----- | :---- | :--- |
+| `GET` | `/system/env` | عرض متغيرات البيئة | ❌ |
+| `PUT` | `/system/env` | تحديث متغيرات البيئة | ❌ |
+| `POST` | `/system/cleanup/force` | تنظيف إجباري للوسائط المؤقتة | ❌ |
+| `GET` | `/system/cleanup/settings` | عرض إعدادات التنظيف التلقائي | ❌ |
+| `PUT` | `/system/cleanup/settings` | تحديث فاصل التنظيف التلقائي | ❌ |
 </details>
 
-> **الإجمالي: 56 نقطة نهاية** · REST كامل لأتمتة واتساب.
+> **الإجمالي: 68 نقطة نهاية**
 
 ---
 
@@ -253,7 +297,11 @@ mindmap
 
 إذا كان webhook يحتوي على `body` مخصص مع `{{placeholders}}`، فسيتم إرسال هذا body بدلاً من المغلف القياسي.
 
-### العناصر النائبة (body مخصص)
+
+---
+
+<details>
+<summary><b>🏷️ العناصر النائبة المتاحة في الـ body المخصص</b></summary>
 
 | العنصر النائب | القيمة |
 | :------------ | :----- |
@@ -264,15 +312,14 @@ mindmap
 | `{{requested}}` | الكمية المطلوبة (fetchMessages) |
 | `{{found}}` | الكمية الموجودة (fetchMessages) |
 | `{{timestamp}}` | الطابع الزمني UTC الحالي |
-| `{{day}}` | اليوم الحالي (dd) |
-| `{{mon}}` | الشهر الحالي (MM) |
-| `{{yea}}` | السنة الحالية (yyyy) |
-| `{{hou}}` | الساعة الحالية (HH) |
-| `{{min}}` | الدقيقة الحالية (mm) |
-| `{{sec}}` | الثانية الحالية (ss) |
+
+</details>
+
+---
+
 
 <details>
-<summary><b>📥 الرسائل المستلمة</b> · 15 حدثاً</summary>
+<summary><b>📥 الرسائل المستلمة</b> · 40 حدثاً</summary>
 
 الحقول الأساسية الموجودة في أحداث الرسائل المستلمة:
 
@@ -521,10 +568,23 @@ mindmap
 ```
 </details>
 
+<details>
+<summary><code>message.undecryptable</code> - رسالة غير قابلة لفك التشفير</summary>
+
+```json
+{
+  "event": "message.undecryptable",
+  "data": {
+    "...base": "..."
+  }
+}
+```
+</details>
+
 </details>
 
 <details>
-<summary><b>📤 الرسائل المرسلة</b> · 1 حدث</summary>
+<summary><b>📤 الرسائل المرسلة</b> · 4 أحداث</summary>
 
 <details>
 <summary><code>message.sent</code> - رسالة مرسلة (يدوي)</summary>
@@ -541,10 +601,53 @@ mindmap
 ```
 </details>
 
+<details>
+<summary><code>message.read</code> - تمت قراءة الرسالة من قبل المستلم</summary>
+
+```json
+{
+  "event": "message.read",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
 </details>
 
 <details>
-<summary><b>🔗 الاتصال</b> · 3 أحداث</summary>
+<summary><code>message.delivered</code> - تم تسليم الرسالة للمستلم (receipt type 1)</summary>
+
+```json
+{
+  "event": "message.delivered",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>message.receipt</code> - تأكيدات تسليم أخرى (receipt types 2, 3, 5+)</summary>
+
+```json
+{
+  "event": "message.receipt",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456",
+    "receiptType": 2
+  }
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>🔗 الاتصال</b> · 40 حدثاً</summary>
 
 <details>
 <summary><code>connection.connected</code> - واتساب متصل</summary>
@@ -583,10 +686,252 @@ mindmap
 ```
 </details>
 
+<details>
+<summary><code>connection.pair_code</code> - تم إنشاء رمز الاقتران</summary>
+
+```json
+{
+  "event": "connection.pair_code",
+  "data": {
+    "code": "NR62-NZSF"
+  }
+}
+```
 </details>
 
 <details>
-<summary><b>📞 المكالمة</b> · 1 حدث</summary>
+<summary><code>connection.pair_status</code> - حالة الاقتران</summary>
+
+```json
+{
+  "event": "connection.pair_status",
+  "data": {
+    "status": "waiting",
+    "phone": "5511999999999"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.logged_out</code> - تم تسجيل الخروج عن بعد</summary>
+
+```json
+{
+  "event": "connection.logged_out",
+  "data": {}
+}
+```
+</details>
+
+<details>
+<summary><code>connection.connect_failure</code> - فشل الاتصال</summary>
+
+```json
+{
+  "event": "connection.connect_failure",
+  "data": {
+    "reason": "network_error"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.stream_error</code> - خطأ في التدفق</summary>
+
+```json
+{
+  "event": "connection.stream_error",
+  "data": {
+    "error": "connection closed"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.temporary_ban</code> - حظر مؤقت</summary>
+
+```json
+{
+  "event": "connection.temporary_ban",
+  "data": {
+    "phone": "5511999999999"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.client_outdated</code> - العميل قديم</summary>
+
+```json
+{
+  "event": "connection.client_outdated",
+  "data": {}
+}
+```
+</details>
+
+<details>
+<summary><code>connection.stream_replaced</code> - تم استبدال التدفق</summary>
+
+```json
+{
+  "event": "connection.stream_replaced",
+  "data": {}
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>👥 المجموعة</b> · 2 حدث</summary>
+
+<details>
+<summary><code>group.join</code> - انضمام عضو جديد للمجموعة</summary>
+
+```json
+{
+  "event": "group.join",
+  "data": {
+    "groupId": "5511999999999-123456@g.us",
+    "inviter": "5511888888888",
+    "member": "5511999999999"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>group.update</code> - تم تحديث المجموعة</summary>
+
+```json
+{
+  "event": "group.update",
+  "data": {
+    "groupId": "5511999999999-123456@g.us",
+    "name": "اسم جديد",
+    "updatedBy": "5511888888888"
+  }
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>👤 جهة اتصال / تواجد</b> · 4 أحداث</summary>
+
+<details>
+<summary><code>contact.presence</code> - حالة تواجد جهة الاتصال</summary>
+
+```json
+{
+  "event": "contact.presence",
+  "data": {
+    "from": "5511999999999@s.whatsapp.net",
+    "presence": "available",
+    "lastSeen": 1700000000
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>contact.chat_presence</code> - حالة الكتابة</summary>
+
+```json
+{
+  "event": "contact.chat_presence",
+  "data": {
+    "from": "5511999999999@s.whatsapp.net",
+    "presence": "composing",
+    "mediaType": 0
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>contact.picture_change</code> - تغيير صورة الملف الشخصي</summary>
+
+```json
+{
+  "event": "contact.picture_change",
+  "data": {
+    "from": "5511999999999@s.whatsapp.net",
+    "pictureId": "abc123"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>contact.identity_change</code> - تغيير مفتاح الأمان</summary>
+
+```json
+{
+  "event": "contact.identity_change",
+  "data": {
+    "from": "5511999999999@s.whatsapp.net"
+  }
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>📞 المكالمة</b> · 3 أحداث</summary>
+
+<details>
+<summary><code>call.received</code> - مكالمة واردة</summary>
+
+```json
+{
+  "event": "call.received",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "callId": "ABC123DEF456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>call.accepted</code> - تم قبول المكالمة</summary>
+
+```json
+{
+  "event": "call.accepted",
+  "data": {
+    "from": "5511999999999",
+    "callId": "ABC123DEF456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>call.terminated</code> - تم إنهاء المكالمة</summary>
+
+```json
+{
+  "event": "call.terminated",
+  "data": {
+    "from": "5511999999999",
+    "callId": "ABC123DEF456",
+    "reason": "timeout"
+  }
+}
+```
+</details>
+
+</details>
 
 <details>
 <summary><code>call.received</code> - مكالمة واردة</summary>
@@ -688,11 +1033,14 @@ cd ~/ZapUnlocked-API
 bash scripts/install/install.sh
 ```
 
-**4.** قم بإنشاء `.env`:
+**4.** *(اختياري)* قم بإنشاء `.env`:
 
 ```bash
 bash scripts/generate-env/generate-env.sh
 ```
+
+> [!NOTE]
+> يسأل سكريبت التثبيت بالفعل إذا كنت تريد تهيئة `.env`. إذا أجبت **نعم**، يمكن تخطي هذه الخطوة. وإلا، قم بتشغيل الأمر أعلاه أو قم بتهيئة `.env` يدوياً.
 
 **5.** قم بتكوين الخدمة (24/7) في **Advanced · Services · Add a service**:
 

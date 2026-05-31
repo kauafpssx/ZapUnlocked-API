@@ -1,6 +1,6 @@
 # Webhook Events — ZapUnlocked API
 
-Todos os webhooks recebem um envelope padrão:
+All webhooks receive a standard envelope:
 
 ```json
 {
@@ -10,48 +10,48 @@ Todos os webhooks recebem um envelope padrão:
 }
 ```
 
-Se o webhook tiver um `body` customizado com `{{placeholders}}`, esse body é enviado em vez do envelope padrão.
+If the webhook has a custom `body` configured with `{{placeholders}}`, that custom body is sent instead of the standard envelope.
 
 ---
 
-## Gerenciamento
+## Management
 
-| Rota | Descrição |
-|------|-----------|
-| `GET /webhooks` | Listar todos os webhooks |
-| `POST /webhooks` | Criar webhook |
-| `GET /webhooks/{name}` | Detalhes |
-| `PUT /webhooks/{name}` | Editar |
-| `DELETE /webhooks/{name}` | Apagar |
-| `POST /webhooks/{name}/toggle` | Ativar/desativar |
-| `POST /webhooks/{name}/test` | Enviar payload de teste |
-| `GET /webhooks/events` | Listar todos os tipos de evento |
+| Route | Description |
+|-------|-------------|
+| `GET /webhooks` | List all webhooks |
+| `POST /webhooks` | Create a webhook |
+| `GET /webhooks/{name}` | Get webhook details |
+| `PUT /webhooks/{name}` | Update webhook |
+| `DELETE /webhooks/{name}` | Delete webhook |
+| `POST /webhooks/{name}/toggle` | Enable / disable |
+| `POST /webhooks/{name}/test` | Send test payload |
+| `GET /webhooks/events` | List all available event types |
 
-### Criar webhook — Exemplo
+### Create webhook — Example
 
 ```json
 POST /webhooks
 {
-  "name": "meu-crm",
-  "url": "https://meucrm.com/hook",
+  "name": "my-crm",
+  "url": "https://mycrm.com/hook",
   "events": ["message.text", "message.button_reply"],
   "active": true
 }
 ```
 
-Use `"events": ["*"]` para receber todos.
+Use `"events": ["*"]` to receive all event types.
 
 ---
 
-## Eventos de Mensagem Recebida
+## Incoming Message Events
 
-Todos os eventos de mensagem incluem estes campos base em `data`:
+All incoming message events share these base fields in `data`:
 
 ```json
 {
   "messageId": "3EB0ABCDEF123456",
   "from": "5511999999999",
-  "fromName": "João Silva",
+  "fromName": "John Doe",
   "fromJid": "5511999999999@s.whatsapp.net",
   "isGroup": false
 }
@@ -61,7 +61,7 @@ Todos os eventos de mensagem incluem estes campos base em `data`:
 
 ### `message.text`
 
-Mensagem de texto simples ou formatada.
+Plain or formatted text message.
 
 ```json
 {
@@ -69,10 +69,10 @@ Mensagem de texto simples ou formatada.
   "data": {
     "messageId": "...",
     "from": "5511999999999",
-    "fromName": "João",
+    "fromName": "John",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
-    "text": "Olá! Como posso ajudar?",
+    "text": "Hello! How can I help you?",
     "quoted": {
       "id": "3EB0...",
       "fromMe": true
@@ -81,7 +81,7 @@ Mensagem de texto simples ou formatada.
 }
 ```
 
-`quoted` é `null` se não for uma resposta.
+`quoted` is `null` when not a reply.
 
 ---
 
@@ -91,8 +91,8 @@ Mensagem de texto simples ou formatada.
 {
   "event": "message.image",
   "data": {
-    ...base,
-    "caption": "Foto do produto",
+    "...base": "...",
+    "caption": "Product photo",
     "mimetype": "image/jpeg",
     "fileLength": 204800
   }
@@ -107,8 +107,8 @@ Mensagem de texto simples ou formatada.
 {
   "event": "message.video",
   "data": {
-    ...base,
-    "caption": "Veja esse vídeo!",
+    "...base": "...",
+    "caption": "Check out this video!",
     "mimetype": "video/mp4",
     "fileLength": 5242880,
     "isPTT": false,
@@ -125,7 +125,7 @@ Mensagem de texto simples ou formatada.
 {
   "event": "message.audio",
   "data": {
-    ...base,
+    "...base": "...",
     "mimetype": "audio/ogg; codecs=opus",
     "fileLength": 30720,
     "isPTT": true,
@@ -134,7 +134,7 @@ Mensagem de texto simples ou formatada.
 }
 ```
 
-`isPTT: true` = nota de voz gravada no WhatsApp.
+`isPTT: true` = voice note recorded on WhatsApp.
 
 ---
 
@@ -144,9 +144,9 @@ Mensagem de texto simples ou formatada.
 {
   "event": "message.document",
   "data": {
-    ...base,
-    "fileName": "contrato.pdf",
-    "caption": "Segue o contrato",
+    "...base": "...",
+    "fileName": "contract.pdf",
+    "caption": "Please find the contract attached",
     "mimetype": "application/pdf",
     "fileLength": 102400
   }
@@ -161,7 +161,7 @@ Mensagem de texto simples ou formatada.
 {
   "event": "message.sticker",
   "data": {
-    ...base,
+    "...base": "...",
     "mimetype": "image/webp",
     "isAnimated": false
   }
@@ -172,11 +172,13 @@ Mensagem de texto simples ou formatada.
 
 ### `message.contact`
 
+Shared contact.
+
 ```json
 {
   "event": "message.contact",
   "data": {
-    ...base,
+    "...base": "...",
     "displayName": "Maria Souza",
     "vcard": "BEGIN:VCARD\nVERSION:3.0\n..."
   }
@@ -191,11 +193,11 @@ Mensagem de texto simples ou formatada.
 {
   "event": "message.location",
   "data": {
-    ...base,
+    "...base": "...",
     "lat": -23.5505,
     "lng": -46.6333,
     "name": "Av. Paulista",
-    "address": "Av. Paulista, 1000 - São Paulo"
+    "address": "Av. Paulista, 1000 — São Paulo"
   }
 }
 ```
@@ -204,13 +206,13 @@ Mensagem de texto simples ou formatada.
 
 ### `message.reaction`
 
-Reação (emoji) a uma mensagem.
+Emoji reaction to a message.
 
 ```json
 {
   "event": "message.reaction",
   "data": {
-    ...base,
+    "...base": "...",
     "emoji": "❤️",
     "targetMessageId": "3EB0ABCDEF123456",
     "isRemoved": false
@@ -218,21 +220,21 @@ Reação (emoji) a uma mensagem.
 }
 ```
 
-`isRemoved: true` quando o usuário **remove** a reação (emoji vazio).
+`isRemoved: true` when the user **removes** the reaction (empty emoji).
 
 ---
 
 ### `message.poll_created`
 
-Enquete recebida.
+Poll received.
 
 ```json
 {
   "event": "message.poll_created",
   "data": {
-    ...base,
-    "pollName": "Qual o melhor sabor?",
-    "options": ["Chocolate", "Morango", "Baunilha"]
+    "...base": "...",
+    "pollName": "What's the best flavor?",
+    "options": ["Chocolate", "Strawberry", "Vanilla"]
   }
 }
 ```
@@ -241,13 +243,13 @@ Enquete recebida.
 
 ### `message.poll_vote`
 
-Voto em enquete.
+Vote on a poll.
 
 ```json
 {
   "event": "message.poll_vote",
   "data": {
-    ...base,
+    "...base": "...",
     "pollId": "3EB0ABCDEF123456",
     "selectedOptions": ["Chocolate"]
   }
@@ -258,36 +260,36 @@ Voto em enquete.
 
 ### `message.button_reply`
 
-Clique em botão (quick_reply, cta_url, cta_copy, etc.).
+Button click (quick_reply, cta_url, cta_copy, etc.).
 
 ```json
 {
   "event": "message.button_reply",
   "data": {
-    ...base,
-    "buttonId": "opcao_sim",
-    "displayText": "Sim",
+    "...base": "...",
+    "buttonId": "option_yes",
+    "displayText": "Yes",
     "type": "quick_reply"
   }
 }
 ```
 
-`type` pode ser `quick_reply` (botão moderno) ou `legacy_button` (formato antigo).
+`type` can be `quick_reply` (modern button) or `legacy_button` (older format).
 
 ---
 
 ### `message.list_reply`
 
-Seleção de item em lista interativa.
+Selection from an interactive list.
 
 ```json
 {
   "event": "message.list_reply",
   "data": {
-    ...base,
+    "...base": "...",
     "rowId": "1",
-    "title": "X-Burguer",
-    "description": "R$ 18,90"
+    "title": "X-Burger",
+    "description": "$ 18.90"
   }
 }
 ```
@@ -296,13 +298,13 @@ Seleção de item em lista interativa.
 
 ### `message.deleted`
 
-Mensagem deletada pelo remetente.
+Message deleted by the sender.
 
 ```json
 {
   "event": "message.deleted",
   "data": {
-    ...base
+    "...base": "..."
   }
 }
 ```
@@ -311,13 +313,13 @@ Mensagem deletada pelo remetente.
 
 ### `message.unknown`
 
-Tipo de mensagem não mapeado.
+Unmapped message type.
 
 ```json
 {
   "event": "message.unknown",
   "data": {
-    ...base,
+    "...base": "...",
     "rawType": "senderKeyDistributionMessage"
   }
 }
@@ -325,11 +327,27 @@ Tipo de mensagem não mapeado.
 
 ---
 
-## Eventos de Mensagem Enviada
+### `message.undecryptable`
+
+Message that could not be decrypted.
+
+```json
+{
+  "event": "message.undecryptable",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net"
+  }
+}
+```
+
+---
+
+## Sent Message Events
 
 ### `message.sent`
 
-> **Nota:** Disparado manualmente via rota `/send` quando configurado. Não é automático para todas as rotas ainda — pode ser implementado por demanda.
+> **Note:** Dispatched manually via the `/send` endpoint when configured. Not automatic for all routes yet — can be implemented on demand.
 
 ```json
 {
@@ -344,11 +362,30 @@ Tipo de mensagem não mapeado.
 
 ---
 
-## Eventos de Conexão
+### `message.read`
+
+Read / delivery receipt.
+
+```json
+{
+  "event": "message.read",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "messageIds": ["3EB0ABCDEF123456", "3EB0ABCDEF123457"],
+    "type": "read",
+    "timestamp": 1704067200
+  }
+}
+```
+
+---
+
+## Connection Lifecycle Events
 
 ### `connection.connected`
 
-WhatsApp conectado com sucesso.
+WhatsApp successfully connected.
 
 ```json
 {
@@ -363,7 +400,7 @@ WhatsApp conectado com sucesso.
 
 ### `connection.disconnected`
 
-WhatsApp desconectado (logout ou erro).
+WhatsApp disconnected (logout or error).
 
 ```json
 {
@@ -376,7 +413,7 @@ WhatsApp desconectado (logout ou erro).
 
 ### `connection.qr_ready`
 
-QR Code gerado para escaneamento.
+QR Code generated for scanning.
 
 ```json
 {
@@ -389,11 +426,261 @@ QR Code gerado para escaneamento.
 
 ---
 
-## Eventos de Chamada
+### `connection.pair_code`
+
+Pairing code received (ready to display to the user).
+
+```json
+{
+  "event": "connection.pair_code",
+  "data": {
+    "code": "ABCD-1234",
+    "connected": false
+  }
+}
+```
+
+`connected: true` when the phone successfully paired via code.
+
+---
+
+### `connection.pair_status`
+
+Pairing status update.
+
+```json
+{
+  "event": "connection.pair_status",
+  "data": {
+    "jid": "5511999999999@s.whatsapp.net",
+    "businessName": "My Business",
+    "platform": "WEB",
+    "status": "OK",
+    "error": ""
+  }
+}
+```
+
+---
+
+### `connection.logged_out`
+
+Session logged out remotely.
+
+```json
+{
+  "event": "connection.logged_out",
+  "data": {
+    "reason": "User logout"
+  }
+}
+```
+
+---
+
+### `connection.connect_failure`
+
+Failed to connect to WhatsApp servers.
+
+```json
+{
+  "event": "connection.connect_failure",
+  "data": {
+    "reason": "ERROR_CONNECT",
+    "message": "Connection timed out"
+  }
+}
+```
+
+---
+
+### `connection.stream_error`
+
+Stream-level error.
+
+```json
+{
+  "event": "connection.stream_error",
+  "data": {
+    "code": "STREAM_ERR"
+  }
+}
+```
+
+---
+
+### `connection.temporary_ban`
+
+Account temporarily banned.
+
+```json
+{
+  "event": "connection.temporary_ban",
+  "data": {
+    "code": "BAN_CODE",
+    "expire": 1704153600
+  }
+}
+```
+
+---
+
+### `connection.client_outdated`
+
+Client version is no longer supported.
+
+```json
+{
+  "event": "connection.client_outdated",
+  "data": {}
+}
+```
+
+---
+
+### `connection.stream_replaced`
+
+Session replaced by another one.
+
+```json
+{
+  "event": "connection.stream_replaced",
+  "data": {}
+}
+```
+
+---
+
+## Group Events
+
+### `group.join`
+
+Bot joined a group.
+
+```json
+{
+  "event": "group.join",
+  "data": {
+    "groupId": "123456789@g.us",
+    "groupName": "My Group",
+    "reason": "invite",
+    "type": ""
+  }
+}
+```
+
+---
+
+### `group.update`
+
+Group info changed (name, description, participants, etc.).
+
+```json
+{
+  "event": "group.update",
+  "data": {
+    "groupId": "123456789@g.us",
+    "sender": "5511999999999@s.whatsapp.net",
+    "name": "New Group Name",
+    "topic": "New description",
+    "locked": false,
+    "announce": false,
+    "ephemeral": 604800,
+    "delete": false,
+    "link": null,
+    "unlink": null,
+    "newInviteLink": "https://chat.whatsapp.com/abc123"
+  }
+}
+```
+
+---
+
+## Contact / Presence Events
+
+### `contact.presence`
+
+Contact online/offline status change.
+
+```json
+{
+  "event": "contact.presence",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "status": "online",
+    "lastSeen": 0
+  }
+}
+```
+
+`status` is `"online"` or `"offline"`.
+
+---
+
+### `contact.chat_presence`
+
+Contact is typing, recording, or paused.
+
+```json
+{
+  "event": "contact.chat_presence",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "state": "typing",
+    "media": null
+  }
+}
+```
+
+`state` can be `"typing"`, `"recording"`, or `"paused"`. `media` is present when recording.
+
+---
+
+### `contact.picture_change`
+
+Profile picture changed or removed.
+
+```json
+{
+  "event": "contact.picture_change",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "author": "5511999999999@s.whatsapp.net",
+    "action": "changed"
+  }
+}
+```
+
+`action` can be `"changed"` or `"removed"`.
+
+---
+
+### `contact.identity_change`
+
+Contact's encryption identity changed (security notification).
+
+```json
+{
+  "event": "contact.identity_change",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "implicit": false,
+    "timestamp": 1704067200
+  }
+}
+```
+
+---
+
+## Call Events
 
 ### `call.received`
 
-Chamada recebida (aceita ou rejeitada).
+Incoming call received (accepted or rejected).
 
 ```json
 {
@@ -408,16 +695,51 @@ Chamada recebida (aceita ou rejeitada).
 
 ---
 
-## Placeholders (body customizado)
+### `call.accepted`
 
-Se o webhook tiver `body` configurado, esses placeholders são substituídos:
+Incoming call was accepted.
 
-| Placeholder | Valor |
+```json
+{
+  "event": "call.accepted",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "callId": "ABC123DEF456"
+  }
+}
+```
+
+---
+
+### `call.terminated`
+
+Call ended.
+
+```json
+{
+  "event": "call.terminated",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "callId": "ABC123DEF456",
+    "reason": "timeout"
+  }
+}
+```
+
+---
+
+## Placeholders (Custom Body)
+
+If the webhook has a `body` configured, these placeholders are replaced:
+
+| Placeholder | Value |
 |-------------|-------|
-| `{{from}}` | Número do remetente |
-| `{{text}}` | Texto da mensagem |
-| `{{phone}}` | Mesmo que `{{from}}` |
-| `{{id}}` | ID da mensagem |
-| `{{timestamp}}` | Timestamp UTC atual |
-| `{{requested}}` | (fetchMessages) qtd solicitada |
-| `{{found}}` | (fetchMessages) qtd encontrada |
+| `{{from}}` | Sender phone number |
+| `{{text}}` | Message text |
+| `{{phone}}` | Same as `{{from}}` |
+| `{{id}}` | Message ID |
+| `{{timestamp}}` | Current UTC timestamp |
+| `{{requested}}` | (fetchMessages) requested count |
+| `{{found}}` | (fetchMessages) found count |

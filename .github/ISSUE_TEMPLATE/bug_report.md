@@ -1,43 +1,43 @@
 ---
 name: Bug Report
-about: Reporte um comportamento inesperado ou erro na API
+about: Report unexpected behavior or API error
 title: "[BUG] "
 labels: bug
 assignees: kauafpssx
 ---
 
-## Descrição do problema
+## Problem description
 
-Descreva claramente o que está acontecendo de errado.
+Clearly describe what is happening wrong.
 
-## Como reproduzir
+## How to reproduce
 
-Passos para reproduzir o comportamento:
+Steps to reproduce the behavior:
 
-1. Endpoint chamado: `METHOD /rota`
-2. Payload enviado (remova dados sensíveis):
+1. Endpoint called: `METHOD /route`
+2. Payload sent (remove sensitive data):
 ```json
 
 ```
-3. O que ocorreu:
+3. What happened:
 
-## Comportamento esperado
+## Expected behavior
 
-O que deveria acontecer.
+What should happen.
 
-## Logs / Resposta da API
+## Logs / API Response
 
 ```
-Cole aqui o erro ou a resposta recebida
+Paste the error or response here
 ```
 
-## Ambiente
+## Environment
 
-- OS: (ex: Ubuntu 22.04 / Windows 11)
-- Python version: (ex: 3.11.4)
-- Hospedagem: (ex: Local / VPS / Alwaysdata)
-- Versão / commit: (ex: v1.0.0 ou hash do commit)
+- OS: (e.g., Ubuntu 22.04 / Windows 11)
+- Python version: (e.g., 3.11.4)
+- Hosting: (e.g., Local / VPS / Alwaysdata)
+- Version / commit: (e.g., v1.0.0 or commit hash)
 
-## Contexto adicional
+## Additional context
 
-Qualquer informação extra que possa ajudar a diagnosticar.
+Any extra information that may help diagnose.

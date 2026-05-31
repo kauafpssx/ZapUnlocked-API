@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Minimal wheel installer — baixa uma wheel e extrai no target.
+"""Minimal wheel installer — downloads a wheel and extracts to target.
 
-Uso: python3 install_wheel.py <wheel_url> <target>
+Usage: python3 install_wheel.py <wheel_url> <target>
 """
 
 import shutil, sys, tempfile, urllib.request, zipfile
@@ -9,13 +9,13 @@ from pathlib import Path
 
 
 def _rename_extensions(target: Path) -> None:
-    """Renomeia .so da wheel para {module}.so.
+    """Renames .so files from wheel to {module}.so.
 
-    As wheels nomeiam extensões nativas com tags de plataforma
-    (ex: _pydantic_core.cp313-cp313-manylinux_2_17_x86_64.so), mas o
-    interpretador só reconhece sufixos como .cpython-313-x86_64-linux-gnu.so
-    ou .so genérico.  Limpamos os tags e deixamos apenas {module}.so, que
-    está sempre em EXTENSION_SUFFIXES.
+    Wheels name native extensions with platform tags
+    (e.g., _pydantic_core.cp313-cp313-manylinux_2_17_x86_64.so), but the
+    interpreter only recognizes suffixes like .cpython-313-x86_64-linux-gnu.so
+    or plain .so. We strip the tags and keep only {module}.so, which
+    is always in EXTENSION_SUFFIXES.
     """
     for so in target.rglob('*.so'):
         mod = so.stem.split('.')[0]
@@ -34,7 +34,7 @@ def main():
         with zipfile.ZipFile(whl) as zf:
             zf.extractall(target)
         _rename_extensions(target)
-        print('    extraido', file=sys.stderr)
+        print('    extracted', file=sys.stderr)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 

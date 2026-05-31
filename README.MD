@@ -1,10 +1,12 @@
-# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
+# ⚡💬 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br/)(https://zapunlocked-api.kauafpss.com.br)
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Free%20%26%20Open%20Source-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="Free & Open Source">
-  <img src="https://img.shields.io/badge/Self%20Hosted-A855F7?style=for-the-badge&logo=docker&logoColor=white" alt="Self Hosted">
+  <a href="https://downgit.github.io/#/home?url=https://github.com/kauafpssx/ZapUnlocked-API/blob/main/ZapUnlocked.collection.json" target="_blank">
+    <img src="https://img.shields.io/badge/Collection-A855F7?style=for-the-badge&logo=postman&logoColor=white" alt="Postman Collection">
+  </a>
   <img src="https://img.shields.io/badge/REST%20API-A855F7?style=for-the-badge&logo=fastapi&logoColor=white" alt="REST API">
   <img src="https://img.shields.io/badge/MIT%20License-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="MIT License">
   <img src="https://img.shields.io/badge/Python%203.10%2B-A855F7?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+">
@@ -45,13 +47,16 @@ Nossa proposta é fundamentada na **excelência técnica** e na **independência
 > [!TIP]
 > Perfeito para desenvolvedores que buscam agilidade na integração de bots, notificações e sistemas de atendimento automatizados. **Sem pagar nada por isso.**
 
+> [!NOTE]
+> A API foi internacionalizada, todas as respostas, mensagens de erro e interface web agora estão em **Inglês**.
+
 ---
 
 ## 🗺️ Visão Geral da API
 
 ```mermaid
 mindmap
-  root((📲 ZapUnlocked-API))
+  root((⚡💬 ZapUnlocked-API))
     📨 Mensagens
       Texto / Responder
       Mídias 📸🎥🎵
@@ -59,7 +64,8 @@ mindmap
       Contatos / Links
       Editar / Deletar / Ler
     🔘 Interativas
-      Botões Stateless
+      Botão Lista / Ação
+      OTP / PIX
       Lista de Opções
       Enquetes
     🔍 Consultas
@@ -67,26 +73,27 @@ mindmap
       Histórico
       Chats Recentes
       Memória / Disco
-      Database
+      Database / Cleanup
     🔗 Conexão
       Status / SSE
-      QR Code
+      QR Code / PNG
       Pairing Code
       Logout
     📡 Webhooks
-      Criar / Listar
-      Editar / Deletar
-      Ativar / Testar
-      20 Eventos
+       Criar / Listar
+       Editar / Deletar
+       Ativar / Testar
+       40 Eventos
     ⚙️ Perfil & Privacidade
       Nome / Foto
       Visto por último
       Bloqueios
     🤖 Bot
       Tag IA
-      IP Control
       Rejeitar Chamadas
       Auto Read
+    🛡️ Regras de IP
+      Whitelist / Blacklist
     📱 Instância
       Dados da Conta
       Dispositivo
@@ -117,125 +124,164 @@ mindmap
 ## 📋 Rotas da API
 
 <details>
-<summary><b>📨 Envio de Mensagens</b> · 14 endpoints</summary>
+<summary><b>📨 Envio de Mensagens</b> · 15 endpoints</summary>
 
-| Método | Rota | Descrição |
-| :----- | :--- | :-------- |
-| `POST` | `/send` | Enviar mensagem de texto / responder |
-| `POST` | `/send_image` | Enviar imagem |
-| `POST` | `/send_video` | Enviar vídeo (suporta GIF e PTV) |
-| `POST` | `/send_audio` | Enviar áudio (com conversão automática para PTT) |
-| `POST` | `/send_document` | Enviar documento |
-| `POST` | `/send_sticker` | Enviar figurinha |
-| `POST` | `/send_reaction` | Enviar reação com emoji |
-| `POST` | `/send_location` | Enviar localização |
-| `POST` | `/send_contact` | Enviar contato |
-| `POST` | `/send_contacts` | Enviar múltiplos contatos |
-| `POST` | `/send_link` | Enviar link com preview |
-| `POST` | `/messages/delete` | Deletar mensagem |
-| `POST` | `/messages/read` | Marcar como lida |
-| `POST` | `/messages/edit` | Editar mensagem enviada |
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/send` | Enviar mensagem de texto / responder | `phone`, `message` |
+| `POST` | `/send_image` | Enviar imagem | `phone`, `image_url` |
+| `POST` | `/send_video` | Enviar vídeo (suporta GIF e PTV) | `phone`, `video_url` |
+| `POST` | `/send_audio` | Enviar áudio (com conversão automática para PTT) | `phone`, `audio_url` |
+| `POST` | `/send_document` | Enviar documento | `phone`, `document_url` |
+| `POST` | `/send_sticker` | Enviar figurinha | `phone`, `sticker_url` |
+| `POST` | `/send_reaction` | Enviar reação com emoji | `phone`, `messageId`, `emoji` |
+| `POST` | `/send_location` | Enviar localização | `phone`, `lat`, `lng` |
+| `POST` | `/send_contact` | Enviar contato | `phone`, `name`, `contactPhone` |
+| `POST` | `/send_contacts` | Enviar múltiplos contatos | `phone`, `contacts` |
+| `POST` | `/send_link` | Enviar link com preview | `phone`, `url` |
+| `POST` | `/messages/delete` | Deletar mensagem | `phone`, `messageId` |
+| `POST` | `/messages/read` | Marcar como lida | `phone`, `messageIds` |
+| `POST` | `/messages/edit` | Editar mensagem enviada | `phone`, `messageId`, `message` |
 </details>
 
 <details>
-<summary><b>🔘 Mensagens Interativas</b> · 4 endpoints</summary>
+<summary><b>🔘 Mensagens Interativas</b> · 7 endpoints</summary>
 
-| Método | Rota | Descrição |
-| :----- | :--- | :-------- |
-| `POST` | `/send_wbuttons` | Enviar botões (lista, ação, OTP, PIX) |
-| `POST` | `/messages/send-option-list` | Enviar lista de opções |
-| `POST` | `/messages/send-poll` | Enviar enquete |
-| `POST` | `/messages/send-poll-vote` | Votar em enquete |
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/messages/send-button-list` | Botão de lista de opções | `phone`, `buttons` |
+| `POST` | `/messages/send-button-actions` | Botão de ação | `phone`, `buttons` |
+| `POST` | `/messages/send-button-otp` | Botão de cópia (OTP) | `phone`, `code` |
+| `POST` | `/messages/send-button-pix` | Botão de PIX | `phone`, `pixKey` |
+| `POST` | `/messages/send-option-list` | Enviar lista de opções | `phone`, `buttons` |
+| `POST` | `/messages/send-poll` | Enviar enquete | `phone`, `name`, `options` |
+| `POST` | `/messages/send-poll-vote` | Votar em enquete | `phone`, `options` |
 </details>
 
 <details>
-<summary><b>🔍 Consultas e Gestão</b> · 7 endpoints</summary>
+<summary><b>🔍 Consultas e Gestão</b> · 8 endpoints</summary>
 
-| Método | Rota | Descrição |
-| :----- | :--- | :-------- |
-| `POST` | `/contacts/info` | Informações detalhadas do contato |
-| `POST` | `/management/fetch_messages` | Buscar histórico de mensagens |
-| `POST` | `/management/recent_contacts` | Listar chats recentes |
-| `GET` | `/management/memory` | Status do uso de memória |
-| `GET` | `/management/volume_stats` | Verificar uso de disco |
-| `GET` | `/management/database/status` | Status e estatísticas do banco |
-| `POST` | `/management/database/cleanup` | Limpeza manual do banco |
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/management/fetch_messages` | Buscar histórico de mensagens | `phone` |
+| `POST` | `/management/recent_contacts` | Listar chats recentes | ❌ |
+| `GET` | `/management/memory` | Status do uso de memória | ❌ |
+| `GET` | `/management/volume_stats` | Verificar uso de disco | ❌ |
+| `DELETE` | `/management/cleanup` | Limpar mídia temporária | ❌ |
+| `GET` | `/management/database/status` | Status e estatísticas do banco | ❌ |
+| `POST` | `/management/database/config` | Atualizar configurações do banco | `interval` |
+| `POST` | `/management/database/cleanup` | Limpeza manual do banco | ❌ |
 </details>
 
 <details>
-<summary><b>🔗 Conexão e Sessão</b> · 8 endpoints</summary>
+<summary><b>👤 Contatos</b> · 1 endpoint</summary>
 
-| Método | Rota | Descrição |
-| :----- | :--- | :-------- |
-| `GET` | `/` | Página de boas-vindas (HTML) |
-| `GET` | `/status` | Status da conexão e sessão |
-| `GET` | `/status/stream` | Status em tempo real (SSE) |
-| `GET` | `/qr` | Visualizar QR Code interativo |
-| `GET` | `/qr/image` | Obter imagem do QR Code (Base64) |
-| `POST` | `/qr/pair` | Gerar código de pareamento numérico |
-| `GET` | `/settings/phone-code/{phone}` | Gerar código por número |
-| `POST` | `/qr/logout` | Desconectar e resetar sessão |
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/contacts/info` | Informações detalhadas do contato | `phone` |
 </details>
 
 <details>
-<summary><b>📡 Webhooks (CRUD)</b> · 7 endpoints</summary>
+<summary><b>🏠 Geral</b> · 3 endpoints</summary>
 
-| Método | Rota | Descrição |
-| :----- | :--- | :-------- |
-| `POST` | `/webhooks` | Criar webhook nomeado |
-| `GET` | `/webhooks` | Listar todos os webhooks |
-| `PUT` | `/webhooks/{name}` | Editar webhook |
-| `DELETE` | `/webhooks/{name}` | Remover webhook |
-| `POST` | `/webhooks/{name}/toggle` | Ativar / desativar |
-| `POST` | `/webhooks/{name}/test` | Testar webhook |
-| `GET` | `/webhooks/events` | Listar tipos de eventos (20 tipos) |
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/` | Página de boas-vindas (HTML) | ❌ |
+| `GET` | `/status` | Status da conexão e sessão (JSON) | ❌ |
+| `GET` | `/status/stream` | Status em tempo real via SSE | ❌ |
+</details>
+
+<details>
+<summary><b>🔗 Conexão (QR)</b> · 2 endpoints</summary>
+
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/qr` | Visualizar QR Code interativo (HTML) | ❌ |
+| `GET` | `/qr/image` | Obter imagem do QR Code (PNG) | ❌ |
+</details>
+
+<details>
+<summary><b>🔐 Sessão</b> · 2 endpoints</summary>
+
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/session/pair` | Gerar código de pareamento numérico | `phone` |
+| `POST` | `/session/logout` | Desconectar e resetar sessão | ❌ |
+</details>
+
+<details>
+<summary><b>📡 Webhooks (CRUD)</b> · 8 endpoints</summary>
+
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/webhooks` | Criar webhook nomeado | `name`, `url` |
+| `GET` | `/webhooks` | Listar todos os webhooks | ❌ |
+| `GET` | `/webhooks/{name}` | Obter webhook por nome | ❌ |
+| `PUT` | `/webhooks/{name}` | Editar webhook | ❌ |
+| `DELETE` | `/webhooks/{name}` | Remover webhook | ❌ |
+| `POST` | `/webhooks/{name}/toggle` | Ativar / desativar | `active` |
+| `POST` | `/webhooks/{name}/test` | Testar webhook | ❌ |
+| `GET` | `/webhooks/events` | Listar tipos de eventos (40 tipos) | ❌ |
 </details>
 
 <details>
 <summary><b>⚙️ Perfil e Privacidade</b> · 3 endpoints</summary>
 
-| Método | Rota | Descrição |
-| :----- | :--- | :-------- |
-| `POST` | `/settings/profile` | Alterar nome e foto do bot |
-| `POST` | `/settings/privacy` | Ajustar privacidade (visto por último, etc) |
-| `POST` | `/settings/block` | Bloquear / desbloquear contato |
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/settings/profile` | Alterar nome e foto do bot | ❌ |
+| `POST` | `/settings/privacy` | Ajustar privacidade (visto por último, etc) | ❌ |
+| `POST` | `/settings/block` | Bloquear / desbloquear contato | `phone`, `action` |
 </details>
 
 <details>
-<summary><b>🤖 Configurações do Bot</b> · 5 endpoints</summary>
+<summary><b>🤖 Configurações do Bot</b> · 6 endpoints</summary>
 
-| Método | Rota | Descrição |
-| :----- | :--- | :-------- |
-| `GET` | `/settings/bot` | Ver configurações do bot |
-| `POST` | `/settings/bot` | Atualizar configurações (tag IA, IP control) |
-| `PUT` | `/settings/instance/call-reject-auto` | Rejeitar chamadas automaticamente |
-| `PUT` | `/settings/instance/call-reject-message` | Mensagem de chamada rejeitada |
-| `PUT` | `/settings/instance/auto-read-message` | Leitura automática de mensagens |
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/settings/bot` | Ver configurações do bot | ❌ |
+| `POST` | `/settings/bot` | Atualizar configurações (tag IA, IP control) | ❌ |
+| `PUT` | `/settings/instance/call-reject-auto` | Rejeitar chamadas automaticamente | `value` |
+| `PUT` | `/settings/instance/call-reject-message` | Mensagem de chamada rejeitada | `value` |
+| `PUT` | `/settings/instance/auto-read-message` | Leitura automática de mensagens | `value` |
+| `GET` | `/settings/phone-code/{phone}` | Gerar código de pareamento por número | ❌ |
 </details>
 
 <details>
 <summary><b>📱 Instância</b> · 3 endpoints</summary>
 
-| Método | Rota | Descrição |
-| :----- | :--- | :-------- |
-| `GET` | `/instance/me` | Dados da conta conectada |
-| `GET` | `/instance/device` | Dados técnicos do dispositivo |
-| `PUT` | `/instance/update-name` | Renomear instância |
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/instance/me` | Dados da conta conectada | ❌ |
+| `GET` | `/instance/device` | Dados técnicos do dispositivo | ❌ |
+| `PUT` | `/instance/update-name` | Renomear instância | `name` |
+</details>
+
+<details>
+<summary><b>🛡️ Regras de IP</b> · 5 endpoints</summary>
+
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/settings/ip-rules` | Listar regras de IP (whitelist/blacklist) | ❌ |
+| `POST` | `/settings/ip-rules/whitelist` | Adicionar IP à whitelist | `ip` |
+| `POST` | `/settings/ip-rules/blacklist` | Adicionar IP à blacklist | `ip` |
+| `DELETE` | `/settings/ip-rules/whitelist/{ip}` | Remover IP da whitelist | ❌ |
+| `DELETE` | `/settings/ip-rules/blacklist/{ip}` | Remover IP da blacklist | ❌ |
 </details>
 
 <details>
 <summary><b>🖥️ Sistema</b> · 5 endpoints</summary>
 
-| Método | Rota | Descrição |
-| :----- | :--- | :-------- |
-| `GET` | `/system/env` | Ver variáveis de ambiente |
-| `PUT` | `/system/env` | Atualizar variáveis de ambiente |
-| `POST` | `/system/cleanup/force` | Limpeza forçada de mídia temporária |
-| `GET` | `/system/cleanup/settings` | Ver configurações de limpeza automática |
-| `PUT` | `/system/cleanup/settings` | Atualizar intervalo de limpeza automática |
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/system/env` | Ver variáveis de ambiente | ❌ |
+| `PUT` | `/system/env` | Atualizar variáveis de ambiente | ❌ |
+| `POST` | `/system/cleanup/force` | Limpeza forçada de mídia temporária | ❌ |
+| `GET` | `/system/cleanup/settings` | Ver configurações de limpeza automática | ❌ |
+| `PUT` | `/system/cleanup/settings` | Atualizar intervalo de limpeza automática | ❌ |
 </details>
 
-> **Total: 56 endpoints** · REST completos para automação de WhatsApp.
+> **Total: 68 endpoints**
 
 ---
 
@@ -253,7 +299,10 @@ Todos os webhooks recebem um envelope padrão:
 
 Se o webhook tiver um `body` customizado com `{{placeholders}}`, esse body é enviado em vez do envelope padrão.
 
-### Placeholders (body customizado)
+---
+
+<details>
+<summary><b>🏷️ Placeholders disponíveis no body customizado</b></summary>
 
 | Placeholder | Valor |
 | :---------- | :---- |
@@ -264,15 +313,13 @@ Se o webhook tiver um `body` customizado com `{{placeholders}}`, esse body é en
 | `{{requested}}` | Quantidade solicitada (fetchMessages) |
 | `{{found}}` | Quantidade encontrada (fetchMessages) |
 | `{{timestamp}}` | Timestamp UTC atual |
-| `{{day}}` | Dia atual (dd) |
-| `{{mon}}` | Mês atual (MM) |
-| `{{yea}}` | Ano atual (yyyy) |
-| `{{hou}}` | Hora atual (HH) |
-| `{{min}}` | Minuto atual (mm) |
-| `{{sec}}` | Segundo atual (ss) |
+
+</details>
+
+---
 
 <details>
-<summary><b>📥 Mensagens Recebidas</b> · 15 eventos</summary>
+<summary><b>📥 Mensagens Recebidas</b> · 16 eventos</summary>
 
 Campos base presentes em eventos de mensagem recebida:
 
@@ -521,10 +568,23 @@ Campos base presentes em eventos de mensagem recebida:
 ```
 </details>
 
+<details>
+<summary><code>message.undecryptable</code> - Mensagem não descriptografável</summary>
+
+```json
+{
+  "event": "message.undecryptable",
+  "data": {
+    "...base": "..."
+  }
+}
+```
+</details>
+
 </details>
 
 <details>
-<summary><b>📤 Mensagens Enviadas</b> · 1 evento</summary>
+<summary><b>📤 Mensagens Enviadas</b> · 4 eventos</summary>
 
 <details>
 <summary><code>message.sent</code> - Mensagem enviada (manual)</summary>
@@ -541,10 +601,53 @@ Campos base presentes em eventos de mensagem recebida:
 ```
 </details>
 
+<details>
+<summary><code>message.delivered</code> - Mensagem entregue ao destinatário (receipt type 1)</summary>
+
+```json
+{
+  "event": "message.delivered",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
 </details>
 
 <details>
-<summary><b>🔗 Conexão</b> · 3 eventos</summary>
+<summary><code>message.read</code> - Mensagem lida pelo destinatário (receipt type 4)</summary>
+
+```json
+{
+  "event": "message.read",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>message.receipt</code> - Outros tipos de confirmação (receipt types 2, 3, 5+)</summary>
+
+```json
+{
+  "event": "message.receipt",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456",
+    "receiptType": 2
+  }
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>🔗 Conexão</b> · 11 eventos</summary>
 
 <details>
 <summary><code>connection.connected</code> - WhatsApp conectado</summary>
@@ -583,10 +686,206 @@ Campos base presentes em eventos de mensagem recebida:
 ```
 </details>
 
+<details>
+<summary><code>connection.pair_code</code> - Código de pareamento gerado</summary>
+
+```json
+{
+  "event": "connection.pair_code",
+  "data": {
+    "code": "NR62-NZSF"
+  }
+}
+```
 </details>
 
 <details>
-<summary><b>📞 Chamada</b> · 1 evento</summary>
+<summary><code>connection.pair_status</code> - Status do pareamento</summary>
+
+```json
+{
+  "event": "connection.pair_status",
+  "data": {
+    "status": "waiting",
+    "phone": "5511999999999"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.logged_out</code> - Sessão encerrada remotamente</summary>
+
+```json
+{
+  "event": "connection.logged_out",
+  "data": {}
+}
+```
+</details>
+
+<details>
+<summary><code>connection.connect_failure</code> - Falha na conexão</summary>
+
+```json
+{
+  "event": "connection.connect_failure",
+  "data": {
+    "reason": "network_error"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.stream_error</code> - Erro no stream</summary>
+
+```json
+{
+  "event": "connection.stream_error",
+  "data": {
+    "error": "connection closed"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.temporary_ban</code> - Ban temporário</summary>
+
+```json
+{
+  "event": "connection.temporary_ban",
+  "data": {
+    "phone": "5511999999999"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.client_outdated</code> - Cliente desatualizado</summary>
+
+```json
+{
+  "event": "connection.client_outdated",
+  "data": {}
+}
+```
+</details>
+
+<details>
+<summary><code>connection.stream_replaced</code> - Stream substituído</summary>
+
+```json
+{
+  "event": "connection.stream_replaced",
+  "data": {}
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>👥 Grupo</b> · 2 eventos</summary>
+
+<details>
+<summary><code>group.join</code> - Novo membro entrou no grupo</summary>
+
+```json
+{
+  "event": "group.join",
+  "data": {
+    "groupId": "5511999999999-123456@g.us",
+    "inviter": "5511888888888",
+    "member": "5511999999999"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>group.update</code> - Grupo atualizado</summary>
+
+```json
+{
+  "event": "group.update",
+  "data": {
+    "groupId": "5511999999999-123456@g.us",
+    "name": "Novo Nome",
+    "updatedBy": "5511888888888"
+  }
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>👤 Contato / Presença</b> · 4 eventos</summary>
+
+<details>
+<summary><code>contact.presence</code> - Status de presença do contato</summary>
+
+```json
+{
+  "event": "contact.presence",
+  "data": {
+    "from": "5511999999999@s.whatsapp.net",
+    "presence": "available",
+    "lastSeen": 1700000000
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>contact.chat_presence</code> - Status de digitação</summary>
+
+```json
+{
+  "event": "contact.chat_presence",
+  "data": {
+    "from": "5511999999999@s.whatsapp.net",
+    "presence": "composing",
+    "mediaType": 0
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>contact.picture_change</code> - Foto de perfil alterada</summary>
+
+```json
+{
+  "event": "contact.picture_change",
+  "data": {
+    "from": "5511999999999@s.whatsapp.net",
+    "pictureId": "abc123"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>contact.identity_change</code> - Chave de segurança alterada</summary>
+
+```json
+{
+  "event": "contact.identity_change",
+  "data": {
+    "from": "5511999999999@s.whatsapp.net"
+  }
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>📞 Chamada</b> · 3 eventos</summary>
 
 <details>
 <summary><code>call.received</code> - Chamada recebida</summary>
@@ -598,6 +897,35 @@ Campos base presentes em eventos de mensagem recebida:
     "from": "5511999999999",
     "fromJid": "5511999999999@s.whatsapp.net",
     "callId": "ABC123DEF456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>call.accepted</code> - Chamada aceita</summary>
+
+```json
+{
+  "event": "call.accepted",
+  "data": {
+    "from": "5511999999999",
+    "callId": "ABC123DEF456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>call.terminated</code> - Chamada encerrada</summary>
+
+```json
+{
+  "event": "call.terminated",
+  "data": {
+    "from": "5511999999999",
+    "callId": "ABC123DEF456",
+    "reason": "timeout"
   }
 }
 ```
@@ -688,11 +1016,14 @@ cd ~/ZapUnlocked-API
 bash scripts/install/install.sh
 ```
 
-**4.** Gere o `.env`:
+**4.** *(Opcional)* Gere o `.env`:
 
 ```bash
 bash scripts/generate-env/generate-env.sh
 ```
+
+> [!NOTE]
+> O script de instalação já pergunta se deseja configurar o `.env`. Se respondeu **sim**, este passo pode ser pulado. Caso contrário, execute o comando acima ou configure o `.env` manualmente.
 
 **5.** Configure o Serviço (24/7) em **Advanced › Services › Add a service**:
 

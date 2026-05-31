@@ -1,10 +1,12 @@
-# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
+# ⚡💬 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br/)(https://zapunlocked-api.kauafpss.com.br/)
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Free%20%26%20Open%20Source-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="Free & Open Source">
-  <img src="https://img.shields.io/badge/Self%20Hosted-A855F7?style=for-the-badge&logo=docker&logoColor=white" alt="Self Hosted">
+  <a href="https://downgit.github.io/#/home?url=https://github.com/kauafpssx/ZapUnlocked-API/blob/main/ZapUnlocked.collection.json" target="_blank">
+    <img src="https://img.shields.io/badge/Collection-A855F7?style=for-the-badge&logo=postman&logoColor=white" alt="Postman Collection">
+  </a>
   <img src="https://img.shields.io/badge/REST%20API-A855F7?style=for-the-badge&logo=fastapi&logoColor=white" alt="REST API">
   <img src="https://img.shields.io/badge/MIT%20License-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="MIT License">
   <img src="https://img.shields.io/badge/Python%203.10%2B-A855F7?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+">
@@ -16,7 +18,7 @@
 
 <table width="100%">
   <tr>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.MD"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg" width="40" title="Português (Brasil)"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg" width="40" title="Português (Brasil)"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/en.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/us.svg" width="40" title="English"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/es.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg" width="40" title="Español"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/fr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/fr.svg" width="40" title="Français"></a></td>
@@ -49,9 +51,10 @@ Unser Ansatz basiert auf **technischer Exzellenz** und **Entwicklerunabhängigke
 
 ## 🗺️ API-Übersicht
 
+
 ```mermaid
 mindmap
-  root((📲 ZapUnlocked-API))
+  root((⚡💬 ZapUnlocked-API))
     📨 Nachrichten
       Text / Antworten
       Medien 📸🎥🎵
@@ -59,7 +62,8 @@ mindmap
       Kontakte / Links
       Bearbeiten / Löschen / Lesen
     🔘 Interaktiv
-      Zustandslose Buttons
+      Button Liste / Aktion
+      OTP / PIX
       Optionsliste
       Umfragen
     🔍 Abfragen
@@ -67,26 +71,27 @@ mindmap
       Verlauf
       Letzte Chats
       Speicher / Festplatte
-      Datenbank
+      Datenbank / Bereinigung
     🔗 Verbindung
       Status / SSE
-      QR-Code
+      QR-Code / PNG
       Pairing-Code
       Abmelden
     📡 Webhooks
-      Erstellen / Auflisten
-      Bearbeiten / Löschen
-      Aktivieren / Testen
-      20 Ereignisse
+       Erstellen / Auflisten
+       Bearbeiten / Löschen
+       Aktivieren / Testen
+       40 Ereignisse
     ⚙️ Profil & Privatsphäre
       Name / Foto
       Zuletzt gesehen
       Sperren
     🤖 Bot
       AI-Tag
-      IP-Kontrolle
       Anrufe ablehnen
       Auto-Lesen
+    🛡️ IP-Regeln
+      Whitelist / Blacklist
     📱 Instanz
       Kontodaten
       Gerät
@@ -107,7 +112,7 @@ mindmap
 | 🔢 **Pairing ohne QR** | Verbinden Sie sich per Zahlencode · ideal für Server ohne GUI |
 | 🎵 **Automatische Audiokonvertierung** | Senden Sie Audio, das nativ als "soeben aufgenommen" (PTT) erscheint |
 | 📦 **Intelligente Medien-Warteschlange** | Automatische Verwaltung zur Vermeidung übermäßigen Speicherverbrauchs |
-| 🏷️ **Dynamische Platzhalter** | Personalisieren Sie Nachrichten und Webhooks mit `{{name}}`, `{{day}}`, `{{phone}}` |
+| 🏷️ **Dynamische Platzhalter** | Personalisieren Sie Nachrichten und Webhooks mit \`{{name}}\`, \`{{phone}}\` |
 
 > [!NOTE]
 > Alle Funktionen sind **100% kostenlos** und werden von der Open-Source-Community gewartet.
@@ -117,125 +122,164 @@ mindmap
 ## 📋 API-Routen
 
 <details>
-<summary><b>📨 Nachrichten senden</b> · 14 Endpunkte</summary>
+<summary><b>📨 Nachrichten senden</b> · 15 Endpunkte</summary>
 
-| Methode | Route | Beschreibung |
-| :------ | :---- | :----------- |
-| `POST` | `/send` | Textnachricht senden / antworten |
-| `POST` | `/send_image` | Bild senden |
-| `POST` | `/send_video` | Video senden (unterstützt GIF und PTV) |
-| `POST` | `/send_audio` | Audio senden (mit automatischer PTT-Konvertierung) |
-| `POST` | `/send_document` | Dokument senden |
-| `POST` | `/send_sticker` | Sticker senden |
-| `POST` | `/send_reaction` | Reaktion mit Emoji senden |
-| `POST` | `/send_location` | Standort senden |
-| `POST` | `/send_contact` | Kontakt senden |
-| `POST` | `/send_contacts` | Mehrere Kontakte senden |
-| `POST` | `/send_link` | Link mit Vorschau senden |
-| `POST` | `/messages/delete` | Nachricht löschen |
-| `POST` | `/messages/read` | Als gelesen markieren |
-| `POST` | `/messages/edit` | Gesendete Nachricht bearbeiten |
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/send` | Textnachricht senden / antworten | `phone`, `message` |
+| `POST` | `/send_image` | Bild senden | `phone`, `image_url` |
+| `POST` | `/send_video` | Video senden (unterstützt GIF und PTV) | `phone`, `video_url` |
+| `POST` | `/send_audio` | Audio senden (mit automatischer PTT-Konvertierung) | `phone`, `audio_url` |
+| `POST` | `/send_document` | Dokument senden | `phone`, `document_url` |
+| `POST` | `/send_sticker` | Sticker senden | `phone`, `sticker_url` |
+| `POST` | `/send_reaction` | Reaktion mit Emoji senden | `phone`, `messageId`, `emoji` |
+| `POST` | `/send_location` | Standort senden | `phone`, `lat`, `lng` |
+| `POST` | `/send_contact` | Kontakt senden | `phone`, `name`, `contactPhone` |
+| `POST` | `/send_contacts` | Mehrere Kontakte senden | `phone`, `contacts` |
+| `POST` | `/send_link` | Link mit Vorschau senden | `phone`, `url` |
+| `POST` | `/messages/delete` | Nachricht löschen | `phone`, `messageId` |
+| `POST` | `/messages/read` | Als gelesen markieren | `phone`, `messageIds` |
+| `POST` | `/messages/edit` | Gesendete Nachricht bearbeiten | `phone`, `messageId`, `message` |
 </details>
 
 <details>
-<summary><b>🔘 Interaktive Nachrichten</b> · 4 Endpunkte</summary>
+<summary><b>🔘 Interaktive Nachrichten</b> · 7 Endpunkte</summary>
 
-| Methode | Route | Beschreibung |
-| :------ | :---- | :----------- |
-| `POST` | `/send_wbuttons` | Buttons senden (Liste, Aktion, OTP, PIX) |
-| `POST` | `/messages/send-option-list` | Optionsliste senden |
-| `POST` | `/messages/send-poll` | Umfrage senden |
-| `POST` | `/messages/send-poll-vote` | In Umfrage abstimmen |
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/messages/send-button-list` | Optionslisten-Button | `phone`, `buttons` |
+| `POST` | `/messages/send-button-actions` | Aktionsbutton | `phone`, `buttons` |
+| `POST` | `/messages/send-button-otp` | Kopierbutton (OTP) | `phone`, `code` |
+| `POST` | `/messages/send-button-pix` | PIX-Button | `phone`, `pixKey` |
+| `POST` | `/messages/send-option-list` | Optionsliste senden | `phone`, `buttons` |
+| `POST` | `/messages/send-poll` | Umfrage senden | `phone`, `name`, `options` |
+| `POST` | `/messages/send-poll-vote` | In Umfrage abstimmen | `phone`, `options` |
 </details>
 
 <details>
-<summary><b>🔍 Abfragen und Verwaltung</b> · 7 Endpunkte</summary>
+<summary><b>🔍 Abfragen und Verwaltung</b> · 8 Endpunkte</summary>
 
-| Methode | Route | Beschreibung |
-| :------ | :---- | :----------- |
-| `POST` | `/contacts/info` | Detaillierte Kontaktinformationen |
-| `POST` | `/management/fetch_messages` | Nachrichtenverlauf abrufen |
-| `POST` | `/management/recent_contacts` | Letzte Chats auflisten |
-| `GET` | `/management/memory` | Speichernutzungsstatus |
-| `GET` | `/management/volume_stats` | Festplattennutzung prüfen |
-| `GET` | `/management/database/status` | DB-Status und Statistiken |
-| `POST` | `/management/database/cleanup` | Manuelle DB-Bereinigung |
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/management/fetch_messages` | Nachrichtenverlauf abrufen | `phone` |
+| `POST` | `/management/recent_contacts` | Letzte Chats auflisten | ❌ |
+| `GET` | `/management/memory` | Speichernutzungsstatus | ❌ |
+| `GET` | `/management/volume_stats` | Festplattenutzung prüfen | ❌ |
+| `DELETE` | `/management/cleanup` | Temporäre Medien bereinigen | ❌ |
+| `GET` | `/management/database/status` | DB-Status und Statistiken | ❌ |
+| `POST` | `/management/database/config` | DB-Konfiguration aktualisieren | `interval` |
+| `POST` | `/management/database/cleanup` | Manuelle DB-Bereinigung | ❌ |
 </details>
 
 <details>
-<summary><b>🔗 Verbindung und Sitzung</b> · 8 Endpunkte</summary>
+<summary><b>👤 Kontakte</b> · 1 Endpunkt</summary>
 
-| Methode | Route | Beschreibung |
-| :------ | :---- | :----------- |
-| `GET` | `/` | Willkommensseite (HTML) |
-| `GET` | `/status` | Verbindungs- und Sitzungsstatus |
-| `GET` | `/status/stream` | Echtzeit-Status (SSE) |
-| `GET` | `/qr` | Interaktiven QR-Code anzeigen |
-| `GET` | `/qr/image` | QR-Code-Bild abrufen (Base64) |
-| `POST` | `/qr/pair` | Numerischen Pairing-Code generieren |
-| `GET` | `/settings/phone-code/{phone}` | Code per Nummer generieren |
-| `POST` | `/qr/logout` | Trennen und Sitzung zurücksetzen |
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/contacts/info` | Detaillierte Kontaktinformationen | `phone` |
 </details>
 
 <details>
-<summary><b>📡 Webhooks (CRUD)</b> · 7 Endpunkte</summary>
+<summary><b>🏠 Allgemein</b> · 3 Endpunkte</summary>
 
-| Methode | Route | Beschreibung |
-| :------ | :---- | :----------- |
-| `POST` | `/webhooks` | Benannten Webhook erstellen |
-| `GET` | `/webhooks` | Alle Webhooks auflisten |
-| `PUT` | `/webhooks/{name}` | Webhook bearbeiten |
-| `DELETE` | `/webhooks/{name}` | Webhook entfernen |
-| `POST` | `/webhooks/{name}/toggle` | Aktivieren / deaktivieren |
-| `POST` | `/webhooks/{name}/test` | Webhook testen |
-| `GET` | `/webhooks/events` | Ereignistypen auflisten (20 Typen) |
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/` | Willkommensseite (HTML) | ❌ |
+| `GET` | `/status` | Verbindungs- und Sitzungsstatus (JSON) | ❌ |
+| `GET` | `/status/stream` | Echtzeit-Status (SSE) | ❌ |
+</details>
+
+<details>
+<summary><b>🔗 Verbindung (QR)</b> · 2 Endpunkte</summary>
+
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/qr` | Interaktiven QR-Code anzeigen (HTML) | ❌ |
+| `GET` | `/qr/image` | QR-Code-Bild abrufen (PNG) | ❌ |
+</details>
+
+<details>
+<summary><b>🔐 Sitzung</b> · 2 Endpunkte</summary>
+
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/session/pair` | Numerischen Pairing-Code generieren | `phone` |
+| `POST` | `/session/logout` | Trennen und Sitzung zurücksetzen | ❌ |
+</details>
+
+<details>
+<summary><b>📡 Webhooks (CRUD)</b> · 8 Endpunkte</summary>
+
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/webhooks` | Benannten Webhook erstellen | `name`, `url` |
+| `GET` | `/webhooks` | Alle Webhooks auflisten | ❌ |
+| `GET` | `/webhooks/{name}` | Webhook nach Name abrufen | ❌ |
+| `PUT` | `/webhooks/{name}` | Webhook bearbeiten | ❌ |
+| `DELETE` | `/webhooks/{name}` | Webhook entfernen | ❌ |
+| `POST` | `/webhooks/{name}/toggle` | Aktivieren / deaktivieren | `active` |
+| `POST` | `/webhooks/{name}/test` | Webhook testen | ❌ |
+| `GET` | `/webhooks/events` | Ereignistypen auflisten (40 Typen) | ❌ |
 </details>
 
 <details>
 <summary><b>⚙️ Profil und Privatsphäre</b> · 3 Endpunkte</summary>
 
-| Methode | Route | Beschreibung |
-| :------ | :---- | :----------- |
-| `POST` | `/settings/profile` | Bot-Name und -Foto ändern |
-| `POST` | `/settings/privacy` | Privatsphäre anpassen (zuletzt gesehen, usw.) |
-| `POST` | `/settings/block` | Kontakt sperren / entsperren |
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/settings/profile` | Bot-Name und -Foto ändern | ❌ |
+| `POST` | `/settings/privacy` | Privatsphäre anpassen (zuletzt gesehen, usw.) | ❌ |
+| `POST` | `/settings/block` | Kontakt sperren / entsperren | `phone`, `action` |
 </details>
 
 <details>
-<summary><b>🤖 Bot-Konfiguration</b> · 5 Endpunkte</summary>
+<summary><b>🤖 Bot-Konfiguration</b> · 6 Endpunkte</summary>
 
-| Methode | Route | Beschreibung |
-| :------ | :---- | :----------- |
-| `GET` | `/settings/bot` | Bot-Konfiguration anzeigen |
-| `POST` | `/settings/bot` | Konfiguration aktualisieren (AI-Tag, IP-Kontrolle) |
-| `PUT` | `/settings/instance/call-reject-auto` | Anrufe automatisch ablehnen |
-| `PUT` | `/settings/instance/call-reject-message` | Nachricht bei abgelehntem Anruf |
-| `PUT` | `/settings/instance/auto-read-message` | Automatisches Lesen von Nachrichten |
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/settings/bot` | Bot-Konfiguration anzeigen | ❌ |
+| `POST` | `/settings/bot` | Konfiguration aktualisieren (AI-Tag, IP-Kontrolle) | ❌ |
+| `PUT` | `/settings/instance/call-reject-auto` | Anrufe automatisch ablehnen | `value` |
+| `PUT` | `/settings/instance/call-reject-message` | Nachricht bei abgelehntem Anruf | `value` |
+| `PUT` | `/settings/instance/auto-read-message` | Automatisches Lesen von Nachrichten | `value` |
+| `GET` | `/settings/phone-code/{phone}` | Code per Telefonnummer generieren | ❌ |
 </details>
 
 <details>
 <summary><b>📱 Instanz</b> · 3 Endpunkte</summary>
 
-| Methode | Route | Beschreibung |
-| :------ | :---- | :----------- |
-| `GET` | `/instance/me` | Daten des verbundenen Kontos |
-| `GET` | `/instance/device` | Technische Gerätedaten |
-| `PUT` | `/instance/update-name` | Instanz umbenennen |
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/instance/me` | Daten des verbundenen Kontos | ❌ |
+| `GET` | `/instance/device` | Technische Gerätedaten | ❌ |
+| `PUT` | `/instance/update-name` | Instanz umbenennen | `name` |
+</details>
+
+<details>
+<summary><b>🛡️ IP-Regeln</b> · 5 Endpunkte</summary>
+
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/settings/ip-rules` | IP-Regeln auflisten (Whitelist/Blacklist) | ❌ |
+| `POST` | `/settings/ip-rules/whitelist` | IP zur Whitelist hinzufügen | `ip` |
+| `POST` | `/settings/ip-rules/blacklist` | IP zur Blacklist hinzufügen | `ip` |
+| `DELETE` | `/settings/ip-rules/whitelist/{ip}` | IP aus Whitelist entfernen | ❌ |
+| `DELETE` | `/settings/ip-rules/blacklist/{ip}` | IP aus Blacklist entfernen | ❌ |
 </details>
 
 <details>
 <summary><b>🖥️ System</b> · 5 Endpunkte</summary>
 
-| Methode | Route | Beschreibung |
-| :------ | :---- | :----------- |
-| `GET` | `/system/env` | Umgebungsvariablen anzeigen |
-| `PUT` | `/system/env` | Umgebungsvariablen aktualisieren |
-| `POST` | `/system/cleanup/force` | Erzwungene Bereinigung temporärer Medien |
-| `GET` | `/system/cleanup/settings` | Auto-Bereinigungseinstellungen anzeigen |
-| `PUT` | `/system/cleanup/settings` | Auto-Bereinigungsintervall aktualisieren |
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/system/env` | Umgebungsvariablen anzeigen | ❌ |
+| `PUT` | `/system/env` | Umgebungsvariablen aktualisieren | ❌ |
+| `POST` | `/system/cleanup/force` | Erzwungene Bereinigung temporärer Medien | ❌ |
+| `GET` | `/system/cleanup/settings` | Auto-Bereinigungseinstellungen anzeigen | ❌ |
+| `PUT` | `/system/cleanup/settings` | Auto-Bereinigungsintervall aktualisieren | ❌ |
 </details>
 
-> **Insgesamt: 56 Endpunkte** · Vollständige REST-API für WhatsApp-Automatisierung.
+> **Insgesamt: 68 Endpunkte**
 
 ---
 
@@ -253,7 +297,11 @@ Alle Webhooks erhalten eine Standardhülle:
 
 Wenn der Webhook einen benutzerdefinierten `body` mit `{{placeholders}}` hat, wird dieser Body anstelle der Standardhülle gesendet.
 
-### Platzhalter (benutzerdefinierter Body)
+
+---
+
+<details>
+<summary><b>🏷️ Verfügbare Platzhalter im benutzerdefinierten Body</b></summary>
 
 | Platzhalter | Wert |
 | :---------- | :--- |
@@ -264,15 +312,14 @@ Wenn der Webhook einen benutzerdefinierten `body` mit `{{placeholders}}` hat, wi
 | `{{requested}}` | Angeforderte Menge (fetchMessages) |
 | `{{found}}` | Gefundene Menge (fetchMessages) |
 | `{{timestamp}}` | Aktueller UTC-Zeitstempel |
-| `{{day}}` | Aktueller Tag (dd) |
-| `{{mon}}` | Aktueller Monat (MM) |
-| `{{yea}}` | Aktuelles Jahr (yyyy) |
-| `{{hou}}` | Aktuelle Stunde (HH) |
-| `{{min}}` | Aktuelle Minute (mm) |
-| `{{sec}}` | Aktuelle Sekunde (ss) |
+
+</details>
+
+---
+
 
 <details>
-<summary><b>📥 Empfangene Nachrichten</b> · 15 Ereignisse</summary>
+<summary><b>📥 Empfangene Nachrichten</b> · 40 Ereignisse</summary>
 
 Basisfelder in empfangenen Nachrichtenereignissen:
 
@@ -521,10 +568,23 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 ```
 </details>
 
+<details>
+<summary><code>message.undecryptable</code> - Nicht entschlüsselbare Nachricht</summary>
+
+```json
+{
+  "event": "message.undecryptable",
+  "data": {
+    "...base": "..."
+  }
+}
+```
+</details>
+
 </details>
 
 <details>
-<summary><b>📤 Gesendete Nachrichten</b> · 1 Ereignis</summary>
+<summary><b>📤 Gesendete Nachrichten</b> · 40 Ereignisse</summary>
 
 <details>
 <summary><code>message.sent</code> - Gesendete Nachricht (manuell)</summary>
@@ -541,10 +601,53 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 ```
 </details>
 
+<details>
+<summary><code>message.read</code> - Nachricht vom Empfänger gelesen</summary>
+
+```json
+{
+  "event": "message.read",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
 </details>
 
 <details>
-<summary><b>🔗 Verbindung</b> · 3 Ereignisse</summary>
+<summary><code>message.delivered</code> - Nachricht an Empfänger zugestellt (receipt type 1)</summary>
+
+```json
+{
+  "event": "message.delivered",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>message.receipt</code> - Andere Zustellungsbestätigungen (receipt types 2, 3, 5+)</summary>
+
+```json
+{
+  "event": "message.receipt",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456",
+    "receiptType": 2
+  }
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>🔗 Verbindung</b> · 40 Ereignisse</summary>
 
 <details>
 <summary><code>connection.connected</code> - WhatsApp verbunden</summary>
@@ -583,10 +686,252 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 ```
 </details>
 
+<details>
+<summary><code>connection.pair_code</code> - Pairing-Code generiert</summary>
+
+```json
+{
+  "event": "connection.pair_code",
+  "data": {
+    "code": "NR62-NZSF"
+  }
+}
+```
 </details>
 
 <details>
-<summary><b>📞 Anruf</b> · 1 Ereignis</summary>
+<summary><code>connection.pair_status</code> - Pairing-Status</summary>
+
+```json
+{
+  "event": "connection.pair_status",
+  "data": {
+    "status": "waiting",
+    "phone": "5511999999999"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.logged_out</code> - Remote abgemeldet</summary>
+
+```json
+{
+  "event": "connection.logged_out",
+  "data": {}
+}
+```
+</details>
+
+<details>
+<summary><code>connection.connect_failure</code> - Verbindungsfehler</summary>
+
+```json
+{
+  "event": "connection.connect_failure",
+  "data": {
+    "reason": "network_error"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.stream_error</code> - Stream-Fehler</summary>
+
+```json
+{
+  "event": "connection.stream_error",
+  "data": {
+    "error": "connection closed"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.temporary_ban</code> - Vorübergehende Sperrung</summary>
+
+```json
+{
+  "event": "connection.temporary_ban",
+  "data": {
+    "phone": "5511999999999"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.client_outdated</code> - Client veraltet</summary>
+
+```json
+{
+  "event": "connection.client_outdated",
+  "data": {}
+}
+```
+</details>
+
+<details>
+<summary><code>connection.stream_replaced</code> - Stream ersetzt</summary>
+
+```json
+{
+  "event": "connection.stream_replaced",
+  "data": {}
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>👥 Gruppe</b> · 40 Ereignisse</summary>
+
+<details>
+<summary><code>group.join</code> - Neues Mitglied in Gruppe</summary>
+
+```json
+{
+  "event": "group.join",
+  "data": {
+    "groupId": "5511999999999-123456@g.us",
+    "inviter": "5511888888888",
+    "member": "5511999999999"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>group.update</code> - Gruppe aktualisiert</summary>
+
+```json
+{
+  "event": "group.update",
+  "data": {
+    "groupId": "5511999999999-123456@g.us",
+    "name": "Neuer Name",
+    "updatedBy": "5511888888888"
+  }
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>👤 Kontakt / Anwesenheit</b> · 40 Ereignisse</summary>
+
+<details>
+<summary><code>contact.presence</code> - Anwesenheitsstatus des Kontakts</summary>
+
+```json
+{
+  "event": "contact.presence",
+  "data": {
+    "from": "5511999999999@s.whatsapp.net",
+    "presence": "available",
+    "lastSeen": 1700000000
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>contact.chat_presence</code> - Tippstatus</summary>
+
+```json
+{
+  "event": "contact.chat_presence",
+  "data": {
+    "from": "5511999999999@s.whatsapp.net",
+    "presence": "composing",
+    "mediaType": 0
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>contact.picture_change</code> - Profilbild geändert</summary>
+
+```json
+{
+  "event": "contact.picture_change",
+  "data": {
+    "from": "5511999999999@s.whatsapp.net",
+    "pictureId": "abc123"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>contact.identity_change</code> - Sicherheitsschlüssel geändert</summary>
+
+```json
+{
+  "event": "contact.identity_change",
+  "data": {
+    "from": "5511999999999@s.whatsapp.net"
+  }
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>📞 Anruf</b> · 40 Ereignisse</summary>
+
+<details>
+<summary><code>call.received</code> - Anruf erhalten</summary>
+
+```json
+{
+  "event": "call.received",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "callId": "ABC123DEF456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>call.accepted</code> - Anruf angenommen</summary>
+
+```json
+{
+  "event": "call.accepted",
+  "data": {
+    "from": "5511999999999",
+    "callId": "ABC123DEF456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>call.terminated</code> - Anruf beendet</summary>
+
+```json
+{
+  "event": "call.terminated",
+  "data": {
+    "from": "5511999999999",
+    "callId": "ABC123DEF456",
+    "reason": "timeout"
+  }
+}
+```
+</details>
+
+</details>
 
 <details>
 <summary><code>call.received</code> - Anruf erhalten</summary>
@@ -688,13 +1033,16 @@ cd ~/ZapUnlocked-API
 bash scripts/install/install.sh
 ```
 
-**4.** `.env` generieren:
+**4.** *(Optional)* `.env` generieren:
 
 ```bash
 bash scripts/generate-env/generate-env.sh
 ```
 
-**5.** Dienst konfigurieren (24/7) unter **Advanced › Services › Add a service**:
+> [!NOTE]
+> Das Installationsskript fragt bereits, ob Sie die `.env` konfigurieren möchten. Wenn Sie **ja** geantwortet haben, kann dieser Schritt übersprungen werden. Andernfalls führen Sie den obigen Befehl aus oder konfigurieren Sie die `.env` manuell.
+
+**5.** Dienst konfigurieren (24/7) unter **Advanced  Services  Add a service**:
 
 | Feld | Wert |
 | :--- | :--- |
@@ -710,7 +1058,7 @@ http://services-[user].alwaysdata.net:8300/
 ```
 
 > [!TIP]
-> Die URL ist bereits extern erreichbar. *(Optional)* Für eine benutzerdefinierte Domain konfigurieren Sie einen **Reverse Proxy** unter **Web › Sites › Add a site**, der auf `http://[user].alwaysdata.net` verweist.
+> Die URL ist bereits extern erreichbar. *(Optional)* Für eine benutzerdefinierte Domain konfigurieren Sie einen **Reverse Proxy** unter **Web  Sites  Add a site**, der auf `http://[user].alwaysdata.net` verweist.
 
 ---
 

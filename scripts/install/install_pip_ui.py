@@ -1,4 +1,7 @@
-import subprocess, json, re, sys
+import json
+import re
+import subprocess
+import sys
 from pathlib import Path
 
 root = Path(__file__).resolve().parent.parent.parent
@@ -7,6 +10,7 @@ venv_python = root / ".venv" / "Scripts" / "python.exe"
 G = "\033[38;2;66;194;146m"
 R = "\033[0m"
 
+
 def show_pkg(name, installed):
     key = name.lower()
     if key in installed:
@@ -14,9 +18,11 @@ def show_pkg(name, installed):
     else:
         print(f"  {G}\u2713{R} {name} (?)")
 
+
 r = subprocess.run(
     [str(venv_python), "-m", "pip", "list", "--format=json"],
-    capture_output=True, text=True
+    capture_output=True,
+    text=True,
 )
 installed = {p["name"].lower(): p["version"] for p in json.loads(r.stdout)}
 

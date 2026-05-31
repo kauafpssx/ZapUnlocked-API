@@ -1,10 +1,12 @@
-# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
+# ⚡💬 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br/)
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Free%20%26%20Open%20Source-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="Free & Open Source">
-  <img src="https://img.shields.io/badge/Self%20Hosted-A855F7?style=for-the-badge&logo=docker&logoColor=white" alt="Self Hosted">
+  <a href="https://downgit.github.io/#/home?url=https://github.com/kauafpssx/ZapUnlocked-API/blob/main/ZapUnlocked.collection.json" target="_blank">
+    <img src="https://img.shields.io/badge/Collection-A855F7?style=for-the-badge&logo=postman&logoColor=white" alt="Postman Collection">
+  </a>
   <img src="https://img.shields.io/badge/REST%20API-A855F7?style=for-the-badge&logo=fastapi&logoColor=white" alt="REST API">
   <img src="https://img.shields.io/badge/MIT%20License-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="MIT License">
   <img src="https://img.shields.io/badge/Python%203.10%2B-A855F7?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+">
@@ -16,7 +18,7 @@
 
 <table width="100%">
   <tr>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.MD"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg" width="40" title="Português (Brasil)"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg" width="40" title="Português (Brasil)"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/en.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/us.svg" width="40" title="English"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/es.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg" width="40" title="Español"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/fr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/fr.svg" width="40" title="Français"></a></td>
@@ -49,9 +51,10 @@
 
 ## 🗺️ API अवलोकन
 
+
 ```mermaid
 mindmap
-  root((📲 ZapUnlocked-API))
+  root((⚡💬 ZapUnlocked-API))
     📨 संदेश
       पाठ / उत्तर दें
       मीडिया 📸🎥🎵
@@ -59,7 +62,8 @@ mindmap
       संपर्क / लिंक
       संपादित करें / हटाएं / पढ़ें
     🔘 इंटरैक्टिव
-      स्टेटलेस बटन
+      बटन सूची / एक्शन
+      OTP / PIX
       विकल्प सूची
       मतदान
     🔍 क्वेरी
@@ -67,26 +71,27 @@ mindmap
       इतिहास
       हाल के चैट
       मेमोरी / डिस्क
-      डेटाबेस
+      डेटाबेस / क्लीनअप
     🔗 कनेक्शन
       स्थिति / SSE
-      क्यूआर कोड
+      क्यूआर कोड / PNG
       पेयरिंग कोड
       लॉगआउट
     📡 वेबहुक
-      बनाएं / सूची
-      संपादित करें / हटाएं
-      सक्षम करें / परीक्षण
-      20 इवेंट
+       बनाएं / सूची
+       संपादित करें / हटाएं
+       सक्षम करें / परीक्षण
+       40 इवेंट
     ⚙️ प्रोफ़ाइल और गोपनीयता
       नाम / फोटो
       अंतिम बार देखा गया
       ब्लॉक
     🤖 बॉट
       AI टैग
-      IP नियंत्रण
       कॉल अस्वीकार करें
       ऑटो रीड
+    🛡️ IP नियम
+      व्हाइटलिस्ट / ब्लैकलिस्ट
     📱 इंस्टेंस
       खाता डेटा
       डिवाइस
@@ -107,7 +112,7 @@ mindmap
 | 🔢 **क्यूआर-रहित पेयरिंग** | संख्यात्मक कोड के माध्यम से कनेक्ट करें · GUI रहित सर्वर के लिए आदर्श |
 | 🎵 **स्वचालित ऑडियो रूपांतरण** | ऑडियो भेजें जो मूल रूप से रिकॉर्ड किए गए (PTT) के रूप में दिखाई देता है |
 | 📦 **स्मार्ट मीडिया कतार** | अत्यधिक मेमोरी खपत को रोकने के लिए स्वचालित प्रबंधन |
-| 🏷️ **डायनामिक प्लेसहोल्डर** | `{{name}}`, `{{day}}`, `{{phone}}` के साथ संदेश और वेबहुक वैयक्तिकृत करें |
+| 🏷️ **डायनामिक प्लेसहोल्डर** | `{{name}}`, `{{phone}}` के साथ संदेश और वेबहुक वैयक्तिकृत करें |
 
 > [!NOTE]
 > सभी विशेषताएं **100% मुफ्त** हैं और ओपन-सोर्स समुदाय द्वारा बनाए रखी जाती हैं।
@@ -117,125 +122,164 @@ mindmap
 ## 📋 API रूट्स
 
 <details>
-<summary><b>📨 संदेश भेजना</b> · 14 एंडपॉइंट</summary>
+<summary><b>📨 संदेश भेजना</b> · 15 एंडपॉइंट</summary>
 
-| मेथड | रूट | विवरण |
-| :----- | :--- | :-------- |
-| `POST` | `/send` | टेक्स्ट संदेश भेजें / उत्तर दें |
-| `POST` | `/send_image` | चित्र भेजें |
-| `POST` | `/send_video` | वीडियो भेजें (GIF और PTV सपोर्ट करता है) |
-| `POST` | `/send_audio` | ऑडियो भेजें (स्वचालित PTT रूपांतरण के साथ) |
-| `POST` | `/send_document` | दस्तावेज़ भेजें |
-| `POST` | `/send_sticker` | स्टिकर भेजें |
-| `POST` | `/send_reaction` | इमोजी के साथ प्रतिक्रिया भेजें |
-| `POST` | `/send_location` | स्थान भेजें |
-| `POST` | `/send_contact` | संपर्क भेजें |
-| `POST` | `/send_contacts` | एकाधिक संपर्क भेजें |
-| `POST` | `/send_link` | पूर्वावलोकन के साथ लिंक भेजें |
-| `POST` | `/messages/delete` | संदेश हटाएं |
-| `POST` | `/messages/read` | पढ़ा हुआ चिह्नित करें |
-| `POST` | `/messages/edit` | भेजा गया संदेश संपादित करें |
+| मेथड | रूट | विवरण | बॉडी |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/send` | टेक्स्ट संदेश भेजें / उत्तर दें | `phone`, `message` |
+| `POST` | `/send_image` | चित्र भेजें | `phone`, `image_url` |
+| `POST` | `/send_video` | वीडियो भेजें (GIF और PTV सपोर्ट करता है) | `phone`, `video_url` |
+| `POST` | `/send_audio` | ऑडियो भेजें (स्वचालित PTT रूपांतरण के साथ) | `phone`, `audio_url` |
+| `POST` | `/send_document` | दस्तावेज़ भेजें | `phone`, `document_url` |
+| `POST` | `/send_sticker` | स्टिकर भेजें | `phone`, `sticker_url` |
+| `POST` | `/send_reaction` | इमोजी के साथ प्रतिक्रिया भेजें | `phone`, `messageId`, `emoji` |
+| `POST` | `/send_location` | स्थान भेजें | `phone`, `lat`, `lng` |
+| `POST` | `/send_contact` | संपर्क भेजें | `phone`, `name`, `contactPhone` |
+| `POST` | `/send_contacts` | एकाधिक संपर्क भेजें | `phone`, `contacts` |
+| `POST` | `/send_link` | पूर्वावलोकन के साथ लिंक भेजें | `phone`, `url` |
+| `POST` | `/messages/delete` | संदेश हटाएं | `phone`, `messageId` |
+| `POST` | `/messages/read` | पढ़ा हुआ चिह्नित करें | `phone`, `messageIds` |
+| `POST` | `/messages/edit` | भेजा गया संदेश संपादित करें | `phone`, `messageId`, `message` |
 </details>
 
 <details>
-<summary><b>🔘 इंटरैक्टिव संदेश</b> · 4 एंडपॉइंट</summary>
+<summary><b>🔘 इंटरैक्टिव संदेश</b> · 7 एंडपॉइंट</summary>
 
-| मेथड | रूट | विवरण |
-| :----- | :--- | :-------- |
-| `POST` | `/send_wbuttons` | बटन भेजें (सूची, कार्रवाई, OTP, PIX) |
-| `POST` | `/messages/send-option-list` | विकल्प सूची भेजें |
-| `POST` | `/messages/send-poll` | मतदान भेजें |
-| `POST` | `/messages/send-poll-vote` | मतदान में वोट करें |
+| मेथड | रूट | विवरण | बॉडी |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/messages/send-button-list` | बटन सूची भेजें | `phone`, `buttons` |
+| `POST` | `/messages/send-button-actions` | बटन कार्रवाई भेजें | `phone`, `buttons` |
+| `POST` | `/messages/send-button-otp` | OTP बटन भेजें | `phone`, `code` |
+| `POST` | `/messages/send-button-pix` | PIX बटन भेजें | `phone`, `pixKey` |
+| `POST` | `/messages/send-option-list` | विकल्प सूची भेजें | `phone`, `buttons` |
+| `POST` | `/messages/send-poll` | मतदान भेजें | `phone`, `name`, `options` |
+| `POST` | `/messages/send-poll-vote` | मतदान में वोट करें | `phone`, `options` |
 </details>
 
 <details>
-<summary><b>🔍 क्वेरी और प्रबंधन</b> · 7 एंडपॉइंट</summary>
+<summary><b>🔍 क्वेरी और प्रबंधन</b> · 8 एंडपॉइंट</summary>
 
-| मेथड | रूट | विवरण |
-| :----- | :--- | :-------- |
-| `POST` | `/contacts/info` | संपर्क की विस्तृत जानकारी |
-| `POST` | `/management/fetch_messages` | संदेश इतिहास प्राप्त करें |
-| `POST` | `/management/recent_contacts` | हाल के चैट की सूची |
-| `GET` | `/management/memory` | मेमोरी उपयोग की स्थिति |
-| `GET` | `/management/volume_stats` | डिस्क उपयोग की जांच करें |
-| `GET` | `/management/database/status` | डेटाबेस स्थिति और आंकड़े |
-| `POST` | `/management/database/cleanup` | मैन्युअल डेटाबेस सफाई |
+| मेथड | रूट | विवरण | बॉडी |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/management/fetch_messages` | संदेश इतिहास प्राप्त करें | `phone` |
+| `POST` | `/management/recent_contacts` | हाल के चैट की सूची | ❌ |
+| `GET` | `/management/memory` | मेमोरी उपयोग की स्थिति | ❌ |
+| `GET` | `/management/volume_stats` | डिस्क उपयोग की जांच करें | ❌ |
+| `GET` | `/management/database/status` | डेटाबेस स्थिति और आंकड़े | ❌ |
+| `POST` | `/management/database/cleanup` | मैन्युअल डेटाबेस सफाई | ❌ |
+| `DELETE` | `/management/cleanup` | पुराने डेटा साफ़ करें | ❌ |
+| `POST` | `/management/database/config` | डेटाबेस कॉन्फ़िगर करें | `interval` |
 </details>
 
 <details>
-<summary><b>🔗 कनेक्शन और सेशन</b> · 8 एंडपॉइंट</summary>
+<summary><b>📇 संपर्क</b> · 1 एंडपॉइंट</summary>
 
-| मेथड | रूट | विवरण |
-| :----- | :--- | :-------- |
-| `GET` | `/` | स्वागत पृष्ठ (HTML) |
-| `GET` | `/status` | कनेक्शन और सेशन की स्थिति |
-| `GET` | `/status/stream` | रीयल-टाइम स्थिति (SSE) |
-| `GET` | `/qr` | इंटरैक्टिव क्यूआर कोड देखें |
-| `GET` | `/qr/image` | क्यूआर कोड छवि प्राप्त करें (Base64) |
-| `POST` | `/qr/pair` | संख्यात्मक पेयरिंग कोड जनरेट करें |
-| `GET` | `/settings/phone-code/{phone}` | फोन नंबर द्वारा कोड जनरेट करें |
-| `POST` | `/qr/logout` | डिस्कनेक्ट करें और सेशन रीसेट करें |
+| मेथड | रूट | विवरण | बॉडी |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/contacts/info` | संपर्क की विस्तृत जानकारी | `phone` |
 </details>
 
 <details>
-<summary><b>📡 वेबहुक (CRUD)</b> · 7 एंडपॉइंट</summary>
+<summary><b>🏠 सामान्य</b> · 3 एंडपॉइंट</summary>
 
-| मेथड | रूट | विवरण |
-| :----- | :--- | :-------- |
-| `POST` | `/webhooks` | नामांकित वेबहुक बनाएं |
-| `GET` | `/webhooks` | सभी वेबहुक की सूची |
-| `PUT` | `/webhooks/{name}` | वेबहुक संपादित करें |
-| `DELETE` | `/webhooks/{name}` | वेबहुक हटाएं |
-| `POST` | `/webhooks/{name}/toggle` | सक्षम / अक्षम करें |
-| `POST` | `/webhooks/{name}/test` | वेबहुक का परीक्षण करें |
-| `GET` | `/webhooks/events` | इवेंट प्रकारों की सूची (20 प्रकार) |
+| मेथड | रूट | विवरण | बॉडी |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/` | स्वागत पृष्ठ (HTML) | ❌ |
+| `GET` | `/status` | कनेक्शन और सेशन की स्थिति | ❌ |
+| `GET` | `/status/stream` | रीयल-टाइम स्थिति (SSE) | ❌ |
+</details>
+
+<details>
+<summary><b>🔗 कनेक्शन (QR)</b> · 2 एंडपॉइंट</summary>
+
+| मेथड | रूट | विवरण | बॉडी |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/qr` | इंटरैक्टिव क्यूआर कोड देखें | ❌ |
+| `GET` | `/qr/image` | क्यूआर कोड छवि प्राप्त करें (Base64) | ❌ |
+</details>
+
+<details>
+<summary><b>🔐 सेशन</b> · 2 एंडपॉइंट</summary>
+
+| मेथड | रूट | विवरण | बॉडी |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/session/pair` | संख्यात्मक पेयरिंग कोड जनरेट करें | `phone` |
+| `POST` | `/session/logout` | डिस्कनेक्ट करें और सेशन रीसेट करें | ❌ |
+</details>
+
+<details>
+<summary><b>📡 वेबहुक (CRUD)</b> · 8 एंडपॉइंट</summary>
+
+| मेथड | रूट | विवरण | बॉडी |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/webhooks` | नामांकित वेबहुक बनाएं | `name`, `url` |
+| `GET` | `/webhooks` | सभी वेबहुक की सूची | ❌ |
+| `GET` | `/webhooks/{name}` | वेबहुक विवरण प्राप्त करें | ❌ |
+| `PUT` | `/webhooks/{name}` | वेबहुक संपादित करें | ❌ |
+| `DELETE` | `/webhooks/{name}` | वेबहुक हटाएं | ❌ |
+| `POST` | `/webhooks/{name}/toggle` | सक्षम / अक्षम करें | `active` |
+| `POST` | `/webhooks/{name}/test` | वेबहुक का परीक्षण करें | ❌ |
+| `GET` | `/webhooks/events` | इवेंट प्रकारों की सूची (40 प्रकार) | ❌ |
 </details>
 
 <details>
 <summary><b>⚙️ प्रोफ़ाइल और गोपनीयता</b> · 3 एंडपॉइंट</summary>
 
-| मेथड | रूट | विवरण |
-| :----- | :--- | :-------- |
-| `POST` | `/settings/profile` | बॉट का नाम और फोटो बदलें |
-| `POST` | `/settings/privacy` | गोपनीयता समायोजित करें (अंतिम बार देखा गया, आदि) |
-| `POST` | `/settings/block` | संपर्क को ब्लॉक / अनब्लॉक करें |
+| मेथड | रूट | विवरण | बॉडी |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/settings/profile` | बॉट का नाम और फोटो बदलें | ❌ |
+| `POST` | `/settings/privacy` | गोपनीयता समायोजित करें (अंतिम बार देखा गया, आदि) | ❌ |
+| `POST` | `/settings/block` | संपर्क को ब्लॉक / अनब्लॉक करें | `phone`, `action` |
 </details>
 
 <details>
-<summary><b>🤖 बॉट सेटिंग्स</b> · 5 एंडपॉइंट</summary>
+<summary><b>🤖 बॉट सेटिंग्स</b> · 6 एंडपॉइंट</summary>
 
-| मेथड | रूट | विवरण |
-| :----- | :--- | :-------- |
-| `GET` | `/settings/bot` | बॉट सेटिंग्स देखें |
-| `POST` | `/settings/bot` | बॉट सेटिंग्स अपडेट करें (AI टैग, IP नियंत्रण) |
-| `PUT` | `/settings/instance/call-reject-auto` | कॉल स्वचालित रूप से अस्वीकार करें |
-| `PUT` | `/settings/instance/call-reject-message` | कॉल अस्वीकृति संदेश |
-| `PUT` | `/settings/instance/auto-read-message` | संदेश स्वचालित रूप से पढ़ें |
+| मेथड | रूट | विवरण | बॉडी |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/settings/bot` | बॉट सेटिंग्स देखें | ❌ |
+| `POST` | `/settings/bot` | बॉट सेटिंग्स अपडेट करें (AI टैग, IP नियंत्रण) | ❌ |
+| `PUT` | `/settings/instance/call-reject-auto` | कॉल स्वचालित रूप से अस्वीकार करें | `value` |
+| `PUT` | `/settings/instance/call-reject-message` | कॉल अस्वीकृति संदेश | `value` |
+| `PUT` | `/settings/instance/auto-read-message` | संदेश स्वचालित रूप से पढ़ें | `value` |
+| `GET` | `/settings/phone-code/{phone}` | फोन नंबर द्वारा कोड जनरेट करें | ❌ |
 </details>
 
 <details>
 <summary><b>📱 इंस्टेंस</b> · 3 एंडपॉइंट</summary>
 
-| मेथड | रूट | विवरण |
-| :----- | :--- | :-------- |
-| `GET` | `/instance/me` | कनेक्टेड खाते का डेटा |
-| `GET` | `/instance/device` | डिवाइस का तकनीकी डेटा |
-| `PUT` | `/instance/update-name` | इंस्टेंस का नाम बदलें |
+| मेथड | रूट | विवरण | बॉडी |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/instance/me` | कनेक्टेड खाते का डेटा | ❌ |
+| `GET` | `/instance/device` | डिवाइस का तकनीकी डेटा | ❌ |
+| `PUT` | `/instance/update-name` | इंस्टेंस का नाम बदलें | `name` |
+</details>
+
+<details>
+<summary><b>🛡️ IP नियम</b> · 5 एंडपॉइंट</summary>
+
+| मेथड | रूट | विवरण | बॉडी |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/settings/ip-rules` | IP नियम देखें | ❌ |
+| `POST` | `/settings/ip-rules/whitelist` | व्हाइटलिस्ट में IP जोड़ें | `ip` |
+| `POST` | `/settings/ip-rules/blacklist` | ब्लैकलिस्ट में IP जोड़ें | `ip` |
+| `DELETE` | `/settings/ip-rules/whitelist/{ip}` | व्हाइटलिस्ट से IP हटाएं | ❌ |
+| `DELETE` | `/settings/ip-rules/blacklist/{ip}` | ब्लैकलिस्ट से IP हटाएं | ❌ |
 </details>
 
 <details>
 <summary><b>🖥️ सिस्टम</b> · 5 एंडपॉइंट</summary>
 
-| मेथड | रूट | विवरण |
-| :----- | :--- | :-------- |
-| `GET` | `/system/env` | एनवायरनमेंट वेरिएबल देखें |
-| `PUT` | `/system/env` | एनवायरनमेंट वेरिएबल अपडेट करें |
-| `POST` | `/system/cleanup/force` | अस्थायी मीडिया की फोर्स सफाई |
-| `GET` | `/system/cleanup/settings` | ऑटो-सफाई सेटिंग्स देखें |
-| `PUT` | `/system/cleanup/settings` | ऑटो-सफाई अंतराल अपडेट करें |
+| मेथड | रूट | विवरण | बॉडी |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/system/env` | एनवायरनमेंट वेरिएबल देखें | ❌ |
+| `PUT` | `/system/env` | एनवायरनमेंट वेरिएबल अपडेट करें | ❌ |
+| `POST` | `/system/cleanup/force` | अस्थायी मीडिया की फोर्स सफाई | ❌ |
+| `GET` | `/system/cleanup/settings` | ऑटो-सफाई सेटिंग्स देखें | ❌ |
+| `PUT` | `/system/cleanup/settings` | ऑटो-सफाई अंतराल अपडेट करें | ❌ |
 </details>
 
-> **कुल: 56 एंडपॉइंट** · व्हाट्सएप ऑटोमेशन के लिए पूर्ण REST।
+> **कुल: 68 एंडपॉइंट**
 
 ---
 
@@ -253,7 +297,11 @@ mindmap
 
 यदि webhook में `{{placeholders}}` के साथ कस्टम `body` है, तो मानक लिफाफे के बजाय यह body भेजा जाता है।
 
-### प्लेसहोल्डर (कस्टम body)
+
+---
+
+<details>
+<summary><b>🏷️ कस्टम body में उपलब्ध प्लेसहोल्डर</b></summary>
 
 | प्लेसहोल्डर | मान |
 | :----------- | :-- |
@@ -264,15 +312,13 @@ mindmap
 | `{{requested}}` | अनुरोधित मात्रा (fetchMessages) |
 | `{{found}}` | मिली मात्रा (fetchMessages) |
 | `{{timestamp}}` | वर्तमान UTC टाइमस्टैंप |
-| `{{day}}` | वर्तमान दिन (dd) |
-| `{{mon}}` | वर्तमान माह (MM) |
-| `{{yea}}` | वर्तमान वर्ष (yyyy) |
-| `{{hou}}` | वर्तमान घंटा (HH) |
-| `{{min}}` | वर्तमान मिनट (mm) |
-| `{{sec}}` | वर्तमान सेकंड (ss) |
+
+</details>
+
+---
 
 <details>
-<summary><b>📥 प्राप्त संदेश</b> · 15 इवेंट्स</summary>
+<summary><b>📥 प्राप्त संदेश</b> · 40 इवेंट्स</summary>
 
 प्राप्त संदेश इवेंट्स में मौजूद आधार फ़ील्ड:
 
@@ -521,10 +567,24 @@ mindmap
 ```
 </details>
 
+<details>
+<summary><code>message.undecryptable</code> - अडिक्रिप्टेबल संदेश</summary>
+
+```json
+{
+  "event": "message.undecryptable",
+  "data": {
+    "...base": "...",
+    "reason": "encrypted"
+  }
+}
+```
+</details>
+
 </details>
 
 <details>
-<summary><b>📤 भेजे गए संदेश</b> · 1 इवेंट</summary>
+<summary><b>📤 भेजे गए संदेश</b> · 40 इवेंट्स</summary>
 
 <details>
 <summary><code>message.sent</code> - भेजा गया संदेश (मैन्युअल)</summary>
@@ -541,10 +601,53 @@ mindmap
 ```
 </details>
 
+<details>
+<summary><code>message.read</code> - संदेश पढ़ा गया</summary>
+
+```json
+{
+  "event": "message.read",
+  "data": {
+    "messageId": "3EB0ABCDEF123456",
+    "from": "5511999999999"
+  }
+}
+```
 </details>
 
 <details>
-<summary><b>🔗 कनेक्शन</b> · 3 इवेंट्स</summary>
+<summary><code>message.delivered</code> - संदेश प्राप्तकर्ता को डिलीवर हुआ (receipt type 1)</summary>
+
+```json
+{
+  "event": "message.delivered",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>message.receipt</code> - अन्य डिलीवरी पुष्टि (receipt types 2, 3, 5+)</summary>
+
+```json
+{
+  "event": "message.receipt",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456",
+    "receiptType": 2
+  }
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>🔗 कनेक्शन</b> · 40 इवेंट्स</summary>
 
 <details>
 <summary><code>connection.connected</code> - WhatsApp कनेक्टेड</summary>
@@ -583,10 +686,202 @@ mindmap
 ```
 </details>
 
+<details>
+<summary><code>connection.pair_code</code> - पेयरिंग कोड जनरेटेड</summary>
+
+```json
+{
+  "event": "connection.pair_code",
+  "data": {
+    "code": "ABC123"
+  }
+}
+```
 </details>
 
 <details>
-<summary><b>📞 कॉल</b> · 1 इवेंट</summary>
+<summary><code>connection.pair_status</code> - पेयरिंग स्थिति</summary>
+
+```json
+{
+  "event": "connection.pair_status",
+  "data": {
+    "status": "success"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.logged_out</code> - सेशन बंद हुआ</summary>
+
+```json
+{
+  "event": "connection.logged_out",
+  "data": {}
+}
+```
+</details>
+
+<details>
+<summary><code>connection.connect_failure</code> - कनेक्शन विफलता</summary>
+
+```json
+{
+  "event": "connection.connect_failure",
+  "data": {
+    "reason": "timeout"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.stream_error</code> - स्ट्रीम त्रुटि</summary>
+
+```json
+{
+  "event": "connection.stream_error",
+  "data": {
+    "error": "stream_error"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.temporary_ban</code> - अस्थायी प्रतिबंध</summary>
+
+```json
+{
+  "event": "connection.temporary_ban",
+  "data": {
+    "duration": 300
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>connection.client_outdated</code> - क्लाइंट पुराना हो गया</summary>
+
+```json
+{
+  "event": "connection.client_outdated",
+  "data": {}
+}
+```
+</details>
+
+<details>
+<summary><code>connection.stream_replaced</code> - स्ट्रीम बदल दी गई</summary>
+
+```json
+{
+  "event": "connection.stream_replaced",
+  "data": {}
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>👥 समूह</b> · 40 इवेंट्स</summary>
+
+<details>
+<summary><code>group.join</code> - समूह में शामिल हुआ</summary>
+
+```json
+{
+  "event": "group.join",
+  "data": {
+    "groupId": "123456789@g.us",
+    "inviter": "5511999999999"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>group.update</code> - समूह अपडेट</summary>
+
+```json
+{
+  "event": "group.update",
+  "data": {
+    "groupId": "123456789@g.us",
+    "subject": "नया नाम"
+  }
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>👤 संपर्क / उपस्थिति</b> · 40 इवेंट्स</summary>
+
+<details>
+<summary><code>contact.presence</code> - संपर्क उपस्थिति</summary>
+
+```json
+{
+  "event": "contact.presence",
+  "data": {
+    "from": "5511999999999",
+    "status": "online"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>contact.chat_presence</code> - चैट उपस्थिति</summary>
+
+```json
+{
+  "event": "contact.chat_presence",
+  "data": {
+    "from": "5511999999999",
+    "chatPresence": "composing"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>contact.picture_change</code> - फोटो परिवर्तन</summary>
+
+```json
+{
+  "event": "contact.picture_change",
+  "data": {
+    "from": "5511999999999",
+    "pictureId": "abc123"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>contact.identity_change</code> - पहचान परिवर्तन</summary>
+
+```json
+{
+  "event": "contact.identity_change",
+  "data": {
+    "from": "5511999999999",
+    "identity": "new_identity"
+  }
+}
+```
+</details>
+
+</details>
+
+<details>
+<summary><b>📞 कॉल</b> · 40 इवेंट्स</summary>
 
 <details>
 <summary><code>call.received</code> - कॉल प्राप्त हुई</summary>
@@ -598,6 +893,35 @@ mindmap
     "from": "5511999999999",
     "fromJid": "5511999999999@s.whatsapp.net",
     "callId": "ABC123DEF456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>call.accepted</code> - कॉल स्वीकार की गई</summary>
+
+```json
+{
+  "event": "call.accepted",
+  "data": {
+    "from": "5511999999999",
+    "callId": "ABC123DEF456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>call.terminated</code> - कॉल समाप्त की गई</summary>
+
+```json
+{
+  "event": "call.terminated",
+  "data": {
+    "from": "5511999999999",
+    "callId": "ABC123DEF456",
+    "duration": 120
   }
 }
 ```
@@ -688,11 +1012,14 @@ cd ~/ZapUnlocked-API
 bash scripts/install/install.sh
 ```
 
-**4.** `.env` जनरेट करें:
+**4.** *(वैकल्पिक)* `.env` जनरेट करें:
 
 ```bash
 bash scripts/generate-env/generate-env.sh
 ```
+
+> [!NOTE]
+> इंस्टॉल स्क्रिप्ट पहले से पूछती है कि क्या आप `.env` कॉन्फ़िगर करना चाहते हैं। यदि आपने **हाँ** उत्तर दिया है, तो यह चरण छोड़ा जा सकता है। अन्यथा, ऊपर का कमांड चलाएं या `.env` को मैन्युअल रूप से कॉन्फ़िगर करें।
 
 **5.** सर्विस कॉन्फ़िगर करें (24/7) **Advanced · Services · Add a service** में:
 

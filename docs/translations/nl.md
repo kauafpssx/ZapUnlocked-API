@@ -1,10 +1,12 @@
-# 🚀 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br) 📲✨
+# ⚡💬 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br/)
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Free%20%26%20Open%20Source-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="Free & Open Source">
-  <img src="https://img.shields.io/badge/Self%20Hosted-A855F7?style=for-the-badge&logo=docker&logoColor=white" alt="Self Hosted">
+  <a href="https://downgit.github.io/#/home?url=https://github.com/kauafpssx/ZapUnlocked-API/blob/main/ZapUnlocked.collection.json" target="_blank">
+    <img src="https://img.shields.io/badge/Collection-A855F7?style=for-the-badge&logo=postman&logoColor=white" alt="Postman Collection">
+  </a>
   <img src="https://img.shields.io/badge/REST%20API-A855F7?style=for-the-badge&logo=fastapi&logoColor=white" alt="REST API">
   <img src="https://img.shields.io/badge/MIT%20License-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="MIT License">
   <img src="https://img.shields.io/badge/Python%203.10%2B-A855F7?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+">
@@ -16,7 +18,7 @@
 
 <table width="100%">
   <tr>
-    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.MD"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg" width="40" title="Português (Brasil)"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/README.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg" width="40" title="Português (Brasil)"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/en.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/us.svg" width="40" title="English"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/es.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg" width="40" title="Español"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/fr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/fr.svg" width="40" title="Français"></a></td>
@@ -49,9 +51,10 @@ Ons voorstel is gebaseerd op **technische excellentie** en **ontwikkelaarsonafha
 
 ## 🗺️ API Overzicht
 
+
 ```mermaid
 mindmap
-  root((📲 ZapUnlocked-API))
+  root((⚡💬 ZapUnlocked-API))
     📨 Berichten
       Tekst / Antwoorden
       Media 📸🎥🎵
@@ -59,7 +62,8 @@ mindmap
       Contacten / Links
       Bewerken / Verwijderen / Lezen
     🔘 Interactief
-      Staatloze Knoppen
+      Knop Lijst / Actie
+      OTP / PIX
       Optielijst
       Polls
     🔍 Query's
@@ -67,26 +71,27 @@ mindmap
       Geschiedenis
       Recente Chats
       Geheugen / Schijf
-      Database
+      Database / Opschonen
     🔗 Verbinding
       Status / SSE
-      QR-code
+      QR-code / PNG
       Koppelcode
       Uitloggen
     📡 Webhooks
-      Aanmaken / Lijst
-      Bewerken / Verwijderen
-      Inschakelen / Testen
-      20 Gebeurtenissen
+       Aanmaken / Lijst
+       Bewerken / Verwijderen
+       Inschakelen / Testen
+       40 Gebeurtenissen
     ⚙️ Profiel en Privacy
       Naam / Foto
       Laatst gezien
       Blokkades
     🤖 Bot
       AI-tag
-      IP-controle
       Oproepen weigeren
       Automatisch lezen
+    🛡️ IP-regels
+      Whitelist / Blacklist
     📱 Instantie
       Accountgegevens
       Apparaat
@@ -117,125 +122,164 @@ mindmap
 ## 📋 API Routes
 
 <details>
-<summary><b>📨 Berichten Verzenden</b> · 14 endpoints</summary>
+<summary><b>📨 Berichten Verzenden</b> · 15 endpoints</summary>
 
-| Methode | Route | Beschrijving |
-| :------ | :---- | :----------- |
-| `POST` | `/send` | Tekstbericht verzenden / antwoorden |
-| `POST` | `/send_image` | Afbeelding verzenden |
-| `POST` | `/send_video` | Video verzenden (ondersteunt GIF en PTV) |
-| `POST` | `/send_audio` | Audio verzenden (met automatische PTT-conversie) |
-| `POST` | `/send_document` | Document verzenden |
-| `POST` | `/send_sticker` | Sticker verzenden |
-| `POST` | `/send_reaction` | Reactie met emoji verzenden |
-| `POST` | `/send_location` | Locatie verzenden |
-| `POST` | `/send_contact` | Contact verzenden |
-| `POST` | `/send_contacts` | Meerdere contacten verzenden |
-| `POST` | `/send_link` | Link met voorbeeld verzenden |
-| `POST` | `/messages/delete` | Bericht verwijderen |
-| `POST` | `/messages/read` | Markeren als gelezen |
-| `POST` | `/messages/edit` | Verzonden bericht bewerken |
+| Methode | Route | Beschrijving | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/send` | Tekstbericht verzenden / antwoorden | `phone`, `message` |
+| `POST` | `/send_image` | Afbeelding verzenden | `phone`, `image_url` |
+| `POST` | `/send_video` | Video verzenden (ondersteunt GIF en PTV) | `phone`, `video_url` |
+| `POST` | `/send_audio` | Audio verzenden (met automatische PTT-conversie) | `phone`, `audio_url` |
+| `POST` | `/send_document` | Document verzenden | `phone`, `document_url` |
+| `POST` | `/send_sticker` | Sticker verzenden | `phone`, `sticker_url` |
+| `POST` | `/send_reaction` | Reactie met emoji verzenden | `phone`, `messageId`, `emoji` |
+| `POST` | `/send_location` | Locatie verzenden | `phone`, `lat`, `lng` |
+| `POST` | `/send_contact` | Contact verzenden | `phone`, `name`, `contactPhone` |
+| `POST` | `/send_contacts` | Meerdere contacten verzenden | `phone`, `contacts` |
+| `POST` | `/send_link` | Link met voorbeeld verzenden | `phone`, `url` |
+| `POST` | `/messages/delete` | Bericht verwijderen | `phone`, `messageId` |
+| `POST` | `/messages/read` | Markeren als gelezen | `phone`, `messageIds` |
+| `POST` | `/messages/edit` | Verzonden bericht bewerken | `phone`, `messageId`, `message` |
 </details>
 
 <details>
-<summary><b>🔘 Interactieve Berichten</b> · 4 endpoints</summary>
+<summary><b>🔘 Interactieve Berichten</b> · 7 endpoints</summary>
 
-| Methode | Route | Beschrijving |
-| :------ | :---- | :----------- |
-| `POST` | `/send_wbuttons` | Knoppen verzenden (lijst, actie, OTP, PIX) |
-| `POST` | `/messages/send-option-list` | Optielijst verzenden |
-| `POST` | `/messages/send-poll` | Poll verzenden |
-| `POST` | `/messages/send-poll-vote` | Stemmen op poll |
+| Methode | Route | Beschrijving | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/messages/send-button-list` | Knoppenlijst verzenden | `phone`, `buttons` |
+| `POST` | `/messages/send-button-actions` | Actieknop verzenden | `phone`, `buttons` |
+| `POST` | `/messages/send-button-otp` | Kopieerknop verzenden (OTP) | `phone`, `code` |
+| `POST` | `/messages/send-button-pix` | PIX-knop verzenden | `phone`, `pixKey` |
+| `POST` | `/messages/send-option-list` | Optielijst verzenden | `phone`, `buttons` |
+| `POST` | `/messages/send-poll` | Poll verzenden | `phone`, `name`, `options` |
+| `POST` | `/messages/send-poll-vote` | Stemmen op poll | `phone`, `options` |
 </details>
 
 <details>
-<summary><b>🔍 Query's en Beheer</b> · 7 endpoints</summary>
+<summary><b>🔍 Query's en Beheer</b> · 8 endpoints</summary>
 
-| Methode | Route | Beschrijving |
-| :------ | :---- | :----------- |
-| `POST` | `/contacts/info` | Gedetailleerde contactgegevens |
-| `POST` | `/management/fetch_messages` | Berichtgeschiedenis ophalen |
-| `POST` | `/management/recent_contacts` | Recente chats weergeven |
-| `GET` | `/management/memory` | Geheugengebruiksstatus |
-| `GET` | `/management/volume_stats` | Schijfgebruik controleren |
-| `GET` | `/management/database/status` | DB-status en statistieken |
-| `POST` | `/management/database/cleanup` | Handmatige DB-opschoning |
+| Methode | Route | Beschrijving | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/management/fetch_messages` | Berichtgeschiedenis ophalen | `phone` |
+| `POST` | `/management/recent_contacts` | Recente chats weergeven | ❌ |
+| `GET` | `/management/memory` | Geheugengebruiksstatus | ❌ |
+| `GET` | `/management/volume_stats` | Schijfgebruik controleren | ❌ |
+| `DELETE` | `/management/cleanup` | Tijdelijke media opschonen | ❌ |
+| `GET` | `/management/database/status` | DB-status en statistieken | ❌ |
+| `POST` | `/management/database/config` | Database-instellingen bijwerken | `interval` |
+| `POST` | `/management/database/cleanup` | Handmatige DB-opschoning | ❌ |
 </details>
 
 <details>
-<summary><b>🔗 Verbinding en Sessie</b> · 8 endpoints</summary>
+<summary><b>👤 Contacten</b> · 1 endpoint</summary>
 
-| Methode | Route | Beschrijving |
-| :------ | :---- | :----------- |
-| `GET` | `/` | Welkomstpagina (HTML) |
-| `GET` | `/status` | Verbindings- en sessiestatus |
-| `GET` | `/status/stream` | Real-time status (SSE) |
-| `GET` | `/qr` | Interactieve QR-code bekijken |
-| `GET` | `/qr/image` | QR-code afbeelding ophalen (Base64) |
-| `POST` | `/qr/pair` | Numerieke koppelcode genereren |
-| `GET` | `/settings/phone-code/{phone}` | Koppelcode genereren op telefoonnummer |
-| `POST` | `/qr/logout` | Verbreken en sessie resetten |
+| Methode | Route | Beschrijving | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/contacts/info` | Gedetailleerde contactgegevens | `phone` |
 </details>
 
 <details>
-<summary><b>📡 Webhooks (CRUD)</b> · 7 endpoints</summary>
+<summary><b>🏠 Algemeen</b> · 3 endpoints</summary>
 
-| Methode | Route | Beschrijving |
-| :------ | :---- | :----------- |
-| `POST` | `/webhooks` | Genoemde webhook aanmaken |
-| `GET` | `/webhooks` | Alle webhooks weergeven |
-| `PUT` | `/webhooks/{name}` | Webhook bewerken |
-| `DELETE` | `/webhooks/{name}` | Webhook verwijderen |
-| `POST` | `/webhooks/{name}/toggle` | Inschakelen / uitschakelen |
-| `POST` | `/webhooks/{name}/test` | Webhook testen |
-| `GET` | `/webhooks/events` | Gebeurtenistypen weergeven (20 typen) |
+| Methode | Route | Beschrijving | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/` | Welkomstpagina (HTML) | ❌ |
+| `GET` | `/status` | Verbindings- en sessiestatus (JSON) | ❌ |
+| `GET` | `/status/stream` | Real-time status (SSE) | ❌ |
+</details>
+
+<details>
+<summary><b>🔗 Verbinding (QR)</b> · 2 endpoints</summary>
+
+| Methode | Route | Beschrijving | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/qr` | Interactieve QR-code bekijken (HTML) | ❌ |
+| `GET` | `/qr/image` | QR-code afbeelding ophalen (PNG) | ❌ |
+</details>
+
+<details>
+<summary><b>🔐 Sessie</b> · 2 endpoints</summary>
+
+| Methode | Route | Beschrijving | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/session/pair` | Numerieke koppelcode genereren | `phone` |
+| `POST` | `/session/logout` | Verbreken en sessie resetten | ❌ |
+</details>
+
+<details>
+<summary><b>📡 Webhooks (CRUD)</b> · 8 endpoints</summary>
+
+| Methode | Route | Beschrijving | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/webhooks` | Genoemde webhook aanmaken | `name`, `url` |
+| `GET` | `/webhooks` | Alle webhooks weergeven | ❌ |
+| `GET` | `/webhooks/{name}` | Webhook ophalen op naam | ❌ |
+| `PUT` | `/webhooks/{name}` | Webhook bewerken | ❌ |
+| `DELETE` | `/webhooks/{name}` | Webhook verwijderen | ❌ |
+| `POST` | `/webhooks/{name}/toggle` | Inschakelen / uitschakelen | `active` |
+| `POST` | `/webhooks/{name}/test` | Webhook testen | ❌ |
+| `GET` | `/webhooks/events` | Gebeurtenistypen weergeven (40 typen) | ❌ |
 </details>
 
 <details>
 <summary><b>⚙️ Profiel en Privacy</b> · 3 endpoints</summary>
 
-| Methode | Route | Beschrijving |
-| :------ | :---- | :----------- |
-| `POST` | `/settings/profile` | Botnaam en -foto wijzigen |
-| `POST` | `/settings/privacy` | Privacy aanpassen (laatst gezien, etc.) |
-| `POST` | `/settings/block` | Contact blokkeren / deblokkeren |
+| Methode | Route | Beschrijving | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/settings/profile` | Botnaam en -foto wijzigen | ❌ |
+| `POST` | `/settings/privacy` | Privacy aanpassen (laatst gezien, etc.) | ❌ |
+| `POST` | `/settings/block` | Contact blokkeren / deblokkeren | `phone`, `action` |
 </details>
 
 <details>
-<summary><b>🤖 Bot-instellingen</b> · 5 endpoints</summary>
+<summary><b>🤖 Bot-instellingen</b> · 6 endpoints</summary>
 
-| Methode | Route | Beschrijving |
-| :------ | :---- | :----------- |
-| `GET` | `/settings/bot` | Bot-instellingen bekijken |
-| `POST` | `/settings/bot` | Bot-instellingen bijwerken (AI-tag, IP-controle) |
-| `PUT` | `/settings/instance/call-reject-auto` | Oproepen automatisch weigeren |
-| `PUT` | `/settings/instance/call-reject-message` | Oproepweigeringsbericht |
-| `PUT` | `/settings/instance/auto-read-message` | Automatisch berichten lezen |
+| Methode | Route | Beschrijving | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/settings/bot` | Bot-instellingen bekijken | ❌ |
+| `POST` | `/settings/bot` | Bot-instellingen bijwerken (AI-tag, IP-controle) | ❌ |
+| `PUT` | `/settings/instance/call-reject-auto` | Oproepen automatisch weigeren | `value` |
+| `PUT` | `/settings/instance/call-reject-message` | Oproepweigeringsbericht | `value` |
+| `PUT` | `/settings/instance/auto-read-message` | Automatisch berichten lezen | `value` |
+| `GET` | `/settings/phone-code/{phone}` | Koppelcode genereren op telefoonnummer | ❌ |
 </details>
 
 <details>
 <summary><b>📱 Instantie</b> · 3 endpoints</summary>
 
-| Methode | Route | Beschrijving |
-| :------ | :---- | :----------- |
-| `GET` | `/instance/me` | Verbonden accountgegevens |
-| `GET` | `/instance/device` | Technische apparaatgegevens |
-| `PUT` | `/instance/update-name` | Instantie hernoemen |
+| Methode | Route | Beschrijving | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/instance/me` | Verbonden accountgegevens | ❌ |
+| `GET` | `/instance/device` | Technische apparaatgegevens | ❌ |
+| `PUT` | `/instance/update-name` | Instantie hernoemen | `name` |
+</details>
+
+<details>
+<summary><b>🛡️ IP-regels</b> · 5 endpoints</summary>
+
+| Methode | Route | Beschrijving | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/settings/ip-rules` | IP-regels weergeven (whitelist/blacklist) | ❌ |
+| `POST` | `/settings/ip-rules/whitelist` | IP toevoegen aan whitelist | `ip` |
+| `POST` | `/settings/ip-rules/blacklist` | IP toevoegen aan blacklist | `ip` |
+| `DELETE` | `/settings/ip-rules/whitelist/{ip}` | IP verwijderen uit whitelist | ❌ |
+| `DELETE` | `/settings/ip-rules/blacklist/{ip}` | IP verwijderen uit blacklist | ❌ |
 </details>
 
 <details>
 <summary><b>🖥️ Systeem</b> · 5 endpoints</summary>
 
-| Methode | Route | Beschrijving |
-| :------ | :---- | :----------- |
-| `GET` | `/system/env` | Omgevingsvariabelen bekijken |
-| `PUT` | `/system/env` | Omgevingsvariabelen bijwerken |
-| `POST` | `/system/cleanup/force` | Geforceerde tijdelijke media-opschoning |
-| `GET` | `/system/cleanup/settings` | Automatische opschooninstellingen bekijken |
-| `PUT` | `/system/cleanup/settings` | Automatisch opschooninterval bijwerken |
+| Methode | Route | Beschrijving | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/system/env` | Omgevingsvariabelen bekijken | ❌ |
+| `PUT` | `/system/env` | Omgevingsvariabelen bijwerken | ❌ |
+| `POST` | `/system/cleanup/force` | Geforceerde tijdelijke media-opschoning | ❌ |
+| `GET` | `/system/cleanup/settings` | Automatische opschooninstellingen bekijken | ❌ |
+| `PUT` | `/system/cleanup/settings` | Automatisch opschooninterval bijwerken | ❌ |
 </details>
 
-> **Totaal: 56 endpoints** · Volledige REST voor WhatsApp-automatisering.
+> **Totaal: 68 endpoints**
 
 ---
 
@@ -253,7 +297,11 @@ Alle webhooks ontvangen een standaard envelop:
 
 Als de webhook een aangepaste `body` met `{{placeholders}}` heeft, wordt deze body verzonden in plaats van de standaard envelop.
 
-### Placeholders (aangepaste body)
+
+---
+
+<details>
+<summary><b>🏷️ Beschikbare placeholders in de aangepaste body</b></summary>
 
 | Placeholder | Waarde |
 | :---------- | :----- |
@@ -270,6 +318,10 @@ Als de webhook een aangepaste `body` met `{{placeholders}}` heeft, wordt deze bo
 | `{{hou}}` | Huidig uur (HH) |
 | `{{min}}` | Huidige minuut (mm) |
 | `{{sec}}` | Huidige seconde (ss) |
+
+</details>
+
+---
 
 <details>
 <summary><b>📥 Ontvangen Berichten</b> · 15 evenementen</summary>
@@ -524,7 +576,7 @@ Basisvelden in ontvangen berichtgebeurtenissen:
 </details>
 
 <details>
-<summary><b>📤 Verzonden Berichten</b> · 1 evenement</summary>
+<summary><b>📤 Verzonden Berichten</b> · 4 evenementen</summary>
 
 <details>
 <summary><code>message.sent</code> - Verzonden bericht (handmatig)</summary>
@@ -536,6 +588,49 @@ Basisvelden in ontvangen berichtgebeurtenissen:
     "to": "5511999999999",
     "type": "text",
     "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>message.read</code> - Bericht gelezen door ontvanger</summary>
+
+```json
+{
+  "event": "message.read",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>message.delivered</code> - Bericht afgeleverd bij ontvanger (receipt type 1)</summary>
+
+```json
+{
+  "event": "message.delivered",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>message.receipt</code> - Andere bezorgbevestigingen (receipt types 2, 3, 5+)</summary>
+
+```json
+{
+  "event": "message.receipt",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456",
+    "receiptType": 2
   }
 }
 ```
@@ -688,11 +783,14 @@ cd ~/ZapUnlocked-API
 bash scripts/install/install.sh
 ```
 
-**4.** Genereer het `.env` bestand:
+**4.** *(Optioneel)* Genereer het `.env` bestand:
 
 ```bash
 bash scripts/generate-env/generate-env.sh
 ```
+
+> [!NOTE]
+> Het installatiescript vraagt al of je de `.env` wilt configureren. Als je **ja** hebt geantwoord, kan deze stap worden overgeslagen. Anders voer je de bovenstaande opdracht uit of configureer je de `.env` handmatig.
 
 **5.** Configureer de Service (24/7) in **Advanced > Services > Add a service**:
 
