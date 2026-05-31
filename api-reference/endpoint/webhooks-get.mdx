@@ -1,0 +1,75 @@
+---
+title: "Buscar Webhook"
+icon: "magnifying-glass"
+api: "GET /webhooks/{name}"
+description: "Retorna os detalhes de um webhook específico pelo nome."
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Retorna a configuração completa de um webhook identificado pelo seu nome único.
+
+### Parâmetro de Rota
+
+<ParamField path="name" type="string" required>
+  Nome único do webhook (ex: `meu-webhook`).
+</ParamField>
+
+<ResponseField name="success" type="boolean">
+  `true` se o webhook foi encontrado.
+</ResponseField>
+
+<ResponseField name="webhook.name" type="string">
+  Nome único do webhook.
+</ResponseField>
+
+<ResponseField name="webhook.url" type="string">
+  URL de destino dos eventos.
+</ResponseField>
+
+<ResponseField name="webhook.method" type="string">
+  Método HTTP usado ao disparar.
+</ResponseField>
+
+<ResponseField name="webhook.events" type="array">
+  Lista de eventos inscritos (ex: `["message.text", "connection.connected"]` ou `["*"]`).
+</ResponseField>
+
+<ResponseField name="webhook.active" type="boolean">
+  `true` se o webhook está ativo.
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "webhook": {
+    "name": "meu-webhook",
+    "url": "https://meusite.com/webhook",
+    "method": "POST",
+    "headers": {},
+    "body": {},
+    "events": ["message.text", "message.image"],
+    "active": true
+  }
+}
+```
+
+```json 404 Não encontrado
+{
+  "error": "NOT_FOUND",
+  "message": "Webhook 'meu-webhook' not found."
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

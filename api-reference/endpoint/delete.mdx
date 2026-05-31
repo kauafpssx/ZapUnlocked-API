@@ -1,17 +1,17 @@
 ---
 title: "Desconectar"
 icon: "right-from-bracket"
-api: "POST /qr/logout"
+api: "POST /session/logout"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Desconecta imediatamente a sessão atual do WhatsApp e apaga todos os arquivos locais de credenciais (`creds.json`). Útil para trocar de conta ou forçar a geração de um novo QR Code.
+Desconecta imediatamente a sessão atual do WhatsApp e deleta os arquivos de credenciais locais (`creds.json`). Útil para trocar de conta ou forçar um novo QR Code.
 
 <Warning>
-  Esta ação é irreversível e requer uma nova leitura de QR Code para restabelecer o serviço.
+  Esta ação é irreversível e exige um novo escaneamento de QR Code para restaurar o serviço.
 </Warning>
 
 
@@ -20,14 +20,14 @@ Desconecta imediatamente a sessão atual do WhatsApp e apaga todos os arquivos l
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Sessão encerrada e arquivos removidos ✅"
+  "message": "Disconnected successfully (data cleared)."
 }
 ```
 
-```json 401 Erro
+```json 401 Não autorizado
 {
   "error": "Unauthorized",
-  "message": "API Key inválida ou ausente"
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
 }
 ```
 

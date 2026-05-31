@@ -1,32 +1,32 @@
 ---
-title: "Imagem do QR"
+title: "Imagem do QR Code"
 icon: "image"
 api: "GET /qr/image"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Retorna a imagem do QR Code como **binário PNG** (`Content-Type: image/png`). Use para exibir o QR em interfaces próprias via tag `<img>` ou download direto.
+Retorna a imagem do QR Code como **PNG binário** (`Content-Type: image/png`). Use para exibir o QR em interfaces personalizadas via tag `<img>` ou download direto.
 
 <Note>
-  Este endpoint retorna imagem binária, não JSON. Para obter o QR Code em Base64, use o endpoint `GET /status/stream`.
+  Este endpoint retorna dados de imagem binária, não JSON. Para obter o QR Code em Base64, use `GET /status/stream`.
 </Note>
 
 <ResponseExample>
 
 ```json 200 Sucesso
 {
-  "_note": "Retorna binário PNG — Content-Type: image/png"
+  "_note": "Retorna PNG binário — Content-Type: image/png"
 }
 ```
 
-```json 404 QR não disponível
+```json 404 Já conectado
 {
   "detail": {
-    "error": "QR Code não disponível",
-    "message": "WhatsApp já está conectado"
+    "error": "NOT_FOUND",
+    "message": "WhatsApp is already connected."
   }
 }
 ```
@@ -34,8 +34,8 @@ Retorna a imagem do QR Code como **binário PNG** (`Content-Type: image/png`). U
 ```json 404 Aguardando
 {
   "detail": {
-    "error": "QR Code não disponível",
-    "message": "Aguardando geração do QR Code..."
+    "error": "NOT_FOUND",
+    "message": "Waiting for QR code generation..."
   }
 }
 ```
@@ -43,7 +43,7 @@ Retorna a imagem do QR Code como **binário PNG** (`Content-Type: image/png`). U
 ```json 401 Não autorizado
 {
   "error": "Unauthorized",
-  "message": "API Key inválida ou ausente"
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
 }
 ```
 

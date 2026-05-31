@@ -4,13 +4,13 @@ icon: 'face-smile'
 api: "POST /send_reaction"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
 Reage a uma mensagem específica com um emoji.
 
-### Body
+### Corpo da Requisição
 
 <ParamField body="phone" type="string" required>
   Número do contato.
@@ -21,11 +21,11 @@ Reage a uma mensagem específica com um emoji.
 </ParamField>
 
 <ParamField body="emoji" type="string" required>
-  O emoji da reação (ex: "💖"). Envie string vazia para remover.
+  Emoji de reação (ex: "💖"). Envie string vazia para remover.
 </ParamField>
 
 <ParamField body="type" type="string" default="text">
-  `text` (busca por conteúdo) ou `id` (busca por ID da mensagem).
+  `text` (busca pelo conteúdo) ou `id` (busca pelo ID da mensagem).
 </ParamField>
 
 <ResponseExample>
@@ -33,7 +33,7 @@ Reage a uma mensagem específica com um emoji.
 ```json 200 Sucesso
 {
     "success": true,
-    "message": "Reação enviada ✅"
+    "message": "Reaction sent."
 }
 ```
 

@@ -1,20 +1,26 @@
 ---
-title: "Config. Limpeza"
+title: "Config. BD"
 icon: "clock-rotate-left"
 api: "POST /management/database/config"
-description: "Define o intervalo de tempo para a limpeza automática do banco de dados."
+description: "Define o intervalo de limpeza automática do banco de autenticação."
 ---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
 
 ### Corpo da Requisição
 
 <ParamField body="interval" type="number" placeholder="1440" required>
-  Intervalo em minutos entre cada limpeza automática. O padrão é 1440 (24
-  horas).
+  Intervalo de limpeza em minutos. Padrão é `1440` (24 horas).
 </ParamField>
 
-
 <ResponseField name="success" type="boolean">
-  Indica se a configuração foi salva.
+  `true` se o intervalo foi salvo.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Confirmação com o intervalo configurado.
 </ResponseField>
 
 <ResponseExample>
@@ -22,7 +28,14 @@ description: "Define o intervalo de tempo para a limpeza automática do banco de
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Intervalo atualizado para 60 minutos"
+  "message": "Cleanup interval updated to 60 minutes."
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
 }
 ```
 

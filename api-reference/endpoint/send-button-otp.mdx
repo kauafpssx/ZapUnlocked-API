@@ -1,0 +1,59 @@
+---
+title: "Botão OTP"
+icon: "key"
+api: "POST /messages/send-button-otp"
+description: "Envia uma mensagem com botão de cópia para códigos OTP/verificação."
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Envia um botão especial de **cópia de código** (OTP). O WhatsApp exibe o código com um botão "Copiar código" que o usuário clica para copiar automaticamente. Ideal para fluxos de autenticação em dois fatores.
+
+### Corpo da Requisição
+
+<ParamField body="phone" type="string" required>
+  Número do destinatário com código do país (ex: `5511999999999`).
+</ParamField>
+
+<ParamField body="code" type="string" required>
+  O código a ser copiado (ex: `"123456"` ou `"AB-9921"`).
+</ParamField>
+
+<ParamField body="message" type="string">
+  Texto da mensagem exibido acima do botão.
+</ParamField>
+
+<ParamField body="reply" type="string">
+  ID ou texto da mensagem para responder.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
+</ParamField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Message sent."
+}
+```
+
+```json 400 Campo ausente
+{
+  "error": "MISSING_FIELD",
+  "message": "'phone' and 'code' are required."
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

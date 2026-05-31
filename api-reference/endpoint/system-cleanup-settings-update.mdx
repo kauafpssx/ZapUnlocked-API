@@ -1,28 +1,28 @@
 ---
-title: 'Atualizar Limpeza'
+title: 'Editar Limpeza'
 icon: 'clock-rotate-left'
 api: "PUT /system/cleanup/settings"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
 Atualiza o intervalo de limpeza automática do banco de dados.
 
-### Body
+### Corpo da Requisição
 
 <ParamField body="interval" type="integer" required>
-  Intervalo em minutos entre limpezas automáticas. Ex: `1440` = 24h, `720` = 12h, `60` = 1h.
+  Intervalo de limpeza em minutos. Ex: `1440` = 24h, `720` = 12h, `60` = 1h.
 </ParamField>
 
 <ResponseExample>
 
 ```json 200 Sucesso
 {
-  "status": "success",
+  "success": true,
   "settings": {
-    "interval": 720,
+    "interval": 1440,
     "last_run": 0
   }
 }

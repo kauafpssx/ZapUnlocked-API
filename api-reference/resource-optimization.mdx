@@ -1,10 +1,10 @@
 ---
 title: "Otimização de Recursos"
 icon: "server"
-description: "Saiba como a ZapUnlocked-API utiliza o mínimo de recursos para rodar em qualquer ambiente."
+description: "Saiba como a ZapUnlocked-API usa recursos mínimos para rodar em qualquer ambiente."
 ---
 
-A **ZapUnlocked-API** foi projetada para ser extremamente leve, rodando de forma estável em ambientes com recursos limitados como o plano gratuito da **Alwaysdata** (256MB de RAM).
+A **ZapUnlocked-API** foi projetada para ser extremamente leve, rodando de forma estável em ambientes com recursos limitados como o plano gratuito do **Alwaysdata** (256 MB de RAM).
 
 ---
 
@@ -59,31 +59,31 @@ A **ZapUnlocked-API** foi projetada para ser extremamente leve, rodando de forma
 
 <CardGroup cols={2}>
   <Card title="RAM: 256 MB" icon="microchip">
-    Consumo em repouso de ~140MB deixa margem confortável. Picos em operação ficam em ~220MB.
+    Consumo idle de ~140 MB deixa uma margem confortável. Picos de operação ficam em ~220 MB.
   </Card>
-  <Card title="CPU: 0.25 vCPU" icon="gauge-high">
+  <Card title="CPU: 0,25 vCPU" icon="gauge-high">
     Otimizado para uso fracionado. Picos ocorrem apenas durante conversão de áudio ou imagem.
   </Card>
   <Card title="Armazenamento: 1 GB SSD" icon="hard-drive">
-    Generoso para uso normal. Compressão gzip reduz histórico em até 70%.
+    Generoso para uso normal. A compressão gzip reduz o histórico em até 70%.
   </Card>
   <Card title="Backups: 3 dias" icon="clock-rotate-left">
-    Retenção automática de 3 dias pela Alwaysdata. Sessão de auth fica em arquivo local.
+    Retenção automática de 3 dias pelo Alwaysdata. Sessão de autenticação armazenada em arquivo local.
   </Card>
 </CardGroup>
 
 <Warning>
-  No plano gratuito da Alwaysdata, processos iniciados via SSH são finalizados após inatividade. Para manter a API ligada 24/7, cadastre a execução em **Web > Services** no painel da Alwaysdata.
+  No plano gratuito do Alwaysdata, processos iniciados via SSH são encerrados após inatividade. Para manter a API rodando 24/7, registre a execução em **Web > Serviços** no painel do Alwaysdata.
 </Warning>
 
 ---
 
 ## <Icon icon="circle-check" iconType="sharp-regular" color="#9d4fe6" size={22} /> Boas Práticas
 
-- **Limpeza de histórico**: use `/management/cleanup` regularmente para evitar acúmulo de dados em disco
+- **Limpeza de histórico**: use `/management/cleanup` regularmente para evitar acúmulo de dados no disco
 - **Mídias pesadas**: a fila de processamento garante que apenas um arquivo seja processado por vez, sem picos de memória
-- **Log em produção**: mantenha o log em modo normal para evitar escrita excessiva em disco
+- **Log em produção**: mantenha o log no modo normal para evitar escritas excessivas em disco
 
 <Warning>
-  Se o consumo de RAM exceder o limite do host, o processo pode ser finalizado pelo OOM Killer do sistema operacional. A arquitetura em Python com Neonize é significativamente mais eficiente que implementações em Node.js.
+  Se o consumo de RAM exceder o limite do host, o processo pode ser encerrado pelo OOM Killer do SO. A arquitetura Python + Neonize é significativamente mais eficiente que implementações Node.js.
 </Warning>

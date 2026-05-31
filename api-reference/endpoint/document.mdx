@@ -4,24 +4,24 @@ icon: "file-import"
 api: "POST /send_document"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Envia qualquer tipo de arquivo (PDF, DOCX, ZIP, etc). Limite de 400MB configurado na API (suporta até 2GB no protocolo).
+Envia qualquer tipo de arquivo (PDF, DOCX, ZIP, etc.). A API está configurada para 400 MB; o protocolo suporta até 2 GB.
 
-### Corpo da Requisição (Body)
+### Corpo da Requisição
 
 <ParamField body="phone" type="string" required>
   Número do destinatário com código do país.
 </ParamField>
 
 <ParamField body="document_url" type="string" required>
-  URL pública direta do arquivo.
+  URL pública do arquivo.
 </ParamField>
 
 <ParamField body="fileName" type="string">
-  Nome customizado que o arquivo terá no WhatsApp (ex: `documento_importante.pdf`).
+  Nome personalizado exibido no WhatsApp (ex: `documento_importante.pdf`).
 </ParamField>
 
 
@@ -29,14 +29,14 @@ Envia qualquer tipo de arquivo (PDF, DOCX, ZIP, etc). Limite de 400MB configurad
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Documento enviado com sucesso ✅"
+  "message": "Document sent successfully."
 }
 ```
 
-```json 401 Erro
+```json 401 Não autorizado
 {
   "error": "Unauthorized",
-  "message": "API Key inválida ou ausente"
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
 }
 ```
 </ResponseExample>

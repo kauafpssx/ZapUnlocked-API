@@ -4,21 +4,21 @@ icon: 'address-book'
 api: "POST /contacts/info"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Este endpoint permite obter informações detalhadas de um número específico, como foto de perfil, recado (status) e informações comerciais.
+Retorna informações detalhadas sobre um número específico: foto de perfil, recado/status e perfil comercial.
 
-### Body
+### Corpo da Requisição
 
-<ParamField body="number" type="string" required>
-  O número do contato que você deseja consultar (ex: `5511999999999`).
+<ParamField body="phone" type="string" required>
+  Número do contato a consultar (ex: `5511999999999`).
 </ParamField>
 
 
 <ResponseField name="success" type="boolean">
-  Indica se a requisição foi bem sucedida.
+  Indica se a requisição foi bem-sucedida.
 </ResponseField>
 
 <ResponseField name="exists" type="boolean">
@@ -30,9 +30,9 @@ Este endpoint permite obter informações detalhadas de um número específico, 
 </ResponseField>
 
 <ResponseField name="about" type="string">
-  O recado/status atual do usuário (ex: "Disponível").
+  Recado/status atual do usuário.
 </ResponseField>
 
 <ResponseField name="businessProfile" type="object">
-  Se for uma conta comercial, retorna detalhes como descrição, categoria e email.
+  Se for conta comercial, retorna detalhes como descrição, categoria e e-mail.
 </ResponseField>

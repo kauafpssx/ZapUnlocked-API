@@ -2,21 +2,21 @@
 title: "Listar Eventos"
 icon: "bolt"
 api: "GET /webhooks/events"
+description: "Retorna a lista completa dos 40 tipos de eventos disponíveis."
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Retorna a lista completa de todos os tipos de eventos disponíveis para inscrição em webhooks.
-
+Retorna todos os tipos de evento que podem ser usados no campo `events` ao criar ou atualizar um webhook. Use `["*"]` para inscrever em todos de uma vez.
 
 <ResponseField name="success" type="boolean">
   Indica se a requisição foi bem-sucedida.
 </ResponseField>
 
 <ResponseField name="events" type="array">
-  Lista de strings com todos os event types disponíveis.
+  Lista de todos os 40 tipos de evento disponíveis.
 </ResponseField>
 
 <ResponseExample>
@@ -40,12 +40,39 @@ Retorna a lista completa de todos os tipos de eventos disponíveis para inscriç
     "message.list_reply",
     "message.deleted",
     "message.unknown",
+    "message.undecryptable",
     "message.sent",
+    "message.read",
     "connection.connected",
     "connection.disconnected",
     "connection.qr_ready",
-    "call.received"
+    "connection.pair_code",
+    "connection.pair_status",
+    "connection.logged_out",
+    "connection.connect_failure",
+    "connection.stream_error",
+    "connection.temporary_ban",
+    "connection.client_outdated",
+    "connection.stream_replaced",
+    "group.join",
+    "group.update",
+    "contact.presence",
+    "contact.chat_presence",
+    "contact.picture_change",
+    "contact.identity_change",
+    "call.received",
+    "call.accepted",
+    "call.terminated",
+    "message.delivered",
+    "message.receipt"
   ]
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
 }
 ```
 

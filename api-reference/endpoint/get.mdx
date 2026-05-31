@@ -4,17 +4,17 @@ icon: 'house'
 description: 'A primeira tela que você vê ao acessar a API no navegador.'
 ---
 
-Ao acessar a URL raiz da sua instância no navegador, a API exibe uma **página interativa de boas-vindas** com tudo que você precisa para iniciar a conexão.
+Ao acessar a URL raiz no navegador, a API exibe uma **página de boas-vindas** interativa com tudo que você precisa para iniciar a conexão.
 
 <Note>
-  Rota pública - não exige autenticação. Não retorna JSON.
+  Rota pública — sem autenticação necessária. Não retorna JSON.
 </Note>
 
 ---
 
 ## <Icon icon="link" iconType="sharp-regular" color="#9d4fe6" size={22} /> Como acessar
 
-Abra no navegador a URL da sua instância:
+Abra a URL da sua instância no navegador:
 
 <CodeGroup>
 ```bash Local icon="house"
@@ -33,13 +33,13 @@ https://minha-api.exemplo.com/
 
 ---
 
-## <Icon icon="eye" iconType="sharp-regular" color="#9d4fe6" size={22} /> O que aparece
+## <Icon icon="eye" iconType="sharp-regular" color="#9d4fe6" size={22} /> O que é exibido
 
-A página exibe duas abas:
+A página mostra duas abas:
 
 <AccordionGroup>
   <Accordion title="Via URL" icon="link">
-    Mostra o link completo para acessar o painel do QR Code diretamente no navegador:
+    Exibe o link completo para acessar o painel do QR Code diretamente no navegador:
 
     ```
     http://SUA_URL:8300/qr?API_KEY=SUA_SENHA_SECRETA
@@ -47,14 +47,14 @@ A página exibe duas abas:
 
     Clique ou cole no navegador para escanear o QR Code e conectar o WhatsApp.
   </Accordion>
-  <Accordion title="Via Request" icon="code">
-    Mostra o endpoint para obter o QR Code como imagem PNG via requisição:
+  <Accordion title="Via Requisição" icon="code">
+    Exibe o endpoint para obter o QR Code como imagem PNG via requisição:
 
     ```
     GET http://SUA_URL:8300/qr/image?API_KEY=SUA_SENHA_SECRETA
     ```
 
-    Útil para integrar o QR Code em painéis ou sistemas próprios.
+    Útil para integrar o QR Code em dashboards ou sistemas personalizados.
   </Accordion>
 </AccordionGroup>
 
@@ -64,7 +64,7 @@ A página exibe duas abas:
 
 <CardGroup cols={2}>
   <Card title="QR Code (Painel)" icon="qrcode" href="/api-reference/endpoint/qr">
-    Acessa a página de escaneamento do WhatsApp.
+    Abre a página de escaneamento do QR Code do WhatsApp.
   </Card>
   <Card title="QR Code (Imagem)" icon="image" href="/api-reference/endpoint/qr-image">
     Retorna o QR Code como PNG para integração.

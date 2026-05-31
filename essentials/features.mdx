@@ -21,7 +21,7 @@ Ferramentas prontas para automação:
 
 ### Mensageria
 
-- **Texto**: Envio de mensagens com placeholders dinâmicos (`{{day}}`, `{{phone}}`, etc.)
+- **Texto**: Envio de mensagens com placeholders dinâmicos (`{{phone}}`, `{{timestamp}}`, etc.)
 - **Reações**: Reagir a mensagens com emojis
 - **Edição e Exclusão**: Alterar ou deletar mensagens para todos no chat
 - **Marcar como Lida**: Enviar duplo check azul programaticamente
@@ -42,10 +42,10 @@ Ferramentas prontas para automação:
 ### Webhooks
 
 - **CRUD Nomeado**: Múltiplos webhooks com nome único, gerenciados via API (criar, listar, editar, remover)
-- **20 Tipos de Eventos**: `message.*` (text, image, video, audio, document, sticker, contact, location, reaction, poll, button, list, deleted), `connection.*`, `call.received`
+- **40 Tipos de Eventos**: `message.*` (text, image, video, audio, document, sticker, contact, location, reaction, poll, button, list, deleted, unknown, undecryptable, sent, delivered, read, receipt), `connection.*` (11 tipos), `group.*`, `contact.*`, `call.*`
 - **Subscrição por Evento**: Cada webhook assina apenas os eventos que importam, ou `["*"]` para todos
 - **Envelope Padrão**: `{event, timestamp, data}` automático quando body não é customizado
-- **Placeholders**: Body/headers customizáveis com `{{from}}`, `{{text}}`, `{{event}}`, etc.
+- **Placeholders**: Body/headers customizáveis com `{{from}}`, `{{text}}`, `{{timestamp}}`, etc.
 
 ### Gerenciamento
 
@@ -64,6 +64,8 @@ Ferramentas prontas para automação:
 - **Privacidade**: Ajustar visibilidade de Visto por Último, Foto e Status
 - **Bloqueio**: Bloquear/desbloquear contatos
 - **Perfil**: Atualizar nome e foto do bot
+- **Regras de IP**: Whitelist e blacklist de IPs com controle de acesso por rota
+- **Bot Settings**: Toggles de tag IA, rejeição automática de chamadas e leitura automática
 
 ---
 
@@ -107,7 +109,6 @@ Transforme o bot em um assistente inteligente com integrações nativas:
 ### **2. Segurança Avançada**
 
 - **Múltiplos Métodos de Autenticação**: Opções extras de segurança além da x-api-key atual.
-- **Whitelist de IP**: Restrição de acesso por origem.
 
 ### **3. Dashboard de Controle**
 

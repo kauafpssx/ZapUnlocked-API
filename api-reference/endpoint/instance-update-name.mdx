@@ -4,13 +4,13 @@ icon: 'pen-to-square'
 api: "PUT /instance/update-name"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
 Renomeia a instância: atualiza o `pushname` no WhatsApp e persiste o nome em `db_config.json`.
 
-### Body
+### Corpo da Requisição
 
 <ParamField body="name" type="string" required>
   Novo nome da instância / pushname do WhatsApp.
@@ -20,14 +20,14 @@ Renomeia a instância: atualiza o `pushname` no WhatsApp e persiste o nome em `d
 
 ```json 200 Sucesso
 {
-  "status": "success",
-  "message": "Instância renomeada para: Meu Bot v2"
+  "success": true,
+  "message": "Instance renamed to: My Bot v2"
 }
 ```
 
 ```json 503 Não conectado
 {
-  "detail": "WhatsApp não conectado"
+  "detail": "WhatsApp is not connected."
 }
 ```
 

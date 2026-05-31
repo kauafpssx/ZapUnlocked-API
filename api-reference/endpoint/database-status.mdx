@@ -1,17 +1,17 @@
 ---
-title: "Status Limpeza"
+title: "Status da Limpeza"
 icon: "chart-simple"
 api: "GET /management/database/status"
-description: "Retorna informações sobre a última limpeza e a contagem regressiva para a próxima."
+description: "Retorna informações da última limpeza e contagem regressiva para a próxima execução."
 ---
 
 
 <ResponseField name="last_run" type="number">
-  Timestamp Unix da última limpeza realizada.
+  Timestamp Unix da última limpeza.
 </ResponseField>
 
 <ResponseField name="next_run" type="number">
-  Timestamp Unix previsto para a próxima limpeza.
+  Timestamp Unix esperado para a próxima limpeza.
 </ResponseField>
 
 <ResponseField name="interval" type="number">

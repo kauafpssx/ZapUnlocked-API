@@ -4,7 +4,7 @@ icon: "pen"
 api: "PUT /webhooks/{name}"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
@@ -16,7 +16,7 @@ Atualiza parcialmente um webhook existente. Envie apenas os campos que deseja al
   Nome do webhook a ser editado (ex: `meu-crm`).
 </ParamField>
 
-### Corpo da Requisição (Body)
+### Corpo da Requisição
 
 <ParamField body="url" type="string">
   Nova URL de destino.
@@ -31,7 +31,7 @@ Atualiza parcialmente um webhook existente. Envie apenas os campos que deseja al
 </ParamField>
 
 <ParamField body="body" type="object">
-  Novo body personalizado (substitui completamente o body existente). Envie `{}` para voltar ao envelope padrão.
+  Novo body personalizado (substitui completamente o body existente). Envie `{}` para reverter ao envelope padrão.
 </ParamField>
 
 <ParamField body="events" type="array">
@@ -69,10 +69,10 @@ Atualiza parcialmente um webhook existente. Envie apenas os campos que deseja al
 }
 ```
 
-```json 404 Erro
+```json 404 Não encontrado
 {
   "success": false,
-  "message": "Webhook 'meu-crm' não encontrado"
+  "message": "Webhook 'meu-crm' not found."
 }
 ```
 

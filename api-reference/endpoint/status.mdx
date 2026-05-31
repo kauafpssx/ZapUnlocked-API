@@ -4,11 +4,11 @@ icon: 'circle-check'
 api: "GET /status"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Retorna o status completo da API: uptime, métricas de processo, sistema, runtime e estado do WhatsApp.
+Retorna o status completo da API: uptime, métricas do processo, sistema, runtime e estado de conexão do WhatsApp.
 
 
 <ResponseExample>
@@ -92,12 +92,12 @@ Retorna o status completo da API: uptime, métricas de processo, sistema, runtim
 | Campo | Tipo | Descrição |
 |---|---|---|
 | `status` | `string` | `ok` se WhatsApp conectado, `degraded` se desconectado |
-| `uptime` | `string` | Tempo online formatado (ex: `2d 3h 45m 12s`) |
+| `uptime` | `string` | Uptime formatado (ex: `2d 3h 45m 12s`) |
 | `uptime_seconds` | `integer` | Uptime em segundos |
 | `whatsapp.connected` | `boolean` | Se o WhatsApp está autenticado |
-| `whatsapp.qr_pending` | `boolean` | Se há QR code aguardando leitura |
-| `process.cpu_percent` | `float` | CPU do processo desde última chamada |
+| `whatsapp.qr_pending` | `boolean` | Se há QR Code aguardando escaneamento |
+| `process.cpu_percent` | `float` | CPU do processo desde a última chamada |
 | `process.memory_rss` | `string` | Memória física usada pelo processo |
 | `system.cpu_percent` | `float` | CPU total do sistema |
-| `system.disk_percent` | `float` | Disco usado em % |
+| `system.disk_percent` | `float` | Uso de disco em % |
 | `runtime.python` | `string` | Versão do Python |

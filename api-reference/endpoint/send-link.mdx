@@ -4,13 +4,13 @@ icon: "link"
 api: "POST /send_link"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Envia um link com card de preview (Open Graph). O WhatsApp exibe título, descrição e imagem da URL automaticamente.
+Envia um link com cartão de pré-visualização (Open Graph). O WhatsApp exibe automaticamente o título, descrição e imagem.
 
-### Corpo da Requisição (Body)
+### Corpo da Requisição
 
 <ParamField body="phone" type="string" required>
   Número do destinatário com código do país (ex: `5511999999999`).
@@ -21,11 +21,11 @@ Envia um link com card de preview (Open Graph). O WhatsApp exibe título, descri
 </ParamField>
 
 <ParamField body="title" type="string">
-  Título exibido no preview. Se omitido, usa o `og:title` da página.
+  Título exibido na pré-visualização. Se omitido, usa o `og:title` da página.
 </ParamField>
 
 <ParamField body="description" type="string">
-  Descrição exibida no preview. Se omitido, usa o `og:description` da página.
+  Descrição exibida na pré-visualização. Se omitida, usa o `og:description` da página.
 </ParamField>
 
 <ParamField body="caption" type="string">
@@ -38,7 +38,7 @@ Envia um link com card de preview (Open Graph). O WhatsApp exibe título, descri
 </ResponseField>
 
 <ResponseField name="message" type="string">
-  Mensagem descritiva do status.
+  Mensagem de status.
 </ResponseField>
 
 <ResponseExample>
@@ -46,14 +46,14 @@ Envia um link com card de preview (Open Graph). O WhatsApp exibe título, descri
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Link enviado ✅"
+  "message": "Link sent."
 }
 ```
 
-```json 401 Erro
+```json 401 Não autorizado
 {
   "error": "Unauthorized",
-  "message": "API Key inválida ou ausente"
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
 }
 ```
 

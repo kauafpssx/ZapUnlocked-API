@@ -1,19 +1,19 @@
 ---
-title: 'Cód. Pareamento'
+title: 'Parear via Código'
 icon: 'mobile'
-api: "POST /qr/pair"
+api: "POST /session/pair"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Gera um código de 8 dígitos para conectar ao WhatsApp sem precisar escanear QR Code (útil para emuladores ou quando a câmera não funciona).
+Gera um código de 8 dígitos para conectar o WhatsApp sem escanear QR Code (útil para servidores headless ou quando a câmera não está disponível).
 
-### Body
+### Corpo da Requisição
 
 <ParamField body="phone" type="string" required>
-  O número de telefone que será conectado, incluindo código do país (ex: `5511999999999`).
+  Número de telefone a conectar, incluindo código do país (ex: `5511999999999`).
 </ParamField>
 
 <ResponseExample>
@@ -27,14 +27,14 @@ Gera um código de 8 dígitos para conectar ao WhatsApp sem precisar escanear QR
 
 ```json 400 Falha ao gerar código
 {
-  "detail": "O código de pareamento não foi capturado. Verifique se o número está formatado corretamente (ex: 5551988887777)"
+  "detail": "Pairing code was not generated. Check that the phone number is correctly formatted (e.g. 5551988887777)."
 }
 ```
 
 ```json 409 Já conectado
 {
   "detail": {
-    "error": "WhatsApp já está conectado. Faça logout antes de parear novamente."
+    "error": "WhatsApp is already connected. Disconnect before pairing again."
   }
 }
 ```
@@ -42,7 +42,7 @@ Gera um código de 8 dígitos para conectar ao WhatsApp sem precisar escanear QR
 ```json 503 Serviço indisponível
 {
   "detail": {
-    "error": "Serviço WhatsApp não inicializado"
+    "error": "WhatsApp service is not initialized."
   }
 }
 ```

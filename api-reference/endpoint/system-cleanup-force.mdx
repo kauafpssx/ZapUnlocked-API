@@ -1,25 +1,25 @@
 ---
-title: 'Limpar Mídia'
+title: 'Limpar Temp.'
 icon: 'broom'
 api: "POST /system/cleanup/force"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Remove todos os arquivos temporários de mídia do diretório `temp_media`. Útil para liberar espaço em disco manualmente.
+Remove todos os arquivos de mídia temporários do diretório `temp_media`. Útil para liberar espaço em disco manualmente.
 
 <Warning>
-  Esta ação remove todos os arquivos temporários imediatamente. Mídias em processamento podem ser afetadas.
+  Esta ação remove imediatamente todos os arquivos temporários. Mídias em processamento podem ser afetadas.
 </Warning>
 
 <ResponseExample>
 
 ```json 200 Sucesso
 {
-  "status": "success",
-  "message": "Espaço em disco liberado com sucesso."
+  "success": true,
+  "message": "Temporary files cleared successfully."
 }
 ```
 

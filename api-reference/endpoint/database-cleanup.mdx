@@ -1,8 +1,8 @@
 ---
-title: "Limpar Banco"
+title: "Limpar BD"
 icon: "broom"
 api: "POST /management/database/cleanup"
-description: "Dispara uma limpeza manual imediata no banco SQLite do Neonize."
+description: "Dispara uma limpeza manual imediata do banco de dados SQLite do Neonize."
 ---
 
 Este endpoint remove segredos de mensagens, chaves de pareamento antigas e compacta o arquivo `auth.sqlite`.
@@ -21,7 +21,7 @@ Este endpoint remove segredos de mensagens, chaves de pareamento antigas e compa
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Limpeza manual executada com sucesso ✅"
+  "message": "Manual cleanup completed successfully."
 }
 ```
 

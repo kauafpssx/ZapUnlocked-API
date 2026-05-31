@@ -1,11 +1,11 @@
 ---
 title: "Risco de Banimento"
 icon: "triangle-exclamation"
-description: "O que você precisa saber antes de colocar em produção."
+description: "O que você precisa saber antes de ir para produção."
 ---
 
 <Warning>
-  A ZapUnlocked-API usa o protocolo **não-oficial** do WhatsApp Web. Uso em produção envolve risco real de bloqueio de conta.
+  A ZapUnlocked-API usa o protocolo **não oficial** do WhatsApp Web. O uso em produção envolve risco real de bloqueio da conta.
 </Warning>
 
 ## <Icon icon="chart-bar" iconType="sharp-regular" color="#9d4fe6" size={22} /> Chance geral de tomar bloqueio
@@ -18,7 +18,7 @@ description: "O que você precisa saber antes de colocar em produção."
     textAlign: "center"
   }}>
     <div style={{ color: "#e9d5ff", fontSize: "12px", fontWeight: 600, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "8px" }}>
-      Numero novo
+      Número novo
     </div>
     <div style={{ color: "#ffffff", fontSize: "56px", fontWeight: 800, lineHeight: 1 }}>
       ~80%
@@ -34,30 +34,30 @@ description: "O que você precisa saber antes de colocar em produção."
     textAlign: "center"
   }}>
     <div style={{ color: "#e9d5ff", fontSize: "12px", fontWeight: 600, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "8px" }}>
-      Numero aquecido
+      Número aquecido
     </div>
     <div style={{ color: "#ffffff", fontSize: "56px", fontWeight: 800, lineHeight: 1 }}>
       1-5%
     </div>
     <div style={{ color: "#c4b5fd", fontSize: "12px", marginTop: "8px" }}>
-      nada e impossivel, mas risco e baixo
+      nada é impossível, mas o risco é baixo
     </div>
   </div>
 </div>
 
 ## <Icon icon="flask" iconType="sharp-regular" color="#9d4fe6" size={22} /> Experiência real com número novo
 
-Em testes com **chip e-SIM recém-criado**:
+Em testes com um **chip e-SIM recém-criado**:
 
 <Steps>
-  <Step title="3 bans temporários de 6 horas">
-    Ocorreram ao enviar mensagem para uma **nova conversa antes que o contato tivesse mandado algo primeiro**. Esse é o gatilho mais comum.
+  <Step title="3 banimentos temporários de 6 horas">
+    Ocorreram ao enviar mensagem para uma **nova conversa antes do contato ter enviado qualquer coisa primeiro**. Esse é o gatilho mais comum.
   </Step>
-  <Step title="1 ban permanente">
-    Também ocorreu, porém o WhatsApp apresentou opção de **revogar** - ao confirmar, a conta foi desbanida imediatamente.
+  <Step title="1 banimento permanente">
+    Também ocorreu, mas o WhatsApp exibiu a opção de **recurso** — ao confirmar, a conta foi desbloqueada imediatamente.
   </Step>
   <Step title="Aquecimento resolveu">
-    Após algumas semanas de uso normal, o número parou de tomar ban. **Número aquecido = risco muito menor.**
+    Após algumas semanas de uso normal, o número parou de ser banido. **Número aquecido = risco muito menor.**
   </Step>
 </Steps>
 
@@ -67,10 +67,10 @@ Em testes com **chip e-SIM recém-criado**:
 
 <CardGroup cols={2}>
   <Card title="Alto risco" icon="circle-exclamation">
-    Enviar para nova conversa antes do contato iniciar. Número recém-criado. Chip VoIP. Bursts de envio rápidos.
+    Enviar para nova conversa antes do contato iniciar. Número recém-criado. SIM VoIP. Disparos em massa rápidos.
   </Card>
   <Card title="Baixo risco" icon="circle-check">
-    Só responder quem te mandou primeiro. Número com mais de 1 ano de uso. Delays humanizados entre mensagens. SIM físico.
+    Responder apenas quem mandou primeiro. Número com mais de 1 ano de uso. Delays entre mensagens como humano. SIM físico.
   </Card>
 </CardGroup>
 
@@ -88,5 +88,5 @@ Em testes com **chip e-SIM recém-criado**:
 - **Monitore** `/status` - detecte logouts antes que virem ban
 
 <Note>
-  Ban temporário (6h, 24h) precisa ser aguardado - não há como revogar antes do prazo. Ban permanente é mais raro e pode ter opção de apelação direto no app.
+  Banimento temporário (6h, 24h) precisa ser aguardado — não há como revogar antes do prazo. Banimento permanente é mais raro e pode ter opção de recurso diretamente no app.
 </Note>

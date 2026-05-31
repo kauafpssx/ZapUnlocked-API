@@ -4,11 +4,11 @@ icon: 'mobile'
 api: "GET /instance/device"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Retorna os dados técnicos do dispositivo vinculado: Device ID, RawAgent, Integrator e plataforma.
+Retorna dados técnicos do dispositivo vinculado: ID do dispositivo, RawAgent, Integrator e plataforma.
 
 <ResponseExample>
 
@@ -24,7 +24,7 @@ Retorna os dados técnicos do dispositivo vinculado: Device ID, RawAgent, Integr
 
 ```json 503 Não conectado
 {
-  "detail": "WhatsApp não conectado"
+  "detail": "WhatsApp is not connected."
 }
 ```
 

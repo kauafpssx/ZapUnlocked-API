@@ -1,0 +1,49 @@
+---
+title: "Listar Regras de IP"
+icon: "shield"
+api: "GET /settings/ip-rules"
+description: "Retorna todas as regras de whitelist e blacklist configuradas."
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Retorna as listas atuais de IPs permitidos (whitelist) e bloqueados (blacklist). As regras de IP controlam quais endereços podem fazer requisições à API quando o IP Control está ativo.
+
+<Note>
+  O IP Control é ativado nas **Configurações do Bot** (`POST /settings/bot`) via `ip_control_enabled: true`.
+</Note>
+
+<ResponseField name="success" type="boolean">
+  `true` se a consulta foi bem-sucedida.
+</ResponseField>
+
+<ResponseField name="rules.whitelist" type="array">
+  Lista de IPs permitidos.
+</ResponseField>
+
+<ResponseField name="rules.blacklist" type="array">
+  Lista de IPs bloqueados.
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "rules": {
+    "whitelist": ["192.168.1.100", "10.0.0.1"],
+    "blacklist": ["203.0.113.42"]
+  }
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,77 @@
+---
+title: "Lista de Botões"
+icon: "list"
+api: "POST /messages/send-button-list"
+description: "Envia uma mensagem com botões de lista de opções nativas."
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Envia botões do tipo **lista**, onde cada botão é uma opção clicável com ID e texto. Quando o usuário clica, o bot recebe um evento `message.button_reply`.
+
+Os botões são **stateless** — as instruções de destino ficam embutidas em forma criptografada no ID do botão.
+
+### Corpo da Requisição
+
+<ParamField body="phone" type="string" required>
+  Número do destinatário com código do país (ex: `5511999999999`).
+</ParamField>
+
+<ParamField body="message" type="string">
+  Texto principal exibido acima dos botões.
+</ParamField>
+
+<ParamField body="buttons" type="array" required>
+  Lista de botões. Cada item pode conter:
+
+  <Expandable title="Estrutura do botão">
+    <ParamField body="id" type="string">
+      ID único do botão (gerado automaticamente se omitido).
+    </ParamField>
+    <ParamField body="text" type="string" required>
+      Texto exibido no botão.
+    </ParamField>
+    <ParamField body="webhook" type="object">
+      Configuração do webhook disparado ao clicar:
+      - `url`: URL de destino
+      - `method`: Método HTTP (padrão `POST`)
+      - `headers`: Cabeçalhos personalizados
+      - `body`: Corpo personalizado (suporta placeholders de webhook como `{{from}}`, `{{text}}`, `{{timestamp}}`, etc.)
+    </ParamField>
+    <ParamField body="reaction" type="string">
+      Emoji para reagir automaticamente ao clique.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="reply" type="string">
+  ID ou texto da mensagem para responder.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
+</ParamField>
+
+<Note>
+  Botões gerados expiram após **24 horas**. Após isso, cliques não disparam mais o webhook.
+</Note>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Message sent."
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

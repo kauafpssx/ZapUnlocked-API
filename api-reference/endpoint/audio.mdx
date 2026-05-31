@@ -4,28 +4,28 @@ icon: "microphone"
 api: "POST /send_audio"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Envia um áudio. Se for menor que 15MB, envia como áudio padrão (ou PTT). Se for maior, envia como documento.
+Envia um arquivo de áudio. Arquivos com menos de 15 MB são enviados como áudio padrão (ou PTT). Arquivos maiores são enviados como documentos.
 
-### Corpo da Requisição (Body)
+### Corpo da Requisição
 
 <ParamField body="phone" type="string" required>
   Número do destinatário com código do país.
 </ParamField>
 
 <ParamField body="audio_url" type="string" required>
-  URL pública direta do arquivo de áudio (mp3, wav, ogg).
+  URL pública do arquivo de áudio (mp3, wav, ogg).
 </ParamField>
 
 <ParamField body="ptt" default="false" type="boolean">
-  Se `true`, aparece como mensagem de voz (apenas para arquivos pequenos).
+  Se `true`, envia como nota de voz (PTT). Apenas para arquivos pequenos.
 </ParamField>
 
 <ParamField body="asDocument" default="false" type="boolean">
-  Força o envio como arquivo.
+  Força o envio como anexo de arquivo.
 </ParamField>
 
 
@@ -34,14 +34,14 @@ Envia um áudio. Se for menor que 15MB, envia como áudio padrão (ou PTT). Se f
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Áudio enviado com sucesso ✅"
+  "message": "Audio sent successfully."
 }
 ```
 
-```json 401 Erro
+```json 401 Não autorizado
 {
   "error": "Unauthorized",
-  "message": "API Key inválida ou ausente"
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
 }
 ```
 

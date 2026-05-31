@@ -1,0 +1,50 @@
+---
+title: "Remover da Blacklist"
+icon: "shield-plus"
+api: "DELETE /settings/ip-rules/blacklist/{ip}"
+description: "Remove um endereço IP da blacklist."
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Remove um endereço IP da **blacklist**. O IP não será mais bloqueado e seguirá as regras padrão do IP Control.
+
+### Parâmetro de Rota
+
+<ParamField path="ip" type="string" required>
+  O endereço IP a remover da blacklist (ex: `203.0.113.42`).
+</ParamField>
+
+<ResponseField name="success" type="boolean">
+  `true` se o IP foi removido com sucesso.
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "rules": {
+    "whitelist": [],
+    "blacklist": []
+  }
+}
+```
+
+```json 404 IP não encontrado
+{
+  "error": "NOT_FOUND",
+  "message": "IP not found in blacklist."
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

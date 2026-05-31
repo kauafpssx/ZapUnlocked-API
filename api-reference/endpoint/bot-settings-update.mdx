@@ -1,19 +1,19 @@
 ---
-title: 'Atualizar Config. Bot'
+title: 'Editar Config. do Bot'
 icon: 'sliders'
 api: "POST /settings/bot"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
 Atualiza as configurações do bot. Todos os campos são opcionais — envie apenas os que deseja alterar.
 
-### Body
+### Corpo da Requisição
 
 <ParamField body="ai_tag_enabled" type="boolean">
-  Ativa ou desativa a tag de IA nas mensagens.
+  Ativar ou desativar a tag de IA nas mensagens.
 </ParamField>
 
 <ParamField body="ai_tag_text" type="string">
@@ -21,15 +21,7 @@ Atualiza as configurações do bot. Todos os campos são opcionais — envie ape
 </ParamField>
 
 <ParamField body="ip_control_enabled" type="boolean">
-  Ativa ou desativa o controle de acesso por IP.
-</ParamField>
-
-<ParamField body="ip_whitelist" type="array">
-  Lista de IPs permitidos (somente se `ip_control_enabled: true`).
-</ParamField>
-
-<ParamField body="ip_blacklist" type="array">
-  Lista de IPs bloqueados.
+  Ativar ou desativar o controle de acesso por IP. Para gerenciar as listas, use os endpoints de [Regras de IP](/api-reference/endpoint/ip-rules-list).
 </ParamField>
 
 <ResponseExample>
@@ -37,13 +29,11 @@ Atualiza as configurações do bot. Todos os campos são opcionais — envie ape
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Configurações do bot atualizadas",
+  "message": "Bot settings updated.",
   "settings": {
     "ai_tag_enabled": true,
     "ai_tag_text": "🤖",
-    "ip_control_enabled": false,
-    "ip_whitelist": [],
-    "ip_blacklist": []
+    "ip_control_enabled": false
   }
 }
 ```

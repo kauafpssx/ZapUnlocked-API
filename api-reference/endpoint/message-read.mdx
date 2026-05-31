@@ -1,35 +1,34 @@
 ---
-title: "Marcar como Lida"
+title: "Marcar como Lido"
 icon: "check-double"
 api: "POST /messages/read"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
 Marca uma ou mais mensagens como lidas, enviando o duplo check azul para o remetente.
 
-### Corpo da Requisição (Body)
+### Corpo da Requisição
 
 <ParamField body="phone" type="string" required>
   Número do remetente/chat com código do país (ex: `5511999999999`).
 </ParamField>
 
-<ParamField body="messageId" type="string">
-  ID da mensagem a marcar como lida. Use junto com `type: "id"`.
-</ParamField>
-
-<ParamField body="messageText" type="string">
-  Texto da mensagem a marcar como lida. Use junto com `type: "text"`.
+<ParamField body="messageIds" type="array" required>
+  Lista de IDs das mensagens a marcar como lidas (com `type: "id"`), ou textos exatos (com `type: "text"`).
+  ```json
+  ["3EB0ABCDEF123456", "3EB0ABCDEF123457"]
+  ```
 </ParamField>
 
 <ParamField body="type" type="string" default="id">
-  Como localizar a mensagem: `"id"` (por ID) ou `"text"` (por conteúdo de texto).
+  Como localizar as mensagens: `"id"` (pelo ID) ou `"text"` (pelo conteúdo).
 </ParamField>
 
 <Note>
-  Este endpoint só funciona se a opção de confirmação de leitura estiver habilitada nas configurações de privacidade do bot (`readReceipts: "all"`).
+  Este endpoint só funciona se os confirmações de leitura estiverem ativas nas configurações de privacidade do bot (`readReceipts: "all"`).
 </Note>
 
 
@@ -38,7 +37,7 @@ Marca uma ou mais mensagens como lidas, enviando o duplo check azul para o remet
 </ResponseField>
 
 <ResponseField name="message" type="string">
-  Mensagem descritiva do status.
+  Mensagem de status.
 </ResponseField>
 
 <ResponseExample>
@@ -46,14 +45,14 @@ Marca uma ou mais mensagens como lidas, enviando o duplo check azul para o remet
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Mensagem marcada como lida ✅"
+  "message": "1 message(s) marked as read."
 }
 ```
 
-```json 404 Erro
+```json 404 Não encontrado
 {
   "success": false,
-  "message": "Mensagem não encontrada no histórico"
+  "message": "Message not found."
 }
 ```
 

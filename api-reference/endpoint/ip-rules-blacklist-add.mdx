@@ -1,0 +1,50 @@
+---
+title: "Adicionar à Blacklist"
+icon: "shield-xmark"
+api: "POST /settings/ip-rules/blacklist"
+description: "Adiciona um endereço IP à blacklist."
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Adiciona um endereço IP à **blacklist**. IPs bloqueados têm acesso negado quando o IP Control está ativo.
+
+### Corpo da Requisição
+
+<ParamField body="ip" type="string" required>
+  Endereço IP a bloquear (IPv4 ou IPv6). Ex: `"203.0.113.42"`.
+</ParamField>
+
+<ResponseField name="success" type="boolean">
+  `true` se o IP foi adicionado com sucesso.
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "rules": {
+    "whitelist": [],
+    "blacklist": ["203.0.113.42"]
+  }
+}
+```
+
+```json 400 Campo ausente
+{
+  "error": "MISSING_FIELD",
+  "message": "'ip' is required."
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

@@ -31,8 +31,8 @@ Ideal para desenvolvimento, testes ou rodar em servidor próprio.
     </CodeGroup>
 
   </Step>
-  <Step title="Configure o Ambiente" icon="gear">
-    Gere seu arquivo `.env` automaticamente com o script oficial:
+  <Step title="Configure o Ambiente (Opcional)" icon="gear">
+    O instalador já pergunta se deseja configurar o `.env`. Se respondeu **sim**, pule este passo. Caso contrário, execute o script:
 
     <CodeGroup>
     ```bat Windows icon="windows"
@@ -69,6 +69,31 @@ Ideal para desenvolvimento, testes ou rodar em servidor próprio.
 
 ---
 
+## <Icon icon="docker" iconType="sharp-regular" color="#9d4fe6" size={22} /> Docker
+
+Para quem prefere containers, o projeto inclui `Dockerfile` e `docker-compose.yml` prontos.
+
+<Steps>
+  <Step title="Configure o .env" icon="gear">
+    Copie o arquivo de exemplo e edite:
+    ```bash
+    cp .env.example .env
+    ```
+  </Step>
+  <Step title="Suba com Docker Compose" icon="play">
+    ```bash
+    docker compose up -d
+    ```
+    A API ficará disponível em `http://localhost:8300/`.
+  </Step>
+</Steps>
+
+<Tip>
+  Para parar: `docker compose down`. Para ver logs: `docker compose logs -f`.
+</Tip>
+
+---
+
 ## <Icon icon="cloud" iconType="sharp-regular" color="#9d4fe6" size={22} /> Hospedagem: Alwaysdata (Grátis 24/7)
 
 A **Alwaysdata** é a opção recomendada para hospedar a API de forma estável e gratuita sem precisar manter um servidor ligado.
@@ -101,7 +126,9 @@ A **Alwaysdata** é a opção recomendada para hospedar a API de forma estável 
     ```
   </Step>
 
-  <Step title="Gere o arquivo .env" icon="key">
+  <Step title="Gere o arquivo .env (Opcional)" icon="key">
+    O instalador já oferece a configuração do `.env`. Se pulou ou preferir fazer manualmente:
+
     ```bash
     bash scripts/generate-env/generate-env.sh
     ```

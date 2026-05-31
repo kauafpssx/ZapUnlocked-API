@@ -1,14 +1,14 @@
 ---
-title: "Gestão de Mensagens"
+title: "Armazenamento"
 icon: "database"
 description: "Entenda como funciona o armazenamento, limites e consumo de mensagens."
 ---
 
-A **ZapUnlocked-API** armazena automaticamente as mensagens recebidas para permitir buscas e análises. Este sistema é otimizado para economizar espaço usando **compressão JSON**.
+A **ZapUnlocked-API** armazena automaticamente as mensagens recebidas para permitir buscas no histórico e análises. Este sistema é otimizado para economizar espaço usando **compressão JSON**.
 
 ## <Icon icon="clock" iconType="sharp-regular" color="#9d4fe6" size={22} /> Quando as Mensagens São Salvas
 
-As mensagens **só começam a ser armazenadas quando a API está conectada e rodando**. Mensagens enviadas enquanto o bot está offline não são recuperadas retroativamente.
+As mensagens **só começam a ser armazenadas quando a API está conectada e em execução**. Mensagens enviadas enquanto o bot está offline não são recuperadas retroativamente.
 
 <Note>
   O armazenamento é incremental: cada nova mensagem recebida é adicionada ao histórico do contato correspondente.
@@ -22,34 +22,34 @@ Para manter o sistema leve e eficiente, aplicamos os seguintes limites:
 
 | Tipo | Limite |
 | :--- | :--- |
-| **Mensagens por Chat** | 100 últimas mensagens |
-| **Contatos Recentes** | 1.000 contatos com interação |
+| **Mensagens por Chat** | Últimas 100 mensagens |
+| **Contatos Recentes** | 1.000 contatos interagidos |
 
 <Warning>
-  Quando o limite é atingido, as mensagens ou contatos mais antigos são automaticamente removidos para dar espaço aos novos.
+  Quando o limite é atingido, as mensagens ou contatos mais antigos são removidos automaticamente para dar espaço aos novos.
 </Warning>
 
 ---
 
 ## <Icon icon="file-zipper" iconType="sharp-regular" color="#9d4fe6" size={22} /> Compressão e Economia de Espaço
 
-Todos os arquivos JSON de mensagens são **compactados com gzip** antes de serem salvos no disco. Isso reduz drasticamente o consumo de armazenamento.
+Todos os arquivos JSON de mensagens são **comprimidos com gzip** antes de serem salvos no disco. Isso reduz drasticamente o consumo de armazenamento.
 
 <Steps>
   <Step title="Recebimento" icon="inbox">
-    Mensagem chega via WhatsApp e é capturada pelo handler.
+    Mensagem chega pelo WhatsApp e é capturada pelo handler.
   </Step>
   <Step title="Indexação" icon="list">
-    Dados são estruturados em JSON com metadados do contato e conteúdo.
+    Os dados são estruturados como JSON com metadados do contato e conteúdo.
   </Step>
   <Step title="Compressão" icon="file-zipper">
-    JSON é compactado com gzip antes de qualquer gravação em disco.
+    O JSON é comprimido com gzip antes de qualquer escrita no disco.
   </Step>
   <Step title="Armazenamento" icon="floppy-disk">
-    Arquivo compactado é salvo no disco, ocupando até 70% menos espaço.
+    O arquivo comprimido é salvo no disco, ocupando até 70% menos espaço.
   </Step>
   <Step title="Leitura" icon="magnifying-glass">
-    Ao buscar, o arquivo é descompactado em memória, processado e retornado via API.
+    Ao consultar, o arquivo é descomprimido em memória, processado e retornado via API.
   </Step>
 </Steps>
 
@@ -57,9 +57,9 @@ Todos os arquivos JSON de mensagens são **compactados com gzip** antes de serem
 
 ## <Icon icon="calculator" iconType="sharp-regular" color="#9d4fe6" size={22} /> Consumo Aproximado de Armazenamento
 
-Baseado em testes reais, cada mensagem ocupa aproximadamente **0.4 KB** após compressão. Veja alguns exemplos:
+Com base em testes reais, cada mensagem ocupa aproximadamente **0,4 KB** após a compressão. Alguns exemplos:
 
-| Quantidade de Mensagens | Espaço Ocupado |
+| Número de Mensagens | Espaço Usado |
 | :--- | :--- |
 | 10 mensagens (1 chat) | ~1 KB |
 | 100 mensagens (1 chat completo) | ~8 KB |
@@ -68,16 +68,16 @@ Baseado em testes reais, cada mensagem ocupa aproximadamente **0.4 KB** após co
 | 100.000 mensagens (limite máximo) | ~80 MB |
 
 <Tip>
-  Com o limite de **100 mensagens por chat** e **1.000 contatos**, o consumo máximo teórico é de aproximadamente **80 MB** de armazenamento para mensagens.
+  Com o limite de **100 mensagens por chat** e **1.000 contatos**, o máximo teórico é de aproximadamente **80 MB** de armazenamento de mensagens.
 </Tip>
 
 ---
 
 ## <Icon icon="broom" iconType="sharp-regular" color="#9d4fe6" size={22} /> Limpeza de Dados
 
-Se você precisar liberar espaço ou resetar o histórico, use o endpoint:  
+Para liberar espaço ou resetar o histórico, use o endpoint:  
 [`DELETE /management/cleanup`](/api-reference/endpoint/cleanup).
 
 <Warning>
-  Esta ação é **irreversível** e apaga todos os JSONs de mensagens e índices de contatos. A sessão do WhatsApp não é desconectada.
+  Esta ação é **irreversível** e deleta todos os JSONs de mensagens e índices de contatos. A sessão do WhatsApp não é desconectada.
 </Warning>

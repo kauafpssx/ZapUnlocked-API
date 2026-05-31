@@ -4,7 +4,7 @@ icon: "paper-plane"
 api: "POST /webhooks/{name}/test"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
@@ -13,7 +13,7 @@ Envia um payload de teste imediato para a URL do webhook, permitindo verificar s
 ### Path
 
 <ParamField path="name" type="string" required>
-  Nome do webhook a ser testado (ex: `meu-crm`).
+  Nome do webhook a testar (ex: `meu-crm`).
 </ParamField>
 
 O payload enviado é um envelope padrão com `event: "test"`:
@@ -29,7 +29,7 @@ O payload enviado é um envelope padrão com `event: "test"`:
 ```
 
 <Note>
-  O teste usa as mesmas configurações do webhook (URL, method, headers, body). Se o webhook tiver body personalizado, os placeholders são substituídos por valores de exemplo.
+  O teste usa as mesmas configurações do webhook (URL, método, headers, body). Se o webhook tiver um body personalizado, os placeholders são substituídos por valores de exemplo.
 </Note>
 
 
@@ -46,7 +46,7 @@ O payload enviado é um envelope padrão com `event: "test"`:
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Payload de teste enviado",
+  "message": "Test payload sent.",
   "statusCode": 200
 }
 ```
@@ -54,7 +54,7 @@ O payload enviado é um envelope padrão com `event: "test"`:
 ```json 200 Endpoint retornou erro
 {
   "success": false,
-  "message": "Endpoint retornou status 500",
+  "message": "Test payload sent.",
   "statusCode": 500
 }
 ```

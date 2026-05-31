@@ -4,36 +4,48 @@ icon: 'shield-check'
 api: "POST /settings/privacy"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Atualize suas configurações de privacidade do WhatsApp, como quem pode ver seu visto por último, foto de perfil, etc.
+Atualiza as configurações de privacidade do WhatsApp, como quem pode ver seu visto por último, foto de perfil, etc.
 
-### Body
+### Corpo da Requisição
 
 <ParamField body="lastSeen" type="string">
-  Quem pode ver seu "visto por último". Opções: `all`, `contacts`, `contact_blacklist`, `none`.
+  Quem pode ver seu visto por último. Opções: `all`, `contacts`, `contact_blacklist`, `none`.
 </ParamField>
 
 <ParamField body="online" type="string">
   Quem pode ver quando você está online. Opções: `all`, `match_last_seen`.
 </ParamField>
 
-<ParamField body="profilePicture" type="string">
+<ParamField body="profile" type="string">
   Quem pode ver sua foto de perfil. Opções: `all`, `contacts`, `contact_blacklist`, `none`.
 </ParamField>
 
-<ParamField body="readReceipts" type="string">
-  Quem pode ver confirmação de leitura (o check azul). Opções: `all`, `none`.
+<ParamField body="status" type="string">
+  Quem pode ver seu recado. Opções: `all`, `contacts`, `contact_blacklist`, `none`.
 </ParamField>
 
-<ParamField body="groups" type="string">
-  Quem pode te adicionar em grupos. Opções: `all`, `contacts`, `contact_blacklist`, `none`.
+<ParamField body="readReceipts" type="string">
+  Quem pode ver confirmações de leitura (check azul). Opções: `all`, `none`.
+</ParamField>
+
+<ParamField body="groupsAdd" type="string">
+  Quem pode te adicionar a grupos. Opções: `all`, `contacts`, `contact_blacklist`, `none`.
+</ParamField>
+
+<ParamField body="callAdd" type="string">
+  Quem pode te adicionar a chamadas em grupo. Opções: `all`, `contacts`, `contact_blacklist`, `none`.
 </ParamField>
 
 <ParamField body="about" type="string">
-  Define o seu recado (status textual). Suporta placeholders: `{{day}}`, `{{mon}}`, `{{yea}}`, `{{hou}}`, `{{min}}`, `{{sec}}`.
+  Define seu recado/status. Suporta placeholders como `{{timestamp}}` e `{{phone}}`.
+</ParamField>
+
+<ParamField body="disappearingTimer" type="integer">
+  Timer padrão de mensagens temporárias (horas). `0` = desativado, `24` = 1 dia, `168` = 7 dias, `2160` = 90 dias.
 </ParamField>
 
 <ResponseExample>
@@ -42,8 +54,8 @@ Atualize suas configurações de privacidade do WhatsApp, como quem pode ver seu
 {
     "success": true,
     "updated": [
-        "Visto por último: all",
-        "Recado/About alterado para: \"Online desde: 15/01/2026 - 00:02\""
+        "Last seen: all",
+        "About updated to: \"Online desde: 15/01/2026 - 00:02\""
     ]
 }
 ```

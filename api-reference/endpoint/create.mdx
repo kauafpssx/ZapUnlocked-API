@@ -4,7 +4,7 @@ icon: "paper-plane"
 api: "POST /send"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
@@ -12,44 +12,40 @@ Envia uma mensagem de texto simples para um número específico do WhatsApp.
 
 ### Placeholders Dinâmicos
 
-Você pode usar variáveis no texto da mensagem que serão substituídas automaticamente:
+Você pode usar variáveis no texto da mensagem que são substituídas automaticamente:
 
-| Placeholder | Descrição                                   |
-| :---------- | :------------------------------------------ |
-| `{{day}}`   | Dia atual (ex: 25)                          |
-| `{{mon}}`   | Mês atual (ex: 12)                          |
-| `{{yea}}`   | Ano atual (ex: 2024)                        |
-| `{{hou}}`   | Hora atual (ex: 14)                         |
-| `{{min}}`   | Minuto atual (ex: 30)                       |
-| `{{sec}}`   | Segundo atual (ex: 45)                      |
-| `{{phone}}` | Número do telefone do destinatário          |
-| `{{name}}`  | _Nome do contato (se disponível na agenda)_ |
+| Placeholder | Valor |
+| :---------- | :---- |
+| `{{from}}` | Número do remetente |
+| `{{text}}` | Texto da mensagem |
+| `{{phone}}` | Mesmo que `{{from}}` |
+| `{{id}}` | ID da mensagem |
+| `{{requested}}` | Quantidade solicitada (fetchMessages) |
+| `{{found}}` | Quantidade encontrada (fetchMessages) |
+| `{{timestamp}}` | Timestamp UTC atual |
 
-### Corpo da Requisição (Body)
+### Corpo da Requisição
 
 <ParamField body="phone" type="string" required>
-  O número de telefone do destinatário com código do país (ex: `5511999999999`).
+  Número do destinatário com código do país (ex: `5511999999999`).
 </ParamField>
 
 <ParamField body="message" type="string" required>
-  O conteúdo em texto da mensagem.
+  Conteúdo de texto da mensagem.
 </ParamField>
 
 <ParamField body="reply" type="string">
-  Responde a uma mensagem específica. Pode ser o **ID da mensagem** ou o **texto
-  exato** da mensagem (dependendo do parâmetro `type`).
+  Responder a uma mensagem específica. Pode ser o **ID da mensagem** ou o **texto exato** (dependendo do `type`).
 </ParamField>
 
 <ParamField body="type" type="string" default="id">
-  Define como o parâmetro `reply` será interpretado: - `id`: Busca a mensagem
-  pelo ID único do WhatsApp - `text`: Busca a mensagem mais recente com o texto
-  exato fornecido (case-insensitive, normalizado)
+  Como o parâmetro `reply` é interpretado:
+  - `id`: Busca a mensagem pelo ID único do WhatsApp
+  - `text`: Encontra a mensagem mais recente com o texto exato fornecido (sem distinção de maiúsculas)
 </ParamField>
 
 <Note>
-  **Modo Text**: Quando `type: "text"`, a API busca no histórico local (últimas
-  100 mensagens) a mensagem mais recente que contenha exatamente o texto
-  fornecido em `reply`. Útil quando você não tem o ID da mensagem.
+  **Modo texto**: Quando `type: "text"`, a API busca no histórico local (últimas 100 mensagens) a mensagem mais recente que contenha exatamente o texto fornecido em `reply`. Útil quando você não tem o ID da mensagem.
 </Note>
 
 
@@ -58,7 +54,7 @@ Você pode usar variáveis no texto da mensagem que serão substituídas automat
 </ResponseField>
 
 <ResponseField name="message" type="string">
-  Mensagem descritiva do status.
+  Mensagem de status.
 </ResponseField>
 
 <ResponseExample>
@@ -66,14 +62,14 @@ Você pode usar variáveis no texto da mensagem que serão substituídas automat
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Mensagem enviada ✅"
+  "message": "Message sent."
 }
 ```
 
-```json 401 Erro
+```json 401 Não autorizado
 {
   "error": "Unauthorized",
-  "message": "API Key inválida ou ausente"
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
 }
 ```
 

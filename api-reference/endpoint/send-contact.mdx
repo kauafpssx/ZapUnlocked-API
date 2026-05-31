@@ -4,32 +4,28 @@ icon: "address-card"
 api: "POST /send_contact"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Envia um contato em formato vCard. Use `/send_contact` para um único contato ou `/send_contacts` para múltiplos.
+Envia um contato como vCard. Use `/send_contact` para um único contato ou `/send_contacts` para múltiplos.
 
-### Corpo da Requisição (Body)
+### Corpo da Requisição
 
 <ParamField body="phone" type="string" required>
   Número do destinatário com código do país (ex: `5511999999999`).
 </ParamField>
 
+<ParamField body="name" type="string" required>
+  Nome exibido no vCard (ex: `"João da Silva"`).
+</ParamField>
+
 <ParamField body="contactPhone" type="string" required>
-  Número do contato a ser enviado (ex: `5511988887777`).
-</ParamField>
-
-<ParamField body="contactName" type="string" required>
-  Nome exibido no vCard (ex: `"João Silva"`).
-</ParamField>
-
-<ParamField body="contactOrg" type="string">
-  Organização/empresa do contato.
+  Número de telefone do contato a enviar (ex: `5511988887777`).
 </ParamField>
 
 <Note>
-  **Múltiplos contatos**: Use `POST /send_contacts` com o campo `contacts` sendo uma lista de objetos com `phone`, `name` e opcionalmente `org`. O corpo do destinatário (`phone`) continua obrigatório.
+  **Múltiplos contatos**: Use `POST /send_contacts` com o campo `contacts` como lista de objetos com `phone` e `name`. O campo `phone` do destinatário ainda é obrigatório.
 </Note>
 
 
@@ -38,7 +34,7 @@ Envia um contato em formato vCard. Use `/send_contact` para um único contato ou
 </ResponseField>
 
 <ResponseField name="message" type="string">
-  Mensagem descritiva do status.
+  Mensagem de status.
 </ResponseField>
 
 <ResponseExample>
@@ -46,14 +42,14 @@ Envia um contato em formato vCard. Use `/send_contact` para um único contato ou
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Contato enviado ✅"
+  "message": "Contact sent."
 }
 ```
 
-```json 401 Erro
+```json 401 Não autorizado
 {
   "error": "Unauthorized",
-  "message": "API Key inválida ou ausente"
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
 }
 ```
 

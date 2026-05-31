@@ -1,20 +1,20 @@
 ---
-title: "Visão Geral"
+title: "Overview"
 icon: "webhook"
-description: "Webhooks nomeados com CRUD completo e 20 tipos de eventos."
+description: "Webhooks nomeados com CRUD completo e 40 tipos de eventos."
 ---
 
-Registre múltiplos endpoints externos para receber eventos do WhatsApp em tempo real. Cada webhook tem um **nome único** (ex: `meu-crm`, `meu-bot`) e pode ser inscrito em tipos de eventos diferentes de forma independente.
+Registre múltiplos endpoints externos para receber eventos do WhatsApp em tempo real. Cada webhook tem um **nome único** (ex: `meu-crm`, `meu-bot`) e pode se inscrever em diferentes tipos de eventos independentemente.
 
 <CardGroup cols={3}>
   <Card title="CRUD completo" icon="pen-to-square">
-    Criar, listar, atualizar, deletar, ativar/desativar e testar cada webhook individualmente.
+    Crie, liste, atualize, delete, ative/desative e teste cada webhook individualmente.
   </Card>
   <Card title="Eventos granulares" icon="filter">
-    Inscreva cada webhook só nos eventos que importam. Use `"*"` para receber tudo.
+    Inscreva cada webhook apenas nos eventos que importam. Use `"*"` para receber tudo.
   </Card>
   <Card title="Body personalizado" icon="code">
-    Defina um payload customizado com placeholders dinâmicos por webhook.
+    Defina um payload personalizado com placeholders dinâmicos por webhook.
   </Card>
 </CardGroup>
 
@@ -32,11 +32,11 @@ Todos os eventos entregues seguem a mesma estrutura:
 }
 ```
 
-Se o webhook tiver `body` personalizado, os placeholders (`{{from}}`, `{{text}}`, etc.) são substituídos antes do envio. Sem `body`, o envelope padrão é enviado completo.
+Se o webhook tiver um `body` personalizado, os placeholders (`{{from}}`, `{{text}}`, etc.) são substituídos antes do envio. Sem `body`, o envelope padrão é enviado.
 
 ---
 
-## <Icon icon="list" iconType="sharp-regular" color="#9d4fe6" size={22} /> Tipos de Eventos
+## <Icon icon="list" iconType="sharp-regular" color="#9d4fe6" size={22} /> Tipos de Evento (40)
 
 Use `"events": ["*"]` para receber todos, ou especifique uma lista.
 
@@ -50,10 +50,10 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
-    "text": "Olá, tudo bem?",
+    "text": "Hello, how are you?",
     "quoted": {
       "id": "3EB0C4AAABBBCC",
       "fromMe": true
@@ -72,7 +72,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
     "caption": "Veja essa foto!",
@@ -91,7 +91,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
     "caption": "",
@@ -112,7 +112,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
     "mimetype": "audio/ogg; codecs=opus",
@@ -122,7 +122,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   }
 }
 ```
-`isPTT: true` indica mensagem de voz gravada na hora.
+`isPTT: true` indica nota de voz gravada na hora.
 </Accordion>
 
 <Accordion title="message.document — Documento recebido" icon="file">
@@ -133,7 +133,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
     "fileName": "relatorio.pdf",
@@ -153,7 +153,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
     "mimetype": "image/webp",
@@ -171,10 +171,10 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
-    "displayName": "Maria Souza",
+    "displayName": "Jane Smith",
     "vcard": "BEGIN:VCARD\nVERSION:3.0\nFN:Maria Souza\nTEL:+5511988887777\nEND:VCARD"
   }
 }
@@ -189,13 +189,13 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
     "lat": -23.5505,
     "lng": -46.6333,
-    "name": "São Paulo",
-    "address": "Av. Paulista, 1000"
+    "name": "Centro",
+    "address": "Rua Principal, 1000"
   }
 }
 ```
@@ -209,7 +209,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
     "emoji": "👍",
@@ -229,10 +229,10 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
-    "pollName": "Qual produto preferem?",
+    "pollName": "Qual produto você prefere?",
     "options": ["Produto A", "Produto B", "Produto C"]
   }
 }
@@ -247,7 +247,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
     "pollId": "3EB0C4AAABBBCC",
@@ -265,7 +265,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
     "buttonId": "btn_confirmar",
@@ -285,7 +285,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
     "rowId": "1",
@@ -296,7 +296,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
 ```
 </Accordion>
 
-<Accordion title="message.deleted — Mensagem deletada" icon="trash">
+<Accordion title="message.deleted — Mensagem deletada pelo remetente" icon="trash">
 ```json
 {
   "event": "message.deleted",
@@ -304,7 +304,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false
   }
@@ -312,7 +312,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
 ```
 </Accordion>
 
-<Accordion title="message.unknown — Tipo não reconhecido" icon="circle-question">
+<Accordion title="message.unknown — Tipo de mensagem não mapeado" icon="circle-question">
 ```json
 {
   "event": "message.unknown",
@@ -320,7 +320,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "data": {
     "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
+    "fromName": "John Doe",
     "fromJid": "5511999999999@s.whatsapp.net",
     "isGroup": false,
     "rawType": "protocolMessage"
@@ -329,21 +329,76 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
 ```
 </Accordion>
 
+<Accordion title="message.undecryptable — Mensagem não descriptografável" icon="lock">
+```json
+{
+  "event": "message.undecryptable",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net"
+  }
+}
+```
+Ocorre quando a chave de sessão está desatualizada. Peça ao contato para reenviar a mensagem.
+</Accordion>
+
 <Accordion title="message.sent — Mensagem enviada pelo bot" icon="paper-plane">
 ```json
 {
   "event": "message.sent",
   "timestamp": "2026-05-28T02:00:00Z",
   "data": {
-    "messageId": "3EB0C4A1234567890",
-    "from": "5511999999999",
-    "fromName": "Meu Bot",
-    "fromJid": "5511999999999@s.whatsapp.net",
-    "isGroup": false,
-    "text": "Olá! Como posso ajudar?"
+    "to": "5511999999999",
+    "type": "text",
+    "messageId": "3EB0C4A1234567890"
   }
 }
 ```
+</Accordion>
+
+<Accordion title="message.read — Mensagem lida pelo destinatário" icon="eye">
+```json
+{
+  "event": "message.read",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "messageIds": ["3EB0C4A1234567890"],
+    "type": "read",
+    "timestamp": 1704067200
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.delivered — Mensagem entregue ao destinatário" icon="check">
+```json
+{
+  "event": "message.delivered",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0C4A1234567890"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.receipt — Outras confirmações de entrega" icon="check-double">
+```json
+{
+  "event": "message.receipt",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0C4A1234567890",
+    "receiptType": 2
+  }
+}
+```
+`receiptType`: `1` = entregue, `2/3` = lido em grupo, `5+` = outros.
 </Accordion>
 
 <Accordion title="connection.connected — WhatsApp conectado" icon="circle-check">
@@ -352,7 +407,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "event": "connection.connected",
   "timestamp": "2026-05-28T02:00:00Z",
   "data": {
-    "status": "connected"
+    "phone": "5511999999999"
   }
 }
 ```
@@ -363,10 +418,7 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
 {
   "event": "connection.disconnected",
   "timestamp": "2026-05-28T02:00:00Z",
-  "data": {
-    "status": "disconnected",
-    "reason": "logged_out"
-  }
+  "data": {}
 }
 ```
 </Accordion>
@@ -377,7 +429,205 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "event": "connection.qr_ready",
   "timestamp": "2026-05-28T02:00:00Z",
   "data": {
-    "status": "qr_ready"
+    "qr": "2@abc123..."
+  }
+}
+```
+</Accordion>
+
+<Accordion title="connection.pair_code — Código de pareamento gerado" icon="mobile">
+```json
+{
+  "event": "connection.pair_code",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "code": "ABCD-1234",
+    "connected": false
+  }
+}
+```
+`connected: true` quando o pareamento foi concluído com sucesso.
+</Accordion>
+
+<Accordion title="connection.pair_status — Status do pareamento" icon="mobile-screen">
+```json
+{
+  "event": "connection.pair_status",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "jid": "5511999999999@s.whatsapp.net",
+    "businessName": "Meu Negócio",
+    "platform": "WEB",
+    "status": "OK",
+    "error": ""
+  }
+}
+```
+</Accordion>
+
+<Accordion title="connection.logged_out — Sessão encerrada remotamente" icon="right-from-bracket">
+```json
+{
+  "event": "connection.logged_out",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "reason": "User logout"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="connection.connect_failure — Falha de conexão" icon="triangle-exclamation">
+```json
+{
+  "event": "connection.connect_failure",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "reason": "ERROR_CONNECT",
+    "message": "Connection timed out"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="connection.stream_error — Erro de stream" icon="bolt-lightning">
+```json
+{
+  "event": "connection.stream_error",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "code": "STREAM_ERR"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="connection.temporary_ban — Banimento temporário" icon="ban">
+```json
+{
+  "event": "connection.temporary_ban",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "code": "BAN_CODE",
+    "expire": 1704153600
+  }
+}
+```
+</Accordion>
+
+<Accordion title="connection.client_outdated — Cliente desatualizado" icon="rotate">
+```json
+{
+  "event": "connection.client_outdated",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {}
+}
+```
+</Accordion>
+
+<Accordion title="connection.stream_replaced — Sessão substituída" icon="arrows-rotate">
+```json
+{
+  "event": "connection.stream_replaced",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {}
+}
+```
+Outra instância assumiu a conexão.
+</Accordion>
+
+<Accordion title="group.join — Bot entrou em um grupo" icon="users">
+```json
+{
+  "event": "group.join",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "groupId": "123456789@g.us",
+    "groupName": "Meu Grupo",
+    "reason": "invite",
+    "type": ""
+  }
+}
+```
+</Accordion>
+
+<Accordion title="group.update — Grupo atualizado" icon="users-gear">
+```json
+{
+  "event": "group.update",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "groupId": "123456789@g.us",
+    "sender": "5511999999999@s.whatsapp.net",
+    "name": "Novo Nome do Grupo",
+    "topic": "Nova descrição",
+    "locked": false,
+    "announce": false,
+    "ephemeral": 604800,
+    "newInviteLink": null
+  }
+}
+```
+</Accordion>
+
+<Accordion title="contact.presence — Status online/offline do contato" icon="circle">
+```json
+{
+  "event": "contact.presence",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "status": "online",
+    "lastSeen": 0
+  }
+}
+```
+`status` é `"online"` ou `"offline"`.
+</Accordion>
+
+<Accordion title="contact.chat_presence — Contato digitando / gravando" icon="keyboard">
+```json
+{
+  "event": "contact.chat_presence",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "state": "typing",
+    "media": null
+  }
+}
+```
+`state` pode ser `"typing"`, `"recording"` ou `"paused"`.
+</Accordion>
+
+<Accordion title="contact.picture_change — Foto de perfil alterada" icon="image-portrait">
+```json
+{
+  "event": "contact.picture_change",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "author": "5511999999999@s.whatsapp.net",
+    "action": "changed"
+  }
+}
+```
+`action` pode ser `"changed"` ou `"removed"`.
+</Accordion>
+
+<Accordion title="contact.identity_change — Chave de segurança alterada" icon="shield-halved">
+```json
+{
+  "event": "contact.identity_change",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "implicit": false,
+    "timestamp": 1704067200
   }
 }
 ```
@@ -389,32 +639,60 @@ Use `"events": ["*"]` para receber todos, ou especifique uma lista.
   "event": "call.received",
   "timestamp": "2026-05-28T02:00:00Z",
   "data": {
-    "messageId": "3EB0C4A1234567890",
     "from": "5511999999999",
-    "fromName": "João Silva",
     "fromJid": "5511999999999@s.whatsapp.net",
-    "isGroup": false
+    "callId": "ABC123DEF456"
   }
 }
 ```
+</Accordion>
+
+<Accordion title="call.accepted — Chamada aceita" icon="phone-volume">
+```json
+{
+  "event": "call.accepted",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "callId": "ABC123DEF456"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="call.terminated — Chamada encerrada" icon="phone-slash">
+```json
+{
+  "event": "call.terminated",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "callId": "ABC123DEF456",
+    "reason": "timeout"
+  }
+}
+```
+`reason` pode ser `"timeout"`, `"rejected"`, `"busy"`, etc.
 </Accordion>
 
 </AccordionGroup>
 
 ---
 
-## <Icon icon="brackets-curly" iconType="sharp-regular" color="#9d4fe6" size={22} /> Placeholders no Body
+## <Icon icon="brackets-curly" iconType="sharp-regular" color="#9d4fe6" size={22} /> Placeholders do Body
 
-Se o webhook tiver `body` personalizado, você pode usar:
+Se o webhook tiver um `body` personalizado, você pode usar:
 
-| Placeholder | Descrição |
-| :---------- | :-------- |
-| `{{from}}` | Número de quem enviou |
-| `{{name}}` | Nome do contato |
+| Placeholder | Valor |
+| :---------- | :---- |
+| `{{from}}` | Número do remetente |
 | `{{text}}` | Texto da mensagem |
-| `{{phone}}` | Mesmo que `from` |
+| `{{phone}}` | Mesmo que `{{from}}` |
 | `{{id}}` | ID da mensagem |
-| `{{timestamp}}` | Data/hora do evento |
-| `{{event}}` | Tipo do evento |
+| `{{requested}}` | Quantidade solicitada (fetchMessages) |
+| `{{found}}` | Quantidade encontrada (fetchMessages) |
+| `{{timestamp}}` | Timestamp UTC atual |
 
 Se `body` estiver vazio, o envelope padrão é enviado automaticamente.

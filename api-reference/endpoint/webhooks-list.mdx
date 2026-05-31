@@ -4,15 +4,15 @@ icon: "list"
 api: "GET /webhooks"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Retorna todos os webhooks cadastrados. Para detalhar um webhook específico, use `GET /webhooks/{name}`.
+Retorna todos os webhooks cadastrados. Para um webhook específico, use `GET /webhooks/{name}`.
 
 ### GET /webhooks — Listar todos
 
-Retorna um array com todos os webhooks cadastrados, incluindo status e configurações.
+Retorna um array com todos os webhooks cadastrados, incluindo status e configuração.
 
 ### GET /webhooks/{name} — Detalhar um
 
@@ -75,10 +75,10 @@ Retorna um array com todos os webhooks cadastrados, incluindo status e configura
 }
 ```
 
-```json 404 Erro
+```json 404 Não encontrado
 {
   "success": false,
-  "message": "Webhook 'nome-inexistente' não encontrado"
+  "message": "Webhook 'nome-inexistente' not found."
 }
 ```
 

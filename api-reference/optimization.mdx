@@ -4,60 +4,60 @@ icon: "gauge-high"
 description: "Entenda como a **ZapUnlocked-API** é otimizada para máxima eficiência."
 ---
 
-A **ZapUnlocked-API** foi projetada para rodar e ser estável mesmo em ambientes de alta restrição de recursos. Cada componente foi otimizado para garantir estabilidade e performance.
+A **ZapUnlocked-API** foi projetada para rodar de forma estável mesmo em ambientes com recursos altamente limitados. Cada componente é otimizado para estabilidade e desempenho.
 
 ---
 
-## <Icon icon="layer-group" iconType="sharp-regular" color="#9d4fe6" size={22} /> Fila de Mídias
+## <Icon icon="layer-group" iconType="sharp-regular" color="#9d4fe6" size={22} /> Fila de Mídia
 
-Para evitar que múltiplos envios simultâneos estourem os limites de recursos, a API usa um sistema de **Fila Inteligente**:
+Para evitar que múltiplos uploads simultâneos excedam os limites de recursos, a API usa um sistema de **Fila Inteligente**:
 
 <Steps>
   <Step title="Recebimento" icon="inbox">
-    A API recebe múltiplas requisições de envio de mídia simultaneamente.
+    A API recebe múltiplas requisições de upload de mídia simultâneas.
   </Step>
   <Step title="Enfileiramento" icon="list-ol">
     Em vez de baixar tudo ao mesmo tempo, os arquivos entram em uma fila de espera ordenada.
   </Step>
-  <Step title="Processamento unitário" icon="play">
+  <Step title="Processamento um por vez" icon="play">
     O sistema processa um arquivo por vez, evitando picos de uso de memória e disco.
   </Step>
   <Step title="Limpeza automática" icon="trash">
-    Assim que o arquivo é enviado ao WhatsApp, ele é deletado do servidor e o espaço é liberado imediatamente.
+    Assim que o arquivo é enviado ao WhatsApp, ele é imediatamente deletado do servidor e o espaço é liberado.
   </Step>
 </Steps>
 
 <Info>
-  Este sistema garante envio de arquivos de até **2GB** (via protocolo) mesmo com recursos limitados no servidor.
+  Este sistema garante que arquivos de até **2 GB** (via protocolo) possam ser enviados mesmo com recursos de servidor limitados.
 </Info>
 
 ---
 
 ## <Icon icon="file-zipper" iconType="sharp-regular" color="#9d4fe6" size={22} /> Compressão de Dados
 
-Todos os **históricos de mensagens** e **índices de contatos** são armazenados em formato **JSON compactado (gzip)**.
+Todos os **históricos de mensagens** e **índices de contatos** são armazenados em formato **JSON comprimido (gzip)**.
 
 <Steps>
   <Step title="Armazenamento" icon="floppy-disk">
-    Quando uma mensagem é salva, o JSON é compactado antes de ser gravado em disco.
+    Quando uma mensagem é salva, o JSON é comprimido antes de ser escrito no disco.
   </Step>
   <Step title="Leitura" icon="magnifying-glass">
-    Ao buscar mensagens, o arquivo é descompactado em memória, processado e retornado.
+    Ao buscar mensagens, o arquivo é descomprimido em memória, processado e retornado.
   </Step>
   <Step title="Economia" icon="chart-line">
-    A compressão reduz o tamanho dos arquivos em até **70%**, permitindo armazenar mais dados no mesmo espaço.
+    A compressão reduz o tamanho do arquivo em até **70%**, permitindo armazenar mais dados no mesmo espaço.
   </Step>
 </Steps>
 
 <Tip>
-  Para detalhes sobre limites de armazenamento e cálculos de consumo, veja a página de [Gerenciamento de Mensagens](/api-reference/message-storage).
+  Para detalhes sobre limites de armazenamento e cálculos de consumo, veja a página de [Armazenamento de Mensagens](/api-reference/message-storage).
 </Tip>
 
 ---
 
-## <Icon icon="gauge-high" iconType="sharp-regular" color="#9d4fe6" size={22} /> Performance da Compressão
+## <Icon icon="gauge-high" iconType="sharp-regular" color="#9d4fe6" size={22} /> Desempenho de Compressão
 
-A compressão não deixa as requisições lentas. Mesmo com o ciclo de descompactar, processar e compactar novamente, as latências permanecem baixas.
+A compressão não prejudica as requisições. Mesmo com o ciclo descomprimir-processar-comprimir, as latências permanecem baixas.
 
 **Latências reais medidas** (servidor na Virgínia/EUA, cliente no Brasil com ~160ms de ping):
 
@@ -77,12 +77,12 @@ A compressão não deixa as requisições lentas. Mesmo com o ciclo de descompac
 
 <CardGroup cols={3}>
   <Card title="Zero configuração" icon="sliders">
-    Nenhum tuning manual necessário. Cada componente já vem ajustado de fábrica para extrair o máximo dos recursos disponíveis.
+    Nenhum ajuste manual necessário. Cada componente é ajustado de fábrica para extrair o máximo dos recursos disponíveis.
   </Card>
   <Card title="Memória controlada" icon="microchip">
-    Gestão ativa de memória com garbage collector sob demanda e limpeza automática de objetos após uso.
+    Gerenciamento ativo de memória com coleta de lixo sob demanda e limpeza automática de objetos após o uso.
   </Card>
-  <Card title="Foco no negócio" icon="code">
+  <Card title="Foco no seu negócio" icon="code">
     Infraestrutura resolvida. Você escreve sua lógica, a API cuida do resto.
   </Card>
 </CardGroup>

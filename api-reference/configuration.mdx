@@ -16,8 +16,8 @@ http://SEU_IP:8300
 ```bash Alwaysdata icon="cloud"
 http://services-[usuario].alwaysdata.net:8300
 ```
-```bash Domínio próprio icon="globe"
-https://minha-api.exemplo.com
+```bash Custom domain icon="globe"
+https://my-api.example.com
 ```
 </CodeGroup>
 
@@ -30,30 +30,30 @@ Todos os endpoints exigem a `API_KEY` definida no `.env`. Dois métodos aceitos:
 <AccordionGroup>
   <Accordion title="Header x-api-key (Recomendado)" icon="key">
     ```bash
-    x-api-key: sua_senha_secreta_aqui
+    x-api-key: sua_chave_secreta_aqui
     ```
   </Accordion>
   <Accordion title="Query parameter API_KEY" icon="link">
     ```bash
-    ?API_KEY=sua_senha_secreta_aqui
+    ?API_KEY=sua_chave_secreta_aqui
     ```
     Útil para acessar `/qr` e `/qr/image` diretamente no navegador.
   </Accordion>
 </AccordionGroup>
 
 <Warning>
-  Nunca exponha sua `API_KEY` no client-side (frontend, app móvel). Qualquer pessoa com a chave tem controle total sobre o WhatsApp conectado. Sempre faça as chamadas a partir de um backend.
+  Nunca exponha sua `API_KEY` no lado do cliente (frontend, app mobile). Qualquer pessoa com a chave tem controle total sobre o WhatsApp conectado. Sempre faça chamadas a partir de um backend.
 </Warning>
 
 ---
 
 ## <Icon icon="sliders" iconType="sharp-regular" color="#9d4fe6" size={22} /> Suas Credenciais
 
-Preencha os campos abaixo com o **endpoint** e **chaves de acesso** da sua instância.
+Preencha os campos abaixo com o **endpoint** e as **chaves de acesso** da sua instância.
 Essas informações são salvas **localmente no seu navegador** (cookies) e preenchem automaticamente os exemplos de código em todas as páginas.
 
 <Tip>
-  Os dados **nunca saem do seu navegador**. Eles são usados apenas para montar
+  Os dados **nunca saem do seu navegador**. Eles são usados apenas para preencher
   os exemplos de requisição com seus dados reais.
 </Tip>
 
@@ -102,7 +102,7 @@ Essas informações são salvas **localmente no seu navegador** (cookies) e pree
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
         </svg>
-        <label className="text-sm font-bold text-purple-300 uppercase tracking-wider">Internal Secret</label>
+        <label className="text-sm font-bold text-purple-300 uppercase tracking-wider">Segredo Interno</label>
         <span className="text-[10px] font-mono bg-amber-900/30 text-amber-400 px-2 py-0.5 rounded-full border border-amber-500/20">Webhooks</span>
       </div>
       <input
@@ -115,7 +115,7 @@ Essas informações são salvas **localmente no seu navegador** (cookies) e pree
       <p className="text-xs text-gray-500 mt-2">Token usado para validar a assinatura dos webhooks recebidos.</p>
     </div>
 
-    {/* --- Ações --- */}
+    {/* --- Actions --- */}
     <div className="flex gap-4 pt-2">
       <button
         id="btn_save"
@@ -144,7 +144,7 @@ Essas informações são salvas **localmente no seu navegador** (cookies) e pree
 
 ## <Icon icon="arrow-right" iconType="sharp-regular" color="#9d4fe6" size={22} /> Próximos Passos
 
-Após salvar suas credenciais, os exemplos de código em **toda a documentação** serão atualizados automaticamente com seu endpoint e chave.
+Após salvar suas credenciais, os exemplos de código **em toda a documentação** serão atualizados automaticamente com seu endpoint e chave.
 
 <CardGroup cols={2}>
   <Card

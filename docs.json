@@ -59,7 +59,6 @@
             "pages": [
               "api-reference/endpoint/create",
               "api-reference/endpoint/send-reaction",
-              "api-reference/endpoint/buttons",
               "api-reference/endpoint/send-sticker",
               "api-reference/endpoint/video",
               "api-reference/endpoint/image",
@@ -67,6 +66,7 @@
               "api-reference/endpoint/audio",
               "api-reference/endpoint/send-location",
               "api-reference/endpoint/send-contact",
+              "api-reference/endpoint/send-contacts",
               "api-reference/endpoint/send-link"
             ]
           },
@@ -81,6 +81,10 @@
           {
             "group": "Mensagens Interativas",
             "pages": [
+              "api-reference/endpoint/send-button-list",
+              "api-reference/endpoint/send-button-actions",
+              "api-reference/endpoint/send-button-otp",
+              "api-reference/endpoint/send-button-pix",
               "api-reference/endpoint/send-poll",
               "api-reference/endpoint/send-poll-vote",
               "api-reference/endpoint/send-option-list"
@@ -123,6 +127,7 @@
               "api-reference/endpoint/webhooks-overview",
               "api-reference/endpoint/webhooks-create",
               "api-reference/endpoint/webhooks-list",
+              "api-reference/endpoint/webhooks-get",
               "api-reference/endpoint/webhooks-update",
               "api-reference/endpoint/webhooks-delete",
               "api-reference/endpoint/webhooks-toggle",
@@ -150,7 +155,18 @@
               "api-reference/endpoint/bot-settings-update",
               "api-reference/endpoint/call-reject-auto",
               "api-reference/endpoint/call-reject-message",
-              "api-reference/endpoint/auto-read"
+              "api-reference/endpoint/auto-read",
+              "api-reference/endpoint/settings-phone-code"
+            ]
+          },
+          {
+            "group": "Regras de IP",
+            "pages": [
+              "api-reference/endpoint/ip-rules-list",
+              "api-reference/endpoint/ip-rules-whitelist-add",
+              "api-reference/endpoint/ip-rules-blacklist-add",
+              "api-reference/endpoint/ip-rules-whitelist-remove",
+              "api-reference/endpoint/ip-rules-blacklist-remove"
             ]
           },
           {

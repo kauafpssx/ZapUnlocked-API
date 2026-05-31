@@ -4,14 +4,14 @@ icon: 'microchip'
 api: "GET /management/memory"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_SENHA_SECRETA">
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
 Retorna estatísticas de memória do processo e do sistema.
 
 <ParamField query="gc" type="string">
-  Passe `gc=true` para forçar o garbage collector do Python antes de retornar as métricas.
+  Passe `gc=true` para forçar a coleta de lixo do Python antes de retornar as métricas.
 </ParamField>
 
 <ResponseExample>
@@ -43,4 +43,4 @@ Retorna estatísticas de memória do processo e do sistema.
 | `process.rss` | RAM física usada pelo processo |
 | `process.vms` | Memória virtual total alocada |
 | `system.usagePercent` | % de RAM consumida no servidor |
-| `uptime` | Tempo online do processo |
+| `uptime` | Uptime do processo |

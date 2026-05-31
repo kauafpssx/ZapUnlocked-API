@@ -1,0 +1,72 @@
+---
+title: "Múltiplos Contatos"
+icon: "address-book"
+api: "POST /send_contacts"
+description: "Envia múltiplos contatos como um único vCard para o destinatário."
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Envia múltiplos contatos de uma vez como um único bloco vCard. Para um único contato, use [`POST /send_contact`](/api-reference/endpoint/send-contact).
+
+### Corpo da Requisição
+
+<ParamField body="phone" type="string" required>
+  Número do destinatário com código do país (ex: `5511999999999`).
+</ParamField>
+
+<ParamField body="contacts" type="array" required>
+  Lista de contatos a enviar. Cada item deve conter:
+
+  <Expandable title="Estrutura do contato">
+    <ParamField body="name" type="string" required>
+      Nome exibido no vCard (ex: `"João da Silva"`).
+    </ParamField>
+    <ParamField body="phone" type="string" required>
+      Número do contato com código do país (ex: `5511988887777`).
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="reply" type="string">
+  ID ou texto da mensagem para responder.
+</ParamField>
+
+<ParamField body="type" type="string" default="id">
+  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
+</ParamField>
+
+<ResponseField name="success" type="boolean">
+  `true` se os contatos foram enviados com sucesso.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Mensagem de status com o número de itens enviados.
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "2 contact(s) sent."
+}
+```
+
+```json 400 Lista vazia
+{
+  "error": "MISSING_FIELD",
+  "message": "At least one contact is required."
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

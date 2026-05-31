@@ -1,0 +1,18 @@
+# Mintlify
+.mintlify/
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+
+# IDEs
+.vscode/
+.idea/
+
+# CLI
+.antigravitycli/
