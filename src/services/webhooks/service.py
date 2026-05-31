@@ -41,7 +41,7 @@ async def trigger_webhook(config: dict, context: dict, default_payload: dict | N
     try:
         logger.info(f"🔗 Triggering webhook: {method} {url}")
 
-        async with httpx.AsyncClient(timeout=10.0) as client:
+        async with httpx.AsyncClient(follow_redirects=True, timeout=15.0) as client:
             request = client.build_request(
                 method=method,
                 url=url,
