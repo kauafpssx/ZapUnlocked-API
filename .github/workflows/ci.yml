@@ -58,6 +58,12 @@ jobs:
             -e ENABLE_WHATSAPP=0 \
             -p 8300:8300 \
             zapunlocked:ci
-          sleep 10
-          curl -f http://localhost:8300/status || (docker logs zaptest && exit 1)
+          
+          # Wait for container to be ready with retries
+          for i in {1..10}; do
+            curl -f -H "X-Api-Key: ci-test-key" http://localhost:8300/status && break
+            echo "Waiting for API... ($i/10)"
+            sleep 3
+          done || (docker logs zaptest && exit 1)
+          
           docker stop zaptest
