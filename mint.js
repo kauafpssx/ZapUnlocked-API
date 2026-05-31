@@ -65,6 +65,20 @@
               config.headers["x-api-key"] = apiKey;
             }
           }
+
+          // Fix double-escaped sequences (Mintlify playground sends \\n instead of real newlines)
+          if (config && config.body && typeof config.body === "string") {
+            try {
+              const _fixEscapes = (v) => {
+                if (typeof v === "string") return v.replace(/\\n/g, "\n").replace(/\\t/g, "\t").replace(/\\r/g, "\r");
+                if (Array.isArray(v)) return v.map(_fixEscapes);
+                if (v && typeof v === "object") { const r = {}; for (const k in v) r[k] = _fixEscapes(v[k]); return r; }
+                return v;
+              };
+              config.body = JSON.stringify(_fixEscapes(JSON.parse(config.body)));
+            } catch (e) {}
+          }
+
           console.log("Playground Redirect:", urlStr, "->", newUrl);
           return originalFetch(resource, config);
         }
@@ -99,6 +113,23 @@
         }
       }
       return originalOpen.call(this, method, url, ...rest);
+    };
+
+    // XHR body fix: unescape literal \n sequences
+    const originalSend = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.send = function (body) {
+      if (body && typeof body === "string") {
+        try {
+          const _fixEscapes = (v) => {
+            if (typeof v === "string") return v.replace(/\\n/g, "\n").replace(/\\t/g, "\t").replace(/\\r/g, "\r");
+            if (Array.isArray(v)) return v.map(_fixEscapes);
+            if (v && typeof v === "object") { const r = {}; for (const k in v) r[k] = _fixEscapes(v[k]); return r; }
+            return v;
+          };
+          body = JSON.stringify(_fixEscapes(JSON.parse(body)));
+        } catch (e) {}
+      }
+      return originalSend.call(this, body);
     };
   };
 
