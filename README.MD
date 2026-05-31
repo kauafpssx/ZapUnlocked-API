@@ -1,4 +1,4 @@
-# ⚡💬 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br/)(https://zapunlocked-api.kauafpss.com.br)
+# ⚡💬 [ZapUnlocked-API](https://zapunlocked-api.kauafpss.com.br/)
 
 ![ZapUnlocked-API Banner](https://github.com/kauafpssx/ZapUnlocked-API/blob/documentation/images/banner/dark.png?raw=true)
 
