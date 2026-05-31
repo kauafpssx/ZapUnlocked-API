@@ -60,10 +60,11 @@ jobs:
             zapunlocked:ci
           
           # Wait for container to be ready with retries
-          for i in {1..10}; do
-            curl -f -H "X-Api-Key: ci-test-key" http://localhost:8300/status && break
-            echo "Waiting for API... ($i/10)"
-            sleep 3
+          for i in {1..15}; do
+            curl -s -f -H "X-Api-Key: ci-test-key" http://127.0.0.1:8300/status && break
+            echo "Waiting for API... ($i/15)"
+            docker ps -a | grep zaptest
+            sleep 4
           done || (docker logs zaptest && exit 1)
           
           docker stop zaptest

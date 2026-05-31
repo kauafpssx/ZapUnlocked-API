@@ -29,6 +29,6 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
     CMD curl -f http://localhost:8300/status || exit 1
 
 CMD ["python", "-m", "uvicorn", "main:app", \
-     "--host", "::", "--port", "8300", \
+     "--host", "0.0.0.0", "--port", "8300", \
      "--proxy-headers", "--forwarded-allow-ips", "*", \
      "--log-level", "info"]
