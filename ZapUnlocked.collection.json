@@ -2,12 +2,12 @@
   "info": {
     "name": "ZapUnlocked-API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Todos os endpoints da ZapUnlocked API. Base URL: http://localhost:8000"
+    "description": "All ZapUnlocked API endpoints. Base URL: http://localhost:8300"
   },
   "variable": [
     {
       "key": "BASE_URL",
-      "value": "http://localhost:8000"
+      "value": "http://localhost:8300"
     },
     {
       "key": "API_KEY",
@@ -16,6 +16,10 @@
     {
       "key": "PHONE",
       "value": ""
+    },
+    {
+      "key": "WEBHOOK_NAME",
+      "value": "my-webhook"
     }
   ],
   "item": [
@@ -23,7 +27,22 @@
       "name": "Status",
       "item": [
         {
-          "name": "Status da API",
+          "name": "Index / Landing Page",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "API Status",
           "request": {
             "method": "GET",
             "url": {
@@ -44,7 +63,7 @@
           }
         },
         {
-          "name": "SSE Stream (logs em tempo real)",
+          "name": "SSE Stream (real-time logs)",
           "request": {
             "method": "GET",
             "url": {
@@ -72,10 +91,10 @@
       ]
     },
     {
-      "name": "QR Code / Conexão",
+      "name": "QR Code / Connection",
       "item": [
         {
-          "name": "Página do QR Code (HTML)",
+          "name": "QR Code Page (HTML)",
           "request": {
             "method": "GET",
             "url": {
@@ -97,7 +116,7 @@
           }
         },
         {
-          "name": "Imagem do QR Code",
+          "name": "QR Code Image",
           "request": {
             "method": "GET",
             "url": {
@@ -119,16 +138,16 @@
           }
         },
         {
-          "name": "Parear via código",
+          "name": "Pair via code",
           "request": {
             "method": "POST",
             "url": {
-              "raw": "{{BASE_URL}}/qr/pair",
+              "raw": "{{BASE_URL}}/session/pair",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
-                "qr",
+                "session",
                 "pair"
               ]
             },
@@ -154,16 +173,16 @@
           }
         },
         {
-          "name": "Logout / Desconectar",
+          "name": "Logout / Disconnect",
           "request": {
             "method": "POST",
             "url": {
-              "raw": "{{BASE_URL}}/qr/logout",
+              "raw": "{{BASE_URL}}/session/logout",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
-                "qr",
+                "session",
                 "logout"
               ]
             },
@@ -178,10 +197,10 @@
       ]
     },
     {
-      "name": "Instância",
+      "name": "Instance",
       "item": [
         {
-          "name": "Dados do número conectado (me)",
+          "name": "Connected number data (me)",
           "request": {
             "method": "GET",
             "url": {
@@ -203,7 +222,7 @@
           }
         },
         {
-          "name": "Info do dispositivo",
+          "name": "Device info",
           "request": {
             "method": "GET",
             "url": {
@@ -225,7 +244,7 @@
           }
         },
         {
-          "name": "Renomear Instância + WhatsApp Pushname",
+          "name": "Rename Instance + WhatsApp Pushname",
           "request": {
             "method": "PUT",
             "url": {
@@ -250,7 +269,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Nova Instancia\"\n}",
+              "raw": "{\n    \"name\": \"New Instance\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -262,10 +281,10 @@
       ]
     },
     {
-      "name": "Configurações da Instância",
+      "name": "Instance Settings",
       "item": [
         {
-          "name": "Ativar rejeição automática de chamadas",
+          "name": "Enable auto call rejection",
           "request": {
             "method": "PUT",
             "url": {
@@ -301,7 +320,7 @@
           }
         },
         {
-          "name": "Desativar rejeição automática de chamadas",
+          "name": "Disable auto call rejection",
           "request": {
             "method": "PUT",
             "url": {
@@ -337,7 +356,7 @@
           }
         },
         {
-          "name": "Definir mensagem de chamada rejeitada",
+          "name": "Set rejected call message",
           "request": {
             "method": "PUT",
             "url": {
@@ -363,7 +382,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"value\": \"No momento não posso atender. Por favor, envie uma mensagem.\"\n}",
+              "raw": "{\n    \"value\": \"I can't answer right now. Please send a message.\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -373,7 +392,7 @@
           }
         },
         {
-          "name": "Ativar leitura automática",
+          "name": "Enable auto read",
           "request": {
             "method": "PUT",
             "url": {
@@ -409,7 +428,7 @@
           }
         },
         {
-          "name": "Desativar leitura automática",
+          "name": "Disable auto read",
           "request": {
             "method": "PUT",
             "url": {
@@ -445,7 +464,7 @@
           }
         },
         {
-          "name": "Gerar código de pareamento por número",
+          "name": "Generate pairing code by number",
           "request": {
             "method": "GET",
             "url": {
@@ -470,10 +489,10 @@
       ]
     },
     {
-      "name": "Mensagens",
+      "name": "Messages",
       "item": [
         {
-          "name": "Enviar texto",
+          "name": "Send text",
           "request": {
             "method": "POST",
             "url": {
@@ -497,7 +516,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Olá! Isso é um teste.\",\n\n    // --- OPCIONAIS (responder msg) ---\n    // \"reply\": \"Texto da mensagem a responder\",\n    // \"type\": \"text\",              // \"text\" | \"id\" (padrão: \"id\")\n    // \"quoted_id\": \"ID_DA_MSG\"\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Hello! This is a test.\",\n\n    // --- OPTIONAL (responder msg) ---\n    // \"reply\": \"Texto da mensagem a responder\",\n    // \"type\": \"text\",              // \"text\" | \"id\" (default: \"id\")\n    // \"quoted_id\": \"ID_DA_MSG\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -507,7 +526,7 @@
           }
         },
         {
-          "name": "Enviar texto (Respondendo via texto)",
+          "name": "Send text (Reply via text)",
           "request": {
             "method": "POST",
             "url": {
@@ -531,7 +550,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Sim! Isso é uma resposta.\",\n    \"reply\": \"Olá! Isso é um teste.\",\n    \"type\": \"text\"\n}",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Yes! This is a reply.\",\n            \"reply\": \"Hello! This is a test.\",\n    \"type\": \"text\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -541,7 +560,7 @@
           }
         },
         {
-          "name": "Enviar imagem",
+          "name": "Send image",
           "request": {
             "method": "POST",
             "url": {
@@ -565,7 +584,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"image_url\": \"https://picsum.photos/800/600\",\n\n    // --- OPCIONAIS ---\n    \"caption\": \"Legenda da imagem\",\n    // \"asDocument\": false,       // true = enviar como documento (PDF/arquivo)\n    // \"fileName\": \"imagem.jpg\", // nome do arquivo (se asDocument=true)\n    // \"reply\": \"Texto da msg a responder\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"ID_DA_MSG\"\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"image_url\": \"https://picsum.photos/800/600\",\n\n    // --- OPTIONAL ---\n    \"caption\": \"Image caption\",\n    // \"asDocument\": false,       // true = enviar como documento (PDF/arquivo)\n    // \"fileName\": \"image.jpg\", // nome do arquivo (se asDocument=true)\n    // \"reply\": \"Texto da msg a responder\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"ID_DA_MSG\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -575,7 +594,7 @@
           }
         },
         {
-          "name": "Enviar imagem como documento",
+          "name": "Send image as document",
           "request": {
             "method": "POST",
             "url": {
@@ -599,7 +618,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"image_url\": \"https://picsum.photos/800/600\",\n    \"caption\": \"Imagem enviada como documento\",\n    \"asDocument\": true,\n    \"fileName\": \"minha-imagem.jpg\"\n}",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"image_url\": \"https://picsum.photos/800/600\",\n    \"caption\": \"Image sent as document\",\n    \"asDocument\": true,\n    \"fileName\": \"my-image.jpg\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -609,7 +628,7 @@
           }
         },
         {
-          "name": "Enviar áudio",
+          "name": "Send audio",
           "request": {
             "method": "POST",
             "url": {
@@ -633,7 +652,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"audio_url\": \"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3\",\n\n    // --- OPCIONAIS ---\n    \"ptt\": false,               // true = mensagem de voz (circle audio)\n    // \"asDocument\": false,     // true = enviar como arquivo\n    // \"format\": \"m4a\",        // \"m4a\" | \"mp3\" | \"ogg\" | \"wav\" (padrão: \"m4a\")\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"audio_url\": \"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3\",\n\n    // --- OPTIONAL ---\n    \"ptt\": false,               // true = mensagem de voz (circle audio)\n    // \"asDocument\": false,     // true = enviar como arquivo\n    // \"format\": \"m4a\",        // \"m4a\" | \"mp3\" | \"ogg\" | \"wav\" (default: \"m4a\")\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -643,7 +662,7 @@
           }
         },
         {
-          "name": "Enviar áudio como PTT (mensagem de voz)",
+          "name": "Send audio as PTT (voice message)",
           "request": {
             "method": "POST",
             "url": {
@@ -677,7 +696,7 @@
           }
         },
         {
-          "name": "Enviar vídeo",
+          "name": "Send video",
           "request": {
             "method": "POST",
             "url": {
@@ -701,7 +720,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"video_url\": \"https://file-examples.com/storage/fe4d6f538767234d29c4e0e/2017/04/file_example_MP4_480_1_5MG.mp4\",\n\n    // --- OPCIONAIS ---\n    \"caption\": \"Legenda do vídeo\",\n    // \"gifPlayback\": false,   // true = enviar como GIF animado\n    // \"ptv\": false,           // true = enviar como vídeo redondo (PIP)\n    // \"asDocument\": false,    // true = enviar como documento (se >15MB, automático)\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"video_url\": \"https://test-videos.co.uk/vids/bigbuckbunny/mp4/av1/360/Big_Buck_Bunny_360_10s_1MB.mp4\",\n\n    // --- OPTIONAL ---\n    \"caption\": \"Video caption\",\n    // \"gifPlayback\": false,   // true = send as animated GIF\n    // \"ptv\": false,           // true = send as round video (PIP)\n    // \"asDocument\": false,    // true = send as document (if >15MB, automatic)\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -711,7 +730,7 @@
           }
         },
         {
-          "name": "Enviar vídeo como GIF",
+          "name": "Send video as GIF",
           "request": {
             "method": "POST",
             "url": {
@@ -735,7 +754,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"video_url\": \"https://file-examples.com/storage/fe4d6f538767234d29c4e0e/2017/04/file_example_MP4_480_1_5MG.mp4\",\n    \"gifPlayback\": true\n}",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"video_url\": \"https://test-videos.co.uk/vids/bigbuckbunny/mp4/av1/360/Big_Buck_Bunny_360_10s_1MB.mp4\",\n    \"gifPlayback\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -745,7 +764,7 @@
           }
         },
         {
-          "name": "Enviar vídeo como PTV (vídeo redondo)",
+          "name": "Send video as PTV (round video)",
           "request": {
             "method": "POST",
             "url": {
@@ -769,7 +788,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"video_url\": \"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4\",\n    \"ptv\": true\n}",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"video_url\": \"https://test-videos.co.uk/vids/bigbuckbunny/mp4/av1/360/Big_Buck_Bunny_360_10s_1MB.mp4\",\n    \"ptv\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -779,7 +798,7 @@
           }
         },
         {
-          "name": "Enviar documento",
+          "name": "Send document",
           "request": {
             "method": "POST",
             "url": {
@@ -803,7 +822,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"document_url\": \"https://www.w3.org/WAI/WCAG21/Techniques/pdf/PDF2.pdf\",\n\n    // --- OPCIONAIS ---\n    \"fileName\": \"documento.pdf\",\n    // \"caption\": \"\",\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"document_url\": \"https://raw.githubusercontent.com/KAUAxiis/database/main/README.md\",\n\n    // --- OPTIONAL ---\n    \"fileName\": \"document.pdf\",\n    // \"caption\": \"\",\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -813,7 +832,7 @@
           }
         },
         {
-          "name": "Enviar sticker",
+          "name": "Send sticker",
           "request": {
             "method": "POST",
             "url": {
@@ -837,7 +856,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO (pelo menos uma URL) ---\n    \"phone\": \"{{PHONE}}\",\n    \"sticker_url\": \"https://www.gstatic.com/webp/gallery/1.webp\",\n    // \"image_url\": \"https://...\",   // alternativa ao sticker_url\n\n    // --- OPCIONAIS ---\n    // \"pack\": \"Meu Pack\",\n    // \"author\": \"ZapUnlocked\",\n    // \"resizeMode\": \"pad\",       // \"pad\" | \"crop\" | \"stretch\" (padrão: \"pad\")\n    // \"padColor\": \"black\",       // cor do fundo se resizeMode=\"pad\" (padrão: \"black\")\n    // \"blurIntensity\": 20,         // desfoque do fundo (0-100, padrão: 20)\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "raw": "{\n    // --- REQUIRED (at least one URL) ---\n    \"phone\": \"{{PHONE}}\",\n    \"sticker_url\": \"https://www.gstatic.com/webp/gallery/1.webp\",\n    // \"image_url\": \"https://...\",   // alternative to sticker_url\n\n    // --- OPTIONAL ---\n    // \"pack\": \"My Pack\",\n    // \"author\": \"ZapUnlocked\",\n    // \"resizeMode\": \"pad\",       // \"pad\" | \"crop\" | \"stretch\" (default: \"pad\")\n    // \"padColor\": \"black\",       // background color if resizeMode=\"pad\" (default: \"black\")\n    // \"blurIntensity\": 20,         // background blur (0-100, default: 20)\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -847,7 +866,7 @@
           }
         },
         {
-          "name": "Enviar reação",
+          "name": "Send reaction",
           "request": {
             "method": "POST",
             "url": {
@@ -871,7 +890,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\",\n    \"emoji\": \"👍\",\n\n    // --- OPCIONAIS ---\n    // \"reaction\": null,        // força remoção da reação\n    // \"text\": null,\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\",\n    \"emoji\": \"👍\",\n\n    // --- OPTIONAL ---\n    // \"reaction\": null,        // forces reaction removal\n    // \"text\": null,\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -881,7 +900,7 @@
           }
         },
         {
-          "name": "Enviar localização",
+          "name": "Send location",
           "request": {
             "method": "POST",
             "url": {
@@ -905,7 +924,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"lat\": -23.550520,\n    \"lng\": -46.633308,\n\n    // --- OPCIONAIS ---\n    \"name\": \"Praça da Sé\",\n    \"address\": \"São Paulo, SP\",\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"lat\": -23.550520,\n    \"lng\": -46.633308,\n\n    // --- OPTIONAL ---\n    \"name\": \"Central Square\",\n    \"address\": \"New York, NY\",\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -915,7 +934,7 @@
           }
         },
         {
-          "name": "Enviar contato (vCard)",
+          "name": "Send contact (vCard)",
           "request": {
             "method": "POST",
             "url": {
@@ -939,7 +958,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"Suporte ZapUnlocked\",\n    \"contactPhone\": \"5511999999999\",\n\n    // --- OPCIONAIS ---\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"ZapUnlocked Support\",\n    \"contactPhone\": \"5511999999999\",\n\n    // --- OPTIONAL ---\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -949,7 +968,7 @@
           }
         },
         {
-          "name": "Enviar vários contatos",
+          "name": "Send multiple contacts",
           "request": {
             "method": "POST",
             "url": {
@@ -973,7 +992,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"contacts\": [\n        {\n            \"name\": \"João Silva\",\n            \"phone\": \"5511988888888\"\n        },\n        {\n            \"name\": \"Maria Souza\",\n            \"phone\": \"5511977777777\"\n        }\n    ],\n\n    // --- OPCIONAIS ---\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"contacts\": [\n        {\n            \"name\": \"John Doe\",\n            \"phone\": \"5511988888888\"\n        },\n        {\n            \"name\": \"Jane Smith\",\n            \"phone\": \"5511977777777\"\n        }\n    ],\n\n    // --- OPTIONAL ---\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -983,7 +1002,7 @@
           }
         },
         {
-          "name": "Enviar link com preview",
+          "name": "Send link with preview",
           "request": {
             "method": "POST",
             "url": {
@@ -1007,7 +1026,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"url\": \"https://github.com\",\n\n    // --- OPCIONAIS ---\n    \"text\": \"Confira este repositório incrível!\",\n    \"title\": \"GitHub\",\n    \"description\": \"Onde o mundo desenvolve software\",\n    \"thumbnailUrl\": \"https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png\",\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"url\": \"https://github.com\",\n\n    // --- OPTIONAL ---\n    \"text\": \"Check out this amazing repository!\",\n    \"title\": \"GitHub\",\n            \"description\": \"Where the world builds software\",\n    \"thumbnailUrl\": \"https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png\",\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1017,7 +1036,7 @@
           }
         },
         {
-          "name": "Deletar mensagem",
+          "name": "Delete message",
           "request": {
             "method": "POST",
             "url": {
@@ -1042,7 +1061,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\",\n\n    // --- OPCIONAIS ---\n    // \"fromMe\": true,        // true = deletar msg própria (padrão: true)\n    // \"type\": \"id\"          // \"id\" | \"text\" (padrão: \"id\")\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\",\n\n    // --- OPTIONAL ---\n    // \"fromMe\": true,        // true = delete own message (default: true)\n    // \"type\": \"id\"          // \"id\" | \"text\" (default: \"id\")\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1052,7 +1071,7 @@
           }
         },
         {
-          "name": "Editar mensagem",
+          "name": "Edit message",
           "request": {
             "method": "POST",
             "url": {
@@ -1077,7 +1096,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"Mensagem original a ser editada\",\n    \"message\": \"Conteúdo editado aqui!\",\n\n    // --- OPCIONAIS ---\n    // \"reply\": \"...\",\n    \"type\": \"text\",       // \"text\" | \"id\" (padrão: \"id\")\n    // \"quoted_id\": \"...\"\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"Original message to be edited\",\n            \"message\": \"Edited content here!\",\n\n    // --- OPTIONAL ---\n    // \"reply\": \"...\",\n    \"type\": \"text\",       // \"text\" | \"id\" (default: \"id\")\n    // \"quoted_id\": \"...\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1087,7 +1106,7 @@
           }
         },
         {
-          "name": "Marcar mensagens como lidas",
+          "name": "Mark messages as read",
           "request": {
             "method": "POST",
             "url": {
@@ -1112,7 +1131,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageIds\": [\n        \"ID_PRIMEIRA_MSG\",\n        \"ID_SEGUNDA_MSG\"\n    ],\n\n    // --- OPCIONAIS ---\n    // \"sender\": \"5511999999999@s.whatsapp.net\",  // JID do remetente\n    // \"type\": \"id\"                                 // \"id\" | \"text\"\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageIds\": [\n        \"ID_PRIMEIRA_MSG\",\n        \"ID_SEGUNDA_MSG\"\n    ],\n\n    // --- OPTIONAL ---\n    // \"sender\": \"5511999999999@s.whatsapp.net\",  // JID do remetente\n    // \"type\": \"id\"                                 // \"id\" | \"text\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1124,10 +1143,10 @@
       ]
     },
     {
-      "name": "Mensagens Interativas",
+      "name": "Interactive Messages",
       "item": [
         {
-          "name": "Botões: Quick Reply (Respostas Rápidas)",
+          "name": "Buttons: Quick Reply",
           "request": {
             "method": "POST",
             "url": {
@@ -1152,7 +1171,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Clique em uma das opções abaixo:\",\n    \"title\": \"Escolha uma opção\",\n    \"buttons\": [\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"Sim\",\n            \"id\": \"opcao_sim\"\n        },\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"Não\",\n            \"id\": \"opcao_nao\"\n        }\n    ],\n\n    // --- OPCIONAIS ---\n    // \"footer\": \"ZapUnlocked API\",\n    // \"body\": null,\n    // \"button_text\": null,\n    // \"button_id\": null,\n    // \"button_value\": null,\n    // \"webhook\": {},\n    // \"reaction\": null,\n    // \"image\": null,\n    // \"code\": null,               // OTP (botão de copiar código)\n    // \"pixKey\": null,             // PIX\n    // \"pixType\": null,\n    // \"merchantName\": null,\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Click one of the options below:\",\n    \"title\": \"Choose an option\",\n    \"buttons\": [\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"Yes\",\n            \"id\": \"option_yes\"\n        },\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"No\",\n            \"id\": \"option_no\"\n        }\n    ],\n\n    // --- OPTIONAL ---\n    // \"footer\": \"ZapUnlocked API\",\n    // \"body\": null,\n    // \"button_text\": null,\n    // \"button_id\": null,\n    // \"button_value\": null,\n    // \"webhook\": {},\n    // \"reaction\": null,\n    // \"image\": null,\n    // \"code\": null,               // OTP (botão de copiar código)\n    // \"pixKey\": null,             // PIX\n    // \"pixType\": null,\n    // \"merchantName\": null,\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1162,7 +1181,7 @@
           }
         },
         {
-          "name": "Botões: URL + Ligação",
+          "name": "Buttons: URL + Call",
           "request": {
             "method": "POST",
             "url": {
@@ -1187,7 +1206,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Entre em contato\",\n    \"message\": \"Escolha como deseja falar conosco:\",\n    \"footer\": \"ZapUnlocked API\",\n    \"buttons\": [\n        {\n            \"type\": \"url\",\n            \"buttonText\": \"Acessar Site\",\n            \"url\": \"https://zapunlocked.com\"\n        },\n        {\n            \"type\": \"call\",\n            \"buttonText\": \"Ligar Agora\",\n            \"phoneNumber\": \"+5511999999999\"\n        }\n    ]\n}",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Get in touch\",\n    \"message\": \"Choose how you'd like to contact us:\",\n    \"footer\": \"ZapUnlocked API\",\n    \"buttons\": [\n        {\n            \"type\": \"url\",\n            \"buttonText\": \"Visit Website\",\n            \"url\": \"https://zapunlocked.com\"\n        },\n        {\n            \"type\": \"call\",\n            \"buttonText\": \"Call Now\",\n            \"phoneNumber\": \"+5511999999999\"\n        }\n    ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1197,7 +1216,7 @@
           }
         },
         {
-          "name": "Botões: OTP (Copiar Código) — via buttons[]",
+          "name": "Buttons: OTP (Copy Code) — via buttons[]",
           "request": {
             "method": "POST",
             "url": {
@@ -1222,7 +1241,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Verificação de Segurança\",\n    \"message\": \"Seu código de acesso é: 591823\",\n    \"footer\": \"Válido por 5 minutos.\",\n    \"buttons\": [\n        {\n            \"type\": \"otp\",\n            \"buttonText\": \"Copiar Código\",\n            \"code\": \"591823\"\n        }\n    ]\n}",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Security Verification\",\n    \"message\": \"Your access code is: 591823\",\n    \"footer\": \"Valid for 5 minutes.\",\n    \"buttons\": [\n        {\n            \"type\": \"otp\",\n            \"buttonText\": \"Copy Code\",\n            \"code\": \"591823\"\n        }\n    ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1232,7 +1251,7 @@
           }
         },
         {
-          "name": "Botões: OTP via campo direto ",
+          "name": "Buttons: OTP via direct field",
           "request": {
             "method": "POST",
             "url": {
@@ -1257,7 +1276,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Seu código de acesso chegou!\",\n    \"code\": \"591823\"\n}",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Your access code has arrived!\",\n    \"code\": \"591823\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1267,7 +1286,7 @@
           }
         },
         {
-          "name": "Pagamento PIX (Copia-e-Cola)",
+          "name": "PIX Payment (Copy-and-Paste)",
           "request": {
             "method": "POST",
             "url": {
@@ -1292,7 +1311,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Pagamento PIX\",\n    \"message\": \"Utilize o botão abaixo para pagar via PIX:\",\n    \"buttons\": [\n        {\n            \"type\": \"pix\",\n            \"buttonText\": \"Copiar PIX\",\n            \"pixKey\": \"suachave@email.com\",\n            \"pixType\": \"EMAIL\",\n            \"merchantName\": \"Minha Loja\"\n        }\n    ]\n}",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"PIX Payment\",\n    \"message\": \"Use the button below to pay via PIX:\",\n    \"buttons\": [\n        {\n            \"type\": \"pix\",\n            \"buttonText\": \"Copy PIX\",\n            \"pixKey\": \"suachave@email.com\",\n            \"pixType\": \"EMAIL\",\n            \"merchantName\": \"Minha Loja\"\n        }\n    ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1302,7 +1321,7 @@
           }
         },
         {
-          "name": "Botões: Lista (Menu com seções)",
+          "name": "Buttons: List (Menu with sections)",
           "request": {
             "method": "POST",
             "url": {
@@ -1327,7 +1346,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Cardápio Digital\",\n    \"message\": \"Confira nossas opções:\",\n    \"footer\": \"Delivery em 30 min\",\n    \"buttons\": [\n        {\n            \"type\": \"list\",\n            \"buttonText\": \"Ver Cardápio\",\n            \"sections\": [\n                {\n                    \"title\": \"Lanches\",\n                    \"rows\": [\n                        { \"rowID\": \"1\", \"title\": \"X-Burguer\", \"description\": \"R$ 18,90\" },\n                        { \"rowID\": \"2\", \"title\": \"X-Salada\", \"description\": \"R$ 20,90\" }\n                    ]\n                },\n                {\n                    \"title\": \"Bebidas\",\n                    \"rows\": [\n                        { \"rowID\": \"3\", \"title\": \"Coca-Cola 350ml\", \"description\": \"R$ 6,00\" },\n                        { \"rowID\": \"4\", \"title\": \"Suco de Laranja\", \"description\": \"R$ 8,00\" }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Digital Menu\",\n    \"message\": \"Check out our options:\",\n    \"footer\": \"Delivery in 30 min\",\n    \"buttons\": [\n        {\n            \"type\": \"list\",\n            \"buttonText\": \"View Menu\",\n            \"sections\": [\n                {\n                    \"title\": \"Burgers\",\n                    \"rows\": [\n                        { \"rowID\": \"1\", \"title\": \"Classic Burger\", \"description\": \"$ 5.99\" },\n                        { \"rowID\": \"2\", \"title\": \"Cheese Burger\", \"description\": \"$ 6.99\" }\n                    ]\n                },\n                {\n                    \"title\": \"Drinks\",\n                    \"rows\": [\n                        { \"rowID\": \"3\", \"title\": \"Cola 350ml\", \"description\": \"$ 2.00\" },\n                        { \"rowID\": \"4\", \"title\": \"Orange Juice\", \"description\": \"$ 2.50\" }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1337,7 +1356,7 @@
           }
         },
         {
-          "name": "Botões: Mistos (URL + Quick Reply)",
+          "name": "Buttons: Mixed (URL + Quick Reply)",
           "request": {
             "method": "POST",
             "url": {
@@ -1362,7 +1381,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Oferta Especial\",\n    \"message\": \"Aproveite nossa promoção hoje!\",\n    \"footer\": \"Válido até meia-noite\",\n    \"buttons\": [\n        {\n            \"type\": \"url\",\n            \"buttonText\": \"Comprar Agora\",\n            \"url\": \"https://loja.com/promo\"\n        },\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"Me lembrar depois\",\n            \"id\": \"lembrar\"\n        }\n    ]\n}",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Special Offer\",\n    \"message\": \"Take advantage of our promotion today!\",\n    \"footer\": \"Valid until midnight\",\n    \"buttons\": [\n        {\n            \"type\": \"url\",\n            \"buttonText\": \"Buy Now\",\n            \"url\": \"https://loja.com/promo\"\n        },\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"Remind me later\",\n            \"id\": \"lembrar\"\n        }\n    ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1372,7 +1391,7 @@
           }
         },
         {
-          "name": "Enviar enquete",
+          "name": "Send poll",
           "request": {
             "method": "POST",
             "url": {
@@ -1397,7 +1416,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"Qual sua cor favorita?\",\n    \"options\": [\"Vermelho\", \"Azul\", \"Verde\", \"Amarelo\"],\n\n    // --- OPCIONAIS ---\n    // \"selectableCount\": 1,       // qtd de opções que o usuário pode escolher (padrão: 1)\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"What is your favorite color?\",\n    \"options\": [\"Red\", \"Blue\", \"Green\", \"Yellow\"],\n\n    // --- OPTIONAL ---\n    // \"selectableCount\": 1,       // number of options user can choose (default: 1)\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1407,7 +1426,7 @@
           }
         },
         {
-          "name": "Enviar voto para enquete",
+          "name": "Send poll vote",
           "request": {
             "method": "POST",
             "url": {
@@ -1432,7 +1451,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n    \"options\": [\"Azul\"],\n\n    // --- OPCIONAIS ---\n    // \"pollName\": \"Qual sua cor favorita?\",   // nome da enquete (busca)\n    // \"pollId\": \"ID_DA_ENQUETE\",              // id da mensagem da enquete\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
+              "raw": "{\n    // --- REQUIRED (when type=\"id\", the default) ---\n    \"phone\": \"{{PHONE}}\",\n    \"options\": [\"Blue\"],\n    \"pollId\": \"ID_DA_ENQUETE\",\n\n    // --- OPTIONAL ---\n    // \"pollName\": \"What is your favorite color?\",   // used with type=\"text\"\n    // \"type\": \"text\",                               // \"id\" | \"text\" (default: \"id\")\n    // \"reply\": \"...\",\n    // \"quoted_id\": \"...\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1444,10 +1463,10 @@
       ]
     },
     {
-      "name": "Contatos",
+      "name": "Contacts",
       "item": [
         {
-          "name": "Info do contato",
+          "name": "Contact info",
           "request": {
             "method": "POST",
             "url": {
@@ -1482,7 +1501,7 @@
           }
         },
         {
-          "name": "Bloquear contato (via settings/block)",
+          "name": "Block contact (via settings/block)",
           "request": {
             "method": "POST",
             "url": {
@@ -1517,7 +1536,7 @@
           }
         },
         {
-          "name": "Desbloquear contato (via settings/block)",
+          "name": "Unblock contact (via settings/block)",
           "request": {
             "method": "POST",
             "url": {
@@ -1554,10 +1573,10 @@
       ]
     },
     {
-      "name": "Configurações",
+      "name": "Settings",
       "item": [
         {
-          "name": "Privacidade: Todos os campos",
+          "name": "Privacy: All fields",
           "request": {
             "method": "POST",
             "url": {
@@ -1582,7 +1601,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- CONFIGURAÇÕES DE PRIVACIDADE ---\n    // Valores possíveis: \"all\" | \"contacts\" | \"none\" | \"match_last_seen\"\n    \"lastSeen\": \"all\",\n    \"online\": \"all\",\n    \"profile\": \"contacts\",\n    \"status\": \"contacts\",\n    \"readReceipts\": \"all\",\n    \"groupsAdd\": \"contacts\",\n    \"callAdd\": \"all\",\n\n    // --- RECADO (about / status message) ---\n    \"about\": \"Disponível via ZapUnlocked Bot\",\n\n    // --- MENSAGENS TEMPORÁRIAS ---\n    // \"disappearingTimer\": 0    // 0=desligado | 24=1dia | 168=7dias | 4320=180dias\n}",
+              "raw": "{\n    // --- PRIVACY SETTINGS ---\n    // Possible values: \"all\" | \"contacts\" | \"none\" | \"match_last_seen\"\n    \"lastSeen\": \"all\",\n    \"online\": \"all\",\n    \"profile\": \"contacts\",\n    \"status\": \"contacts\",\n    \"readReceipts\": \"all\",\n    \"groupsAdd\": \"contacts\",\n    \"callAdd\": \"all\",\n\n    // --- ABOUT (status message) ---\n    \"about\": \"Available via ZapUnlocked Bot\",\n\n    // --- DISAPPEARING MESSAGES ---\n    // \"disappearingTimer\": 0    // 0=off | 24=1day | 168=7days | 4320=180days\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1592,7 +1611,7 @@
           }
         },
         {
-          "name": "Privacidade: Só lastSeen (exemplo único)",
+          "name": "Privacy: Only lastSeen (single example)",
           "request": {
             "method": "POST",
             "url": {
@@ -1627,7 +1646,7 @@
           }
         },
         {
-          "name": "Privacidade: Só disappearing + about",
+          "name": "Privacy: Only disappearing + about",
           "request": {
             "method": "POST",
             "url": {
@@ -1652,7 +1671,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"disappearingTimer\": 24,\n    \"about\": \"Mensagens temporárias ativadas!\"\n}",
+              "raw": "{\n    \"disappearingTimer\": 24,\n    \"about\": \"Disappearing messages enabled!\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1662,7 +1681,7 @@
           }
         },
         {
-          "name": "Atualizar perfil (nome + foto via Neonize)",
+          "name": "Update profile (name + photo via Neonize)",
           "request": {
             "method": "POST",
             "url": {
@@ -1687,7 +1706,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OPCIONAIS (pelo menos um) ---\n    \"name\": \"Meu Bot\",\n    \"newProfilePictureUrl\": \"https://picsum.photos/400/400\"\n}",
+              "raw": "{\n    // --- OPTIONAL (pelo menos um) ---\n    \"name\": \"My Bot\",\n    \"newProfilePictureUrl\": \"https://picsum.photos/400/400\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1697,7 +1716,7 @@
           }
         },
         {
-          "name": "Atualizar só o nome do perfil",
+          "name": "Update profile name only",
           "request": {
             "method": "POST",
             "url": {
@@ -1732,100 +1751,7 @@
           }
         },
         {
-          "name": "Configurar webhook",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/webhook",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "webhook"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"url\": \"https://meu-servidor.com/webhook\",\n\n    // --- OPCIONAIS ---\n    // \"enabled\": true,            // ativar/desativar (padrão: true)\n    // \"method\": \"POST\",         // método HTTP (padrão: \"POST\")\n    // \"headers\": {},             // headers customizados\n    // \"body\": {}                 // body customizado\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Toggle webhook (ligar/desligar)",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/webhook/toggle",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "webhook",
-                "toggle"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"status\": \"off\"       // \"on\" | \"off\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Remover webhook",
-          "request": {
-            "method": "DELETE",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/webhook",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "webhook"
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ]
-          }
-        },
-        {
-          "name": "Ver configurações do bot",
+          "name": "View bot settings",
           "request": {
             "method": "GET",
             "url": {
@@ -1847,7 +1773,7 @@
           }
         },
         {
-          "name": "Atualizar configurações do bot",
+          "name": "Update bot settings",
           "request": {
             "method": "POST",
             "url": {
@@ -1872,7 +1798,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- TODOS OPCIONAIS (envie só o que quiser mudar) ---\n    // \"ai_tag_enabled\": false,         // marcar msgs enviadas com tag\n    // \"ai_tag_text\": \" (ZapUnlocked)\", // texto da tag\n    // \"ip_control_enabled\": false,     // controle de IP\n    // \"ip_whitelist\": [],              // IPs permitidos\n    // \"ip_blacklist\": []               // IPs bloqueados\n}",
+              "raw": "{\n    // --- ALL OPTIONAL (send only what you want to change) ---\n    // \"ai_tag_enabled\": false,         // tag sent messages\n    // \"ai_tag_text\": \" (ZapUnlocked)\", // tag text\n    // \"ip_control_enabled\": false,     // IP control\n    // \"ip_whitelist\": [],              // allowed IPs\n    // \"ip_blacklist\": []               // blocked IPs\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1880,14 +1806,156 @@
               }
             }
           }
+        },
+        {
+          "name": "IP Rules: View all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/settings/ip-rules",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "ip-rules"
+              ]
+            }
+          }
+        },
+        {
+          "name": "IP Rules: Add to whitelist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/settings/ip-rules/whitelist",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "ip-rules",
+                "whitelist"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ip\": \"192.168.1.100\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "IP Rules: Add to blacklist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/settings/ip-rules/blacklist",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "ip-rules",
+                "blacklist"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ip\": \"10.0.0.50\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "IP Rules: Remove from whitelist",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/settings/ip-rules/whitelist/192.168.1.100",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "ip-rules",
+                "whitelist",
+                "192.168.1.100"
+              ]
+            }
+          }
+        },
+        {
+          "name": "IP Rules: Remove from blacklist",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/settings/ip-rules/blacklist/10.0.0.50",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings",
+                "ip-rules",
+                "blacklist",
+                "10.0.0.50"
+              ]
+            }
+          }
         }
       ]
     },
     {
-      "name": "Gerenciamento",
+      "name": "Management",
       "item": [
         {
-          "name": "Buscar mensagens antigas (fetch)",
+          "name": "Fetch old messages",
           "request": {
             "method": "POST",
             "url": {
@@ -1912,7 +1980,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OBRIGATÓRIO ---\n    \"phone\": \"{{PHONE}}\",\n\n    // --- OPCIONAIS ---\n    \"limit\": 20,                     // qtd de msgs (padrão: 20)\n    // \"type\": \"all\",               // \"all\" | \"text\" | \"image\" | \"video\" | ...\n    // \"query\": \"palavra chave\",    // busca textual\n    // \"onlyReactions\": false,       // só msgs com reação\n    // \"reactionEmoji\": \"👍\",       // filtrar por emoji específico\n    // \"webhook\": {}                 // disparar webhook com resultado\n}",
+              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n\n    // --- OPTIONAL ---\n    \"limit\": 20,                     // number of msgs (default: 20)\n    // \"type\": \"all\",               // \"all\" | \"text\" | \"image\" | \"video\" | ...\n    // \"query\": \"keyword\",         // text search\n    // \"onlyReactions\": false,       // only msgs with reaction\n    // \"reactionEmoji\": \"👍\",       // filter by specific emoji\n    // \"webhook\": {}                 // trigger webhook with result\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1922,7 +1990,7 @@
           }
         },
         {
-          "name": "Chats recentes",
+          "name": "Recent chats",
           "request": {
             "method": "POST",
             "url": {
@@ -1947,7 +2015,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // --- OPCIONAIS ---\n    \"limit\": 20       // qtd de chats (padrão: 20)\n}",
+              "raw": "{\n    // --- OPTIONAL ---\n    \"limit\": 20       // number of chats (default: 20)\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1957,7 +2025,7 @@
           }
         },
         {
-          "name": "Stats de memória RAM",
+          "name": "RAM memory stats",
           "request": {
             "method": "GET",
             "url": {
@@ -1979,7 +2047,7 @@
           }
         },
         {
-          "name": "Stats de disco",
+          "name": "Disk stats",
           "request": {
             "method": "GET",
             "url": {
@@ -2001,7 +2069,7 @@
           }
         },
         {
-          "name": "Limpar cache/arquivos temporários",
+          "name": "Clean cache/temp files",
           "request": {
             "method": "DELETE",
             "url": {
@@ -2023,7 +2091,7 @@
           }
         },
         {
-          "name": "Status do banco SQLite",
+          "name": "SQLite database status",
           "request": {
             "method": "GET",
             "url": {
@@ -2046,7 +2114,7 @@
           }
         },
         {
-          "name": "Limpeza manual do banco SQLite",
+          "name": "Manual SQLite database cleanup",
           "request": {
             "method": "POST",
             "url": {
@@ -2069,7 +2137,7 @@
           }
         },
         {
-          "name": "Configurar intervalo de limpeza do banco",
+          "name": "Configure database cleanup interval",
           "request": {
             "method": "POST",
             "url": {
@@ -2095,7 +2163,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"interval\": 1440       // minutos entre limpezas (1440 = 24h)\n}",
+              "raw": "{\n    \"interval\": 1440       // minutes between cleanups (1440 = 24h)\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2107,10 +2175,10 @@
       ]
     },
     {
-      "name": "Sistema",
+      "name": "System",
       "item": [
         {
-          "name": "Ver variáveis de ambiente (ofuscadas)",
+          "name": "View environment variables (obfuscated)",
           "request": {
             "method": "GET",
             "url": {
@@ -2132,7 +2200,7 @@
           }
         },
         {
-          "name": "Atualizar variáveis de ambiente",
+          "name": "Update environment variables",
           "request": {
             "method": "PUT",
             "url": {
@@ -2157,7 +2225,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    // Envie PARES chave:valor para alterar no .env\n    \"PORT\": \"8000\",\n    // \"API_KEY\": \"nova_key\",\n    // \"AUTH_DIR\": \"auth_info\",\n    // \"DATA_DIR\": \"data\",\n    // \"INTERNAL_SECRET\": \"novo_segredo\"\n}",
+              "raw": "{\n    // Send key:value pairs to change in .env\n    \"PORT\": \"8300\",\n    // \"API_KEY\": \"nova_key\",\n    // \"AUTH_DIR\": \"auth_info\",\n    // \"DATA_DIR\": \"data\",\n    // \"INTERNAL_SECRET\": \"novo_segredo\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2167,7 +2235,7 @@
           }
         },
         {
-          "name": "Forçar limpeza de arquivos temporários",
+          "name": "Force temp file cleanup",
           "request": {
             "method": "POST",
             "url": {
@@ -2190,7 +2258,7 @@
           }
         },
         {
-          "name": "Ver configurações de auto-cleanup",
+          "name": "View auto-cleanup settings",
           "request": {
             "method": "GET",
             "url": {
@@ -2213,7 +2281,7 @@
           }
         },
         {
-          "name": "Alterar configurações de auto-cleanup",
+          "name": "Change auto-cleanup settings",
           "request": {
             "method": "PUT",
             "url": {
@@ -2254,7 +2322,7 @@
       "name": "Webhooks",
       "item": [
         {
-          "name": "Listar webhooks",
+          "name": "List webhooks",
           "request": {
             "method": "GET",
             "header": [
@@ -2276,7 +2344,7 @@
           }
         },
         {
-          "name": "Listar eventos disponíveis",
+          "name": "List available events",
           "request": {
             "method": "GET",
             "header": [
@@ -2299,7 +2367,7 @@
           }
         },
         {
-          "name": "Criar webhook",
+          "name": "Create webhook",
           "request": {
             "method": "POST",
             "header": [
@@ -2320,7 +2388,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"meu-webhook\",\n  \"url\": \"https://meuservidor.com/hook\",\n  \"method\": \"POST\",\n  \"events\": [\n    \"*\"\n  ],\n  \"active\": true\n}",
+              "raw": "{\n  \"name\": \"my-webhook\",\n  \"url\": \"https://myserver.com/hook\",\n  \"method\": \"POST\",\n  \"events\": [\n    \"*\"\n  ],\n  \"active\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2330,7 +2398,7 @@
           }
         },
         {
-          "name": "Detalhes do webhook",
+          "name": "Webhook details",
           "request": {
             "method": "GET",
             "header": [
@@ -2341,19 +2409,19 @@
               }
             ],
             "url": {
-              "raw": "{{BASE_URL}}/webhooks/meu-webhook",
+              "raw": "{{BASE_URL}}/webhooks/{{WEBHOOK_NAME}}",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
                 "webhooks",
-                "meu-webhook"
+                "{{WEBHOOK_NAME}}"
               ]
             }
           }
         },
         {
-          "name": "Editar webhook",
+          "name": "Edit webhook",
           "request": {
             "method": "PUT",
             "header": [
@@ -2364,18 +2432,18 @@
               }
             ],
             "url": {
-              "raw": "{{BASE_URL}}/webhooks/meu-webhook",
+              "raw": "{{BASE_URL}}/webhooks/{{WEBHOOK_NAME}}",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
                 "webhooks",
-                "meu-webhook"
+                "{{WEBHOOK_NAME}}"
               ]
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"url\": \"https://meuservidor.com/hook-v2\",\n  \"events\": [\n    \"message.text\",\n    \"message.button_reply\",\n    \"message.list_reply\"\n  ]\n}",
+              "raw": "{\n  \"url\": \"https://myserver.com/hook-v2\",\n  \"events\": [\n    \"message.text\",\n    \"message.button_reply\",\n    \"message.list_reply\"\n  ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2385,7 +2453,7 @@
           }
         },
         {
-          "name": "Ativar/Desativar webhook",
+          "name": "Enable/Disable webhook",
           "request": {
             "method": "POST",
             "header": [
@@ -2396,13 +2464,13 @@
               }
             ],
             "url": {
-              "raw": "{{BASE_URL}}/webhooks/meu-webhook/toggle",
+              "raw": "{{BASE_URL}}/webhooks/{{WEBHOOK_NAME}}/toggle",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
                 "webhooks",
-                "meu-webhook",
+                "{{WEBHOOK_NAME}}",
                 "toggle"
               ]
             },
@@ -2418,7 +2486,7 @@
           }
         },
         {
-          "name": "Testar webhook",
+          "name": "Test webhook",
           "request": {
             "method": "POST",
             "header": [
@@ -2429,20 +2497,20 @@
               }
             ],
             "url": {
-              "raw": "{{BASE_URL}}/webhooks/meu-webhook/test",
+              "raw": "{{BASE_URL}}/webhooks/{{WEBHOOK_NAME}}/test",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
                 "webhooks",
-                "meu-webhook",
+                "{{WEBHOOK_NAME}}",
                 "test"
               ]
             }
           }
         },
         {
-          "name": "Deletar webhook",
+          "name": "Delete webhook",
           "request": {
             "method": "DELETE",
             "header": [
@@ -2453,13 +2521,13 @@
               }
             ],
             "url": {
-              "raw": "{{BASE_URL}}/webhooks/meu-webhook",
+              "raw": "{{BASE_URL}}/webhooks/{{WEBHOOK_NAME}}",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
                 "webhooks",
-                "meu-webhook"
+                "{{WEBHOOK_NAME}}"
               ]
             }
           }

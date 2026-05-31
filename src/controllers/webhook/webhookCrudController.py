@@ -1,9 +1,9 @@
 from fastapi import HTTPException
 
 from src.services import webhookRegistry
-from src.services.webhookRegistry import ALL_EVENTS
+from src.services.webhooks.registry import ALL_EVENTS
 from src.utils.logger import logger
-from .webhookSchemas import WebhookCreateRequest, WebhookUpdateRequest, WebhookToggleRequest
+from src.schemas import WebhookCreateRequest, WebhookUpdateRequest, WebhookToggleRequest
 
 
 async def list_webhooks():
@@ -26,7 +26,7 @@ async def create_webhook(data: WebhookCreateRequest):
     except ValueError as e:
         raise HTTPException(status_code=400, detail={"error": "INVALID_FIELD", "message": str(e)})
     except Exception as e:
-        logger.error(f"Erro ao criar webhook: {e}")
+        logger.error(f"Failed to create webhook: {e}")
         raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
@@ -39,7 +39,7 @@ async def update_webhook(name: str, data: WebhookUpdateRequest):
     except ValueError as e:
         raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": str(e)})
     except Exception as e:
-        logger.error(f"Erro ao atualizar webhook: {e}")
+        logger.error(f"Failed to update webhook: {e}")
         raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
@@ -50,7 +50,7 @@ async def delete_webhook(name: str):
     except ValueError as e:
         raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": str(e)})
     except Exception as e:
-        logger.error(f"Erro ao deletar webhook: {e}")
+        logger.error(f"Failed to delete webhook: {e}")
         raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
@@ -62,7 +62,7 @@ async def toggle_webhook(name: str, data: WebhookToggleRequest):
     except ValueError as e:
         raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": str(e)})
     except Exception as e:
-        logger.error(f"Erro ao alternar webhook: {e}")
+        logger.error(f"Failed to toggle webhook: {e}")
         raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
@@ -71,7 +71,7 @@ async def test_webhook(name: str):
     if not wh:
         raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": f"Webhook '{name}' not found."})
 
-    from src.services.webhookService import trigger_webhook
+    from src.services.webhooks.service import trigger_webhook
     import asyncio
     from datetime import datetime, timezone
 
@@ -79,7 +79,7 @@ async def test_webhook(name: str):
         "event": "webhook.test",
         "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "data": {
-            "message": "Teste de webhook — ZapUnlocked API",
+            "message": "Webhook test — ZapUnlocked API",
             "webhook_name": name,
         },
     }

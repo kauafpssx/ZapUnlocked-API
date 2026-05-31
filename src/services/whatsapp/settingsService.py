@@ -10,8 +10,8 @@ DEFAULT_SETTINGS = {
     "ai_tag_enabled": False,
     "ai_tag_text": " (ZapUnlocked AI)",
     "ip_control_enabled": False,
-    "ip_whitelist": [],
-    "ip_blacklist": [],
+    # NOTE: IP whitelist/blacklist are now stored in data/ip_rules.json
+    # and managed via /settings/ip-rules endpoints.
     # Instance settings
     "call_reject_auto": False,
     "call_reject_message": "I'm unavailable right now. Please send a message.",

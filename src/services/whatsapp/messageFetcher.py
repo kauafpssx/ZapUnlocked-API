@@ -1,13 +1,13 @@
 from src.utils.logger import logger
-from src.services.whatsapp.client import get_sock, get_reaction_cache
+from src.services.whatsapp.client import get_client, get_reaction_cache
 from src.services.whatsapp import storage
 
 async def fetch_messages(jid: str, limit: int = 20, msg_type: str = "all", options: dict = None):
-    sock = get_sock()
+    sock = get_client()
     if not sock:
         raise Exception("WhatsApp is not connected.")
 
-    logger.info(f"🔍 Buscando {limit} mensagens ({msg_type}) para {jid}...")
+    logger.info(f"🔍 Fetching {limit} messages ({msg_type}) for {jid}...")
 
     phone = jid.split("@")[0]
     messages = await storage.get_history(phone)
@@ -54,7 +54,7 @@ async def fetch_messages(jid: str, limit: int = 20, msg_type: str = "all", optio
                 "fromMe": m.get("key", {}).get("fromMe", False),
                 "pushName": m.get("pushName"),
                 "text": f"[{message_type}]",
-                "timestamp": (lambda ts: (ts.get("low") if isinstance(ts, dict) else ts) if (ts := m.get("messageTimestamp", 0)) else 0)(),
+                "timestamp": (lambda: (ts.get("low") if isinstance(ts, dict) else ts) if (ts := m.get("messageTimestamp", 0)) else 0)(),
                 "mimetype": None,
                 "type": message_type,
                 "hasButtons": False,
@@ -91,9 +91,9 @@ async def fetch_messages(jid: str, limit: int = 20, msg_type: str = "all", optio
         elif "stickerMessage" in content:
             text = "[sticker_message]"
         elif "documentMessage" in content:
-            text = content["documentMessage"].get("caption", f"[document_message: {content['documentMessage'].get('fileName', 'arquivo')}]")
+            text = content["documentMessage"].get("caption", f"[document_message: {content['documentMessage'].get('fileName', 'file')}]")
         elif "contactMessage" in content:
-            text = f"[contact_message: {content['contactMessage'].get('displayName', 'desconhecido')}]"
+            text = f"[contact_message: {content['contactMessage'].get('displayName', 'unknown')}]"
         elif "locationMessage" in content:
             text = "[location_message]"
         elif "pollCreationMessage" in content:
@@ -102,7 +102,7 @@ async def fetch_messages(jid: str, limit: int = 20, msg_type: str = "all", optio
             reaction = content["reactionMessage"]
             if reaction.get("key", {}).get("id"):
                 reaction_map[reaction["key"]["id"]] = reaction.get("text")
-            text = f"[reaction: {reaction.get('text', 'removida')}]"
+            text = f"[reaction: {reaction.get('text', 'removed')}]"
         elif "pollUpdateMessage" in content:
             text = "[poll_vote]"
         elif "protocolMessage" in content:

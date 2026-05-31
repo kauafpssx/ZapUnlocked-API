@@ -1,29 +1,29 @@
 # ============================================================
-# ZapUnlocked API — Dependências
-# Instalação: pip install -r requirements.txt
+# ZapUnlocked API — Dependencies
+# Installation: pip install -r requirements.txt
 # ============================================================
 
-# ── Servidor Web ──────────────────────────────────────────
+# ── Web Server ────────────────────────────────────────────
 fastapi>=0.115.0
 uvicorn[standard]>=0.34.0
 pydantic>=2.10.0
 python-dotenv>=1.0.0
 
-# ── WhatsApp Client (Neonize) ─────────────────────────────
+# ── WhatsApp Client (Neonize) ───────────────────────────
 neonize>=0.3.18.post0
 
-# ── Processamento de Mídia ────────────────────────────────
+# ── Media Processing ──────────────────────────────────────
 Pillow>=11.0.0
 python-magic>=0.4.14; sys_platform != "win32"    # MIME detection — Linux/macOS (needs system libmagic)
 python-magic-bin>=0.4.14; sys_platform == "win32" # MIME detection — Windows (bundles libmagic.dll)
 ffmpeg-python>=0.2.0
-imageio-ffmpeg>=0.5.1              # Binário ffmpeg embutido (sem instalação manual)
+imageio-ffmpeg>=0.5.1              # Bundled ffmpeg binary (no manual install)
 
-# ── Requisições HTTP ──────────────────────────────────────
+# ── HTTP Requests ─────────────────────────────────────────
 requests>=2.32.0
 httpx>=0.28.0
 
-# ── Utilitários ───────────────────────────────────────────
+# ── Utilities ─────────────────────────────────────────────
 qrcode>=8.0
 loguru>=0.7.0
 psutil>=7.0.0

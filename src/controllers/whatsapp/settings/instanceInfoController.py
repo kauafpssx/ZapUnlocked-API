@@ -1,16 +1,16 @@
 from fastapi import HTTPException
-from src.services.whatsapp.client import get_sock, get_is_ready
+from src.services.whatsapp.client import get_client, get_is_ready
 from src.utils.logger import logger
 import asyncio
 
 
-async def _get_sock_info(info_type: str = "me") -> dict:
+async def _get_client_info(info_type: str = "me") -> dict:
     """
     Fetch instance or device info via Neonize.
     info_type="me" returns profile data (phone, pushname, etc).
     info_type="device" returns device data (device, raw_agent, etc).
     """
-    sock = get_sock()
+    sock = get_client()
     if not sock:
         raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
@@ -70,9 +70,9 @@ async def _get_sock_info(info_type: str = "me") -> dict:
 
 async def get_instance_me():
     """Return instance profile data (phone, jid, PushName, etc)."""
-    return await _get_sock_info("me")
+    return await _get_client_info("me")
 
 
 async def get_instance_device():
     """Return device data (Device, RawAgent, Integrator, etc)."""
-    return await _get_sock_info("device")
+    return await _get_client_info("device")

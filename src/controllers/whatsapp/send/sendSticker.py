@@ -1,54 +1,48 @@
 from fastapi import HTTPException
-from src.services.whatsapp.client import get_is_ready
 from src.services.whatsapp.sender import send_sticker_message
+from src.utils.decorators import require_whatsapp, handle_errors
 from src.services.media.downloader import download_media
 from src.services.media.imageConverter import convert_to_webp
 from src.services.media.utils import cleanup
-from src.services.mediaQueue import task_queue
+from src.services.media.queue import task_queue
 from src.utils.logger import logger
 from src.utils.quote import resolve_quote
-from ..schemas import SendStickerRequest
+from src.schemas import SendStickerRequest
 
+@require_whatsapp
+@handle_errors("send sticker")
 async def send_sticker(data: SendStickerRequest):
     logger.debug(f"🔍 POST /send_sticker: phone={data.phone}")
 
-    if not get_is_ready():
-        raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
+    async def process_task():
+        jid = f"{data.phone}@s.whatsapp.net"
 
-    try:
-        async def process_task():
-            jid = f"{data.phone}@s.whatsapp.net"
+        options = await resolve_quote(
+            jid,
+            reply_identifier=data.reply or data.quoted_id,
+            reply_type=data.type or "id",
+        )
 
-            options = await resolve_quote(
-                jid,
-                reply_identifier=data.reply or data.quoted_id,
-                reply_type=data.type or "id",
-            )
+        url = data.sticker_url or data.image_url
+        if not url:
+            raise Exception("'sticker_url' or 'image_url' is required.")
 
-            url = data.sticker_url or data.image_url
-            if not url:
-                raise Exception("'sticker_url' or 'image_url' is required.")
+        file_path = await download_media(url)
+        sticker_path = None
 
-            file_path = await download_media(url)
-            sticker_path = None
+        try:
+            logger.info(f"🔄 Converting to sticker ({data.phone})...")
+            sticker_path = await convert_to_webp(file_path, {
+                "resizeMode": data.resizeMode,
+                "padColor": data.padColor,
+                "blurIntensity": data.blurIntensity
+            })
+            logger.info(f"📤 Sending sticker to {data.phone}...")
+            await send_sticker_message(jid, sticker_path, data.pack or "", data.author or "", options=options)
+        finally:
+            cleanup(file_path)
+            if sticker_path:
+                cleanup(sticker_path)
 
-            try:
-                logger.info(f"🔄 Converting to sticker ({data.phone})...")
-                sticker_path = await convert_to_webp(file_path, {
-                    "resizeMode": data.resizeMode,
-                    "padColor": data.padColor,
-                    "blurIntensity": data.blurIntensity
-                })
-                logger.info(f"📤 Sending sticker to {data.phone}...")
-                await send_sticker_message(jid, sticker_path, data.pack or "", data.author or "", options=options)
-            finally:
-                cleanup(file_path)
-                if sticker_path:
-                    cleanup(sticker_path)
-
-        await task_queue.enqueue(process_task())
-        return {"success": True, "message": "Sticker sent successfully."}
-
-    except Exception as e:
-        logger.error(f"❌ Erro ao enviar figurinha ({type(e).__name__}): {str(e)}")
-        raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": f"({type(e).__name__}): {str(e)}"})
+    await task_queue.enqueue(process_task())
+    return {"success": True, "message": "Sticker sent successfully."}

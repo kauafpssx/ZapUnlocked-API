@@ -6,7 +6,6 @@ from src.utils.logger import logger
 from src.utils.startup_validator import is_alwaysdata
 
 _ffmpeg_path: str | None = None
-_ffprobe_path: str | None = None
 
 _WINDOWS_EXTRA_PATHS = [
     r"C:\ffmpeg\bin",
@@ -30,7 +29,7 @@ def get_ffmpeg_path() -> str:
     except Exception:
         pass
 
-    # 2. PATH do sistema
+    # 2. System PATH
     found = shutil.which("ffmpeg")
     if found:
         _ffmpeg_path = found
@@ -42,7 +41,7 @@ def get_ffmpeg_path() -> str:
         _ffmpeg_path = str(home_local)
         return _ffmpeg_path
 
-    # 4. Caminhos comuns no Windows
+    # 4. Common Windows paths
     exe = "ffmpeg.exe" if sys.platform == "win32" else "ffmpeg"
     for base in _WINDOWS_EXTRA_PATHS:
         candidate = Path(base) / exe
@@ -56,37 +55,6 @@ def get_ffmpeg_path() -> str:
     )
 
 
-def get_ffprobe_path() -> str:
-    global _ffprobe_path
-    if _ffprobe_path is not None:
-        return _ffprobe_path
-
-    # Try the same directory as ffmpeg (binaries are usually co-located)
-    try:
-        ffmpeg = get_ffmpeg_path()
-        candidate = Path(ffmpeg).parent / ("ffprobe.exe" if sys.platform == "win32" else "ffprobe")
-        if candidate.exists():
-            _ffprobe_path = str(candidate)
-            return _ffprobe_path
-    except Exception:
-        pass
-
-    found = shutil.which("ffprobe")
-    if found:
-        _ffprobe_path = found
-        return _ffprobe_path
-
-    exe = "ffprobe.exe" if sys.platform == "win32" else "ffprobe"
-    for base in _WINDOWS_EXTRA_PATHS:
-        candidate = Path(base) / exe
-        if candidate.exists():
-            _ffprobe_path = str(candidate)
-            return _ffprobe_path
-
-    raise FileNotFoundError(
-        "ffprobe not found. Run: pip install imageio-ffmpeg "
-        "or install ffmpeg manually: https://ffmpeg.org/download.html"
-    )
 
 
 def warm_up_ffmpeg() -> None:

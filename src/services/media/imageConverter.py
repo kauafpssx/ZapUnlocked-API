@@ -48,7 +48,7 @@ async def convert_to_webp(input_path: str, options: dict = None) -> str:
     # Filter empty items from command for safety
     cmd = [c for c in cmd if c]
     
-    logger.debug(f"⚙️ Comando v2.6: {'|'.join(cmd)}")
+    logger.debug(f"⚙️ Command v2.6: {'|'.join(cmd)}")
 
     try:
         # Run synchronous subprocess without blocking the event loop (Windows-safe)

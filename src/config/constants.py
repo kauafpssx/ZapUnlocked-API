@@ -24,14 +24,6 @@ auth_dir = Path(auth_dir_env) if auth_dir_env else default_auth_from_sys
 
 temp_dir = BASE_DIR / "temp_media"
 
-# Ensure directories exist
-auth_dir.mkdir(parents=True, exist_ok=True)
-data_dir.mkdir(parents=True, exist_ok=True)
-temp_dir.mkdir(parents=True, exist_ok=True)
-
-print(f"📁 Auth directory: {auth_dir}")
-print(f"📁 Data directory (chats): {data_dir}")
-
 PORT = int(os.getenv("PORT", 8300))
 API_KEY = os.getenv("API_KEY")
 INTERNAL_SECRET = os.getenv("INTERNAL_SECRET")
@@ -40,7 +32,4 @@ AUTH_DIR = str(auth_dir)
 DATA_DIR = str(data_dir)
 TEMP_DIR = str(temp_dir)
 
-WHATSAPP_CONFIG = {
-    # Placeholder for config that matches Baileys behavior
-}
 RECONNECT_DELAY = 5

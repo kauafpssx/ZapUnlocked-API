@@ -27,7 +27,7 @@ async def convert_to_mp4(input_path: str) -> str:
     # Filter empty items from command for safety
     cmd = [c for c in cmd if c]
     
-    logger.debug(f"⚙️ Comando v2.6: {'|'.join(cmd)}")
+    logger.debug(f"⚙️ Command v2.6: {'|'.join(cmd)}")
 
     try:
         # Run synchronous subprocess without blocking the event loop

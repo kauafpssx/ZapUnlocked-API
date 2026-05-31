@@ -56,7 +56,7 @@ async def convert_audio(input_path: str, target_format: str = "ogg") -> tuple[st
         result = await asyncio.to_thread(run_ffmpeg)
 
         if result.returncode != 0:
-            logger.error(f"❌ Erro FFmpeg ({result.returncode}): {result.stderr}")
+            logger.error(f"❌ FFmpeg error ({result.returncode}): {result.stderr}")
             raise Exception(f"FFmpeg error: {result.stderr}")
 
         # Get duration from ffmpeg -i (stderr) — no ffprobe dependency
@@ -84,10 +84,3 @@ async def convert_audio(input_path: str, target_format: str = "ogg") -> tuple[st
         logger.error(f"❌ Audio conversion to {target_format} failed: {str(e)}")
         raise e
 
-
-async def convert_to_m4a(input_path: str) -> tuple[str, int]:
-    return await convert_audio(input_path, "m4a")
-
-
-async def convert_to_ogg(input_path: str) -> tuple[str, int]:
-    return await convert_audio(input_path, "m4a")

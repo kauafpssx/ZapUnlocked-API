@@ -5,12 +5,19 @@ Provides a logger with:
 - File persistence (daily rotation, 30-day retention)
 """
 
+import logging
 from loguru import logger
 import sys
 from pathlib import Path
 
 # Remove default Loguru handler
 logger.remove()
+
+# ── Suppress noisy 3rd-party loggers ──────────────────────────────
+# watchfiles spams "X changes detected" on every file change during --reload
+logging.getLogger("watchfiles").setLevel(logging.WARNING)
+# uvicorn error / access logs are handled by Loguru; keep them clean
+logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
 
 # Log directory at project root
 LOG_DIR = Path(__file__).resolve().parent.parent.parent / "logs"

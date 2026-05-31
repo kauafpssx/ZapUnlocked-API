@@ -31,8 +31,8 @@ async def get_qr_page(request: Request):
         with open(template_path, "r", encoding="utf-8") as f:
             html = f.read()
 
-        status_text = "Conectado" if is_connected else ("Aguardando Scan" if qr_data_url else "Inicializando")
-        title_text = "Conectado!" if is_connected else ("📲 Escaneie o QR" if qr_data_url else "⏳ Inicializando...")
+        status_text = "Connected" if is_connected else ("Awaiting Scan" if qr_data_url else "Initializing")
+        title_text = "Connected!" if is_connected else ("📲 Scan the QR" if qr_data_url else "⏳ Initializing...")
         desc_text = "The assistant is ready." if is_connected else "Open WhatsApp and scan the code below."
         qr_hidden_class = "hidden" if is_connected else ""
         instr_hidden_class = "" if not is_connected else "hidden"
@@ -52,4 +52,4 @@ async def get_qr_page(request: Request):
 
         return HTMLResponse(content=html)
     except Exception as e:
-        return HTMLResponse(f"<h1>Erro ao gerar QR Code</h1><p>{str(e)}</p>", status_code=500)
+        return HTMLResponse(f"<h1>Error generating QR Code</h1><p>{str(e)}</p>", status_code=500)

@@ -1,11 +1,12 @@
 import datetime
 import re
 
+
 def format_text(text: str) -> str:
     """
-    Substitui placeholders de data/hora no texto.
+    Replaces date/time placeholders in the text.
 
-    Placeholders suportados: {{day}}, {{mon}}, {{yea}}, {{hou}}, {{min}}, {{sec}}
+    Supported placeholders: {{day}}, {{mon}}, {{yea}}, {{hou}}, {{min}}, {{sec}}
     """
     if not text or not isinstance(text, str):
         return text

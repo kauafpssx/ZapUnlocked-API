@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,18 +64,16 @@
         }
 
         .logo {
-            font-size: 32px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #c084fc, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.5px;
             margin-bottom: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+        }
+
+        .logo img {
+            max-width: 260px;
+            height: auto;
+            display: block;
         }
 
         .status-badge {
@@ -222,8 +220,7 @@
 <body>
     <div class="card">
         <div class="logo">
-            <i class="ph-fill ph-lightning"></i>
-            ZapUnlocked
+            <img src="/static/logo-text-dark.png" alt="ZapUnlocked">
         </div>
         
         <div class="status-badge">
@@ -231,8 +228,8 @@
             API Status: Online
         </div>
         
-        <h2>Bem-vindo ao ZapUnlocked!</h2>
-        <p>Sua API de alto desempenho para automação de WhatsApp.<br>Inicie sua sessão de forma segura e rápida.</p>
+        <h2>Welcome to ZapUnlocked!</h2>
+        <p>Your high-performance WhatsApp automation API.<br>Start your session safely and quickly.</p>
 
         <div class="tabs">
             <div class="tab active" onclick="switchTab('url')">
@@ -247,9 +244,9 @@
 
         <div id="content-url" class="tab-content active">
             <div class="setup-box">
-                <span class="setup-title">Sua URL de Acesso ao Painel:</span>
+                <span class="setup-title">Your Dashboard Access URL:</span>
                 <div class="code-display">
-                    <span style="color: #64748b;"># Use este link para conectar seu WhatsApp:</span><br>
+                    <span style="color: #64748b;"># Use this link to connect your WhatsApp:</span><br>
                     {{BASE_URL}}/qr?API_KEY={{API_KEY}}
                 </div>
             </div>
@@ -257,9 +254,9 @@
 
         <div id="content-request" class="tab-content">
             <div class="setup-box">
-                <span class="setup-title">Como conectar via Request (Imagem):</span>
+                <span class="setup-title">Connect via Request (Image):</span>
                 <div class="code-display">
-                    <span style="color: #64748b;"># Endpoint para obter o QR Code bruto:</span><br>
+                    <span style="color: #64748b;"># Endpoint to get the raw QR Code:</span><br>
                     GET {{BASE_URL}}/qr/image?API_KEY={{API_KEY}}
                 </div>
             </div>
@@ -272,11 +269,11 @@
             </a>
             <a href="https://zapunlocked-api.kauafpss.com.br" class="footer-link" target="_blank">
                 <i class="ph-bold ph-book-open"></i>
-                <span>Documentação:</span> zapunlocked-api.kauafpss.com.br
+                <span>Documentation:</span> zapunlocked-api.kauafpss.com.br
             </a>
         </div>
 
-        <div class="brand-footer">Desenvolvido por ZapUnlocked</div>
+        <div class="brand-footer">Powered by ZapUnlocked</div>
     </div>
 
     <script>

@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import Optional
 from src.services.whatsapp.client import get_is_ready
 from src.services.whatsapp.messageFetcher import fetch_messages as whatsapp_fetch_messages
-from src.services.webhookService import trigger_webhook
+from src.services.webhooks.service import trigger_webhook
 from src.utils.logger import logger
 
 class FetchMessagesRequest(BaseModel):
@@ -50,5 +50,5 @@ async def fetch_messages(data: FetchMessagesRequest):
             **result
         }
     except Exception as e:
-        logger.error(f"❌ Erro ao buscar mensagens para {data.phone}: {str(e)}")
+        logger.error(f"❌ Failed to fetch messages for {data.phone}: {str(e)}")
         raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})

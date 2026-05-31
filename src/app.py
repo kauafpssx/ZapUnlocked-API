@@ -1,21 +1,12 @@
-import sys
-import asyncio
-
-# Force ProactorEventLoopPolicy before anything else
-if sys.platform == "win32":
-    try:
-        if not isinstance(asyncio.get_event_loop_policy(), asyncio.WindowsProactorEventLoopPolicy):
-            asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
-    except Exception:
-        asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
-
+import os
+from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.exceptions import RequestValidationError
 from loguru import logger
-import re
-import json
+from typing import Any
 
 from src.routes.index import router as root_router
 from src.routes.send import router as send_router
@@ -26,53 +17,31 @@ from src.routes.contacts import router as contacts_router
 from src.routes.system import router as system_router
 from src.routes.instance import router as instance_router
 from src.routes.webhooks import router as webhooks_router
-from src.middleware.ipControl import IPControlMiddleware
-from typing import Any
+from src.routes.session import router as session_router
+from src.middleware.ip_control import IPControlMiddleware
+from src.middleware.json_cleaner import json_comment_stripper
 
-def clean_json_text(text: str) -> str:
-    """Strip // and /* */ comments and trailing commas from JSON text."""
-    # Remove // comments (unless preceded by : to avoid breaking URLs)
-    text = re.sub(r'(?<!:)\s*//.*', '', text)
-    # Remove /* */ comments
-    text = re.sub(r'/\*.*?\*/', '', text, flags=re.DOTALL)
-    # Remove trailing commas before } or ]
-    text = re.sub(r',\s*([\]}])', r'\1', text)
-    return text.strip()
 
 def create_app(lifespan: Any = None) -> FastAPI:
-    
+
     app = FastAPI(title="ZapUnlocked API", version="1.5.2", lifespan=lifespan)
 
-    # Middlewares
-    app.add_middleware(IPControlMiddleware) # Logging e Controle de IP vem primeiro
+    # Middlewares — IP control runs first for logging + access control
+    app.add_middleware(IPControlMiddleware)
+
+    # CORS — read allowed origins from env (comma-separated), fall back to "*"
+    cors_origins_env = os.getenv("CORS_ORIGINS", "*")
+    cors_origins = [o.strip() for o in cors_origins_env.split(",") if o.strip()]
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=cors_origins,
         allow_credentials=False,
         allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allow_headers=["Content-Type", "Authorization", "x-api-key"],
     )
 
-    @app.middleware("http")
-    async def json_comment_stripper(request: Request, call_next):
-        """Strip JSON comments and trailing commas before FastAPI parses the body.
-
-        Allows // and /* */ comments in request bodies (useful for Postman inline docs).
-        """
-        if request.method in ("POST", "PUT", "PATCH") \
-           and "application/json" in request.headers.get("content-type", ""):
-            body = await request.body()
-            if body:
-                try:
-                    text = body.decode("utf-8")
-                    cleaned_text = clean_json_text(text)
-                    if cleaned_text != text:
-                        # Overwrite FastAPI's internal body cache so it parses the cleaned version.
-                        request._body = cleaned_text.encode("utf-8")
-                except Exception as e:
-                    logger.debug(f"⚠️ Failed to clean JSON body: {e}")
-        
-        return await call_next(request)
+    # JSON comment stripping middleware (allows // and /* */ in request bodies)
+    app.middleware("http")(json_comment_stripper)
 
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -86,7 +55,20 @@ def create_app(lifespan: Any = None) -> FastAPI:
             }
         )
 
-    # Rotas
+    # ── Static files (images, etc) ────────────────────────────
+    _static_dir = Path(__file__).resolve().parent / "static"
+    if _static_dir.is_dir():
+        app.mount("/static", StaticFiles(directory=str(_static_dir)), name="static")
+
+    # ── Favicon ──────────────────────────────────────────────
+    _favicon_path = Path(__file__).resolve().parent.parent / "favicon.ico"
+    if _favicon_path.exists():
+
+        @app.get("/favicon.ico", include_in_schema=False)
+        async def favicon():
+            return FileResponse(str(_favicon_path), media_type="image/x-icon")
+
+    # Routes
     app.include_router(root_router)
     app.include_router(system_router, prefix="/system")
     app.include_router(send_router)
@@ -96,5 +78,6 @@ def create_app(lifespan: Any = None) -> FastAPI:
     app.include_router(contacts_router, prefix="/contacts")
     app.include_router(instance_router, prefix="/instance")
     app.include_router(webhooks_router, prefix="/webhooks")
+    app.include_router(session_router, prefix="/session")
 
     return app

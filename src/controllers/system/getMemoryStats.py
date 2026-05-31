@@ -15,8 +15,6 @@ def _fmt_uptime(seconds: float) -> str:
     parts.append(f"{s}s")
     return " ".join(parts)
 
-from src.services.whatsapp.client import get_store
-
 async def get_memory_stats(request: Request):
     if request.query_params.get("gc") == "true":
         gc.collect()
@@ -25,7 +23,7 @@ async def get_memory_stats(request: Request):
     mem_info = process.memory_info()
     sys_mem = psutil.virtual_memory()
 
-    contacts_count = 0 # Depreciado para economizar RAM
+    contacts_count = 0 # Deprecated to conserve RAM
 
     def format_mb(bytes_val):
         return f"{(bytes_val / 1024 / 1024):.2f} MB"

@@ -10,6 +10,13 @@ from src.controllers.whatsapp.settings.instanceController import (
     set_auto_read_message,
     get_phone_pair_code,
 )
+from src.controllers.system.ipRulesController import (
+    get_ip_rules,
+    add_to_whitelist,
+    add_to_blacklist,
+    remove_from_whitelist,
+    remove_from_blacklist,
+)
 
 router = APIRouter(dependencies=[Depends(auth)])
 
@@ -27,3 +34,10 @@ router.put("/instance/call-reject-auto")(set_call_reject_auto)
 router.put("/instance/call-reject-message")(set_call_reject_message)
 router.put("/instance/auto-read-message")(set_auto_read_message)
 router.get("/phone-code/{phone}")(get_phone_pair_code)
+
+# ── IP Rules (blacklist / whitelist) ──────────────────────────────
+router.get("/ip-rules")(get_ip_rules)
+router.post("/ip-rules/whitelist")(add_to_whitelist)
+router.post("/ip-rules/blacklist")(add_to_blacklist)
+router.delete("/ip-rules/whitelist/{ip}")(remove_from_whitelist)
+router.delete("/ip-rules/blacklist/{ip}")(remove_from_blacklist)

@@ -1,14 +1,9 @@
 import asyncio
 from fastapi import HTTPException
-from src.services.whatsapp.client import get_sock
+from src.services.whatsapp.client import get_client
 from src.services.whatsapp.settingsService import get_settings, save_settings
 from src.utils.logger import logger
-from src.controllers.whatsapp.schemas import (
-    CallRejectRequest,
-    CallRejectMessageRequest,
-    AutoReadRequest,
-    PairPhoneRequest,
-)
+from src.schemas import CallRejectRequest, CallRejectMessageRequest, AutoReadRequest
 
 
 # ─────────────────────────────────────────────
@@ -74,7 +69,7 @@ async def get_phone_pair_code(phone: str):
 
     Requires client to be awaiting connection (no active session).
     """
-    sock = get_sock()
+    sock = get_client()
     if not sock:
         raise HTTPException(
             status_code=503,

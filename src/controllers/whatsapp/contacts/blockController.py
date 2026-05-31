@@ -2,13 +2,13 @@ from fastapi import HTTPException
 from neonize.utils import build_jid
 from neonize.utils.enum import BlocklistAction
 
-from src.services.whatsapp.client import get_sock
-from src.controllers.whatsapp.schemas import BlockRequest
+from src.services.whatsapp.client import get_client
+from src.schemas import BlockRequest
 from src.utils.logger import logger
 
 
 async def block_user(data: BlockRequest):
-    sock = get_sock()
+    sock = get_client()
     if not sock:
         raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
@@ -18,17 +18,18 @@ async def block_user(data: BlockRequest):
     if data.action not in ("block", "unblock"):
         raise HTTPException(status_code=400, detail={"error": "INVALID_FIELD", "message": "'action' must be 'block' or 'unblock'."})
 
-    jid = build_jid(data.phone)
     action = BlocklistAction.BLOCK if data.action == "block" else BlocklistAction.UNBLOCK
+    jid = build_jid(data.phone)
 
     try:
         sock.update_blocklist(jid, action)
-        return {
-            "success": True,
-            "phone": data.phone,
-            "action": data.action,
-            "message": f"User {data.phone} {'blocked' if data.action == 'block' else 'unblocked'} successfully.",
-        }
     except Exception as e:
         logger.error(f"❌ Block/unblock failed for {data.phone}: {e}")
         raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
+
+    return {
+        "success": True,
+        "phone": data.phone,
+        "action": data.action,
+        "message": f"User {data.phone} {'blocked' if data.action == 'block' else 'unblocked'} successfully.",
+    }

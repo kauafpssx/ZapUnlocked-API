@@ -4,21 +4,21 @@ import asyncio
 import json
 from fastapi import HTTPException
 from src.config.constants import data_dir
-from src.controllers.whatsapp.schemas import UpdateInstanceNameRequest
-from src.services.whatsapp.client import get_sock
+from src.schemas import UpdateInstanceNameRequest
+from src.services.whatsapp.client import get_client
 from src.utils.logger import logger
 
 
 async def update_instance_name(data: UpdateInstanceNameRequest):
     """Rename the instance in db_config.json and update WhatsApp pushname."""
     try:
-        # ── Atualiza pushname no WhatsApp ────────────────────
-        sock = get_sock()
+        # ── Update pushname on WhatsApp ────────────────────
+        sock = get_client()
         if not sock:
             raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
         await asyncio.to_thread(sock.set_profile_name, data.name)
 
-        # ── Persiste nome localmente ─────────────────────────
+        # ── Persist name locally ────────────────────────────
         db_config_file = data_dir / "db_config.json"
         current = {}
         if db_config_file.exists():

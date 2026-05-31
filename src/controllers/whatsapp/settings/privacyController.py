@@ -2,9 +2,9 @@ import asyncio
 from datetime import timedelta
 from fastapi import HTTPException
 from neonize.utils.enum import PrivacySettingType, PrivacySetting
-from src.services.whatsapp.client import get_sock
+from src.services.whatsapp.client import get_client
 from src.utils.logger import logger
-from src.controllers.whatsapp.schemas import PrivacyUpdateRequest
+from src.schemas import PrivacyUpdateRequest
 
 
 # ── Schema field → PrivacySettingType mapping ────────
@@ -43,13 +43,13 @@ def _set_privacy(sock, field: str, value: str):
 
 async def update_privacy(data: PrivacyUpdateRequest):
     try:
-        sock = get_sock()
+        sock = get_client()
         if not sock:
             raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
         updates = []
 
-        # ── Privacidades via set_privacy_setting ─────────────
+        # ── Privacy via set_privacy_setting ─────────────────
         for field, pstype in _FIELD_TO_TYPE.items():
             raw = getattr(data, field, None)
             if raw:
@@ -84,7 +84,7 @@ async def update_privacy(data: PrivacyUpdateRequest):
                 detail={"error": "MISSING_FIELD", "message": "No parameters provided. Send at least one field to update."},
             )
 
-        logger.info(f"⚙️ Privacidade atualizada: {', '.join(updates)}")
+        logger.info(f"⚙️ Privacy updated: {', '.join(updates)}")
         return {"success": True, "updated": updates}
     except HTTPException:
         raise

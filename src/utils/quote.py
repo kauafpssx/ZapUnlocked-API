@@ -5,6 +5,8 @@ Eliminates the duplicated quote block that existed across 8 send controllers.
 Usage: send controllers call this function instead of reimplementing the logic.
 """
 
+from __future__ import annotations
+
 from src.services.whatsapp.sender import find_message
 
 

@@ -24,5 +24,5 @@ async def get_recent_chats(data: RecentChatsRequest):
             "chats": chats
         }
     except Exception as e:
-        logger.error(f"❌ Erro ao obter chats recentes: {str(e)}")
+        logger.error(f"❌ Failed to get recent chats: {str(e)}")
         raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
