@@ -58,50 +58,74 @@ Nossa proposta é fundamentada na **excelência técnica** e na **independência
 mindmap
   root((⚡💬 ZapUnlocked-API))
     📨 Mensagens
-      Texto / Responder
-      Mídias 📸🎥🎵
-      Reações / Localização
-      Contatos / Links
-      Editar / Deletar / Ler
+      Texto
+      Mídia
+      Reações
+      Localização
+      Contatos
+      Links
+      Editar
+      Deletar
+      Ler
+
     🔘 Interativas
-      Botão Lista / Ação
-      OTP / PIX
-      Lista de Opções
+      Botões
+      Listas
+      OTP
+      PIX
       Enquetes
+
     🔍 Consultas
-      Info de Contato
+      Contatos
       Histórico
-      Chats Recentes
-      Memória / Disco
-      Database / Cleanup
+      Chats
+      Memória
+      Disco
+      Database
+      Cleanup
+
     🔗 Conexão
-      Status / SSE
-      QR Code / PNG
-      Pairing Code
+      Status
+      SSE
+      QR Code
+      PNG
+      Pairing
       Logout
+
     📡 Webhooks
-       Criar / Listar
-       Editar / Deletar
-       Ativar / Testar
-       40 Eventos
-    ⚙️ Perfil & Privacidade
-      Nome / Foto
-      Visto por último
+      Criar
+      Listar
+      Editar
+      Deletar
+      Ativar
+      Testar
+      40 Eventos
+
+    ⚙️ Perfil
+      Nome
+      Foto
+      Privacidade
+      Visto
       Bloqueios
+
     🤖 Bot
-      Tag IA
-      Rejeitar Chamadas
+      IA Tag
       Auto Read
-    🛡️ Regras de IP
-      Whitelist / Blacklist
+      Rejeitar Calls
+
+    🛡️ IP Rules
+      Whitelist
+      Blacklist
+
     📱 Instância
-      Dados da Conta
+      Conta
       Dispositivo
       Renomear
+
     🖥️ Sistema
-      Variáveis de Ambiente
-      Limpeza de Mídia
-      Cleanup Automático
+      Env Vars
+      Media Cleanup
+      Auto Cleanup
 ```
 
 ---
