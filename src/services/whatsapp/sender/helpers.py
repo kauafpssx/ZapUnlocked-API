@@ -1,4 +1,7 @@
+import asyncio
 import json
+import random
+import re
 import time
 from google.protobuf.json_format import ParseDict
 
@@ -71,12 +74,59 @@ async def _dispatch_sent_event(jid: str, event_type: str, res):
         logger.error(f"Failed to dispatch message.sent: {e}")
 
 
-def _build_context_info(quoted_dict: dict):
-    """Rebuild a ContextInfo proto from a history dictionary."""
+def _parse_delay(val) -> float:
+    if val is None:
+        return 0.0
+    if isinstance(val, (int, float)):
+        return float(max(0.0, min(15.0, val)))
+    m = re.match(r'^(\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)$', str(val).strip())
+    if m:
+        lo, hi = float(m.group(1)), float(m.group(2))
+        return round(random.uniform(min(lo, hi), max(lo, hi)), 3)
+    try:
+        return float(max(0.0, min(15.0, float(val))))
+    except Exception:
+        return 0.0
+
+
+async def apply_pre_send(jid: str, options: dict, client) -> None:
+    if not options:
+        return
+    delay_typing = options.get("delay_typing")
+    delay_message = options.get("delay_message")
+    if delay_typing:
+        secs = _parse_delay(delay_typing)
+        if secs > 0:
+            try:
+                from neonize.utils.enum import ChatPresence, ChatPresenceMedia
+                client.send_chat_presence(build_jid(jid), ChatPresence.COMPOSING, ChatPresenceMedia.TEXT)
+                await asyncio.sleep(secs)
+                client.send_chat_presence(build_jid(jid), ChatPresence.PAUSED, ChatPresenceMedia.TEXT)
+            except Exception as e:
+                logger.warning(f"send_chat_presence failed: {e}")
+    if delay_message:
+        secs = _parse_delay(delay_message)
+        if secs > 0:
+            await asyncio.sleep(secs)
+
+
+def _build_context_info(quoted_dict: dict, mentioned: list = None):
+    """Rebuild a ContextInfo proto from a history dictionary, with optional @mentions."""
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import ContextInfo, Message
 
-    if not quoted_dict:
+    mentioned_jids = []
+    if mentioned:
+        for phone in mentioned:
+            clean = str(phone).replace("+", "").replace(" ", "").replace("-", "")
+            if "@" not in clean:
+                clean = f"{clean}@s.whatsapp.net"
+            mentioned_jids.append(clean)
+
+    if not quoted_dict and not mentioned_jids:
         return None
+
+    if not quoted_dict:
+        return ContextInfo(mentionedJID=mentioned_jids)
 
     try:
         key = quoted_dict.get("key", {})
@@ -96,10 +146,13 @@ def _build_context_info(quoted_dict: dict):
         return ContextInfo(
             stanzaID=msg_id,
             participant=participant,
-            quotedMessage=msg_proto
+            quotedMessage=msg_proto,
+            mentionedJID=mentioned_jids,
         )
     except Exception as e:
         logger.error(f"Failed to reconstruct ContextInfo for quote: {e}")
+        if mentioned_jids:
+            return ContextInfo(mentionedJID=mentioned_jids)
         return None
 
 

@@ -1,7 +1,7 @@
 """Pydantic request schemas for sending messages."""
 
 from pydantic import BaseModel, AnyUrl
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Union
 
 
 class BaseWhatsAppRequest(BaseModel):
@@ -9,6 +9,9 @@ class BaseWhatsAppRequest(BaseModel):
     reply: Optional[str] = None
     type: Optional[str] = None
     quoted_id: Optional[str] = None
+    delay_message: Optional[Union[int, float, str]] = None
+    delay_typing: Optional[Union[int, float]] = None
+    mentioned: Optional[List[str]] = None
 
 
 class SendMessageRequest(BaseWhatsAppRequest):
