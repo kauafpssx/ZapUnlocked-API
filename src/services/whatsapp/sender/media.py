@@ -1,6 +1,6 @@
 import gc
 
-from src.services.whatsapp.sender.helpers import _ensure_client, _build_context_info, _save_to_history, build_jid, _dispatch_sent_event
+from src.services.whatsapp.sender.helpers import _ensure_client, _build_context_info, _save_to_history, build_jid, _dispatch_sent_event, apply_pre_send
 
 
 async def send_image_message(jid: str, image_path: str, caption: str = "", as_document: bool = False, file_name: str = None, options: dict = None):
@@ -15,6 +15,7 @@ async def send_image_message(jid: str, image_path: str, caption: str = "", as_do
 
     mimetype = magic.from_buffer(image_bytes, mime=True)
 
+    await apply_pre_send(jid, options, client)
     if as_document:
         upload = client.upload(image_bytes, MediaType.MediaDocument)
         final_name = file_name or Path(image_path).name or "image"
@@ -29,7 +30,7 @@ async def send_image_message(jid: str, image_path: str, caption: str = "", as_do
                 mimetype=mimetype,
                 fileName=final_name,
                 caption=caption,
-                contextInfo=_build_context_info(options.get("quoted")) if options else None
+                contextInfo=_build_context_info(options.get("quoted"), options.get("mentioned")) if options else None
             )
         )
         res = client.send_message(build_jid(jid), msg)
@@ -47,7 +48,7 @@ async def send_image_message(jid: str, image_path: str, caption: str = "", as_do
                 fileLength=len(image_bytes),
                 mimetype=mimetype,
                 caption=caption,
-                contextInfo=_build_context_info(options.get("quoted")) if options else None
+                contextInfo=_build_context_info(options.get("quoted"), options.get("mentioned")) if options else None
             )
         )
         res = client.send_message(build_jid(jid), msg)
@@ -78,6 +79,7 @@ async def send_audio_message(jid: str, audio_path: str, is_ptt: bool = False, du
         mimetype = "audio/wav"
     else:
         mimetype = magic.from_buffer(audio_bytes, mime=True)
+    await apply_pre_send(jid, options, client)
     upload = client.upload(audio_bytes, MediaType.MediaAudio)
 
     msg = Message(
@@ -91,7 +93,7 @@ async def send_audio_message(jid: str, audio_path: str, is_ptt: bool = False, du
             mimetype=mimetype,
             PTT=is_ptt,
             seconds=duration,
-            contextInfo=_build_context_info(options.get("quoted")) if options else None
+            contextInfo=_build_context_info(options.get("quoted"), options.get("mentioned")) if options else None
         )
     )
     res = client.send_message(build_jid(jid), msg)
@@ -116,6 +118,7 @@ async def send_video_message(jid: str, video_path: str, caption: str = "", as_do
         video_bytes = f.read()
 
     mimetype = magic.from_buffer(video_bytes, mime=True)
+    await apply_pre_send(jid, options, client)
     upload = client.upload(video_bytes, MediaType.MediaVideo)
 
     video_msg = VideoMessage(
@@ -128,7 +131,7 @@ async def send_video_message(jid: str, video_path: str, caption: str = "", as_do
         mimetype=mimetype,
         caption=caption,
         gifPlayback=gif_playback,
-        contextInfo=_build_context_info(options.get("quoted")) if options else None
+        contextInfo=_build_context_info(options.get("quoted"), options.get("mentioned")) if options else None
     )
 
     if ptv:
@@ -155,6 +158,7 @@ async def send_document_message(jid: str, file_path: str, file_name: str, mimety
 
     if not mimetype:
         mimetype = magic.from_buffer(doc_bytes, mime=True)
+    await apply_pre_send(jid, options, client)
     upload = client.upload(doc_bytes, MediaType.MediaDocument)
 
     msg = Message(
@@ -167,7 +171,7 @@ async def send_document_message(jid: str, file_path: str, file_name: str, mimety
             fileLength=len(doc_bytes),
             mimetype=mimetype,
             fileName=file_name,
-            contextInfo=_build_context_info(options.get("quoted")) if options else None
+            contextInfo=_build_context_info(options.get("quoted"), options.get("mentioned")) if options else None
         )
     )
     res = client.send_message(build_jid(jid), msg)

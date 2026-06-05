@@ -7,7 +7,8 @@ from src.services.media.queue import task_queue
 from src.services.media.resolver import resolve_media
 from src.services.media import upload_tracker
 from src.utils.logger import logger
-from src.utils.quote import resolve_quote
+import json
+from src.utils.quote import build_send_options
 
 
 @require_whatsapp
@@ -21,6 +22,9 @@ async def send_image(
     quoted_id: Optional[str] = Form(None),
     as_document: bool = Form(False),
     file_name: Optional[str] = Form(None),
+    delay_message: Optional[str] = Form(None),
+    delay_typing: Optional[float] = Form(None),
+    mentioned: Optional[str] = Form(None),
 ):
     logger.debug(f"🔍 POST /send_image: phone={phone}")
 
@@ -29,7 +33,7 @@ async def send_image(
     async def process_task():
         try:
             jid = f"{phone}@s.whatsapp.net"
-            options = await resolve_quote(jid, reply_identifier=reply or quoted_id)
+            options = await build_send_options(jid, reply_identifier=reply or quoted_id, delay_message=delay_message, delay_typing=delay_typing, mentioned=json.loads(mentioned) if mentioned else None)
             fn = file_name or (file.filename if file else None)
             await send_image_message(jid, path, caption=caption, as_document=as_document, file_name=fn, options=options)
         finally:

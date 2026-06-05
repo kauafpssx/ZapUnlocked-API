@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from src.services.whatsapp.sender import send_message as whatsapp_send_message
 from src.utils.logger import logger
-from src.utils.quote import resolve_quote
+from src.utils.quote import build_send_options
 from src.utils.formatter import format_text
 from src.utils.decorators import require_whatsapp, handle_errors
 from src.schemas import SendMessageRequest
@@ -17,10 +17,13 @@ async def send_message(data: SendMessageRequest):
 
     jid = f"{data.phone}@s.whatsapp.net"
 
-    options = await resolve_quote(
+    options = await build_send_options(
         jid,
         reply_identifier=data.reply or data.quoted_id,
         reply_type=data.type or "id",
+        delay_message=data.delay_message,
+        delay_typing=data.delay_typing,
+        mentioned=data.mentioned,
     )
 
     formatted_message = format_text(data.message)

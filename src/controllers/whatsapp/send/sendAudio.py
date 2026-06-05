@@ -9,7 +9,8 @@ from src.services.media.queue import task_queue
 from src.services.media.resolver import resolve_media
 from src.services.media import upload_tracker
 from src.utils.logger import logger
-from src.utils.quote import resolve_quote
+import json
+from src.utils.quote import build_send_options
 
 
 @require_whatsapp
@@ -23,6 +24,9 @@ async def send_audio(
     ptt: bool = Form(False),
     as_document: bool = Form(False),
     format: str = Form("m4a"),
+    delay_message: Optional[str] = Form(None),
+    delay_typing: Optional[float] = Form(None),
+    mentioned: Optional[str] = Form(None),
 ):
     logger.debug(f"🔍 POST /send_audio: phone={phone}")
 
@@ -31,7 +35,7 @@ async def send_audio(
     async def process_task():
         try:
             jid = f"{phone}@s.whatsapp.net"
-            options = await resolve_quote(jid, reply_identifier=reply or quoted_id)
+            options = await build_send_options(jid, reply_identifier=reply or quoted_id, delay_message=delay_message, delay_typing=delay_typing, mentioned=json.loads(mentioned) if mentioned else None)
             file_size = get_file_size(path)
             is_too_big = file_size > (15 * 1024 * 1024)
 

@@ -3,7 +3,7 @@ import time
 
 from neonize.client import NewClient
 from neonize.exc import SendMessageError
-from src.services.whatsapp.sender.helpers import _ensure_client, _build_context_info, _build_message_info, _save_to_history, build_jid, _dispatch_sent_event
+from src.services.whatsapp.sender.helpers import _ensure_client, _build_context_info, _build_message_info, _save_to_history, build_jid, _dispatch_sent_event, apply_pre_send
 from src.services.whatsapp import storage
 from src.utils.logger import logger
 
@@ -15,6 +15,7 @@ async def send_list_message(jid: str, text: str, button_text: str, sections: lis
     )
 
     client = _ensure_client()
+    await apply_pre_send(jid, options, client)
 
     list_msg = ListMessage()
     list_msg.description = text
@@ -26,7 +27,7 @@ async def send_list_message(jid: str, text: str, button_text: str, sections: lis
     if footer:
         list_msg.footerText = footer
 
-    ci = _build_context_info(options.get("quoted")) if options else None
+    ci = _build_context_info(options.get("quoted"), options.get("mentioned") if options else None) if options else None
     if ci:
         list_msg.contextInfo.CopyFrom(ci)
 
@@ -101,6 +102,7 @@ async def send_button_message(jid: str, text: str, buttons: list, options: dict 
         DeviceListMetadata,
     )
     client = _ensure_client()
+    await apply_pre_send(jid, options, client)
 
     interactive_msg = InteractiveMessage()
 
@@ -120,7 +122,7 @@ async def send_button_message(jid: str, text: str, buttons: list, options: dict 
 
     interactive_msg.body.text = text
 
-    ci = _build_context_info(options.get("quoted")) if options else None
+    ci = _build_context_info(options.get("quoted"), options.get("mentioned") if options else None) if options else None
     if ci:
         interactive_msg.contextInfo.CopyFrom(ci)
 
@@ -252,6 +254,7 @@ async def send_button_message(jid: str, text: str, buttons: list, options: dict 
 async def send_poll_message(jid: str, name: str, options: list, selectable_count: int = 1, message_options: dict = None):
     from neonize.utils.enum import VoteType
     client = _ensure_client()
+    await apply_pre_send(jid, message_options, client)
 
     vote_type = VoteType.MULTIPLE if selectable_count == 0 else VoteType.SINGLE
 

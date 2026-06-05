@@ -3,7 +3,7 @@ from src.services.whatsapp.sender import send_button_message
 from src.utils.decorators import require_whatsapp, handle_errors
 from src.utils.logger import logger
 from src.utils.security.callback_token import create_callback_payload
-from src.utils.quote import resolve_quote
+from src.utils.quote import build_send_options
 from src.utils.formatter import format_text
 from src.schemas import (
     SendButtonRequest,
@@ -20,10 +20,13 @@ from src.schemas import (
 async def send_with_buttons(data: SendButtonRequest):
     jid = f"{data.phone}@s.whatsapp.net"
 
-    options = await resolve_quote(
+    options = await build_send_options(
         jid,
         reply_identifier=data.reply or data.quoted_id,
         reply_type=data.type or "id",
+        delay_message=data.delay_message,
+        delay_typing=data.delay_typing,
+        mentioned=data.mentioned,
     )
 
     # 2. Extract and format text
@@ -116,7 +119,7 @@ async def send_with_buttons(data: SendButtonRequest):
 @handle_errors("send otp")
 async def send_otp(data: SendButtonOtpRequest):
     jid = f"{data.phone}@s.whatsapp.net"
-    options = await resolve_quote(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id")
+    options = await build_send_options(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     buttons = [{"type": "otp", "text": data.button_text or "Copy code", "code": data.code}]
     await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)
@@ -127,7 +130,7 @@ async def send_otp(data: SendButtonOtpRequest):
 @handle_errors("send pix")
 async def send_pix(data: SendButtonPixRequest):
     jid = f"{data.phone}@s.whatsapp.net"
-    options = await resolve_quote(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id")
+    options = await build_send_options(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     ptype = (data.pixType or "EVP").upper()
     footer = data.footer or f"{ptype}: {data.pixKey}"
@@ -149,7 +152,7 @@ async def send_pix(data: SendButtonPixRequest):
 @handle_errors("send quick reply")
 async def send_quick_reply(data: SendButtonQuickReplyRequest):
     jid = f"{data.phone}@s.whatsapp.net"
-    options = await resolve_quote(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id")
+    options = await build_send_options(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     buttons = []
     for i, btn in enumerate(data.buttons):
@@ -168,7 +171,7 @@ async def send_quick_reply(data: SendButtonQuickReplyRequest):
 @handle_errors("send url button")
 async def send_url(data: SendButtonUrlRequest):
     jid = f"{data.phone}@s.whatsapp.net"
-    options = await resolve_quote(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id")
+    options = await build_send_options(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     buttons = [{"type": "url", "url": data.url, "text": data.button_text or "Acessar", "buttonText": data.button_text or "Acessar"}]
     await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)
@@ -179,7 +182,7 @@ async def send_url(data: SendButtonUrlRequest):
 @handle_errors("send call button")
 async def send_call(data: SendButtonCallRequest):
     jid = f"{data.phone}@s.whatsapp.net"
-    options = await resolve_quote(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id")
+    options = await build_send_options(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     buttons = [{"type": "call", "phoneNumber": data.callPhone, "text": data.button_text or "Ligar", "buttonText": data.button_text or "Ligar"}]
     await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)

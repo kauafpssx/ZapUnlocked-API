@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from src.services.whatsapp.sender import send_poll_message, send_poll_vote_message, find_message
 from src.utils.logger import logger
-from src.utils.quote import resolve_quote
+from src.utils.quote import build_send_options
 from src.utils.decorators import require_whatsapp, handle_errors
 from src.schemas import SendPollRequest, SendPollVoteRequest
 
@@ -10,10 +10,13 @@ from src.schemas import SendPollRequest, SendPollVoteRequest
 async def send_poll(data: SendPollRequest):
     jid = f"{data.phone}@s.whatsapp.net"
 
-    options_dict = await resolve_quote(
+    options_dict = await build_send_options(
         jid,
         reply_identifier=data.reply or data.quoted_id,
         reply_type=data.type or "id",
+        delay_message=data.delay_message,
+        delay_typing=data.delay_typing,
+        mentioned=data.mentioned,
     )
 
     if not data.options or len(data.options) < 2:

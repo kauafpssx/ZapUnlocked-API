@@ -8,7 +8,8 @@ from src.services.media.queue import task_queue
 from src.services.media.resolver import resolve_media
 from src.services.media import upload_tracker
 from src.utils.logger import logger
-from src.utils.quote import resolve_quote
+import json
+from src.utils.quote import build_send_options
 
 
 @require_whatsapp
@@ -23,10 +24,13 @@ async def send_video(
     as_document: bool = Form(False),
     gif_playback: bool = Form(False),
     ptv: bool = Form(False),
+    delay_message: Optional[str] = Form(None),
+    delay_typing: Optional[float] = Form(None),
+    mentioned: Optional[str] = Form(None),
 ):
     logger.debug(f"🔍 POST /send_video: phone={phone}")
     path, size = await resolve_media(url, file, media_type="video")
-    await _send_video_common(phone, path, size, caption, reply, quoted_id, as_document, gif_playback, ptv)
+    await _send_video_common(phone, path, size, caption, reply, quoted_id, as_document, gif_playback, ptv, delay_message, delay_typing, mentioned)
     return {"success": True, "message": "Video sent successfully."}
 
 
@@ -39,19 +43,22 @@ async def send_gif(
     caption: str = Form(""),
     reply: Optional[str] = Form(None),
     quoted_id: Optional[str] = Form(None),
+    delay_message: Optional[str] = Form(None),
+    delay_typing: Optional[float] = Form(None),
+    mentioned: Optional[str] = Form(None),
 ):
     logger.debug(f"🔍 POST /send_gif: phone={phone}")
     path, size = await resolve_media(url, file, media_type="gif")
-    await _send_video_common(phone, path, size, caption, reply, quoted_id, as_document=False, gif_playback=True, ptv=False)
+    await _send_video_common(phone, path, size, caption, reply, quoted_id, as_document=False, gif_playback=True, ptv=False, delay_message=delay_message, delay_typing=delay_typing, mentioned=mentioned)
     return {"success": True, "message": "GIF sent successfully."}
 
 
-async def _send_video_common(phone, path, size, caption, reply, quoted_id, as_document, gif_playback, ptv):
+async def _send_video_common(phone, path, size, caption, reply, quoted_id, as_document, gif_playback, ptv, delay_message=None, delay_typing=None, mentioned=None):
     async def process_task():
         converted_path = None
         try:
             jid = f"{phone}@s.whatsapp.net"
-            options = await resolve_quote(jid, reply_identifier=reply or quoted_id)
+            options = await build_send_options(jid, reply_identifier=reply or quoted_id, delay_message=delay_message, delay_typing=delay_typing, mentioned=json.loads(mentioned) if mentioned else None)
 
             final_path = path
             try:

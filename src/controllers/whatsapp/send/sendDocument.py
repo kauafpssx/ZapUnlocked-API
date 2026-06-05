@@ -8,7 +8,8 @@ from src.services.media.queue import task_queue
 from src.services.media.resolver import resolve_media
 from src.services.media import upload_tracker
 from src.utils.logger import logger
-from src.utils.quote import resolve_quote
+import json
+from src.utils.quote import build_send_options
 
 
 @require_whatsapp
@@ -20,6 +21,9 @@ async def send_document(
     reply: Optional[str] = Form(None),
     quoted_id: Optional[str] = Form(None),
     file_name: Optional[str] = Form(None),
+    delay_message: Optional[str] = Form(None),
+    delay_typing: Optional[float] = Form(None),
+    mentioned: Optional[str] = Form(None),
 ):
     logger.debug(f"🔍 POST /send_document: phone={phone}")
 
@@ -28,7 +32,7 @@ async def send_document(
     async def process_task():
         try:
             jid = f"{phone}@s.whatsapp.net"
-            options = await resolve_quote(jid, reply_identifier=reply or quoted_id)
+            options = await build_send_options(jid, reply_identifier=reply or quoted_id, delay_message=delay_message, delay_typing=delay_typing, mentioned=json.loads(mentioned) if mentioned else None)
             fn = file_name or (file.filename if file else None) or Path(path).name
             await send_document_message(jid, path, fn, "application/octet-stream", options=options)
         finally:

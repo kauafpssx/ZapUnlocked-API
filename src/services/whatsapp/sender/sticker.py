@@ -1,9 +1,10 @@
 import asyncio
-from src.services.whatsapp.sender.helpers import _ensure_client, _build_message_info, _save_to_history, build_jid, _dispatch_sent_event
+from src.services.whatsapp.sender.helpers import _ensure_client, _build_message_info, _save_to_history, build_jid, _dispatch_sent_event, apply_pre_send
 
 
 async def send_sticker_message(jid: str, sticker_path: str, pack: str = "", author: str = "", options: dict = None, passthrough: bool = False):
     client = _ensure_client()
+    await apply_pre_send(jid, options, client)
 
     quoted = _build_message_info(options.get("quoted")) if options else None
 

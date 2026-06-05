@@ -9,7 +9,8 @@ from src.services.media.resolver import resolve_media
 from src.services.media import upload_tracker
 from src.services.media.validator import is_animated_sticker_source
 from src.utils.logger import logger
-from src.utils.quote import resolve_quote
+import json
+from src.utils.quote import build_send_options
 
 
 @require_whatsapp
@@ -25,6 +26,9 @@ async def send_sticker(
     resize_mode: str = Form("pad"),
     pad_color: str = Form("black"),
     blur_intensity: int = Form(20),
+    delay_message: Optional[str] = Form(None),
+    delay_typing: Optional[float] = Form(None),
+    mentioned: Optional[str] = Form(None),
 ):
     logger.debug(f"🔍 POST /send_sticker: phone={phone}")
 
@@ -34,7 +38,7 @@ async def send_sticker(
         sticker_path = None
         try:
             jid = f"{phone}@s.whatsapp.net"
-            options = await resolve_quote(jid, reply_identifier=reply or quoted_id)
+            options = await build_send_options(jid, reply_identifier=reply or quoted_id, delay_message=delay_message, delay_typing=delay_typing, mentioned=json.loads(mentioned) if mentioned else None)
 
             conv_options = {"resizeMode": resize_mode, "padColor": pad_color, "blurIntensity": blur_intensity}
 

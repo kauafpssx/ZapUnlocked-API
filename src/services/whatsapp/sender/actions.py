@@ -3,7 +3,7 @@ import json
 import re
 import httpx
 
-from src.services.whatsapp.sender.helpers import _ensure_client, _build_context_info, _save_to_history, build_jid, _dispatch_sent_event
+from src.services.whatsapp.sender.helpers import _ensure_client, _build_context_info, _save_to_history, build_jid, _dispatch_sent_event, apply_pre_send
 from src.utils.logger import logger
 
 
@@ -49,13 +49,14 @@ async def send_location_message(jid: str, latitude: float, longitude: float, nam
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, LocationMessage
 
     client = _ensure_client()
+    await apply_pre_send(jid, options, client)
     msg = Message(
         locationMessage=LocationMessage(
             degreesLatitude=latitude,
             degreesLongitude=longitude,
             name=name,
             address=address,
-            contextInfo=_build_context_info(options.get("quoted")) if options else None
+            contextInfo=_build_context_info(options.get("quoted"), options.get("mentioned") if options else None) if options else None
         )
     )
     res = client.send_message(build_jid(jid), msg)
@@ -68,6 +69,7 @@ async def send_contact_message(jid: str, contact_name: str, contact_phone: str, 
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, ContactMessage
 
     client = _ensure_client()
+    await apply_pre_send(jid, options, client)
     phone_clean = contact_phone.lstrip("+").replace(" ", "").replace("-", "")
     vcard = (
         f"BEGIN:VCARD\nVERSION:3.0\n"
@@ -80,7 +82,7 @@ async def send_contact_message(jid: str, contact_name: str, contact_phone: str, 
         contactMessage=ContactMessage(
             displayName=contact_name,
             vcard=vcard,
-            contextInfo=_build_context_info(options.get("quoted")) if options else None
+            contextInfo=_build_context_info(options.get("quoted"), options.get("mentioned") if options else None) if options else None
         )
     )
     res = client.send_message(build_jid(jid), msg)
@@ -94,6 +96,7 @@ async def send_contacts_message(jid: str, contacts: list, options: dict = None):
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, ContactsArrayMessage, ContactMessage
 
     client = _ensure_client()
+    await apply_pre_send(jid, options, client)
     contact_msgs = []
     for c in contacts:
         name = c.get("name", "Contact")
@@ -111,7 +114,7 @@ async def send_contacts_message(jid: str, contacts: list, options: dict = None):
         contactsArrayMessage=ContactsArrayMessage(
             displayName=f"{len(contacts)} contacts",
             contacts=contact_msgs,
-            contextInfo=_build_context_info(options.get("quoted")) if options else None
+            contextInfo=_build_context_info(options.get("quoted"), options.get("mentioned") if options else None) if options else None
         )
     )
     res = client.send_message(build_jid(jid), msg)
@@ -124,6 +127,7 @@ async def send_link_message(jid: str, url: str, text: str = "", title: str = "",
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, ExtendedTextMessage
 
     client = _ensure_client()
+    await apply_pre_send(jid, options, client)
 
     if not title and not description:
         try:
@@ -156,7 +160,7 @@ async def send_link_message(jid: str, url: str, text: str = "", title: str = "",
         title=title or url,
         description=description,
         previewType=ExtendedTextMessage.PreviewType.VIDEO if is_youtube else ExtendedTextMessage.PreviewType.NONE,
-        contextInfo=_build_context_info(options.get("quoted")) if options else None
+        contextInfo=_build_context_info(options.get("quoted"), options.get("mentioned") if options else None) if options else None
     )
 
     if thumbnail_url:
