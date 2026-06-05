@@ -1,1463 +1,78 @@
 {
   "info": {
-    "name": "ZapUnlocked-API",
+    "name": "ZapUnlocked API (auto-generated)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "All ZapUnlocked API endpoints. Base URL: http://localhost:8300"
+    "description": "Auto-generated from OpenAPI. Base URL: http://localhost:8300"
   },
   "variable": [
     {
       "key": "BASE_URL",
-      "value": "http://localhost:8300"
+      "value": "http://localhost:8300",
+      "type": "default"
     },
     {
       "key": "API_KEY",
-      "value": ""
+      "value": "",
+      "type": "secret"
     },
     {
       "key": "PHONE",
-      "value": ""
+      "value": "",
+      "type": "default"
     },
     {
       "key": "WEBHOOK_NAME",
-      "value": "my-webhook"
+      "value": "my-webhook",
+      "type": "default"
+    },
+    {
+      "key": "IP",
+      "value": "192.168.1.100",
+      "type": "default"
     }
   ],
   "item": [
     {
-      "name": "Status",
+      "name": "Collection",
       "item": [
         {
-          "name": "Index / Landing Page",
+          "name": "Get Collection",
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{BASE_URL}}/",
+              "raw": "{{BASE_URL}}/collection.json",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
-                ""
+                "collection.json"
               ]
             }
           }
         },
         {
-          "name": "API Status",
+          "name": "Update Collection",
           "request": {
-            "method": "GET",
+            "method": "POST",
             "url": {
-              "raw": "{{BASE_URL}}/status",
+              "raw": "{{BASE_URL}}/collection.json",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
-                "status"
+                "collection.json"
               ]
             },
             "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
               {
                 "key": "x-api-key",
                 "value": "{{API_KEY}}"
               }
             ]
-          }
-        },
-        {
-          "name": "SSE Stream (real-time logs)",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{BASE_URL}}/status/stream",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "status",
-                "stream"
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              },
-              {
-                "key": "Accept",
-                "value": "text/event-stream"
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "QR Code / Connection",
-      "item": [
-        {
-          "name": "QR Code Page (HTML)",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{BASE_URL}}/qr/",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "qr",
-                ""
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ]
-          }
-        },
-        {
-          "name": "QR Code Image",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{BASE_URL}}/qr/image",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "qr",
-                "image"
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ]
-          }
-        },
-        {
-          "name": "Pair via code",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/session/pair",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "session",
-                "pair"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Logout / Disconnect",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/session/logout",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "session",
-                "logout"
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "Instance",
-      "item": [
-        {
-          "name": "Connected number data (me)",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{BASE_URL}}/instance/me",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "instance",
-                "me"
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ]
-          }
-        },
-        {
-          "name": "Device info",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{BASE_URL}}/instance/device",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "instance",
-                "device"
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ]
-          }
-        },
-        {
-          "name": "Rename Instance + WhatsApp Pushname",
-          "request": {
-            "method": "PUT",
-            "url": {
-              "raw": "{{BASE_URL}}/instance/update-name",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "instance",
-                "update-name"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"name\": \"New Instance\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Instance Settings",
-      "item": [
-        {
-          "name": "Enable auto call rejection",
-          "request": {
-            "method": "PUT",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/instance/call-reject-auto",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "instance",
-                "call-reject-auto"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"value\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Disable auto call rejection",
-          "request": {
-            "method": "PUT",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/instance/call-reject-auto",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "instance",
-                "call-reject-auto"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"value\": false\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Set rejected call message",
-          "request": {
-            "method": "PUT",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/instance/call-reject-message",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "instance",
-                "call-reject-message"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"value\": \"I can't answer right now. Please send a message.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Enable auto read",
-          "request": {
-            "method": "PUT",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/instance/auto-read-message",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "instance",
-                "auto-read-message"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"value\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Disable auto read",
-          "request": {
-            "method": "PUT",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/instance/auto-read-message",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "instance",
-                "auto-read-message"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"value\": false\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Generate pairing code by number",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/phone-code/{{PHONE}}",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "phone-code",
-                "{{PHONE}}"
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "Messages",
-      "item": [
-        {
-          "name": "Send text",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Hello! This is a test.\",\n\n    // --- OPTIONAL (responder msg) ---\n    // \"reply\": \"Texto da mensagem a responder\",\n    // \"type\": \"text\",              // \"text\" | \"id\" (default: \"id\")\n    // \"quoted_id\": \"ID_DA_MSG\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send text (Reply via text)",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Yes! This is a reply.\",\n            \"reply\": \"Hello! This is a test.\",\n    \"type\": \"text\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send image",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send_image",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send_image"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"image_url\": \"https://picsum.photos/800/600\",\n\n    // --- OPTIONAL ---\n    \"caption\": \"Image caption\",\n    // \"asDocument\": false,       // true = enviar como documento (PDF/arquivo)\n    // \"fileName\": \"image.jpg\", // nome do arquivo (se asDocument=true)\n    // \"reply\": \"Texto da msg a responder\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"ID_DA_MSG\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send image as document",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send_image",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send_image"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"image_url\": \"https://picsum.photos/800/600\",\n    \"caption\": \"Image sent as document\",\n    \"asDocument\": true,\n    \"fileName\": \"my-image.jpg\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send audio",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send_audio",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send_audio"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"audio_url\": \"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3\",\n\n    // --- OPTIONAL ---\n    \"ptt\": false,               // true = mensagem de voz (circle audio)\n    // \"asDocument\": false,     // true = enviar como arquivo\n    // \"format\": \"m4a\",        // \"m4a\" | \"mp3\" | \"ogg\" | \"wav\" (default: \"m4a\")\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send audio as PTT (voice message)",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send_audio",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send_audio"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"audio_url\": \"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3\",\n    \"ptt\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send video",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send_video",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send_video"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"video_url\": \"https://test-videos.co.uk/vids/bigbuckbunny/mp4/av1/360/Big_Buck_Bunny_360_10s_1MB.mp4\",\n\n    // --- OPTIONAL ---\n    \"caption\": \"Video caption\",\n    // \"gifPlayback\": false,   // true = send as animated GIF\n    // \"ptv\": false,           // true = send as round video (PIP)\n    // \"asDocument\": false,    // true = send as document (if >15MB, automatic)\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send video as GIF",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send_video",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send_video"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"video_url\": \"https://test-videos.co.uk/vids/bigbuckbunny/mp4/av1/360/Big_Buck_Bunny_360_10s_1MB.mp4\",\n    \"gifPlayback\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send video as PTV (round video)",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send_video",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send_video"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"video_url\": \"https://test-videos.co.uk/vids/bigbuckbunny/mp4/av1/360/Big_Buck_Bunny_360_10s_1MB.mp4\",\n    \"ptv\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send document",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send_document",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send_document"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"document_url\": \"https://raw.githubusercontent.com/KAUAxiis/database/main/README.md\",\n\n    // --- OPTIONAL ---\n    \"fileName\": \"document.pdf\",\n    // \"caption\": \"\",\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send sticker",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send_sticker",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send_sticker"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED (at least one URL) ---\n    \"phone\": \"{{PHONE}}\",\n    \"sticker_url\": \"https://www.gstatic.com/webp/gallery/1.webp\",\n    // \"image_url\": \"https://...\",   // alternative to sticker_url\n\n    // --- OPTIONAL ---\n    // \"pack\": \"My Pack\",\n    // \"author\": \"ZapUnlocked\",\n    // \"resizeMode\": \"pad\",       // \"pad\" | \"crop\" | \"stretch\" (default: \"pad\")\n    // \"padColor\": \"black\",       // background color if resizeMode=\"pad\" (default: \"black\")\n    // \"blurIntensity\": 20,         // background blur (0-100, default: 20)\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send reaction",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send_reaction",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send_reaction"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\",\n    \"emoji\": \"👍\",\n\n    // --- OPTIONAL ---\n    // \"reaction\": null,        // forces reaction removal\n    // \"text\": null,\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send location",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send_location",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send_location"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"lat\": -23.550520,\n    \"lng\": -46.633308,\n\n    // --- OPTIONAL ---\n    \"name\": \"Central Square\",\n    \"address\": \"New York, NY\",\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send contact (vCard)",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send_contact",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send_contact"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"ZapUnlocked Support\",\n    \"contactPhone\": \"5511999999999\",\n\n    // --- OPTIONAL ---\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send multiple contacts",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send_contacts",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send_contacts"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"contacts\": [\n        {\n            \"name\": \"John Doe\",\n            \"phone\": \"5511988888888\"\n        },\n        {\n            \"name\": \"Jane Smith\",\n            \"phone\": \"5511977777777\"\n        }\n    ],\n\n    // --- OPTIONAL ---\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send link with preview",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/send_link",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "send_link"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"url\": \"https://github.com\",\n\n    // --- OPTIONAL ---\n    \"text\": \"Check out this amazing repository!\",\n    \"title\": \"GitHub\",\n            \"description\": \"Where the world builds software\",\n    \"thumbnailUrl\": \"https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png\",\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Delete message",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/messages/delete",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "messages",
-                "delete"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\",\n\n    // --- OPTIONAL ---\n    // \"fromMe\": true,        // true = delete own message (default: true)\n    // \"type\": \"id\"          // \"id\" | \"text\" (default: \"id\")\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Edit message",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/messages/edit",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "messages",
-                "edit"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"Original message to be edited\",\n            \"message\": \"Edited content here!\",\n\n    // --- OPTIONAL ---\n    // \"reply\": \"...\",\n    \"type\": \"text\",       // \"text\" | \"id\" (default: \"id\")\n    // \"quoted_id\": \"...\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Mark messages as read",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/messages/read",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "messages",
-                "read"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"messageIds\": [\n        \"ID_PRIMEIRA_MSG\",\n        \"ID_SEGUNDA_MSG\"\n    ],\n\n    // --- OPTIONAL ---\n    // \"sender\": \"5511999999999@s.whatsapp.net\",  // JID do remetente\n    // \"type\": \"id\"                                 // \"id\" | \"text\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Interactive Messages",
-      "item": [
-        {
-          "name": "Buttons: Quick Reply",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/messages/send-button-list",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "messages",
-                "send-button-list"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Click one of the options below:\",\n    \"title\": \"Choose an option\",\n    \"buttons\": [\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"Yes\",\n            \"id\": \"option_yes\"\n        },\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"No\",\n            \"id\": \"option_no\"\n        }\n    ],\n\n    // --- OPTIONAL ---\n    // \"footer\": \"ZapUnlocked API\",\n    // \"body\": null,\n    // \"button_text\": null,\n    // \"button_id\": null,\n    // \"button_value\": null,\n    // \"webhook\": {},\n    // \"reaction\": null,\n    // \"image\": null,\n    // \"code\": null,               // OTP (botão de copiar código)\n    // \"pixKey\": null,             // PIX\n    // \"pixType\": null,\n    // \"merchantName\": null,\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Buttons: URL + Call",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/messages/send-button-actions",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "messages",
-                "send-button-actions"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Get in touch\",\n    \"message\": \"Choose how you'd like to contact us:\",\n    \"footer\": \"ZapUnlocked API\",\n    \"buttons\": [\n        {\n            \"type\": \"url\",\n            \"buttonText\": \"Visit Website\",\n            \"url\": \"https://zapunlocked.com\"\n        },\n        {\n            \"type\": \"call\",\n            \"buttonText\": \"Call Now\",\n            \"phoneNumber\": \"+5511999999999\"\n        }\n    ]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Buttons: OTP (Copy Code) — via buttons[]",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/messages/send-button-otp",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "messages",
-                "send-button-otp"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Security Verification\",\n    \"message\": \"Your access code is: 591823\",\n    \"footer\": \"Valid for 5 minutes.\",\n    \"buttons\": [\n        {\n            \"type\": \"otp\",\n            \"buttonText\": \"Copy Code\",\n            \"code\": \"591823\"\n        }\n    ]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Buttons: OTP via direct field",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/messages/send-button-otp",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "messages",
-                "send-button-otp"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Your access code has arrived!\",\n    \"code\": \"591823\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "PIX Payment (Copy-and-Paste)",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/messages/send-button-pix",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "messages",
-                "send-button-pix"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"PIX Payment\",\n    \"message\": \"Use the button below to pay via PIX:\",\n    \"buttons\": [\n        {\n            \"type\": \"pix\",\n            \"buttonText\": \"Copy PIX\",\n            \"pixKey\": \"suachave@email.com\",\n            \"pixType\": \"EMAIL\",\n            \"merchantName\": \"Minha Loja\"\n        }\n    ]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Buttons: List (Menu with sections)",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/messages/send-option-list",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "messages",
-                "send-option-list"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Digital Menu\",\n    \"message\": \"Check out our options:\",\n    \"footer\": \"Delivery in 30 min\",\n    \"buttons\": [\n        {\n            \"type\": \"list\",\n            \"buttonText\": \"View Menu\",\n            \"sections\": [\n                {\n                    \"title\": \"Burgers\",\n                    \"rows\": [\n                        { \"rowID\": \"1\", \"title\": \"Classic Burger\", \"description\": \"$ 5.99\" },\n                        { \"rowID\": \"2\", \"title\": \"Cheese Burger\", \"description\": \"$ 6.99\" }\n                    ]\n                },\n                {\n                    \"title\": \"Drinks\",\n                    \"rows\": [\n                        { \"rowID\": \"3\", \"title\": \"Cola 350ml\", \"description\": \"$ 2.00\" },\n                        { \"rowID\": \"4\", \"title\": \"Orange Juice\", \"description\": \"$ 2.50\" }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Buttons: Mixed (URL + Quick Reply)",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/messages/send-button-actions",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "messages",
-                "send-button-actions"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Special Offer\",\n    \"message\": \"Take advantage of our promotion today!\",\n    \"footer\": \"Valid until midnight\",\n    \"buttons\": [\n        {\n            \"type\": \"url\",\n            \"buttonText\": \"Buy Now\",\n            \"url\": \"https://loja.com/promo\"\n        },\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"Remind me later\",\n            \"id\": \"lembrar\"\n        }\n    ]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send poll",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/messages/send-poll",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "messages",
-                "send-poll"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"What is your favorite color?\",\n    \"options\": [\"Red\", \"Blue\", \"Green\", \"Yellow\"],\n\n    // --- OPTIONAL ---\n    // \"selectableCount\": 1,       // number of options user can choose (default: 1)\n    // \"reply\": \"...\",\n    // \"type\": \"text\",\n    // \"quoted_id\": \"...\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Send poll vote",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/messages/send-poll-vote",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "messages",
-                "send-poll-vote"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED (when type=\"id\", the default) ---\n    \"phone\": \"{{PHONE}}\",\n    \"options\": [\"Blue\"],\n    \"pollId\": \"ID_DA_ENQUETE\",\n\n    // --- OPTIONAL ---\n    // \"pollName\": \"What is your favorite color?\",   // used with type=\"text\"\n    // \"type\": \"text\",                               // \"id\" | \"text\" (default: \"id\")\n    // \"reply\": \"...\",\n    // \"quoted_id\": \"...\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
           }
         }
       ]
@@ -1466,7 +81,7 @@
       "name": "Contacts",
       "item": [
         {
-          "name": "Contact info",
+          "name": "Get Contact Info",
           "request": {
             "method": "POST",
             "url": {
@@ -1501,7 +116,7 @@
           }
         },
         {
-          "name": "Block contact (via settings/block)",
+          "name": "Block User",
           "request": {
             "method": "POST",
             "url": {
@@ -1526,42 +141,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"action\": \"block\"       // \"block\" | \"unblock\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Unblock contact (via settings/block)",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/block",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "block"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"action\": \"unblock\"\n}",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"action\": \"block\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1573,195 +153,20 @@
       ]
     },
     {
-      "name": "Settings",
+      "name": "Instance",
       "item": [
         {
-          "name": "Privacy: All fields",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/privacy",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "privacy"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- PRIVACY SETTINGS ---\n    // Possible values: \"all\" | \"contacts\" | \"none\" | \"match_last_seen\"\n    \"lastSeen\": \"all\",\n    \"online\": \"all\",\n    \"profile\": \"contacts\",\n    \"status\": \"contacts\",\n    \"readReceipts\": \"all\",\n    \"groupsAdd\": \"contacts\",\n    \"callAdd\": \"all\",\n\n    // --- ABOUT (status message) ---\n    \"about\": \"Available via ZapUnlocked Bot\",\n\n    // --- DISAPPEARING MESSAGES ---\n    // \"disappearingTimer\": 0    // 0=off | 24=1day | 168=7days | 4320=180days\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Privacy: Only lastSeen (single example)",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/privacy",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "privacy"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"lastSeen\": \"none\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Privacy: Only disappearing + about",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/privacy",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "privacy"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"disappearingTimer\": 24,\n    \"about\": \"Disappearing messages enabled!\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Update profile (name + photo via Neonize)",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/profile",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "profile"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- OPTIONAL (pelo menos um) ---\n    \"name\": \"My Bot\",\n    \"newProfilePictureUrl\": \"https://picsum.photos/400/400\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Update profile name only",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/profile",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "profile"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"name\": \"ZapUnlocked Bot v2\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "View bot settings",
+          "name": "Get Instance Device",
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{BASE_URL}}/settings/bot",
+              "raw": "{{BASE_URL}}/instance/device",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
-                "settings",
-                "bot"
+                "instance",
+                "device"
               ]
             },
             "header": [
@@ -1773,66 +178,41 @@
           }
         },
         {
-          "name": "Update bot settings",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/settings/bot",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "bot"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- ALL OPTIONAL (send only what you want to change) ---\n    // \"ai_tag_enabled\": false,         // tag sent messages\n    // \"ai_tag_text\": \" (ZapUnlocked)\", // tag text\n    // \"ip_control_enabled\": false,     // IP control\n    // \"ip_whitelist\": [],              // allowed IPs\n    // \"ip_blacklist\": []               // blocked IPs\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "IP Rules: View all",
+          "name": "Get Instance Me",
           "request": {
             "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/instance/me",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "instance",
+                "me"
+              ]
+            },
             "header": [
               {
                 "key": "x-api-key",
                 "value": "{{API_KEY}}"
               }
-            ],
+            ]
+          }
+        },
+        {
+          "name": "Update Instance Name",
+          "request": {
+            "method": "PUT",
             "url": {
-              "raw": "{{BASE_URL}}/settings/ip-rules",
+              "raw": "{{BASE_URL}}/instance/update-name",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
-                "settings",
-                "ip-rules"
+                "instance",
+                "update-name"
               ]
-            }
-          }
-        },
-        {
-          "name": "IP Rules: Add to whitelist",
-          "request": {
-            "method": "POST",
+            },
             "header": [
               {
                 "key": "Content-Type",
@@ -1843,20 +223,9 @@
                 "value": "{{API_KEY}}"
               }
             ],
-            "url": {
-              "raw": "{{BASE_URL}}/settings/ip-rules/whitelist",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "ip-rules",
-                "whitelist"
-              ]
-            },
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"ip\": \"192.168.1.100\"\n}",
+              "raw": "{\n    \"name\": \"New Instance\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1866,88 +235,689 @@
           }
         },
         {
-          "name": "IP Rules: Add to blacklist",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
+          "name": "Connection",
+          "item": [
+            {
+              "name": "Get Qr Page",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/qr",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "qr"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
               }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/settings/ip-rules/blacklist",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "ip-rules",
-                "blacklist"
-              ]
             },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"ip\": \"10.0.0.50\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+            {
+              "name": "Get Qr Image",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/qr/image",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "qr",
+                    "image"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "Logout",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/session/logout",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "session",
+                    "logout"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "Pair Device",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/session/pair",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "session",
+                    "pair"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 }
               }
             }
-          }
+          ]
         },
         {
-          "name": "IP Rules: Remove from whitelist",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
+          "name": "Settings",
+          "item": [
+            {
+              "name": "Set Auto Read Message",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/instance/auto-read-message",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "instance",
+                    "auto-read-message"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"value\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/settings/ip-rules/whitelist/192.168.1.100",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "ip-rules",
-                "whitelist",
-                "192.168.1.100"
-              ]
+            },
+            {
+              "name": "Set Call Reject Auto",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/instance/call-reject-auto",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "instance",
+                    "call-reject-auto"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"value\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Set Call Reject Message",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/instance/call-reject-message",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "instance",
+                    "call-reject-message"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"value\": \"I can't answer right now.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Get Phone Pair Code",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/phone-code/{{PHONE}}",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "phone-code",
+                    "{{PHONE}}"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
+              }
             }
-          }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Interactive Messages",
+      "item": [
+        {
+          "name": "Actions",
+          "item": [
+            {
+              "name": "Delete Msg",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/delete",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "delete"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Send Edit",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/edit",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "edit"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\",\n    \"message\": \"Edited content here!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Read Messages",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/read",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "read"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageIds\": [\n        \"ID_PRIMEIRA_MSG\",\n        \"ID_SEGUNDA_MSG\"\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
         },
         {
-          "name": "IP Rules: Remove from blacklist",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
+          "name": "Buttons",
+          "item": [
+            {
+              "name": "Send Call",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/send-button-call",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "send-button-call"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"callPhone\": \"+5511999999999\",\n    \"button_text\": \"Call Now\",\n    \"title\": \"Contact us\",\n    \"text\": \"Call us now:\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/settings/ip-rules/blacklist/10.0.0.50",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "settings",
-                "ip-rules",
-                "blacklist",
-                "10.0.0.50"
-              ]
+            },
+            {
+              "name": "Send With Buttons",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/send-button-list",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "send-button-list"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Choose an option:\",\n    \"title\": \"Menu\",\n    \"text\": \"What would you like to do?\",\n    \"footer\": \"Tap a button below\",\n    \"buttons\": [\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"Yes\",\n            \"id\": \"yes\"\n        },\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"No\",\n            \"id\": \"no\"\n        },\n        {\n            \"type\": \"url\",\n            \"buttonText\": \"Visit Site\",\n            \"url\": \"https://zapunlocked.com\"\n        },\n        {\n            \"type\": \"call\",\n            \"buttonText\": \"Call Support\",\n            \"callPhone\": \"+5511999999999\"\n        },\n        {\n            \"type\": \"otp\",\n            \"buttonText\": \"Copy Code\",\n            \"code\": \"591823\"\n        }\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Send Otp",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/send-button-otp",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "send-button-otp"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"code\": \"591823\",\n    \"button_text\": \"Copy Code\",\n    \"title\": \"Security Verification\",\n    \"text\": \"Your access code is: 591823\",\n    \"footer\": \"Valid for 5 minutes.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Send Pix",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/send-button-pix",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "send-button-pix"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"pixKey\": \"suachave@email.com\",\n    \"pixType\": \"EMAIL\",\n    \"pixValue\": 19.9,\n    \"merchantName\": \"Minha Loja\",\n    \"pixCity\": \"Sao Paulo\",\n    \"pixDescription\": \"Compra #1234\",\n    \"button_text\": \"Pagar\",\n    \"title\": \"PIX Payment\",\n    \"text\": \"Use the button below to pay via PIX:\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Send Quick Reply",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/send-button-quick-reply",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "send-button-quick-reply"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Confirm\",\n    \"text\": \"Do you agree?\",\n    \"buttons\": [\n        {\n            \"text\": \"Yes\",\n            \"id\": \"yes\"\n        },\n        {\n            \"text\": \"No\",\n            \"id\": \"no\"\n        }\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Send Url",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/send-button-url",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "send-button-url"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"url\": \"https://zapunlocked.com\",\n    \"button_text\": \"Visit Website\",\n    \"title\": \"Get in touch\",\n    \"text\": \"Visit our website:\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Send Option List",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/send-option-list",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "send-option-list"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Hello! This is a test message.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
             }
-          }
+          ]
+        },
+        {
+          "name": "Poll",
+          "item": [
+            {
+              "name": "Send Poll",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/send-poll",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "send-poll"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"What is your favorite color?\",\n    \"options\": [\n        \"Red\",\n        \"Blue\",\n        \"Green\",\n        \"Yellow\"\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Send Poll Vote",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/send-poll-vote",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "send-poll-vote"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"options\": [\n        \"Blue\"\n    ],\n    \"pollId\": \"ID_DA_ENQUETE\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
         }
       ]
     },
@@ -1955,222 +925,1559 @@
       "name": "Management",
       "item": [
         {
-          "name": "Fetch old messages",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/management/fetch_messages",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "management",
-                "fetch_messages"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
+          "name": "Cleanup",
+          "item": [
+            {
+              "name": "Clear Storage",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "{{BASE_URL}}/management/cleanup",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "management",
+                    "cleanup"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
               }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- REQUIRED ---\n    \"phone\": \"{{PHONE}}\",\n\n    // --- OPTIONAL ---\n    \"limit\": 20,                     // number of msgs (default: 20)\n    // \"type\": \"all\",               // \"all\" | \"text\" | \"image\" | \"video\" | ...\n    // \"query\": \"keyword\",         // text search\n    // \"onlyReactions\": false,       // only msgs with reaction\n    // \"reactionEmoji\": \"👍\",       // filter by specific emoji\n    // \"webhook\": {}                 // trigger webhook with result\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+            }
+          ]
+        },
+        {
+          "name": "Database",
+          "item": [
+            {
+              "name": "Manual Cleanup",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/management/database/cleanup",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "management",
+                    "database",
+                    "cleanup"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "Update Config",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/management/database/config",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "management",
+                    "database",
+                    "config"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"interval\": 1440\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Get Status",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/management/database/status",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "management",
+                    "database",
+                    "status"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Messages",
+          "item": [
+            {
+              "name": "Fetch Messages",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/management/fetch_messages",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "management",
+                    "fetch_messages"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"limit\": 20\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Get Recent Chats",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/management/recent_contacts",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "management",
+                    "recent_contacts"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"limit\": 20\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 }
               }
             }
-          }
-        },
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
         {
-          "name": "Recent chats",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/management/recent_contacts",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "management",
-                "recent_contacts"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
+          "name": "Contact",
+          "item": [
+            {
+              "name": "Send Contact",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/send_contact",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "send_contact"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"ZapUnlocked Support\",\n    \"contactPhone\": \"5511999999999\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // --- OPTIONAL ---\n    \"limit\": 20       // number of chats (default: 20)\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+            },
+            {
+              "name": "Send Contacts",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/send_contacts",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "send_contacts"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"contacts\": [\n        {\n            \"name\": \"John Doe\",\n            \"phone\": \"5511988888888\"\n        },\n        {\n            \"name\": \"Jane Smith\",\n            \"phone\": \"5511977777777\"\n        }\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 }
               }
             }
-          }
+          ]
         },
         {
-          "name": "RAM memory stats",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{BASE_URL}}/management/memory",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "management",
-                "memory"
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ]
-          }
-        },
-        {
-          "name": "Disk stats",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{BASE_URL}}/management/volume_stats",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "management",
-                "volume_stats"
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ]
-          }
-        },
-        {
-          "name": "Clean cache/temp files",
-          "request": {
-            "method": "DELETE",
-            "url": {
-              "raw": "{{BASE_URL}}/management/cleanup",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "management",
-                "cleanup"
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ]
-          }
-        },
-        {
-          "name": "SQLite database status",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{BASE_URL}}/management/database/status",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "management",
-                "database",
-                "status"
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ]
-          }
-        },
-        {
-          "name": "Manual SQLite database cleanup",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/management/database/cleanup",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "management",
-                "database",
-                "cleanup"
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ]
-          }
-        },
-        {
-          "name": "Configure database cleanup interval",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/management/database/config",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "management",
-                "database",
-                "config"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"interval\": 1440       // minutes between cleanups (1440 = 24h)\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+          "name": "Link",
+          "item": [
+            {
+              "name": "Send Link",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/send_link",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "send_link"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"url\": \"https://github.com\",\n    \"text\": \"Check out this repository!\",\n    \"title\": \"GitHub\",\n    \"description\": \"Where the world builds software\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 }
               }
             }
-          }
+          ]
+        },
+        {
+          "name": "Location",
+          "item": [
+            {
+              "name": "Send Location",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/send_location",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "send_location"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"lat\": -23.55052,\n    \"lng\": -46.633308,\n    \"name\": \"Central Square\",\n    \"address\": \"New York, NY\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Media",
+          "item": [
+            {
+              "name": "Send Audio",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/send_audio",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "send_audio"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "value": "",
+                      "type": "file",
+                      "src": []
+                    },
+                    {
+                      "key": "phone",
+                      "value": "{{PHONE}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "url",
+                      "value": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "ptt",
+                      "value": "false",
+                      "type": "text"
+                    },
+                    {
+                      "key": "as_document",
+                      "value": "false",
+                      "type": "text"
+                    },
+                    {
+                      "key": "format",
+                      "value": "m4a",
+                      "type": "text"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Send Document",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/send_document",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "send_document"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "value": "",
+                      "type": "file",
+                      "src": []
+                    },
+                    {
+                      "key": "phone",
+                      "value": "{{PHONE}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "url",
+                      "value": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "file_name",
+                      "value": "document.pdf",
+                      "type": "text"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Send Gif",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/send_gif",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "send_gif"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "value": "",
+                      "type": "file",
+                      "src": []
+                    },
+                    {
+                      "key": "phone",
+                      "value": "{{PHONE}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "url",
+                      "value": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "caption",
+                      "value": "Funny gif",
+                      "type": "text"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Send Image",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/send_image",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "send_image"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "value": "",
+                      "type": "file",
+                      "src": []
+                    },
+                    {
+                      "key": "phone",
+                      "value": "{{PHONE}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "url",
+                      "value": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "caption",
+                      "value": "Image caption",
+                      "type": "text"
+                    },
+                    {
+                      "key": "as_document",
+                      "value": "false",
+                      "type": "text"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Send Sticker",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/send_sticker",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "send_sticker"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "value": "",
+                      "type": "file",
+                      "src": []
+                    },
+                    {
+                      "key": "phone",
+                      "value": "{{PHONE}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "url",
+                      "value": "https://www.gstatic.com/webp/gallery/1.webp",
+                      "type": "text"
+                    },
+                    {
+                      "key": "pack",
+                      "value": "My Sticker Pack",
+                      "type": "text"
+                    },
+                    {
+                      "key": "author",
+                      "value": "ZapUnlocked",
+                      "type": "text"
+                    },
+                    {
+                      "key": "resize_mode",
+                      "value": "pad",
+                      "type": "text"
+                    },
+                    {
+                      "key": "pad_color",
+                      "value": "black",
+                      "type": "text"
+                    },
+                    {
+                      "key": "blur_intensity",
+                      "value": "20",
+                      "type": "text"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Send Video",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/send_video",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "send_video"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "value": "",
+                      "type": "file",
+                      "src": []
+                    },
+                    {
+                      "key": "phone",
+                      "value": "{{PHONE}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "url",
+                      "value": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "caption",
+                      "value": "Video caption",
+                      "type": "text"
+                    },
+                    {
+                      "key": "as_document",
+                      "value": "false",
+                      "type": "text"
+                    },
+                    {
+                      "key": "gif_playback",
+                      "value": "false",
+                      "type": "text"
+                    },
+                    {
+                      "key": "ptv",
+                      "value": "false",
+                      "type": "text"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reaction",
+          "item": [
+            {
+              "name": "Send Reaction",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/send_reaction",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "send_reaction"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\",\n    \"emoji\": \"\\\\uD83D\\\\uDC4D\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Text",
+          "item": [
+            {
+              "name": "Send Message",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/send",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "send"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Hello! This is a test message.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "item": [
+        {
+          "name": "IP Control",
+          "item": [
+            {
+              "name": "Get Ip Control",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/ip-control",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "ip-control"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"enabled\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Update Ip Control",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/ip-control",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "ip-control"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"enabled\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "IP Rules",
+          "item": [
+            {
+              "name": "Get Ip Rules",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/ip-rules",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "ip-rules"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "Add To Blacklist",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/ip-rules/blacklist",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "ip-rules",
+                    "blacklist"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"ip\": \"10.0.0.50\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Remove From Blacklist",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/ip-rules/blacklist/{{IP}}",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "ip-rules",
+                    "blacklist",
+                    "{{IP}}"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "Add To Whitelist",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/ip-rules/whitelist",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "ip-rules",
+                    "whitelist"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"ip\": \"192.168.1.100\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Remove From Whitelist",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/ip-rules/whitelist/{{IP}}",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "ip-rules",
+                    "whitelist",
+                    "{{IP}}"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Privacy",
+          "item": [
+            {
+              "name": "Set About",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/privacy/about",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "privacy",
+                    "about"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"value\": \"Available via ZapUnlocked Bot\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Set Call Add",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/privacy/call-add",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "privacy",
+                    "call-add"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"value\": \"all\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Set Disappearing Timer",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/privacy/disappearing-timer",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "privacy",
+                    "disappearing-timer"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"value\": 24\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Set Groups Add",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/privacy/groups-add",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "privacy",
+                    "groups-add"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"value\": \"contacts\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Set Last Seen",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/privacy/last-seen",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "privacy",
+                    "last-seen"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"value\": \"all\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Set Online",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/privacy/online",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "privacy",
+                    "online"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"value\": \"all\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Set Profile",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/privacy/profile",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "privacy",
+                    "profile"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"value\": \"contacts\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Set Read Receipts",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/privacy/read-receipts",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "privacy",
+                    "read-receipts"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"value\": \"all\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Set Status",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/privacy/status",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "privacy",
+                    "status"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"value\": \"contacts\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Profile",
+          "item": [
+            {
+              "name": "Update My Profile",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings/profile",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "profile"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"My Bot\",\n    \"newProfilePictureUrl\": \"https://picsum.photos/400/400\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Status",
+      "item": [
+        {
+          "name": "General",
+          "item": [
+            {
+              "name": "Root Route",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    ""
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Logs",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/logs",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "logs"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "Get Status Controller",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/status",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "status"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Health",
+          "item": [
+            {
+              "name": "Health Controller",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/status/health",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "status",
+                    "health"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Readiness Controller",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/status/readiness",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "status",
+                    "readiness"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "System",
+          "item": [
+            {
+              "name": "Get Memory Status",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/status/memory",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "status",
+                    "memory"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "Stream Status Route",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/status/stream",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "status",
+                    "stream"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "Get Volume Status",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/status/volume",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "status",
+                    "volume"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -2178,143 +2485,175 @@
       "name": "System",
       "item": [
         {
-          "name": "View environment variables (obfuscated)",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{BASE_URL}}/system/env",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "system",
-                "env"
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
+          "name": "Cleanup",
+          "item": [
+            {
+              "name": "Force Cleanup",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/system/cleanup/force",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "system",
+                    "cleanup",
+                    "force"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ]
               }
-            ]
-          }
-        },
-        {
-          "name": "Update environment variables",
-          "request": {
-            "method": "PUT",
-            "url": {
-              "raw": "{{BASE_URL}}/system/env",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "system",
-                "env"
-              ]
             },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
+            {
+              "name": "Get Cleanup Settings",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/system/cleanup/settings",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "system",
+                    "cleanup",
+                    "settings"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"interval\": 1440\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    // Send key:value pairs to change in .env\n    \"PORT\": \"8300\",\n    // \"API_KEY\": \"nova_key\",\n    // \"AUTH_DIR\": \"auth_info\",\n    // \"DATA_DIR\": \"data\",\n    // \"INTERNAL_SECRET\": \"novo_segredo\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+            },
+            {
+              "name": "Update Cleanup Route",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/system/cleanup/settings",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "system",
+                    "cleanup",
+                    "settings"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"interval\": 1440\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 }
               }
             }
-          }
+          ]
         },
         {
-          "name": "Force temp file cleanup",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{BASE_URL}}/system/cleanup/force",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "system",
-                "cleanup",
-                "force"
-              ]
-            },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
+          "name": "Environment",
+          "item": [
+            {
+              "name": "Get Env Vars",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/system/env",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "system",
+                    "env"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"PORT\": \"8300\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
-            ]
-          }
-        },
-        {
-          "name": "View auto-cleanup settings",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{BASE_URL}}/system/cleanup/settings",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "system",
-                "cleanup",
-                "settings"
-              ]
             },
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ]
-          }
-        },
-        {
-          "name": "Change auto-cleanup settings",
-          "request": {
-            "method": "PUT",
-            "url": {
-              "raw": "{{BASE_URL}}/system/cleanup/settings",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "system",
-                "cleanup",
-                "settings"
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"interval\": 1440,        // minutos (1440 = 24h)\n    // \"enabled\": true        // true | false\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+            {
+              "name": "Update Env Route",
+              "request": {
+                "method": "PUT",
+                "url": {
+                  "raw": "{{BASE_URL}}/system/env",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "system",
+                    "env"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"PORT\": \"8300\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 }
               }
             }
-          }
+          ]
         }
       ]
     },
@@ -2322,16 +2661,9 @@
       "name": "Webhooks",
       "item": [
         {
-          "name": "List webhooks",
+          "name": "List Webhooks",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}",
-                "type": "text"
-              }
-            ],
             "url": {
               "raw": "{{BASE_URL}}/webhooks",
               "host": [
@@ -2340,20 +2672,62 @@
               "path": [
                 "webhooks"
               ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"my-webhook\",\n    \"url\": \"https://myserver.com/hook\",\n    \"events\": [\n        \"*\"\n    ],\n    \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             }
           }
         },
         {
-          "name": "List available events",
+          "name": "Create Webhook",
           "request": {
-            "method": "GET",
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/webhooks",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "webhooks"
+              ]
+            },
             "header": [
               {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
                 "key": "x-api-key",
-                "value": "{{API_KEY}}",
-                "type": "text"
+                "value": "{{API_KEY}}"
               }
             ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"my-webhook\",\n    \"url\": \"https://myserver.com/hook\",\n    \"events\": [\n        \"*\"\n    ],\n    \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "List Events",
+          "request": {
+            "method": "GET",
             "url": {
               "raw": "{{BASE_URL}}/webhooks/events",
               "host": [
@@ -2363,87 +2737,64 @@
                 "webhooks",
                 "events"
               ]
-            }
-          }
-        },
-        {
-          "name": "Create webhook",
-          "request": {
-            "method": "POST",
+            },
             "header": [
               {
                 "key": "x-api-key",
-                "value": "{{API_KEY}}",
-                "type": "text"
+                "value": "{{API_KEY}}"
               }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/webhooks",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "webhooks"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"my-webhook\",\n  \"url\": \"https://myserver.com/hook\",\n  \"method\": \"POST\",\n  \"events\": [\n    \"*\"\n  ],\n  \"active\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
+            ]
           }
         },
         {
-          "name": "Webhook details",
+          "name": "Get Webhook",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}",
-                "type": "text"
-              }
-            ],
             "url": {
-              "raw": "{{BASE_URL}}/webhooks/{{WEBHOOK_NAME}}",
+              "raw": "{{BASE_URL}}/webhooks/:name",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
                 "webhooks",
-                "{{WEBHOOK_NAME}}"
+                ":name"
               ]
-            }
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
           }
         },
         {
-          "name": "Edit webhook",
+          "name": "Update Webhook",
           "request": {
             "method": "PUT",
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}",
-                "type": "text"
-              }
-            ],
             "url": {
-              "raw": "{{BASE_URL}}/webhooks/{{WEBHOOK_NAME}}",
+              "raw": "{{BASE_URL}}/webhooks/:name",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
                 "webhooks",
-                "{{WEBHOOK_NAME}}"
+                ":name"
               ]
             },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"url\": \"https://myserver.com/hook-v2\",\n  \"events\": [\n    \"message.text\",\n    \"message.button_reply\",\n    \"message.list_reply\"\n  ]\n}",
+              "raw": "{\n    \"url\": \"https://example.com\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2453,82 +2804,87 @@
           }
         },
         {
-          "name": "Enable/Disable webhook",
+          "name": "Delete Webhook",
           "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}",
-                "type": "text"
-              }
-            ],
+            "method": "DELETE",
             "url": {
-              "raw": "{{BASE_URL}}/webhooks/{{WEBHOOK_NAME}}/toggle",
+              "raw": "{{BASE_URL}}/webhooks/:name",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
                 "webhooks",
-                "{{WEBHOOK_NAME}}",
+                ":name"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Test Webhook",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/webhooks/:name/test",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "webhooks",
+                ":name",
+                "test"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Toggle Webhook",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/webhooks/:name/toggle",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "webhooks",
+                ":name",
                 "toggle"
               ]
             },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"active\": false\n}",
+              "raw": "{\n    \"active\": false\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            }
-          }
-        },
-        {
-          "name": "Test webhook",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/webhooks/{{WEBHOOK_NAME}}/test",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "webhooks",
-                "{{WEBHOOK_NAME}}",
-                "test"
-              ]
-            }
-          }
-        },
-        {
-          "name": "Delete webhook",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "x-api-key",
-                "value": "{{API_KEY}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/webhooks/{{WEBHOOK_NAME}}",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "webhooks",
-                "{{WEBHOOK_NAME}}"
-              ]
             }
           }
         }
