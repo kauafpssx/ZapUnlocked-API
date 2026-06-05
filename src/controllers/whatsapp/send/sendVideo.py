@@ -1,71 +1,76 @@
-from fastapi import HTTPException
+from typing import Optional
+from fastapi import UploadFile, File, Form
 from src.services.whatsapp.sender import send_video_message
 from src.utils.decorators import require_whatsapp, handle_errors
-from src.services.media.downloader import download_media
 from src.services.media.videoConverter import convert_to_mp4
 from src.services.media.utils import cleanup, get_file_size
 from src.services.media.queue import task_queue
+from src.services.media.resolver import resolve_media
+from src.services.media import upload_tracker
 from src.utils.logger import logger
 from src.utils.quote import resolve_quote
-from src.schemas import SendVideoRequest
+
 
 @require_whatsapp
 @handle_errors("send video")
-async def send_video(data: SendVideoRequest):
-    logger.debug(f"🔍 POST /send_video: phone={data.phone}")
+async def send_video(
+    phone: str = Form(...),
+    url: Optional[str] = Form(None),
+    file: Optional[UploadFile] = File(None),
+    caption: str = Form(""),
+    reply: Optional[str] = Form(None),
+    quoted_id: Optional[str] = Form(None),
+    as_document: bool = Form(False),
+    gif_playback: bool = Form(False),
+    ptv: bool = Form(False),
+):
+    logger.debug(f"🔍 POST /send_video: phone={phone}")
+    path, size = await resolve_media(url, file, media_type="video")
+    await _send_video_common(phone, path, size, caption, reply, quoted_id, as_document, gif_playback, ptv)
+    return {"success": True, "message": "Video sent successfully."}
 
+
+@require_whatsapp
+@handle_errors("send gif")
+async def send_gif(
+    phone: str = Form(...),
+    url: Optional[str] = Form(None),
+    file: Optional[UploadFile] = File(None),
+    caption: str = Form(""),
+    reply: Optional[str] = Form(None),
+    quoted_id: Optional[str] = Form(None),
+):
+    logger.debug(f"🔍 POST /send_gif: phone={phone}")
+    path, size = await resolve_media(url, file, media_type="gif")
+    await _send_video_common(phone, path, size, caption, reply, quoted_id, as_document=False, gif_playback=True, ptv=False)
+    return {"success": True, "message": "GIF sent successfully."}
+
+
+async def _send_video_common(phone, path, size, caption, reply, quoted_id, as_document, gif_playback, ptv):
     async def process_task():
-        jid = f"{data.phone}@s.whatsapp.net"
-
-        options = await resolve_quote(
-            jid,
-            reply_identifier=data.reply or data.quoted_id,
-            reply_type=data.type or "id",
-        )
-
-        file_path = await download_media(data.video_url)
         converted_path = None
-
         try:
-            final_path = file_path
+            jid = f"{phone}@s.whatsapp.net"
+            options = await resolve_quote(jid, reply_identifier=reply or quoted_id)
+
+            final_path = path
             try:
-                converted_path = await convert_to_mp4(file_path)
+                converted_path = await convert_to_mp4(path)
                 final_path = converted_path
             except Exception:
-                logger.error("⚠️ Video conversion failed, trying to send original...")
+                logger.error("⚠️ Video conversion failed, sending original...")
 
             file_size = get_file_size(final_path)
-            should_be_doc = data.asDocument or file_size > (15 * 1024 * 1024)
+            should_be_doc = as_document or file_size > (15 * 1024 * 1024)
+            final_ptv = False if should_be_doc else ptv
+            final_gif = False if (should_be_doc or final_ptv) else gif_playback
 
-            if should_be_doc:
-                mb_size = file_size / 1024 / 1024
-                logger.info(f"🎥 Large video detected ({mb_size:.2f}MB). Sending as document.")
-
-            # Precedence logic:
-            # 1. If document, PTV and GIF are disabled.
-            # 2. PTV and GIF are mutually exclusive (PTV wins if both are true).
-            final_ptv = bool(data.ptv)
-            final_gif = bool(data.gifPlayback)
-
-            if should_be_doc:
-                final_ptv = False
-                final_gif = False
-            elif final_ptv:
-                final_gif = False
-
-            await send_video_message(
-                jid,
-                final_path,
-                data.caption or "",
-                as_document=should_be_doc,
-                gif_playback=final_gif,
-                ptv=final_ptv,
-                options=options
-            )
+            await send_video_message(jid, final_path, caption, as_document=should_be_doc, gif_playback=final_gif, ptv=final_ptv, options=options)
         finally:
+            await upload_tracker.release(size)
             if converted_path:
                 cleanup(converted_path)
-            cleanup(file_path)
+            cleanup(path)
 
+    from src.services.media.queue import task_queue
     await task_queue.enqueue(process_task())
-    return {"success": True, "message": "Video sent successfully."}

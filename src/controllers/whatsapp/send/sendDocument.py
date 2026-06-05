@@ -1,35 +1,39 @@
 from pathlib import Path
-from fastapi import HTTPException
+from typing import Optional
+from fastapi import UploadFile, File, Form
 from src.services.whatsapp.sender import send_document_message
 from src.utils.decorators import require_whatsapp, handle_errors
-from src.services.media.downloader import download_media
 from src.services.media.utils import cleanup
 from src.services.media.queue import task_queue
+from src.services.media.resolver import resolve_media
+from src.services.media import upload_tracker
 from src.utils.logger import logger
 from src.utils.quote import resolve_quote
-from src.schemas import SendDocumentRequest
+
 
 @require_whatsapp
 @handle_errors("send document")
-async def send_document(data: SendDocumentRequest):
-    logger.debug(f"🔍 POST /send_document: phone={data.phone}")
+async def send_document(
+    phone: str = Form(...),
+    url: Optional[str] = Form(None),
+    file: Optional[UploadFile] = File(None),
+    reply: Optional[str] = Form(None),
+    quoted_id: Optional[str] = Form(None),
+    file_name: Optional[str] = Form(None),
+):
+    logger.debug(f"🔍 POST /send_document: phone={phone}")
+
+    path, size = await resolve_media(url, file, media_type="document")
 
     async def process_task():
-        jid = f"{data.phone}@s.whatsapp.net"
-
-        options = await resolve_quote(
-            jid,
-            reply_identifier=data.reply or data.quoted_id,
-            reply_type=data.type or "id",
-        )
-
-        file_path = await download_media(data.document_url)
-
         try:
-            final_file_name = data.fileName or Path(file_path).name
-            await send_document_message(jid, file_path, final_file_name, "application/octet-stream", options=options)
+            jid = f"{phone}@s.whatsapp.net"
+            options = await resolve_quote(jid, reply_identifier=reply or quoted_id)
+            fn = file_name or (file.filename if file else None) or Path(path).name
+            await send_document_message(jid, path, fn, "application/octet-stream", options=options)
         finally:
-            cleanup(file_path)
+            await upload_tracker.release(size)
+            cleanup(path)
 
     await task_queue.enqueue(process_task())
     return {"success": True, "message": "Document sent successfully."}
