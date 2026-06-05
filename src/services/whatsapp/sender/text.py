@@ -1,17 +1,8 @@
 from src.services.whatsapp.sender.helpers import _ensure_client, _build_context_info, _save_to_history, build_jid, _dispatch_sent_event
-from src.services.whatsapp import settingsService
 
 
 async def send_message(jid: str, message: str, options: dict = None):
     client = _ensure_client()
-
-    # Appending AI Tag if enabled
-    settings = settingsService.get_settings()
-
-    if settings.get("ai_tag_enabled"):
-        tag = settings.get("ai_tag_text", " (ZapUnlocked AI)")
-        if tag not in message:
-            message += tag
 
     ci = _build_context_info(options.get("quoted")) if options else None
 

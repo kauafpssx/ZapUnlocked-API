@@ -7,8 +7,6 @@ from src.utils.logger import logger
 SETTINGS_FILE = Path(DATA_DIR) / "settings.json"
 
 DEFAULT_SETTINGS = {
-    "ai_tag_enabled": False,
-    "ai_tag_text": " (ZapUnlocked AI)",
     "ip_control_enabled": False,
     # NOTE: IP whitelist/blacklist are now stored in data/ip_rules.json
     # and managed via /settings/ip-rules endpoints.
