@@ -5,7 +5,14 @@ from src.utils.logger import logger
 from src.utils.security.callback_token import create_callback_payload
 from src.utils.quote import resolve_quote
 from src.utils.formatter import format_text
-from src.schemas import SendButtonRequest
+from src.schemas import (
+    SendButtonRequest,
+    SendButtonOtpRequest,
+    SendButtonPixRequest,
+    SendButtonQuickReplyRequest,
+    SendButtonUrlRequest,
+    SendButtonCallRequest,
+)
 
 
 @require_whatsapp
@@ -57,9 +64,12 @@ async def send_with_buttons(data: SendButtonRequest):
         # PIX
         buttons_to_send.append({
             "type": "pix",
-            "text": data.button_text or "💰 Copy PIX",
             "pixKey": data.pixKey,
-            "pixType": data.pixType or data.type or "EVP"
+            "pixType": data.pixType or data.type or "EVP",
+            "pixValue": data.pixValue,
+            "merchantName": data.merchantName or "",
+            "pixCity": data.pixCity or "",
+            "pixDescription": data.pixDescription or "",
         })
     elif data.button_text:
         # Legacy format (single button fields)
@@ -91,12 +101,86 @@ async def send_with_buttons(data: SendButtonRequest):
                 break
 
     await send_button_message(
-        jid, 
-        formatted_text, 
-        buttons_to_send, 
+        jid,
+        formatted_text,
+        buttons_to_send,
         options,
         title=data.title or "",
         footer=final_footer,
         image_url=data.image
     )
     return {"success": True, "message": "Interactive message sent."}
+
+
+@require_whatsapp
+@handle_errors("send otp")
+async def send_otp(data: SendButtonOtpRequest):
+    jid = f"{data.phone}@s.whatsapp.net"
+    options = await resolve_quote(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id")
+    formatted_text = format_text(data.text or "")
+    buttons = [{"type": "otp", "text": data.button_text or "Copy code", "code": data.code}]
+    await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)
+    return {"success": True, "message": "OTP message sent."}
+
+
+@require_whatsapp
+@handle_errors("send pix")
+async def send_pix(data: SendButtonPixRequest):
+    jid = f"{data.phone}@s.whatsapp.net"
+    options = await resolve_quote(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id")
+    formatted_text = format_text(data.text or "")
+    ptype = (data.pixType or "EVP").upper()
+    footer = data.footer or f"{ptype}: {data.pixKey}"
+    buttons = [{
+        "type": "pix",
+        "pixKey": data.pixKey,
+        "pixType": data.pixType or "EVP",
+        "pixValue": data.pixValue,
+        "merchantName": data.merchantName,
+        "pixCity": data.pixCity or "",
+        "pixDescription": data.pixDescription or "",
+        "text": data.button_text or "Pagar",
+    }]
+    await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=footer, image_url=data.image)
+    return {"success": True, "message": "PIX message sent."}
+
+
+@require_whatsapp
+@handle_errors("send quick reply")
+async def send_quick_reply(data: SendButtonQuickReplyRequest):
+    jid = f"{data.phone}@s.whatsapp.net"
+    options = await resolve_quote(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id")
+    formatted_text = format_text(data.text or "")
+    buttons = []
+    for i, btn in enumerate(data.buttons):
+        btn_id = btn.get("id", btn.get("buttonId", f"btn_{i}"))
+        webhook = btn.get("webhook")
+        reaction = btn.get("reaction")
+        if webhook or reaction:
+            token = create_callback_payload({**(webhook or {}), "reaction": reaction or (webhook.get("reaction") if webhook else None)})
+            btn_id = f"cb={token}"
+        buttons.append({"type": "quick_reply", "buttonText": format_text(btn.get("text", btn.get("buttonText", f"Button {i}"))), "id": btn_id})
+    await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)
+    return {"success": True, "message": "Quick reply message sent."}
+
+
+@require_whatsapp
+@handle_errors("send url button")
+async def send_url(data: SendButtonUrlRequest):
+    jid = f"{data.phone}@s.whatsapp.net"
+    options = await resolve_quote(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id")
+    formatted_text = format_text(data.text or "")
+    buttons = [{"type": "url", "url": data.url, "text": data.button_text or "Acessar", "buttonText": data.button_text or "Acessar"}]
+    await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)
+    return {"success": True, "message": "URL button message sent."}
+
+
+@require_whatsapp
+@handle_errors("send call button")
+async def send_call(data: SendButtonCallRequest):
+    jid = f"{data.phone}@s.whatsapp.net"
+    options = await resolve_quote(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id")
+    formatted_text = format_text(data.text or "")
+    buttons = [{"type": "call", "phoneNumber": data.callPhone, "text": data.button_text or "Ligar", "buttonText": data.button_text or "Ligar"}]
+    await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)
+    return {"success": True, "message": "Call button message sent."}

@@ -79,7 +79,70 @@ class SendButtonRequest(BaseWhatsAppRequest):
     code: Optional[str] = None
     pixKey: Optional[str] = None
     pixType: Optional[str] = None
+    pixValue: Optional[float] = None
     merchantName: Optional[str] = None
+    pixCity: Optional[str] = None
+    pixDescription: Optional[str] = None
+    image: Optional[str] = None
+
+
+class SendButtonOtpRequest(BaseWhatsAppRequest):
+    text: Optional[str] = None
+    title: Optional[str] = None
+    footer: Optional[str] = None
+    image: Optional[str] = None
+    button_text: Optional[str] = "Copy code"
+    code: str
+
+
+class SendButtonPixRequest(BaseWhatsAppRequest):
+    text: Optional[str] = None
+    title: Optional[str] = None
+    footer: Optional[str] = None
+    image: Optional[str] = None
+    button_text: Optional[str] = None
+    pixKey: str
+    pixValue: float
+    merchantName: str
+    pixType: Optional[str] = "EVP"
+    pixCity: Optional[str] = None
+    pixDescription: Optional[str] = None
+
+
+class SendButtonQuickReplyRequest(BaseWhatsAppRequest):
+    text: Optional[str] = None
+    title: Optional[str] = None
+    footer: Optional[str] = None
+    image: Optional[str] = None
+    buttons: List[Dict[str, Any]]
+
+
+class SendButtonUrlRequest(BaseWhatsAppRequest):
+    text: Optional[str] = None
+    title: Optional[str] = None
+    footer: Optional[str] = None
+    image: Optional[str] = None
+    url: str
+    button_text: Optional[str] = "Acessar"
+
+
+class SendButtonCallRequest(BaseWhatsAppRequest):
+    text: Optional[str] = None
+    title: Optional[str] = None
+    footer: Optional[str] = None
+    image: Optional[str] = None
+    callPhone: str
+    button_text: Optional[str] = "Ligar"
+
+
+class SendOptionListRequest(BaseWhatsAppRequest):
+    message: Optional[str] = None
+    text: Optional[str] = None
+    title: Optional[str] = None
+    footer: Optional[str] = None
+    button_text: Optional[str] = None
+    sections: Optional[List[Dict[str, Any]]] = None
+    buttons: Optional[List[Dict[str, Any]]] = None
     image: Optional[str] = None
 
 
