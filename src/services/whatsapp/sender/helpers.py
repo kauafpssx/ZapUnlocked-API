@@ -14,6 +14,9 @@ def build_jid(phone_or_jid: str):
     clean = phone_or_jid.replace(" ", "").replace("+", "")
     if "@" in clean:
         user, server = clean.split("@", 1)
+        # Preserve LID server if explicitly provided
+        if server == "lid":
+            return neonize_build_jid(user, "lid")
         server = server.replace("@s.whatsapp.net", "").replace("@g.us", "")
         if not server or server == "s.whatsapp.net":
             server = "s.whatsapp.net"
@@ -96,7 +99,7 @@ def _build_context_info(quoted_dict: dict):
             quotedMessage=msg_proto
         )
     except Exception as e:
-        logger.error(f"❌ Failed to reconstruct ContextInfo for quote: {e}")
+        logger.error(f"Failed to reconstruct ContextInfo for quote: {e}")
         return None
 
 
@@ -166,5 +169,5 @@ def _build_message_info(quoted_dict: dict):
             RetryCount=0
         )
     except Exception as e:
-        logger.error(f"❌ Failed to reconstruct Neonize Message for quote: {e}")
+        logger.error(f"Failed to reconstruct Neonize Message for quote: {e}")
         return None
