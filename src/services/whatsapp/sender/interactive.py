@@ -1,9 +1,96 @@
 import json
 import time
 
+from neonize.client import NewClient
+from neonize.exc import SendMessageError
 from src.services.whatsapp.sender.helpers import _ensure_client, _build_context_info, _build_message_info, _save_to_history, build_jid, _dispatch_sent_event
 from src.services.whatsapp import storage
 from src.utils.logger import logger
+
+
+async def send_list_message(jid: str, text: str, button_text: str, sections: list, options: dict = None, title: str = "", footer: str = ""):
+    from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import (
+        Message, ListMessage,
+        MessageContextInfo, DeviceListMetadata,
+    )
+
+    client = _ensure_client()
+
+    list_msg = ListMessage()
+    list_msg.description = text
+    list_msg.buttonText = button_text or "Ver opções"
+    list_msg.listType = ListMessage.SINGLE_SELECT
+
+    if title:
+        list_msg.title = title
+    if footer:
+        list_msg.footerText = footer
+
+    ci = _build_context_info(options.get("quoted")) if options else None
+    if ci:
+        list_msg.contextInfo.CopyFrom(ci)
+
+    for sec in sections:
+        section = list_msg.sections.add()
+        section.title = sec.get("title", "")
+        for row in sec.get("rows", []):
+            r = section.rows.add()
+            r.rowID = str(row.get("id", row.get("rowID", "")))
+            r.title = row.get("title", "")
+            r.description = row.get("description", "")
+
+    dlm = DeviceListMetadata()
+    dlm.senderTimestamp = int(time.time())
+
+    msg = Message(
+        listMessage=list_msg,
+        messageContextInfo=MessageContextInfo(
+            deviceListMetadata=dlm,
+            deviceListMetadataVersion=2
+        )
+    )
+
+    try:
+        res = client.send_message(build_jid(jid), msg)
+    except SendMessageError as e:
+        error_str = str(e)
+        if "479" in error_str:
+            logger.error(f"server returned error 479 sending list")
+        raise
+
+    logger.info(f"List message sent — ID: {res.ID}")
+
+    await _save_to_history(jid, {
+        "listMessage": {
+            "title": title,
+            "description": text,
+            "buttonText": button_text,
+            "footerText": footer,
+            "sections": sections,
+        }
+    }, res)
+    await _dispatch_sent_event(jid, "list", res)
+    return res
+
+
+def _schedule_reconnect_sender():
+    """Schedule a bot reconnect from the sender module."""
+    try:
+        from src.services.whatsapp.client import start_bot
+        import asyncio
+        loop = asyncio.get_event_loop()
+        if loop and loop.is_running():
+            loop.call_soon_threadsafe(
+                lambda: asyncio.create_task(_reconnect_delayed(start_bot))
+            )
+    except Exception:
+        pass
+
+
+async def _reconnect_delayed(start_bot):
+    import asyncio
+    await asyncio.sleep(5)
+    asyncio.create_task(start_bot())
 
 
 async def send_button_message(jid: str, text: str, buttons: list, options: dict = None, title: str = "", footer: str = "", image_url: str = None):
@@ -23,7 +110,7 @@ async def send_button_message(jid: str, text: str, buttons: list, options: dict 
             img_full = client.build_image_message(image_url)
             interactive_msg.header.imageMessage.CopyFrom(img_full.imageMessage)
         except Exception as e:
-            logger.warning(f"⚠️ Failed to load image for header: {e}")
+            logger.warning(f"Failed to load image for header: {e}")
             interactive_msg.header.hasMediaAttachment = False
             if title:
                 interactive_msg.header.title = title
@@ -58,7 +145,7 @@ async def send_button_message(jid: str, text: str, buttons: list, options: dict 
                 "display_text": display_text,
                 "phoneNumber": btn_data.get("phoneNumber", btn_data.get("id", ""))
             })
-        elif b_type in ["copy", "otp", "pix"]:
+        elif b_type in ["copy", "otp"]:
             btn.name = "cta_copy"
             btn.buttonParamsJSON = json.dumps({
                 "display_text": display_text,
@@ -82,16 +169,25 @@ async def send_button_message(jid: str, text: str, buttons: list, options: dict 
                 "sections": mapped_sections
             })
         elif b_type == "pix":
-            btn.name = "payment_info"
+            btn.name = "review_and_pay"
             btn.buttonParamsJSON = json.dumps({
-               "payment_settings": [{
-                  "type": "pix_static_code",
-                  "pix_static_code": {
-                     "merchant_name": btn_data.get("merchantName", btn_data.get("buttonText", "Pix")),
-                     "key": btn_data.get("pixKey", ""),
-                     "key_type": btn_data.get("pixType", btn_data.get("type_key", "EVP"))
-                  }
-               }]
+                "reference_id": "",
+                "type": "physical-goods",
+                "payment_configuration": "merchant_categorization_code",
+                "currency": "BRL",
+                "total_amount": {"value": int(round((btn_data.get("pixValue") or 0) * 100)), "offset": 100},
+                "payment_settings": [
+                    {
+                        "type": "pix_static_code",
+                        "pix_static_code": {
+                            "merchant_name": btn_data.get("merchantName", display_text),
+                            "key": btn_data.get("pixKey", ""),
+                            "key_type": btn_data.get("pixType", "EVP"),
+                            "city": btn_data.get("pixCity") or "Brasil",
+                            "description": btn_data.get("pixDescription") or "",
+                        },
+                    }
+                ],
             })
         elif b_type == "review_and_pay":
             btn.name = "review_and_pay"
@@ -115,7 +211,7 @@ async def send_button_message(jid: str, text: str, buttons: list, options: dict 
         else:
             interactive_msg.header.title = "Action Required"
 
-    interactive_msg.nativeFlowMessage.messageVersion = 3
+    interactive_msg.nativeFlowMessage.messageVersion = 1
 
     msg = Message(
         interactiveMessage=interactive_msg,
@@ -125,7 +221,12 @@ async def send_button_message(jid: str, text: str, buttons: list, options: dict 
         )
     )
 
-    res = client.send_message(build_jid(jid), msg, add_msg_secret=True)
+    try:
+        res = client.send_message(build_jid(jid), msg)
+    except SendMessageError as e:
+        error_str = str(e)
+        logger.error(f"SendMessageError sending interactive: {error_str}")
+        raise
 
     await _save_to_history(jid, {
         "interactiveMessage": {

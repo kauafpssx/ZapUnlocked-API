@@ -10,7 +10,7 @@ Modules:
   text.py       — send_message
   media.py      — send_image_message, send_audio_message, send_video_message, send_document_message
   sticker.py    — send_sticker_message
-  interactive.py — send_button_message, send_poll_message, send_poll_vote_message, find_message
+  interactive.py — send_button_message, send_list_message, send_poll_message, send_poll_vote_message, find_message
   actions.py    — send_reaction, send_location_message, send_contact_message, send_contacts_message,
                   send_link_message, delete_message, mark_messages_read, edit_message
 """
@@ -25,6 +25,7 @@ from src.services.whatsapp.sender.media import (
 from src.services.whatsapp.sender.sticker import send_sticker_message
 from src.services.whatsapp.sender.interactive import (
     send_button_message,
+    send_list_message,
     send_poll_message,
     send_poll_vote_message,
     find_message,
