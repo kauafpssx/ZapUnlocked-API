@@ -56,6 +56,7 @@ class WhatsAppState:
         self._current_pair_code: Optional[str] = None
         self._reaction_cache: dict = {}
         self._start_time: float = time.time()
+        self._connected_at: Optional[float] = None
         self._main_loop: Optional[asyncio.AbstractEventLoop] = None
 
         # QR gating — only store QR after an authenticated request
@@ -143,6 +144,16 @@ class WhatsAppState:
     @property
     def start_time(self) -> float:
         return self._start_time
+
+    # ── Connected at ───────────────────────────────────────────────────────
+
+    @property
+    def connected_at(self) -> Optional[float]:
+        return self._connected_at
+
+    @connected_at.setter
+    def connected_at(self, value: Optional[float]) -> None:
+        self._connected_at = value
 
     # ── Event loop ─────────────────────────────────────────────────────────
 

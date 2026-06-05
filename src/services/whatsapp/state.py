@@ -122,7 +122,9 @@ def set_keep_qr_active_on_restart(value: bool) -> None:
 
 def mark_connected() -> None:
     """Set all state vars to 'connected'."""
+    import time
     _state.is_ready = True
+    _state.connected_at = time.time()
     _state.current_qr = None
     _state.current_pair_code = None
     _state.qr_generation_active = False
@@ -148,6 +150,14 @@ def reset_for_logout() -> None:
 
 def get_start_time() -> float:
     return _state.start_time
+
+
+def get_connected_at() -> Optional[float]:
+    return _state.connected_at
+
+
+def set_connected_at(value: Optional[float]) -> None:
+    _state.connected_at = value
 
 
 def get_cleanup_lock() -> threading.Lock:

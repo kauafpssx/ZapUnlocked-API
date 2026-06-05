@@ -114,24 +114,45 @@ def _on_history_sync(c: NewClient, event) -> None:
     pass
 
 
+def _schedule_reconnect():
+    """Schedule an automatic bot reconnection."""
+    from src.services.whatsapp.client import start_bot
+    loop = state.get_main_loop()
+    if loop and loop.is_running():
+        loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(_reconnect_delayed(start_bot))
+        )
+
+
+async def _reconnect_delayed(start_bot):
+    await asyncio.sleep(5)
+    asyncio.create_task(start_bot())
+
+
 def _on_logged_out(c: NewClient, event) -> None:
     """Handle remote logout."""
+    state.mark_disconnected()
     logger.warning(f"🔌 Session logged out — reason: {event.Reason}")
     _run_in_loop(lambda: _fire("connection.logged_out", {"reason": event.Reason}))
+    _schedule_reconnect()
 
 
 def _on_connect_failure(c: NewClient, event) -> None:
     """Handle connection failure."""
+    state.mark_disconnected()
     logger.error(f"❌ Connect failure: {event.Reason} — {event.Message}")
     _run_in_loop(lambda: _fire("connection.connect_failure", {
         "reason": event.Reason, "message": event.Message,
     }))
+    _schedule_reconnect()
 
 
 def _on_stream_error(c: NewClient, event) -> None:
     """Handle stream-level errors."""
+    state.mark_disconnected()
     logger.error(f"🌊 Stream error — code: {event.Code}")
     _run_in_loop(lambda: _fire("connection.stream_error", {"code": event.Code}))
+    _schedule_reconnect()
 
 
 def _on_temporary_ban(c: NewClient, event) -> None:
@@ -150,8 +171,10 @@ def _on_client_outdated(c: NewClient, event) -> None:
 
 def _on_stream_replaced(c: NewClient, event) -> None:
     """Handle stream replaced by another session."""
+    state.mark_disconnected()
     logger.warning("🔄 Stream replaced by another session")
     _run_in_loop(lambda: _fire("connection.stream_replaced", {}))
+    _schedule_reconnect()
 
 
 def _on_pair_status(c: NewClient, event) -> None:
@@ -328,6 +351,12 @@ def _on_call_offer(c: NewClient, event) -> None:
         }))
 
         if not settings.get("call_reject_auto", False):
+            return
+
+        import time
+        connected_at = state.get_connected_at()
+        if connected_at and (time.time() - connected_at) < 15:
+            logger.info(f"📞 Skipping rejection message for {caller_str} — startup grace period (missed call)")
             return
 
         logger.info(f"📞 Call from {caller_str} (ID: {call_id}) — rejecting automatically")
@@ -530,4 +559,3 @@ def _forward_to_handler(c, message) -> None:
         asyncio.create_task(handleMessage(c, message))
     except Exception:
         pass
-
