@@ -53,6 +53,18 @@ from src.services.whatsapp.event_handlers import (
 )
 
 
+_shutting_down = False
+
+
+def set_shutting_down(value: bool) -> None:
+    global _shutting_down
+    _shutting_down = value
+
+
+def is_shutting_down() -> bool:
+    return _shutting_down
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 # QR ACTIVATION
 # ═══════════════════════════════════════════════════════════════════════════
@@ -60,7 +72,7 @@ from src.services.whatsapp.event_handlers import (
 def activate_qr() -> None:
     """Authorize QR storage after valid /qr or /qr/image access.
     No-op if already connected. Restarts bot if QR has expired."""
-    if state.get_is_ready():
+    if state.get_is_ready() or _shutting_down:
         return
     state.set_qr_generation_active(True)
     if state.get_qr() is None and state.get_main_loop() and state.get_main_loop().is_running():
@@ -168,6 +180,9 @@ def _patch_neonize_logging() -> None:
 
 async def start_bot() -> None:
     """Initialize the Neonize client: configure logging, register handlers and connect."""
+    if _shutting_down:
+        return
+
     state.set_main_loop(asyncio.get_running_loop())
 
     try:
@@ -186,6 +201,8 @@ async def start_bot() -> None:
         await loop.run_in_executor(None, state.get_client().connect)
 
     except Exception as e:
+        if _shutting_down:
+            return
         logger.error(f"❌ Error starting bot: {str(e)}")
         await asyncio.sleep(RECONNECT_DELAY / 1000)
         asyncio.create_task(start_bot())
