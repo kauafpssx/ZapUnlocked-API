@@ -47,6 +47,9 @@ CLAUDE.md
 .claude/
 docs/internal/
 
+# Obsidian vault (personal notes, not for public repo)
+obsidian/
+
 # External API reference collections (internal use only)
 Z-API Collection.postman_collection.json
 

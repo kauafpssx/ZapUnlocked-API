@@ -52,20 +52,10 @@ class IPControlMiddleware(BaseHTTPMiddleware):
         if settings.get("ip_control_enabled", False):
             self._check_access(client_ip)
 
-        try:
-            response = await call_next(request)
-            process_time = (time.time() - start_time) * 1000
-            status_code = response.status_code
-            logger.info(f"📤 {status_code} | {process_time:.2f}ms | Origin: {client_ip}")
-            return response
-        except HTTPException as he:
-            return JSONResponse(status_code=he.status_code, content=he.detail)
-        except Exception as e:
-            logger.error(f"❌ IP middleware error: {type(e).__name__}: {e}")
-            return JSONResponse(
-                status_code=500,
-                content={"error": "INTERNAL_ERROR", "message": "IP control middleware failed."},
-            )
+        response = await call_next(request)
+        process_time = (time.time() - start_time) * 1000
+        logger.info(f"📤 {response.status_code} | {process_time:.2f}ms | Origin: {client_ip}")
+        return response
 
     def _check_access(self, client_ip: str) -> None:
         """Enforce whitelist/blacklist for the given IP."""
