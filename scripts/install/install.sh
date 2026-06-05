@@ -123,6 +123,8 @@ PKGS = [
     ("segno",               "1.6.1",    "py3-none-any"),
     ("tqdm",                "4.67.1",   "py3-none-any"),
     ("aiocontextvars",      "0.2.2",    "py3-none-any"),
+    ("aiofiles",            "24.1.0",   "py3-none-any"),
+    ("python-multipart",    "0.0.20",   "py3-none-any"),
 ]
 
 def fetch(url):
@@ -193,9 +195,9 @@ PY
     PYTHONPATH="$SITE_PKG" python3 -c "import magic" &>/dev/null && _MAGIC_OK=true
 
     if ! $_MAGIC_OK; then
-        # Search common Debian/Ubuntu library paths
+        # Search common Debian/Ubuntu/Alwaysdata library paths
         _LIBMAGIC_DIR=""
-        for _d in /usr/lib/x86_64-linux-gnu /usr/lib/aarch64-linux-gnu /usr/lib /usr/local/lib; do
+        for _d in /usr/lib/x86_64-linux-gnu /usr/lib/aarch64-linux-gnu /usr/lib /usr/local/lib /usr/lib64; do
             if [ -f "$_d/libmagic.so.1" ]; then
                 _LIBMAGIC_DIR="$_d"
                 break
@@ -203,7 +205,6 @@ PY
         done
 
         if [ -n "$_LIBMAGIC_DIR" ]; then
-            # Persist so run.sh and the app can pick it up
             grep -q "^LD_LIBRARY_PATH=" "$ROOT_DIR/.env" 2>/dev/null \
                 || echo "LD_LIBRARY_PATH=$_LIBMAGIC_DIR" >> "$ROOT_DIR/.env"
             export LD_LIBRARY_PATH="$_LIBMAGIC_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
@@ -211,7 +212,42 @@ PY
                 && ui_log_ok "libmagic found at $_LIBMAGIC_DIR" \
                 || ui_log_warn "libmagic found at $_LIBMAGIC_DIR but magic still fails — check installation"
         else
-            ui_log_warn "libmagic not found — run: sudo apt-get install libmagic1"
+            # No root? Download & extract libmagic.so.1 from Debian .deb
+            ui_log_step "Downloading libmagic.so.1 from Debian repo..."
+            _TMP_DEB=$(mktemp)
+            _LIBMAGIC_DL=false
+            # Try the latest stable libmagic1 from Debian
+            for _VER in "5.45-3" "5.44-1" "5.43-2" "5.41-4"; do
+                curl -fsSL "http://deb.debian.org/debian/pool/main/f/file/libmagic1_${_VER}_amd64.deb" -o "$_TMP_DEB" 2>/dev/null && {
+                    _LIBMAGIC_DL=true
+                    break
+                }
+            done
+            if $_LIBMAGIC_DL; then
+                _EXTRACT_DIR="$(mktemp -d)"
+                cd "$_EXTRACT_DIR"
+                ar x "$_TMP_DEB" 2>/dev/null
+                tar -xzf data.tar.gz 2>/dev/null
+                _LIBMAGIC_SO=$(find "$_EXTRACT_DIR" -name "libmagic.so*" -type f 2>/dev/null | head -1)
+                if [ -n "$_LIBMAGIC_SO" ]; then
+                    cp -P "$_LIBMAGIC_SO" "$SITE_PKG/" 2>/dev/null
+                    # Also copy symlink target if it's a symlink
+                    _LIBMAGIC_LINK=$(find "$_EXTRACT_DIR" -name "libmagic.so*" -type l 2>/dev/null | head -1)
+                    [ -n "$_LIBMAGIC_LINK" ] && cp -P "$_LIBMAGIC_LINK" "$SITE_PKG/" 2>/dev/null
+                    grep -q "^LD_LIBRARY_PATH=" "$ROOT_DIR/.env" 2>/dev/null \
+                        || echo "LD_LIBRARY_PATH=$SITE_PKG" >> "$ROOT_DIR/.env"
+                    export LD_LIBRARY_PATH="$SITE_PKG${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+                    PYTHONPATH="$SITE_PKG" python3 -c "import magic" &>/dev/null \
+                        && ui_log_ok "libmagic.so.1 downloaded & ready at $SITE_PKG" \
+                        || ui_log_warn "libmagic.so.1 downloaded but import still fails"
+                else
+                    ui_log_warn "Downloaded .deb but libmagic.so not found inside"
+                fi
+                rm -rf "$_EXTRACT_DIR" "$_TMP_DEB"
+                cd "$ROOT_DIR"
+            else
+                ui_log_warn "Could not download libmagic — place libmagic.so.1 manually in vendor/"
+            fi
         fi
     else
         ui_log_ok "python-magic OK"

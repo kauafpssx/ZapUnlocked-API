@@ -27,3 +27,5 @@ httpx>=0.28.0
 qrcode>=8.0
 loguru>=0.7.0
 psutil>=7.0.0
+aiofiles>=24.1.0
+python-multipart>=0.0.20

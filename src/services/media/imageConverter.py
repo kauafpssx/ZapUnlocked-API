@@ -65,3 +65,52 @@ async def convert_to_webp(input_path: str, options: dict = None) -> str:
         logger.error(f"❌ Sticker conversion failed: {str(e)}")
         logger.error(traceback.format_exc())
         raise e
+
+
+async def convert_to_animated_webp(input_path: str, options: dict = None) -> str:
+    """Convert GIF or video to animated WebP sticker (512x512, all frames preserved)."""
+    if options is None:
+        options = {}
+
+    path = Path(input_path)
+    output_path = path.parent / f"{path.stem}_anim.webp"
+
+    rmode = str(options.get("resizeMode", "pad") or "pad")
+    pcolor = str(options.get("padColor", "black") or "black")
+    bsigma = int(options.get("blurIntensity", 20) or 20)
+
+    if rmode == "stretch":
+        vf = "scale=512:512"
+    elif rmode == "cover":
+        vf = "scale=512:512:force_original_aspect_ratio=increase,crop=512:512"
+    elif rmode == "blur":
+        vf = f"split[main][tmp];[tmp]scale=512:512:force_original_aspect_ratio=increase,crop=512:512,boxblur={bsigma}:1[bg];[main]scale=512:512:force_original_aspect_ratio=decrease[fg];[bg][fg]overlay=(W-w)/2:(H-h)/2"
+    else:
+        color = "#00000000" if pcolor in ("transparent", None) else pcolor
+        fmt = "format=rgba," if pcolor == "transparent" else ""
+        vf = f"{fmt}scale=512:512:force_original_aspect_ratio=decrease,pad=512:512:(ow-iw)/2:(oh-ih)/2:color={color}"
+
+    cmd = [
+        "ffmpeg",
+        "-i", str(input_path),
+        "-vcodec", "libwebp",
+        "-vf", vf,
+        "-preset", "default",
+        "-loop", "0",     # animated loop
+        "-an",
+        "-vsync", "0",
+        "-y",
+        str(output_path),
+    ]
+
+    logger.info(f"🎞️ Converting animated sticker: {path.name}")
+    try:
+        result = await asyncio.to_thread(run_ffmpeg_sync, cmd)
+        if result.returncode != 0:
+            err_msg = result.stderr.decode(errors="replace").strip()
+            raise Exception(f"FFmpeg error: {err_msg}")
+        logger.info("✅ Animated sticker converted!")
+        return str(output_path)
+    except Exception as e:
+        logger.error(f"❌ Animated sticker conversion failed: {e}")
+        raise e

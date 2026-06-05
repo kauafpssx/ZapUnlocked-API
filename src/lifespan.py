@@ -27,8 +27,15 @@ async def lifespan(app: FastAPI):
     # ── WhatsApp bot ────────────────────────────────────────
     await _start_whatsapp()
 
+    # ── Media auto-cleanup loop ─────────────────────────
+    asyncio.create_task(_media_cleanup_loop())
+
     logger.info(f"🚀 API running on port {PORT}")
     yield
+
+    # ── Shutdown ─────────────────────────────────────────────
+    logger.info("🛑 Shutting down — disconnecting WhatsApp...")
+    await _stop_whatsapp()
 
 
 # ── Internal helpers ────────────────────────────────────────
@@ -70,3 +77,47 @@ async def _start_whatsapp():
         logger.info("WhatsApp bot started")
     except Exception as e:
         logger.error(f"Failed to start WhatsApp bot: {e}")
+
+
+async def _stop_whatsapp():
+    """Gracefully disconnect neonize client on shutdown, then force-exit to free Go runtime threads."""
+    try:
+        from src.services.whatsapp import state
+        from src.services.whatsapp.client import set_shutting_down
+
+        set_shutting_down(True)
+
+        client = state.get_client()
+        if client:
+            try:
+                await asyncio.wait_for(
+                    asyncio.get_event_loop().run_in_executor(None, _safe_disconnect, client),
+                    timeout=3.0,
+                )
+                logger.info("✅ WhatsApp client disconnected")
+            except asyncio.TimeoutError:
+                logger.warning("⚠️ Disconnect timed out — forcing exit")
+    except Exception as e:
+        logger.warning(f"WhatsApp shutdown error (non-fatal): {e}")
+    finally:
+        # Go runtime threads (neonize/cgo) are non-daemon and block process exit.
+        # os._exit bypasses Python cleanup and kills all threads immediately,
+        # letting the uvicorn reloader spawn a fresh worker cleanly.
+        os._exit(0)
+
+
+async def _media_cleanup_loop():
+    while True:
+        await asyncio.sleep(3600)
+        try:
+            from src.services.media.auto_cleanup import run_media_cleanup
+            await run_media_cleanup()
+        except Exception as e:
+            logger.warning(f"Media cleanup error: {e}")
+
+
+def _safe_disconnect(client):
+    try:
+        client.disconnect()
+    except Exception:
+        pass

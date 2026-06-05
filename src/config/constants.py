@@ -1,5 +1,7 @@
 import os
 import sys
+import socket
+import subprocess
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -33,3 +35,30 @@ DATA_DIR = str(data_dir)
 TEMP_DIR = str(temp_dir)
 
 RECONNECT_DELAY = 5
+
+
+def _is_alwaysdata() -> bool:
+    if os.getenv("ALWAYSDATA_ACCOUNT"):
+        return True
+    if os.path.exists("/etc/alwaysdata"):
+        return True
+    try:
+        if "alwaysdata" in socket.getfqdn().lower():
+            return True
+    except Exception:
+        pass
+    try:
+        uname = subprocess.check_output(["uname", "-r"], timeout=1).decode().lower()
+        if "alwaysdata" in uname:
+            return True
+    except Exception:
+        pass
+    return False
+
+
+IS_ALWAYSDATA = _is_alwaysdata()
+MAX_UPLOAD_SIZE_MB = 500 if IS_ALWAYSDATA else int(os.getenv("MAX_UPLOAD_SIZE_MB", "500"))
+MAX_UPLOAD_SIZE_BYTES = MAX_UPLOAD_SIZE_MB * 1024 * 1024
+
+CLEANUP_MAX_AGE_DAYS = int(os.getenv("CLEANUP_MAX_AGE_DAYS", "7"))
+CLEANUP_MAX_SIZE_MB = int(os.getenv("CLEANUP_MAX_SIZE_MB", "500"))
