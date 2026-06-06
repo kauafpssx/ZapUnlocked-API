@@ -2684,6 +2684,100 @@
               }
             },
             {
+              "name": "Stats Webhooks All",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/stats/webhooks",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "stats",
+                    "webhooks"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Returns delivery statistics for all registered webhooks, including fire count and last-fired timestamp for each.\n\nResponse: `{\"total\": N, \"webhooks\": [{\"name\": \"...\", \"fired\": N, \"last_fired\": \"...\"}]}`"
+              }
+            },
+            {
+              "name": "Delete Stats Webhooks All",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "{{BASE_URL}}/stats/webhooks",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "stats",
+                    "webhooks"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Resets delivery statistics for ALL webhooks. Fire counts go back to zero.\n\nResponse: `{\"success\": true}`"
+              }
+            },
+            {
+              "name": "Stats Webhooks One",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/stats/webhooks/:name",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "stats",
+                    "webhooks",
+                    ":name"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Returns delivery statistics for a single webhook by name.\n\nResponse: `{\"name\": \"...\", \"fired\": N, \"last_fired\": \"...\"}`"
+              }
+            },
+            {
+              "name": "Delete Stats Webhooks One",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "{{BASE_URL}}/stats/webhooks/:name",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "stats",
+                    "webhooks",
+                    ":name"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Resets delivery statistics for a single webhook by name.\n\nResponse: `{\"success\": true}`"
+              }
+            },
+            {
               "name": "Get Status Controller",
               "request": {
                 "method": "GET",

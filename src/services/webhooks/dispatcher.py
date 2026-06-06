@@ -26,12 +26,13 @@ async def dispatch_event(event_type: str, data: dict) -> None:
 
         context = {**data, "event": event_type}
 
+        from src.services.stats import increment, increment_webhook
         for wh in webhooks:
             asyncio.create_task(
                 trigger_webhook(wh, context, default_payload=default_payload)
             )
+            increment_webhook(wh.get("name", "unknown"))
 
-        from src.services.stats import increment
         increment("webhooks_fired", len(webhooks))
         logger.debug(f"📡 Event '{event_type}' dispatched to {len(webhooks)} webhook(s)")
     except Exception as e:

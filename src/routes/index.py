@@ -10,7 +10,10 @@ from src.controllers.status.memoryController import get_memory_status
 from src.controllers.status.volumeController import get_volume_status
 from src.controllers.status.logsController import get_logs, list_log_files
 from src.services.logs_cleanup import run_logs_cleanup
-from src.controllers.status.statsController import get_stats, delete_stats
+from src.controllers.status.statsController import (
+    get_stats, delete_stats,
+    get_webhook_stats_controller, delete_webhook_stats_controller,
+)
 
 router = APIRouter()
 
@@ -37,6 +40,22 @@ async def logs_cleanup_route():
     return {"success": True, **result}
 router.get("/stats", dependencies=[Depends(auth)])(get_stats)
 router.delete("/stats", dependencies=[Depends(auth)])(delete_stats)
+
+@router.get("/stats/webhooks", dependencies=[Depends(auth)])
+async def stats_webhooks_all():
+    return await get_webhook_stats_controller()
+
+@router.get("/stats/webhooks/{name}", dependencies=[Depends(auth)])
+async def stats_webhooks_one(name: str):
+    return await get_webhook_stats_controller(name)
+
+@router.delete("/stats/webhooks", dependencies=[Depends(auth)])
+async def delete_stats_webhooks_all():
+    return await delete_webhook_stats_controller()
+
+@router.delete("/stats/webhooks/{name}", dependencies=[Depends(auth)])
+async def delete_stats_webhooks_one(name: str):
+    return await delete_webhook_stats_controller(name)
 
 _COLLECTION_PATH = Path(__file__).resolve().parents[2] / "ZapUnlocked.collection.json"
 

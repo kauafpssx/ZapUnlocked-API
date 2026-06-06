@@ -47,6 +47,21 @@ ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
         "Resets all runtime statistics counters (messages sent/received, webhooks fired) "
         "back to zero. Does NOT restart the server or disconnect WhatsApp.\n\n"
         'Response: `{"success": true}`',
+
+    # ── Webhook Stats ─────────────────────────────────────────────────────
+    "/stats/webhooks":
+        "Returns delivery statistics for all registered webhooks, including fire count "
+        "and last-fired timestamp for each.\n\n"
+        'Response: `{"total": N, "webhooks": [{"name": "...", "fired": N, "last_fired": "..."}]}`',
+    "GET /stats/webhooks/{name}":
+        "Returns delivery statistics for a single webhook by name.\n\n"
+        'Response: `{"name": "...", "fired": N, "last_fired": "..."}`',
+    "DELETE /stats/webhooks":
+        "Resets delivery statistics for ALL webhooks. Fire counts go back to zero.\n\n"
+        'Response: `{"success": true}`',
+    "DELETE /stats/webhooks/{name}":
+        "Resets delivery statistics for a single webhook by name.\n\n"
+        'Response: `{"success": true}`',
     "/status":
         "Returns general connection and instance status. Use this endpoint to check "
         "whether the WhatsApp client is connected, the server is ready, and the instance name/ID.",
