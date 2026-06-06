@@ -50,7 +50,7 @@ async def convert_audio(input_path: str, target_format: str = "ogg") -> tuple[st
 
     try:
         def run_ffmpeg():
-            resolved = [get_ffmpeg_path()] + cmd[1:]
+            resolved = [get_ffmpeg_path(), "-loglevel", "error"] + cmd[1:]
             return subprocess.run(resolved, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
         result = await asyncio.to_thread(run_ffmpeg)
@@ -62,7 +62,7 @@ async def convert_audio(input_path: str, target_format: str = "ogg") -> tuple[st
         # Get duration from ffmpeg -i (stderr) — no ffprobe dependency
         def get_duration() -> int:
             probe = subprocess.run(
-                [get_ffmpeg_path(), "-i", str(output_path)],
+                [get_ffmpeg_path(), "-loglevel", "error", "-i", str(output_path)],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,

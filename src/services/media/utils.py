@@ -73,6 +73,9 @@ def run_ffmpeg_sync(cmd):
     """Run FFmpeg synchronously for use with asyncio.to_thread. Auto-resolves 'ffmpeg' to the cached path."""
     if cmd and cmd[0] == "ffmpeg":
         cmd = [get_ffmpeg_path()] + cmd[1:]
+    # Insert -loglevel error right after the executable to silence banner/progress spam
+    if len(cmd) > 1 and cmd[1] != "-loglevel":
+        cmd = [cmd[0], "-loglevel", "error"] + cmd[1:]
     return subprocess.run(
         cmd,
         stdout=subprocess.PIPE,

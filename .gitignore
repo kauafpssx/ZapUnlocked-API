@@ -50,9 +50,6 @@ docs/internal/
 # Obsidian vault (personal notes, not for public repo)
 obsidian/
 
-# External API reference collections (internal use only)
-Z-API Collection.postman_collection.json
-
 # Temp media uploads
 temp_media/
 
@@ -70,6 +67,7 @@ logs/
 *.swo
 .agent/
 .ruff_cache/
+0.4.14
 
 # OS
 .DS_Store
