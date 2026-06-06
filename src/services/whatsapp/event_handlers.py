@@ -489,12 +489,36 @@ async def handle_message_async(c: NewClient, message: MessageEv) -> None:
 
     phone = jid.split("@")[0]
 
+    # Meta AI identifiers — per whatsmeow Go source (types/jid.go):
+    #   Old:  MetaAIJID    = "13135550002"@s.whatsapp.net
+    #   New:  NewMetaAIJID = "867051314767696"@bot    (personal)
+    #   Biz:  "718584497008509"@bot                     (business)
+    _META_AI_PHONES = {
+        "13135550002",
+        "867051314767696",    # personal (NewMetaAIJID)
+        "718584497008509",    # business
+    }
+    import os as _os
+    env_phone = _os.getenv("META_AI_PHONE")
+    if env_phone and env_phone not in _META_AI_PHONES:
+        _META_AI_PHONES.add(env_phone)
+    env_personal = _os.getenv("META_AI_PERSONAL")
+    if env_personal and env_personal not in _META_AI_PHONES:
+        _META_AI_PHONES.add(env_personal)
+    env_business = _os.getenv("META_AI_BUSINESS")
+    if env_business and env_business not in _META_AI_PHONES:
+        _META_AI_PHONES.add(env_business)
+
     parsed = parse_message(message)
     if not parsed:
         _cache_reaction_if_present(message)
         return
 
     _cache_reaction_if_present(message)
+
+    if phone in _META_AI_PHONES:
+        await _handle_meta_ai_response(message, parsed)
+        return
 
     text_content = parsed.get("text", "")
     resolved_name = message.Info.Pushname or phone
@@ -520,28 +544,8 @@ async def handle_message_async(c: NewClient, message: MessageEv) -> None:
 
     _auto_read_message(c, message, source)
 
-    # Meta AI identifiers — per whatsmeow Go source (types/jid.go):
-    #   Old:  MetaAIJID    = "13135550002"@s.whatsapp.net
-    #   New:  NewMetaAIJID = "867051314767696"@bot    (personal)
-    #   Biz:  "718584497008509"@bot                     (business)
-    _META_AI_PHONES = {
-        "13135550002",
-        "867051314767696",    # personal (NewMetaAIJID)
-        "718584497008509",    # business
-    }
-    import os as _os
-    env_phone = _os.getenv("META_AI_PHONE")
-    if env_phone and env_phone not in _META_AI_PHONES:
-        _META_AI_PHONES.add(env_phone)
-    env_personal = _os.getenv("META_AI_PERSONAL")
-    if env_personal and env_personal not in _META_AI_PHONES:
-        _META_AI_PHONES.add(env_personal)
-    env_business = _os.getenv("META_AI_BUSINESS")
-    if env_business and env_business not in _META_AI_PHONES:
-        _META_AI_PHONES.add(env_business)
-    if phone in _META_AI_PHONES:
-        await _handle_meta_ai_response(message, parsed)
-        return
+    from src.services.stats import increment
+    increment("messages_received")
 
     _forward_to_handler(c, message)
 

@@ -31,6 +31,8 @@ async def dispatch_event(event_type: str, data: dict) -> None:
                 trigger_webhook(wh, context, default_payload=default_payload)
             )
 
+        from src.services.stats import increment
+        increment("webhooks_fired", len(webhooks))
         logger.debug(f"📡 Event '{event_type}' dispatched to {len(webhooks)} webhook(s)")
     except Exception as e:
         logger.error(f"Failed to dispatch event '{event_type}': {e}")

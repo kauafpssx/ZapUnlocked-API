@@ -8,7 +8,9 @@ from src.controllers.status.healthController import health_controller
 from src.controllers.status.readinessController import readiness_controller
 from src.controllers.status.memoryController import get_memory_status
 from src.controllers.status.volumeController import get_volume_status
-from src.controllers.status.logsController import get_logs
+from src.controllers.status.logsController import get_logs, list_log_files
+from src.services.logs_cleanup import run_logs_cleanup
+from src.controllers.status.statsController import get_stats, delete_stats
 
 router = APIRouter()
 
@@ -26,7 +28,15 @@ router.get("/status/health")(health_controller)
 router.get("/status/readiness")(readiness_controller)
 router.get("/status/memory", dependencies=[Depends(auth)])(get_memory_status)
 router.get("/status/volume", dependencies=[Depends(auth)])(get_volume_status)
+router.get("/logs/files", dependencies=[Depends(auth)])(list_log_files)
 router.get("/logs", dependencies=[Depends(auth)])(get_logs)
+
+@router.post("/logs/cleanup", dependencies=[Depends(auth)])
+async def logs_cleanup_route():
+    result = await run_logs_cleanup()
+    return {"success": True, **result}
+router.get("/stats", dependencies=[Depends(auth)])(get_stats)
+router.delete("/stats", dependencies=[Depends(auth)])(delete_stats)
 
 _COLLECTION_PATH = Path(__file__).resolve().parents[2] / "ZapUnlocked.collection.json"
 

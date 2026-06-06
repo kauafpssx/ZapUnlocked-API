@@ -63,8 +63,10 @@ async def _dispatch_sent_event(jid: str, event_type: str, res):
             return
 
         from src.services.webhooks.dispatcher import dispatch_event
+        from src.services.stats import increment
         phone = jid.split("@")[0]
 
+        increment("messages_sent")
         payload = {"to": phone, "type": event_type, "messageId": res.ID}
         await dispatch_event("message.sent", payload)
         await dispatch_event(f"message.sent.{event_type}", payload)
