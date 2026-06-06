@@ -1,7 +1,15 @@
+import hashlib
+import hmac
+import json
 import httpx
 from datetime import datetime, timezone
 
 from src.utils.logger import logger
+
+
+def _sign_payload(secret: str, payload: dict) -> str:
+    body = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
+    return "sha256=" + hmac.new(secret.encode(), body.encode(), hashlib.sha256).hexdigest()  # noqa: S324
 
 
 async def trigger_webhook(config: dict, context: dict, default_payload: dict | None = None):
@@ -9,6 +17,7 @@ async def trigger_webhook(config: dict, context: dict, default_payload: dict | N
     method = config.get("method", "POST")
     headers = config.get("headers", {})
     body = config.get("body", {})
+    secret = config.get("secret")
 
     if not url:
         return
@@ -40,6 +49,9 @@ async def trigger_webhook(config: dict, context: dict, default_payload: dict | N
 
     try:
         logger.info(f"🔗 Triggering webhook: {method} {url}")
+
+        if secret and method in ["POST", "PUT", "PATCH"]:
+            final_headers["X-Webhook-Signature"] = _sign_payload(secret, final_body)
 
         timeout = httpx.Timeout(connect=3.0, read=10.0, write=5.0, pool=5.0)
         async with httpx.AsyncClient(follow_redirects=True, timeout=timeout) as client:

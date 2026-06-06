@@ -12,6 +12,7 @@ class WebhookCreateRequest(BaseModel):
     body: dict = {}
     events: list[str] = ["*"]
     active: bool = True
+    secret: Optional[str] = None
 
 
 class WebhookUpdateRequest(BaseModel):
@@ -21,6 +22,7 @@ class WebhookUpdateRequest(BaseModel):
     body: Optional[dict] = None
     events: Optional[list[str]] = None
     active: Optional[bool] = None
+    secret: Optional[str] = None
 
 
 class WebhookToggleRequest(BaseModel):

@@ -381,9 +381,10 @@ ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
     "/webhooks":
         "Creates a new webhook endpoint. The server will POST event payloads to "
         "this URL whenever matching events occur.\n\n"
-        "Required: `name`, `url` (your endpoint), "
-        "`events` (array of event names, or `[\"*\"]` for all), "
-        "`active` (boolean to enable immediately).\n\n"
+        "Required: name, url, events (array of event names, or [\"*\"] for all), "
+        "active (boolean to enable immediately).\n"
+        "Optional: secret (string) — if set, outgoing payloads are signed with "
+        "HMAC-SHA256 and the signature is sent in the X-Webhook-Signature header.\n\n"
         "Available event types:\n"
         "- `message.*` / `message.text` / `message.image` / `message.audio` / etc.\n"
         "- `message.contacts` — contact array messages\n"

@@ -357,10 +357,27 @@ ENDPOINT_BODIES: Dict[str, Any] = {
     # WEBHOOK
     # ═══════════════════════════════════════════════════════════════════
     "/webhooks": {
+        "__commented__": {
+            "secret": '"your-secret", | signs payload with HMAC-SHA256',
+            "method": '"GET", | default: POST',
+            "headers": '{"Authorization": "Bearer ..."}, | custom headers',
+            "body": '{"key": "value"}, | request template body',
+        },
         "name": "my-webhook",
         "url": "https://example.com/webhook",
         "events": ["*"],
         "active": True,
+    },
+    "/webhooks/{name}": {
+        "__commented__": {
+            "url": '"https://example.com/webhook"',
+            "method": '"GET"',
+            "headers": '{"Authorization": "Bearer ..."}',
+            "body": '{"key": "value"}',
+            "events": '["*"]',
+            "active": "true",
+            "secret": '"your-secret"',
+        },
     },
 
     # ═══════════════════════════════════════════════════════════════════

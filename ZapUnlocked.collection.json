@@ -3251,14 +3251,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"my-webhook\",\n    \"url\": \"https://example.com/webhook\",\n    \"events\": [\n        \"*\"\n    ],\n    \"active\": true\n}",
+              "raw": "{\n    \"name\": \"my-webhook\",\n    \"url\": \"https://example.com/webhook\",\n    \"events\": [\n        \"*\"\n    ],\n    \"active\": true\n    // \"secret\": \"your-secret\", | signs payload with HMAC-SHA256\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Creates a new webhook endpoint. The server will POST event payloads to this URL whenever matching events occur.\n\nRequired: `name`, `url` (your endpoint), `events` (array of event names, or `[\"*\"]` for all), `active` (boolean to enable immediately).\n\nAvailable event types:\n- `message.*` / `message.text` / `message.image` / `message.audio` / etc.\n- `message.contacts` — contact array messages\n- `message.sent` / `message.delivered` / `message.read` — delivery receipts\n- `message.poll_created` / `message.poll_vote` — poll events\n- `connection.*` — connection state changes\n- `qr.*` — QR code events\n- `call.*` — call events\n- `group.*` — group events\n- `contact.*` — presence/chat state events\n- `media.cleanup.*` — automatic media cleanup events\n- `ai.response` — Meta AI reply received"
+            "description": "Creates a new webhook endpoint. The server will POST event payloads to this URL whenever matching events occur.\n\nRequired: name, url, events (array of event names, or [\"*\"] for all), active (boolean to enable immediately).\nOptional: secret (string) — if set, outgoing payloads are signed with HMAC-SHA256 and the signature is sent in the X-Webhook-Signature header.\n\nAvailable event types:\n- `message.*` / `message.text` / `message.image` / `message.audio` / etc.\n- `message.contacts` — contact array messages\n- `message.sent` / `message.delivered` / `message.read` — delivery receipts\n- `message.poll_created` / `message.poll_vote` — poll events\n- `connection.*` — connection state changes\n- `qr.*` — QR code events\n- `call.*` — call events\n- `group.*` — group events\n- `contact.*` — presence/chat state events\n- `media.cleanup.*` — automatic media cleanup events\n- `ai.response` — Meta AI reply received"
           }
         },
         {
@@ -3286,14 +3286,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"my-webhook\",\n    \"url\": \"https://example.com/webhook\",\n    \"events\": [\n        \"*\"\n    ],\n    \"active\": true\n}",
+              "raw": "{\n    \"name\": \"my-webhook\",\n    \"url\": \"https://example.com/webhook\",\n    \"events\": [\n        \"*\"\n    ],\n    \"active\": true\n    // \"secret\": \"your-secret\", | signs payload with HMAC-SHA256\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Creates a new webhook endpoint. The server will POST event payloads to this URL whenever matching events occur.\n\nRequired: `name`, `url` (your endpoint), `events` (array of event names, or `[\"*\"]` for all), `active` (boolean to enable immediately).\n\nAvailable event types:\n- `message.*` / `message.text` / `message.image` / `message.audio` / etc.\n- `message.contacts` — contact array messages\n- `message.sent` / `message.delivered` / `message.read` — delivery receipts\n- `message.poll_created` / `message.poll_vote` — poll events\n- `connection.*` — connection state changes\n- `qr.*` — QR code events\n- `call.*` — call events\n- `group.*` — group events\n- `contact.*` — presence/chat state events\n- `media.cleanup.*` — automatic media cleanup events\n- `ai.response` — Meta AI reply received"
+            "description": "Creates a new webhook endpoint. The server will POST event payloads to this URL whenever matching events occur.\n\nRequired: name, url, events (array of event names, or [\"*\"] for all), active (boolean to enable immediately).\nOptional: secret (string) — if set, outgoing payloads are signed with HMAC-SHA256 and the signature is sent in the X-Webhook-Signature header.\n\nAvailable event types:\n- `message.*` / `message.text` / `message.image` / `message.audio` / etc.\n- `message.contacts` — contact array messages\n- `message.sent` / `message.delivered` / `message.read` — delivery receipts\n- `message.poll_created` / `message.poll_vote` — poll events\n- `connection.*` — connection state changes\n- `qr.*` — QR code events\n- `call.*` — call events\n- `group.*` — group events\n- `contact.*` — presence/chat state events\n- `media.cleanup.*` — automatic media cleanup events\n- `ai.response` — Meta AI reply received"
           }
         },
         {
