@@ -43,3 +43,12 @@ async def run_media_cleanup() -> None:
 
     if removed:
         logger.info(f"🧹 Media cleanup: removed {removed} file(s) from temp_media")
+
+    try:
+        from src.services.webhooks.dispatcher import dispatch_event
+        await dispatch_event("media.cleanup.completed", {
+            "filesRemoved": removed,
+            "remainingBytes": total_bytes,
+        })
+    except Exception:
+        pass

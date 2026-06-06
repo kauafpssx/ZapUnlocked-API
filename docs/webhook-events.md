@@ -187,6 +187,27 @@ Shared contact.
 
 ---
 
+### `message.contacts`
+
+Multiple contacts shared at once.
+
+```json
+{
+  "event": "message.contacts",
+  "data": {
+    "...base": "...",
+    "displayName": "2 contacts",
+    "count": 2,
+    "contacts": [
+      { "displayName": "Maria Souza", "vcard": "BEGIN:VCARD\n..." },
+      { "displayName": "João Silva", "vcard": "BEGIN:VCARD\n..." }
+    ]
+  }
+}
+```
+
+---
+
 ### `message.location`
 
 ```json
@@ -347,7 +368,7 @@ Message that could not be decrypted.
 
 ### `message.sent`
 
-> **Note:** Dispatched manually via the `/send` endpoint when configured. Not automatic for all routes yet — can be implemented on demand.
+Fired after every outgoing message, regardless of type.
 
 ```json
 {
@@ -356,6 +377,62 @@ Message that could not be decrypted.
     "to": "5511999999999",
     "type": "text",
     "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+
+`type` values: `text`, `image`, `audio`, `video`, `document`, `sticker`, `gif`, `interactive`, `poll`, `location`, `contact`, `contacts`, `link`, `reaction`, `edit`, `delete`.
+
+---
+
+### `message.sent.{type}`
+
+Same payload as `message.sent`, but with a specific event name per type. Useful when you only want to subscribe to a single outgoing message type.
+
+```
+message.sent.text
+message.sent.image
+message.sent.audio
+message.sent.video
+message.sent.document
+message.sent.sticker
+message.sent.gif
+message.sent.interactive
+message.sent.poll
+message.sent.location
+message.sent.contact
+message.sent.link
+message.sent.reaction
+```
+
+Example:
+
+```json
+{
+  "event": "message.sent.image",
+  "data": {
+    "to": "5511999999999",
+    "type": "image",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+
+---
+
+### `message.delivered`
+
+Message delivered to the recipient's device.
+
+```json
+{
+  "event": "message.delivered",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "messageIds": ["3EB0ABCDEF123456"],
+    "type": 1,
+    "timestamp": 1704067200
   }
 }
 ```
@@ -727,6 +804,77 @@ Call ended.
   }
 }
 ```
+
+---
+
+## Media Events
+
+### `media.cleanup.completed`
+
+Fired after each automatic TEMP_DIR cleanup cycle (runs every hour).
+
+```json
+{
+  "event": "media.cleanup.completed",
+  "data": {
+    "filesRemoved": 12,
+    "remainingBytes": 52428800
+  }
+}
+```
+
+`filesRemoved: 0` means nothing was old or oversized — the event still fires every cycle.
+
+---
+
+## AI Events
+
+### `ai.response`
+
+Fired when a message is received from Meta AI. Always dispatched — regardless of whether there's a pending `POST /ai/ask` request.
+
+> **Note:** `POST /ai/ask` and `POST /ai/imagine` already return these same fields directly in the HTTP response (await with 30s timeout). Use this webhook when you need to handle responses asynchronously or when the timeout is not enough.
+
+**Text response** (from `POST /ai/ask`):
+
+```json
+{
+  "event": "ai.response",
+  "data": {
+    "text": "Brasília!",
+    "hasImage": false,
+    "imageBase64": null,
+    "imageUrl": null,
+    "mimeType": null,
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+
+**Image response** (from `POST /ai/imagine`):
+
+```json
+{
+  "event": "ai.response",
+  "data": {
+    "text": "What kind of hat is the cat wearing?",
+    "hasImage": true,
+    "imageBase64": "/9j/4AAQSkZJRgAB...",
+    "imageUrl": null,
+    "mimeType": "image/jpeg",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `text` | `string` | Meta AI response text. For `/imagine`, this is the image caption. |
+| `hasImage` | `boolean` | `true` when Meta AI sent an image. |
+| `imageBase64` | `string \| null` | Base64-encoded image bytes. Set when `hasImage: true`. |
+| `imageUrl` | `string \| null` | URL to the saved image (`/media/{filename}`). Only set when `META_AI_KEEP_IMAGES=true` on non-Alwaysdata environments. |
+| `mimeType` | `string \| null` | Image MIME type (e.g. `"image/jpeg"`). Set when `hasImage: true`. |
+| `messageId` | `string` | WhatsApp message ID of the Meta AI response. |
 
 ---
 

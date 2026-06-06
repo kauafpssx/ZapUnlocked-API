@@ -119,6 +119,25 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
             })
             return
 
+        # ── Contacts array ───────────────────────────────────
+        if _has(raw, "contactsArrayMessage"):
+            arr = raw.contactsArrayMessage
+            contacts = []
+            try:
+                contacts = [
+                    {"displayName": _safe_str(c, "displayName"), "vcard": _safe_str(c, "vcard")}
+                    for c in arr.contacts
+                ]
+            except Exception:
+                pass
+            await dispatch_event("message.contacts", {
+                **base,
+                "displayName": _safe_str(arr, "displayName"),
+                "count": len(contacts),
+                "contacts": contacts,
+            })
+            return
+
         # ── Location ───────────────────────────────────────────
         if _has(raw, "locationMessage"):
             loc = raw.locationMessage

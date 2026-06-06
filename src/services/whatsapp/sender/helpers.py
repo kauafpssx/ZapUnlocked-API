@@ -65,11 +65,9 @@ async def _dispatch_sent_event(jid: str, event_type: str, res):
         from src.services.webhooks.dispatcher import dispatch_event
         phone = jid.split("@")[0]
 
-        await dispatch_event("message.sent", {
-            "to": phone,
-            "type": event_type,
-            "messageId": res.ID
-        })
+        payload = {"to": phone, "type": event_type, "messageId": res.ID}
+        await dispatch_event("message.sent", payload)
+        await dispatch_event(f"message.sent.{event_type}", payload)
     except Exception as e:
         logger.error(f"Failed to dispatch message.sent: {e}")
 
@@ -99,9 +97,14 @@ async def apply_pre_send(jid: str, options: dict, client) -> None:
         if secs > 0:
             try:
                 from neonize.utils.enum import ChatPresence, ChatPresenceMedia
-                client.send_chat_presence(build_jid(jid), ChatPresence.COMPOSING, ChatPresenceMedia.TEXT)
+                jid_obj = build_jid(jid)
+                await asyncio.to_thread(
+                    client.send_chat_presence, jid_obj, ChatPresence.CHAT_PRESENCE_COMPOSING, ChatPresenceMedia.CHAT_PRESENCE_MEDIA_TEXT
+                )
                 await asyncio.sleep(secs)
-                client.send_chat_presence(build_jid(jid), ChatPresence.PAUSED, ChatPresenceMedia.TEXT)
+                await asyncio.to_thread(
+                    client.send_chat_presence, jid_obj, ChatPresence.CHAT_PRESENCE_PAUSED, ChatPresenceMedia.CHAT_PRESENCE_MEDIA_TEXT
+                )
             except Exception as e:
                 logger.warning(f"send_chat_presence failed: {e}")
     if delay_message:
