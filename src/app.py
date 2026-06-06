@@ -18,6 +18,7 @@ from src.routes.system import router as system_router
 from src.routes.instance import router as instance_router
 from src.routes.webhooks import router as webhooks_router
 from src.routes.session import router as session_router
+from src.routes.ai import router as ai_router
 from src.middleware.ip_control import IPControlMiddleware
 from src.middleware.json_cleaner import json_comment_stripper
 
@@ -60,6 +61,12 @@ def create_app(lifespan: Any = None) -> FastAPI:
     if _static_dir.is_dir():
         app.mount("/static", StaticFiles(directory=str(_static_dir)), name="static")
 
+    # ── Temp media (Meta AI images, etc) — only when META_AI_KEEP_IMAGES=true ──
+    from src.config.constants import TEMP_DIR, IS_ALWAYSDATA
+    if os.getenv("META_AI_KEEP_IMAGES", "false").lower() == "true" and not IS_ALWAYSDATA:
+        Path(TEMP_DIR).mkdir(parents=True, exist_ok=True)
+        app.mount("/media", StaticFiles(directory=TEMP_DIR), name="media")
+
     # ── Favicon ──────────────────────────────────────────────
     _favicon_path = Path(__file__).resolve().parent.parent / "favicon.ico"
     if _favicon_path.exists():
@@ -79,5 +86,6 @@ def create_app(lifespan: Any = None) -> FastAPI:
     app.include_router(instance_router, prefix="/instance")
     app.include_router(webhooks_router, prefix="/webhooks")
     app.include_router(session_router, prefix="/session")
+    app.include_router(ai_router, prefix="/ai")
 
     return app

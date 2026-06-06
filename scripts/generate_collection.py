@@ -230,6 +230,10 @@ FOLDER_MAP: List[Tuple[Optional[str], List[str]]] = [
 
     # ── Webhooks ──────────────────────────────────────────────────────
     ("/webhooks", ["Webhooks"]),
+
+    # ── AI ────────────────────────────────────────────────────────────
+    ("/ai/ask",     ["AI"]),
+    ("/ai/imagine", ["AI"]),
 ]
 
 
@@ -294,6 +298,8 @@ FIELD_EXAMPLES = {
     "lat": -23.550520,
     "lng": -46.633308,
     "pixValue": 19.90,
+    "prompt": "A cute cat wearing a hat, digital art",
+    "timeout": 30,
 }
 
 # ── Endpoint-specific body overrides for better examples ─────────────────
@@ -572,6 +578,16 @@ ENDPOINT_BODIES = {
         "url": "https://myserver.com/hook",
         "events": ["*"],
         "active": True,
+    },
+
+    # ── AI ────────────────────────────────────────────────────────────
+    "/ai/ask": {
+        "message": "What is the capital of Brazil?",
+        "timeout": 30,
+    },
+    "/ai/imagine": {
+        "prompt": "A cute cat wearing a hat, digital art",
+        "timeout": 60,
     },
 }
 

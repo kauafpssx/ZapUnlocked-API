@@ -33,6 +33,81 @@
   ],
   "item": [
     {
+      "name": "AI",
+      "item": [
+        {
+          "name": "Ask Controller",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/ai/ask",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "ai",
+                "ask"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"message\": \"What is the capital of Brazil?\",\n    \"timeout\": 30\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Imagine Controller",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/ai/imagine",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "ai",
+                "imagine"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"prompt\": \"A cute cat wearing a hat, digital art\",\n    \"timeout\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Collection",
       "item": [
         {
