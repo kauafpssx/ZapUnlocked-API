@@ -2049,6 +2049,41 @@
                 },
                 "description": "Sends a plain text message to a WhatsApp contact or group.\n\nOptional parameters:\n- `delay_message`: Server-side delay before sending. Can be a number (seconds) or a range string like \"2-5\" for random delay.\n- `delay_typing`: Shows the \"typing…\" indicator for N seconds before sending. Simulates a human typing.\n- `mentioned`: Array of phone numbers to @mention in group messages. Marked via ContextInfo — does NOT add @ symbol in text automatically. Add @ manually in `message` if you want visible mentions."
               }
+            },
+            {
+              "name": "Send Bulk",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/send_bulk",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "send_bulk"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phones\": [\n        \"{{PHONE}}\",\n        \"5511988888888\"\n    ],\n    \"message\": \"Hello! This is a bulk test message.\",\n    \"delay_message\": null,\n    \"delay_typing\": 2,\n    \"delay_between\": \"1-3\",\n    \"mentioned\": null\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Sends the same text message to multiple WhatsApp contacts in sequence.\n\nRequired:\n- `phones`: Array of phone numbers (strings) to send the message to\n- `message`: The text content to send\n\nOptional:\n- `delay_message`: Per-message server-side delay before sending\n- `delay_typing`: Per-message typing indicator duration\n- `delay_between`: Delay BETWEEN messages (not per-message). Can be a number or a range like \"1-3\" for random delay.\n- `mentioned`: Array of phone numbers to @mention in group messages\n\nResponse: `{\"sent\": N, \"failed\": N, \"results\": [...]}`"
+              }
             }
           ]
         }

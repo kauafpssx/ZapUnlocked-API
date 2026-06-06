@@ -24,6 +24,7 @@ from src.controllers.whatsapp.send.sendDelete import delete_msg
 from src.controllers.whatsapp.send.sendRead import read_messages
 from src.controllers.whatsapp.send.sendEdit import send_edit
 from src.controllers.whatsapp.send.sendOptionList import send_option_list
+from src.controllers.whatsapp.send.sendBulk import send_bulk
 
 router = APIRouter(dependencies=[Depends(auth)])
 
@@ -37,6 +38,7 @@ router.post("/send_sticker")(send_sticker)
 
 # ── Basic messages ────────────────────────────────────
 router.post("/send")(send_message)
+router.post("/send_bulk")(send_bulk)
 router.post("/send_reaction")(send_reaction)
 
 # ── New routes ─────────────────────────────────────────

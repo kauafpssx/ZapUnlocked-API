@@ -31,6 +31,7 @@ from src.schemas.send import (
     DeleteMessageRequest,
     ReadMessagesRequest,
     SendEditMessageRequest,
+    BulkSendTextRequest,
 )
 from src.schemas.settings import (
     ProfileUpdateRequest,

@@ -77,6 +77,18 @@ ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
         "- `mentioned`: Array of phone numbers to @mention in group messages. "
         "Marked via ContextInfo — does NOT add @ symbol in text automatically. "
         "Add @ manually in `message` if you want visible mentions.",
+    "/send_bulk":
+        "Sends the same text message to multiple WhatsApp contacts in sequence.\n\n"
+        "Required:\n"
+        "- `phones`: Array of phone numbers (strings) to send the message to\n"
+        "- `message`: The text content to send\n\n"
+        "Optional:\n"
+        "- `delay_message`: Per-message server-side delay before sending\n"
+        "- `delay_typing`: Per-message typing indicator duration\n"
+        '- `delay_between`: Delay BETWEEN messages (not per-message). Can be a number '
+        'or a range like "1-3" for random delay.\n'
+        "- `mentioned`: Array of phone numbers to @mention in group messages\n\n"
+        "Response: `{\"sent\": N, \"failed\": N, \"results\": [...]}`",
 
     # ── Media ──────────────────────────────────────────────────────────
     "/send_image":

@@ -48,6 +48,14 @@ ENDPOINT_BODIES: Dict[str, Any] = {
         "delay_typing": 2,
         "mentioned": None,
     },
+    "/send_bulk": {
+        "phones": ["{{PHONE}}", "5511988888888"],
+        "message": "Hello! This is a bulk test message.",
+        "delay_message": None,
+        "delay_typing": 2,
+        "delay_between": "1-3",
+        "mentioned": None,
+    },
     # ── Media (unified: url OR file upload) ──────────────────────────
     "/send_image": {
         "phone": "{{PHONE}}",

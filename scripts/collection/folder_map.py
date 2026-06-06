@@ -39,6 +39,7 @@ FOLDER_MAP: List[Tuple[Optional[str], List[str]]] = [
 
     # ── Messages (plain send) ─────────────────────────────────────────
     ("/send",            ["Messages", "Text"]),
+    ("/send_bulk",       ["Messages", "Text"]),
     ("/send_image",      ["Messages", "Media"]),
     ("/send_audio",      ["Messages", "Media"]),
     ("/send_video",      ["Messages", "Media"]),

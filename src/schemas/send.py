@@ -207,3 +207,12 @@ class ReadMessagesRequest(BaseModel):
 class SendEditMessageRequest(BaseWhatsAppRequest):
     messageId: str
     message: str
+
+
+class BulkSendTextRequest(BaseModel):
+    phones: List[str]
+    message: str
+    delay_message: Optional[Union[int, float, str]] = None
+    delay_typing: Optional[Union[int, float]] = None
+    delay_between: Optional[Union[int, float, str]] = None
+    mentioned: Optional[List[str]] = None
