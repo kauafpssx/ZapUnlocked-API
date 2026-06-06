@@ -30,6 +30,9 @@ async def lifespan(app: FastAPI):
     # ── Media auto-cleanup loop ─────────────────────────
     asyncio.create_task(_media_cleanup_loop())
 
+    # ── Log compression + cleanup loop ──────────────────
+    asyncio.create_task(_logs_cleanup_loop())
+
     logger.info(f"🚀 API running on port {PORT}")
     yield
 
@@ -114,6 +117,22 @@ async def _media_cleanup_loop():
             await run_media_cleanup()
         except Exception as e:
             logger.warning(f"Media cleanup error: {e}")
+
+
+async def _logs_cleanup_loop():
+    # Run once at startup to compress yesterday's log, then daily
+    try:
+        from src.services.logs_cleanup import run_logs_cleanup
+        await run_logs_cleanup()
+    except Exception as e:
+        logger.warning(f"Log cleanup error: {e}")
+    while True:
+        await asyncio.sleep(86400)  # 24h
+        try:
+            from src.services.logs_cleanup import run_logs_cleanup
+            await run_logs_cleanup()
+        except Exception as e:
+            logger.warning(f"Log cleanup error: {e}")
 
 
 def _safe_disconnect(client):

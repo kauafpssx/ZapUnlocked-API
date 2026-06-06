@@ -67,7 +67,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Sends a text message to Meta AI via WhatsApp and waits for its response.\n\nThe message is forwarded to the Meta AI contact (13135550002@s.whatsapp.net). The server blocks until a reply is received or the `timeout` is reached.\n\nResponse includes:\n- `text`: The AI's reply text\n- `hasImage`: Whether the response includes an image\n- `messageId`: The WhatsApp message ID of the reply\n\nRequires an active WhatsApp connection."
           }
         },
         {
@@ -102,7 +103,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Generates an image using Meta AI's /imagine feature.\n\nInternally sends `/imagine {prompt}` to the Meta AI contact and returns the generated image along with any accompanying text.\n\nResponse shape same as /ai/ask with `hasImage: true` when successful.\n\nRequires an active WhatsApp connection."
           }
         }
       ]
@@ -122,7 +124,8 @@
               "path": [
                 "collection.json"
               ]
-            }
+            },
+            "description": "Get Collection."
           }
         },
         {
@@ -147,7 +150,8 @@
                 "key": "x-api-key",
                 "value": "{{API_KEY}}"
               }
-            ]
+            ],
+            "description": "Update Collection."
           }
         }
       ]
@@ -187,7 +191,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Get Contact Info.\n\nRequest body: `Contact` schema"
           }
         },
         {
@@ -216,13 +221,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"action\": \"block\"\n}",
+              "raw": "{\n    \"phone\": \"{{PHONE}}\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Block User.\n\nRequest body: `Block` schema"
           }
         }
       ]
@@ -249,7 +255,8 @@
                 "key": "x-api-key",
                 "value": "{{API_KEY}}"
               }
-            ]
+            ],
+            "description": "Get Instance Device.\n\nReturn device data (Device, RawAgent, Integrator, etc)."
           }
         },
         {
@@ -271,7 +278,8 @@
                 "key": "x-api-key",
                 "value": "{{API_KEY}}"
               }
-            ]
+            ],
+            "description": "Get Instance Me.\n\nReturn instance profile data (phone, jid, PushName, etc)."
           }
         },
         {
@@ -306,7 +314,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Updates the display name of this API instance. The name appears in logs and status responses."
           }
         },
         {
@@ -330,7 +339,8 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Get Qr Page."
               }
             },
             {
@@ -352,7 +362,8 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Get Qr Image."
               }
             },
             {
@@ -378,7 +389,17 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Logout."
               }
             },
             {
@@ -413,7 +434,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Pairs a new device via pairing code. This is an alternative to QR code scanning.\n\nRequired: `phone` (the phone number to pair with, including country code). The server will request a pairing code from WhatsApp."
               }
             }
           ]
@@ -454,7 +476,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Enables or disables automatic read receipts for incoming messages. When enabled, messages are automatically marked as read upon receipt."
               }
             },
             {
@@ -490,7 +513,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Enables or disables automatic call rejection. When enabled, incoming calls are automatically rejected and the caller may see a configurable message."
               }
             },
             {
@@ -526,7 +550,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Sets the message displayed when a call is automatically rejected. Only applies when `call-reject-auto` is enabled."
               }
             },
             {
@@ -549,7 +574,8 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Get Phone Pair Code.\n\nPath parameters: `phone`\n\nGenerate a pairing code to connect a number without QR Code.\nEnter the code directly in WhatsApp (Linked Devices > Link with phone number).\n\nRequires client to be awaiting connection (no active session)."
               }
             }
           ]
@@ -594,7 +620,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Deletes a message for everyone (if possible) or for yourself.\n\nRequired: `phone`, `messageId`."
               }
             },
             {
@@ -629,7 +656,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Edits an existing message. Works only for messages sent by the same bot.\n\nRequired: `messageId`, `message` (new text content).\nOptional: `delay_message`, `delay_typing`, `mentioned`."
               }
             },
             {
@@ -664,7 +692,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Marks a message (or multiple messages) as read.\n\nRequired: `messageIds` (array of message IDs)."
               }
             }
           ]
@@ -704,7 +733,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Sends a single call button message. The recipient sees a button that initiates a phone call when tapped.\n\nRequired: `callPhone`, `button_text`, `title`, `text`.\nOptional: `delay_message`, `delay_typing`, `mentioned`."
               }
             },
             {
@@ -739,7 +769,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Sends an interactive button list message. Supports up to 5 buttons of mixed types.\n\nButton types available:\n- `quick_reply`: Simple reply button with `buttonText` and `id`\n- `url`: Opens a URL when tapped (`url` field)\n- `call`: Initiates a phone call (`callPhone` field)\n- `otp`: One-time password copy button (`code` field)\n\nNOTE: PIX buttons are NOT supported in combined lists — use the dedicated /messages/send-button-pix endpoint instead.\n\nOptional: `delay_message`, `delay_typing`, `mentioned`."
               }
             },
             {
@@ -774,7 +805,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Sends a one-time password (OTP) button. The recipient can copy the code with one tap.\n\nRequired: `code`, `button_text`, `title`, `text`.\nOptional: `footer` (string), `delay_message`, `delay_typing`, `mentioned`."
               }
             },
             {
@@ -809,7 +841,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Sends a PIX payment button (exclusive — cannot be combined with other button types).\n\nRequired:\n- `pixKey`: The PIX key (email, phone, CPF, CNPJ, or random)\n- `pixType`: Key type — EMAIL, PHONE, CPF, CNPJ, or RANDOM\n- `pixValue`: Amount in BRL (float)\n- `merchantName`: Your business/trading name\n- `pixCity`: Your city\n\nOptional: `pixDescription` (string), `button_text`, `title`, `text`, `delay_message`, `delay_typing`, `mentioned`."
               }
             },
             {
@@ -844,7 +877,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Sends quick reply buttons (simple reply options shown as buttons).\n\nRequired: `title`, `text`, `buttons` (array of `{text, id}` objects).\nOptional: `delay_message`, `delay_typing`, `mentioned`."
               }
             },
             {
@@ -879,7 +913,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Sends a single URL button message. The recipient sees a button that opens a URL when tapped.\n\nRequired: `url`, `button_text`, `title`, `text`.\nOptional: `delay_message`, `delay_typing`, `mentioned`."
               }
             },
             {
@@ -908,13 +943,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Hello! This is a test message.\"\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Choose an option\",\n    \"text\": \"Please select:\",\n    \"options\": [\n        {\n            \"title\": \"Option 1\",\n            \"description\": \"First option\"\n        },\n        {\n            \"title\": \"Option 2\",\n            \"description\": \"Second option\"\n        }\n    ],\n    \"button_text\": \"See options\",\n    \"footer\": \"Footer text\",\n    \"description\": \"Description text\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Sends an interactive list message with a menu of options. The user taps the button to expand the list and selects an option.\n\nRequired: `title`, `text`, `options` (array of option objects).\nOptional: `button_text`, `footer`, `description`, `delay_message`, `delay_typing`, `mentioned`."
               }
             }
           ]
@@ -954,7 +990,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Creates and sends a poll to a WhatsApp chat. Recipients can vote on options.\n\nRequired: `name` (poll question), `options` (array of strings, up to 12).\nOptional: `delay_message`, `delay_typing`, `mentioned`."
               }
             },
             {
@@ -989,10 +1026,135 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Votes on an existing poll.\n\nRequired: `options` (array of selected option strings), `pollId` (the poll message ID).\nOptional: `delay_message`, `delay_typing`, `mentioned`."
               }
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "Logs",
+      "item": [
+        {
+          "name": "Get Logs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/logs",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "logs"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "",
+                  "description": "Specific date YYYY-MM-DD (default: today)"
+                },
+                {
+                  "key": "from_date",
+                  "value": "",
+                  "description": "Start date YYYY-MM-DD"
+                },
+                {
+                  "key": "to_date",
+                  "value": "",
+                  "description": "End date YYYY-MM-DD"
+                },
+                {
+                  "key": "from_time",
+                  "value": "",
+                  "description": "Start time HH:MM (within selected dates)"
+                },
+                {
+                  "key": "to_time",
+                  "value": "",
+                  "description": "End time HH:MM (within selected dates)"
+                },
+                {
+                  "key": "level",
+                  "value": "",
+                  "description": "Filter by level: DEBUG, INFO, WARNING, ERROR, CRITICAL"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Text search in log message"
+                },
+                {
+                  "key": "limit",
+                  "value": "200",
+                  "description": "Max lines returned"
+                },
+                {
+                  "key": "offset",
+                  "value": "",
+                  "description": "Skip first N matching lines"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Returns server logs with powerful filtering. All parameters are optional query params.\n\nFilters:\n- `date` (YYYY-MM-DD): Specific day's logs (default: today)\n- `from_date` / `to_date` (YYYY-MM-DD): Date range (alternative to `date`)\n- `from_time` / `to_time` (HH:MM): Time range within the selected dates\n- `level`: Filter by log level — DEBUG, INFO, WARNING, ERROR, CRITICAL\n- `search`: Full-text search in log messages (case-insensitive)\n- `limit`: Max lines to return (default: 200, max: 10000)\n- `offset`: Skip first N matching lines (for pagination)\n\nUse `date` OR (`from_date` + `to_date`), never both.\n\nResponse includes `filters` (echo of applied filters), `total`, `returned`, `offset`, and `logs` array."
+          }
+        },
+        {
+          "name": "Logs Cleanup Route",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/logs/cleanup",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "logs",
+                "cleanup"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Runs log maintenance: compresses old .log files to .gz, then deletes compressed files that exceed age (LOG_MAX_AGE_DAYS, default 30) or total size (LOG_MAX_SIZE_MB, default 50 MB) limits.\n\nResponse: `{\"success\": true, \"compressed\": N, \"deleted\": N}`"
+          }
+        },
+        {
+          "name": "List Log Files",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/logs/files",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "logs",
+                "files"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Lists all available log files with their date and size. Each log file covers one day.\n\nResponse: `{\"success\": true, \"count\": N, \"files\": [{\"file\": \"...\", \"date\": \"YYYY-MM-DD\", \"sizeBytes\": N, \"sizeFormatted\": \"...\"}]}`"
+          }
         }
       ]
     },
@@ -1021,7 +1183,8 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Clear Storage."
               }
             }
           ]
@@ -1053,7 +1216,8 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Manual Cleanup."
               }
             },
             {
@@ -1089,7 +1253,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Updates database cleanup configuration.\n\nRequired: `interval` (cleanup interval in minutes). Older messages are purged periodically based on this setting."
               }
             },
             {
@@ -1112,7 +1277,8 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Get Status."
               }
             }
           ]
@@ -1152,7 +1318,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Fetches stored messages from the local database.\n\nRequired: `phone` (the chat to fetch from).\nOptional: `limit` (max messages to return, default 20)."
               }
             },
             {
@@ -1187,7 +1354,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Returns the most recent contacts/chats the bot has interacted with.\n\nOptional: `limit` (max contacts to return, default 20)."
               }
             }
           ]
@@ -1225,13 +1393,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"ZapUnlocked Support\",\n    \"contactPhone\": \"5511999999999\",\n    \"delay_message\": null,\n    \"delay_typing\": null,\n    \"mentioned\": null\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"string\",\n    \"contactPhone\": \"5511999999999\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Send Contact.\n\nRequest body: `SendContact` schema"
               }
             },
             {
@@ -1259,13 +1428,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"contacts\": [\n        {\n            \"name\": \"John Doe\",\n            \"phone\": \"5511988888888\"\n        },\n        {\n            \"name\": \"Jane Smith\",\n            \"phone\": \"5511977777777\"\n        }\n    ],\n    \"delay_message\": null,\n    \"delay_typing\": null,\n    \"mentioned\": null\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"contacts\": [\n        {\n            \"name\": \"string\",\n            \"phone\": \"string\"\n        }\n    ]\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Send Contacts.\n\nRequest body: `SendContacts` schema"
               }
             }
           ]
@@ -1298,13 +1468,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"url\": \"https://github.com\",\n    \"text\": \"Check out this repository!\",\n    \"title\": \"GitHub\",\n    \"description\": \"Where the world builds software\",\n    \"delay_message\": null,\n    \"delay_typing\": null,\n    \"mentioned\": null\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"url\": \"https://example.com\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Send Link.\n\nRequest body: `SendLink` schema"
               }
             }
           ]
@@ -1337,13 +1508,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"lat\": -23.55052,\n    \"lng\": -46.633308,\n    \"name\": \"Central Square\",\n    \"address\": \"New York, NY\",\n    \"delay_message\": null,\n    \"delay_typing\": null,\n    \"mentioned\": null\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"lat\": -23.55052,\n    \"lng\": -46.633308,\n    \"name\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Send Location.\n\nRequest body: `SendLocation` schema"
               }
             }
           ]
@@ -1424,7 +1596,8 @@
                       "type": "text"
                     }
                   ]
-                }
+                },
+                "description": "Sends an audio message. Accepts URL or file upload.\n\nOptional: `ptt` (boolean — send as voice note), `as_document` (boolean), `format` (string, e.g. \"m4a\", \"ogg\"), `delay_message`, `delay_typing`, `mentioned`."
               }
             },
             {
@@ -1470,8 +1643,13 @@
                       "type": "text"
                     },
                     {
-                      "key": "file_name",
+                      "key": "fileName",
                       "value": "document.pdf",
+                      "type": "text"
+                    },
+                    {
+                      "key": "caption",
+                      "value": "Document caption",
                       "type": "text"
                     },
                     {
@@ -1490,7 +1668,8 @@
                       "type": "text"
                     }
                   ]
-                }
+                },
+                "description": "Sends a document/file message. Accepts URL or file upload.\n\nOptional: `fileName` (string — overrides the displayed filename), `caption` (string), `delay_message`, `delay_typing`, `mentioned`."
               }
             },
             {
@@ -1537,7 +1716,7 @@
                     },
                     {
                       "key": "caption",
-                      "value": "Funny gif",
+                      "value": "GIF caption",
                       "type": "text"
                     },
                     {
@@ -1556,7 +1735,8 @@
                       "type": "text"
                     }
                   ]
-                }
+                },
+                "description": "Sends an animated GIF. Accepts URL or file upload.\n\nOptional: `caption` (string), `delay_message`, `delay_typing`, `mentioned`."
               }
             },
             {
@@ -1627,7 +1807,8 @@
                       "type": "text"
                     }
                   ]
-                }
+                },
+                "description": "Sends an image message. Accepts either a URL or a file upload.\n\nUse `url` (text field) to send from a remote URL, or `file` (file field) to upload from your local machine. If both are provided, `url` takes precedence.\n\nOptional: `caption` (string), `as_document` (boolean — send as file instead of image), `delay_message`, `delay_typing`, `mentioned`."
               }
             },
             {
@@ -1713,7 +1894,8 @@
                       "type": "text"
                     }
                   ]
-                }
+                },
+                "description": "Sends a sticker image. Accepts URL or file upload.\n\nAdditional sticker-specific fields:\n- `pack`: Sticker pack name\n- `author`: Sticker author\n- `resize_mode`: 'pad' (add padding) or 'crop' (crop to fit)\n- `pad_color`: Background color when using pad mode, e.g. 'black', 'white', '#FF0000'\n- `blur_intensity`: Blur strength for the background padding (int)\n\nOptional: `delay_message`, `delay_typing`, `mentioned`."
               }
             },
             {
@@ -1769,16 +1951,6 @@
                       "type": "text"
                     },
                     {
-                      "key": "gif_playback",
-                      "value": "false",
-                      "type": "text"
-                    },
-                    {
-                      "key": "ptv",
-                      "value": "false",
-                      "type": "text"
-                    },
-                    {
                       "key": "delay_message",
                       "value": "",
                       "type": "text"
@@ -1794,7 +1966,8 @@
                       "type": "text"
                     }
                   ]
-                }
+                },
+                "description": "Sends a video message. Accepts URL or file upload.\n\nOptional: `caption` (string), `as_document` (boolean), `delay_message`, `delay_typing`, `mentioned`."
               }
             }
           ]
@@ -1827,13 +2000,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\",\n    \"emoji\": \"\\\\uD83D\\\\uDC4D\",\n    \"delay_message\": null,\n    \"delay_typing\": null,\n    \"mentioned\": null\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\",\n    \"emoji\": \"\\\\uD83D\\\\uDC4D\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Send Reaction.\n\nRequest body: `SendReaction` schema"
               }
             }
           ]
@@ -1872,7 +2046,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Sends a plain text message to a WhatsApp contact or group.\n\nOptional parameters:\n- `delay_message`: Server-side delay before sending. Can be a number (seconds) or a range string like \"2-5\" for random delay.\n- `delay_typing`: Shows the \"typing…\" indicator for N seconds before sending. Simulates a human typing.\n- `mentioned`: Array of phone numbers to @mention in group messages. Marked via ContextInfo — does NOT add @ symbol in text automatically. Add @ manually in `message` if you want visible mentions."
               }
             }
           ]
@@ -1913,7 +2088,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Enables or disables IP-based access control. When enabled, only whitelisted IPs can access the API. Requests from non-whitelisted IPs are blocked."
               }
             },
             {
@@ -1948,7 +2124,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Enables or disables IP-based access control. When enabled, only whitelisted IPs can access the API. Requests from non-whitelisted IPs are blocked."
               }
             }
           ]
@@ -1975,7 +2152,8 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Get Ip Rules.\n\nReturn the current whitelist and blacklist."
               }
             },
             {
@@ -2011,7 +2189,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Adds an IP address to the blacklist. Requires `ip-control` to be enabled."
               }
             },
             {
@@ -2035,7 +2214,8 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Remove From Blacklist.\n\nPath parameters: `ip`\n\nRemove an IP address from the blacklist."
               }
             },
             {
@@ -2071,7 +2251,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Adds an IP address to the whitelist. Requires `ip-control` to be enabled."
               }
             },
             {
@@ -2095,7 +2276,8 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Remove From Whitelist.\n\nPath parameters: `ip`\n\nRemove an IP address from the whitelist."
               }
             }
           ]
@@ -2128,15 +2310,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"value\": \"Available via ZapUnlocked Bot\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
+                "description": "Set About.\n\nRequest body: `About` schema"
               }
             },
             {
@@ -2164,15 +2338,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"value\": \"all\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
+                "description": "Set Call Add.\n\nRequest body: `PrivacyValue` schema"
               }
             },
             {
@@ -2200,15 +2366,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"value\": 24\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
+                "description": "Set Disappearing Timer.\n\nRequest body: `DisappearingTimer` schema"
               }
             },
             {
@@ -2236,15 +2394,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"value\": \"contacts\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
+                "description": "Set Groups Add.\n\nRequest body: `PrivacyValue` schema"
               }
             },
             {
@@ -2272,15 +2422,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"value\": \"all\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
+                "description": "Set Last Seen.\n\nRequest body: `PrivacyValue` schema"
               }
             },
             {
@@ -2308,15 +2450,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"value\": \"all\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
+                "description": "Set Online.\n\nRequest body: `PrivacyValue` schema"
               }
             },
             {
@@ -2344,15 +2478,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"value\": \"contacts\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
+                "description": "Set Profile.\n\nRequest body: `PrivacyValue` schema"
               }
             },
             {
@@ -2380,15 +2506,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"value\": \"all\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
+                "description": "Set Read Receipts.\n\nRequest body: `PrivacyValue` schema"
               }
             },
             {
@@ -2416,15 +2534,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"value\": \"contacts\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
+                "description": "Set Status.\n\nRequest body: `PrivacyValue` schema"
               }
             }
           ]
@@ -2458,13 +2568,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"name\": \"My Bot\",\n    \"newProfilePictureUrl\": \"https://picsum.photos/400/400\"\n}",
+                  "raw": "{\n    \"name\": \"My Bot\",\n    \"about\": \"Powered by ZapUnlocked\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Update My Profile.\n\nRequest body: `ProfileUpdate` schema"
               }
             }
           ]
@@ -2489,20 +2600,21 @@
                   "path": [
                     ""
                   ]
-                }
+                },
+                "description": "Root Route."
               }
             },
             {
-              "name": "Get Logs",
+              "name": "Get Stats",
               "request": {
                 "method": "GET",
                 "url": {
-                  "raw": "{{BASE_URL}}/logs",
+                  "raw": "{{BASE_URL}}/stats",
                   "host": [
                     "{{BASE_URL}}"
                   ],
                   "path": [
-                    "logs"
+                    "stats"
                   ]
                 },
                 "header": [
@@ -2510,7 +2622,30 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Returns real-time runtime statistics including uptime (seconds + formatted), connection duration, message counters (sent/received), and webhook fire count. All counters reset on server restart.\n\nResponse shape:\n`{\"uptime\": {\"seconds\": 3600, \"formatted\": \"1h 0m 0s\"}, \"connected\": {...}, \"messages\": {\"sent\": 42, \"received\": 128}, \"webhooks\": {\"fired\": 7}}`"
+              }
+            },
+            {
+              "name": "Delete Stats",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "{{BASE_URL}}/stats",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "stats"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Resets all runtime statistics counters (messages sent/received, webhooks fired) back to zero. Does NOT restart the server or disconnect WhatsApp.\n\nResponse: `{\"success\": true}`"
               }
             },
             {
@@ -2531,7 +2666,8 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Returns general connection and instance status. Use this endpoint to check whether the WhatsApp client is connected, the server is ready, and the instance name/ID."
               }
             }
           ]
@@ -2552,7 +2688,8 @@
                     "status",
                     "health"
                   ]
-                }
+                },
+                "description": "Simple health-check endpoint. Returns HTTP 200 with a JSON body confirming the server is alive. Does not check WhatsApp connection status."
               }
             },
             {
@@ -2568,7 +2705,8 @@
                     "status",
                     "readiness"
                   ]
-                }
+                },
+                "description": "Readiness probe — returns HTTP 200 only when the server has completed its initialization (WhatsApp client ready). Useful for container orchestration health checks."
               }
             }
           ]
@@ -2588,6 +2726,13 @@
                   "path": [
                     "status",
                     "memory"
+                  ],
+                  "query": [
+                    {
+                      "key": "gc",
+                      "value": "",
+                      "description": ""
+                    }
                   ]
                 },
                 "header": [
@@ -2595,7 +2740,8 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Returns current memory usage statistics: RSS, heap total, heap used, external, and array buffers. Useful for monitoring resource consumption."
               }
             },
             {
@@ -2617,7 +2763,8 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Returns the current WhatsApp stream/connection state: connected, disconnected, connecting, etc."
               }
             },
             {
@@ -2639,7 +2786,8 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Returns the volume (data usage) statistics for the current WhatsApp session. Includes sent/received byte counts."
               }
             }
           ]
@@ -2676,7 +2824,8 @@
                     "key": "x-api-key",
                     "value": "{{API_KEY}}"
                   }
-                ]
+                ],
+                "description": "Force Cleanup.\n\nDelete all temporary media files."
               }
             },
             {
@@ -2708,7 +2857,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Get Cleanup Settings.\n\nReturn current automatic database cleanup settings."
               }
             },
             {
@@ -2744,7 +2894,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Update Cleanup Route."
               }
             }
           ]
@@ -2780,7 +2931,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Updates environment variables at runtime. Changes take effect immediately without server restart.\n\nRequired: key-value pairs of environment variables to update (e.g. `{\"PORT\": \"8300\"}`)."
               }
             },
             {
@@ -2815,7 +2967,8 @@
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Updates environment variables at runtime. Changes take effect immediately without server restart.\n\nRequired: key-value pairs of environment variables to update (e.g. `{\"PORT\": \"8300\"}`)."
               }
             }
           ]
@@ -2852,7 +3005,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Creates a new webhook endpoint. The server will POST event data to this URL whenever matching events occur.\n\nRequired: `name`, `url` (your endpoint URL), `events` (array of event names or [\"*\"] for all events), `active` (boolean).\n\nAvailable events:\n- `message.*` — All message events\n- `message.text`, `message.image`, `message.audio`, etc.\n- `message.contacts` — Contact array messages\n- `status.*` — Status changes\n- `qr.*` — QR code events\n- `call.*` — Call events"
           }
         },
         {
@@ -2886,7 +3040,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Creates a new webhook endpoint. The server will POST event data to this URL whenever matching events occur.\n\nRequired: `name`, `url` (your endpoint URL), `events` (array of event names or [\"*\"] for all events), `active` (boolean).\n\nAvailable events:\n- `message.*` — All message events\n- `message.text`, `message.image`, `message.audio`, etc.\n- `message.contacts` — Contact array messages\n- `status.*` — Status changes\n- `qr.*` — QR code events\n- `call.*` — Call events"
           }
         },
         {
@@ -2908,7 +3063,8 @@
                 "key": "x-api-key",
                 "value": "{{API_KEY}}"
               }
-            ]
+            ],
+            "description": "List Events."
           }
         },
         {
@@ -2930,7 +3086,8 @@
                 "key": "x-api-key",
                 "value": "{{API_KEY}}"
               }
-            ]
+            ],
+            "description": "Get Webhook.\n\nPath parameters: `name`"
           }
         },
         {
@@ -2965,7 +3122,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Update Webhook.\n\nPath parameters: `name`\nRequest body: `WebhookUpdate` schema"
           }
         },
         {
@@ -2987,7 +3145,8 @@
                 "key": "x-api-key",
                 "value": "{{API_KEY}}"
               }
-            ]
+            ],
+            "description": "Delete Webhook.\n\nPath parameters: `name`"
           }
         },
         {
@@ -3014,7 +3173,8 @@
                 "key": "x-api-key",
                 "value": "{{API_KEY}}"
               }
-            ]
+            ],
+            "description": "Test Webhook.\n\nPath parameters: `name`"
           }
         },
         {
@@ -3050,7 +3210,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Toggle Webhook.\n\nPath parameters: `name`\nRequest body: `WebhookToggle` schema"
           }
         }
       ]
