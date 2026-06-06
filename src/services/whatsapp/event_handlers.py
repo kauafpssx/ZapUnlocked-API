@@ -461,6 +461,24 @@ async def handle_message_async(c: NewClient, message: MessageEv) -> None:
 
     from src.utils.parsing.message_parser import parse_message, should_ignore_message
 
+    # Meta AI sends streaming edits as protocolMessage type=14 (MESSAGE_EDIT).
+    # Intercept before should_ignore_message drops them.
+    try:
+        proto = message.Message.protocolMessage
+        if proto and proto.type == 14:  # MESSAGE_EDIT
+            sender = message.Info.MessageSource.Chat.User
+            _META_AI_EDIT_PHONES = {"13135550002", "867051314767696", "718584497008509"}
+            import os as _os2
+            for _env_key in ("META_AI_PHONE", "META_AI_PERSONAL", "META_AI_BUSINESS"):
+                _v = _os2.getenv(_env_key)
+                if _v:
+                    _META_AI_EDIT_PHONES.add(_v)
+            if sender in _META_AI_EDIT_PHONES:
+                await _handle_meta_ai_edit(proto)
+                return
+    except Exception:
+        pass
+
     if should_ignore_message(message):
         return
 
@@ -501,10 +519,101 @@ async def handle_message_async(c: NewClient, message: MessageEv) -> None:
     })
 
     _auto_read_message(c, message, source)
+
+    # Meta AI identifiers — per whatsmeow Go source (types/jid.go):
+    #   Old:  MetaAIJID    = "13135550002"@s.whatsapp.net
+    #   New:  NewMetaAIJID = "867051314767696"@bot    (personal)
+    #   Biz:  "718584497008509"@bot                     (business)
+    _META_AI_PHONES = {
+        "13135550002",
+        "867051314767696",    # personal (NewMetaAIJID)
+        "718584497008509",    # business
+    }
+    import os as _os
+    env_phone = _os.getenv("META_AI_PHONE")
+    if env_phone and env_phone not in _META_AI_PHONES:
+        _META_AI_PHONES.add(env_phone)
+    env_personal = _os.getenv("META_AI_PERSONAL")
+    if env_personal and env_personal not in _META_AI_PHONES:
+        _META_AI_PHONES.add(env_personal)
+    env_business = _os.getenv("META_AI_BUSINESS")
+    if env_business and env_business not in _META_AI_PHONES:
+        _META_AI_PHONES.add(env_business)
+    if phone in _META_AI_PHONES:
+        await _handle_meta_ai_response(message, parsed)
+        return
+
     _forward_to_handler(c, message)
 
     if ts % 10 == 0:
         gc.collect()
+
+
+async def _handle_meta_ai_response(message, parsed: dict) -> None:
+    """Route Meta AI incoming message to pending request tracker and webhook."""
+    from src.services.whatsapp.ai.response_tracker import push_chunk
+
+    text = parsed.get("text", "")
+    has_image = False
+    try:
+        has_image = bool(message.Message.imageMessage and message.Message.imageMessage.fileLength)
+    except Exception:
+        pass
+
+    image_info = None
+    if has_image:
+        try:
+            from src.services.whatsapp.ai.image_downloader import download_meta_ai_image
+            image_info = await download_meta_ai_image(message)
+        except Exception as e:
+            logger.warning(f"Meta AI image download failed: {e}")
+
+    payload = {
+        "text": text,
+        "hasImage": has_image,
+        "imageBase64": image_info.get("imageBase64") if image_info else None,
+        "imageUrl": image_info.get("imageUrl") if image_info else None,
+        "mimeType": image_info.get("mimeType") if image_info else None,
+        "messageId": message.Info.ID,
+    }
+
+    push_chunk(payload)
+
+    await _fire("ai.response", payload)
+
+
+async def _handle_meta_ai_edit(proto) -> None:
+    """Handle Meta AI streaming edit (protocolMessage type=14). Extracts full edited text and pushes as chunk."""
+    from src.services.whatsapp.ai.response_tracker import push_chunk
+
+    try:
+        # editedMessage wraps the actual updated message content
+        edited = proto.editedMessage
+        text = ""
+        has_image = False
+        try:
+            text = edited.conversation or ""
+            if not text:
+                text = edited.extendedTextMessage.text or ""
+        except Exception:
+            pass
+        try:
+            has_image = bool(edited.imageMessage and edited.imageMessage.fileLength)
+        except Exception:
+            pass
+
+        if not text and not has_image:
+            return
+
+        msg_id = getattr(proto, "key", None)
+        msg_id_str = getattr(msg_id, "id", None) if msg_id else None
+
+        payload = {"text": text, "hasImage": has_image, "messageId": msg_id_str}
+        logger.debug(f"[Meta AI edit] text={repr(text[:80])} hasImage={has_image}")
+        push_chunk(payload)
+        await _fire("ai.response", payload)
+    except Exception as e:
+        logger.debug(f"_handle_meta_ai_edit failed: {e}")
 
 
 def _resolve_jid(source, chat) -> str:
@@ -513,6 +622,10 @@ def _resolve_jid(source, chat) -> str:
 
     if source.IsGroup:
         return f"{chat.User}@g.us"
+
+    if chat.Server == "bot":
+        # Bot server (Meta AI, etc.) — return identifier without server suffix
+        return chat.User
 
     if chat.Server == "lid":
         if source.SenderAlt and source.SenderAlt.Server == "s.whatsapp.net":
