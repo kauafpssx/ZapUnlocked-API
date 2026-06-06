@@ -118,8 +118,10 @@ def create_webhook(data: dict) -> dict:
         "body": data.get("body", {}),
         "events": data.get("events", ["*"]),
         "active": data.get("active", True),
-        "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "created_at": data.get("created_at") or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
+    if data.get("secret"):
+        wh["secret"] = data["secret"]
     _write_file(path, wh)
     logger.info(f"🔗 Webhook created: {name}")
     return wh
@@ -143,6 +145,11 @@ def update_webhook(name: str, data: dict) -> dict:
         wh["events"] = data["events"]
     if "active" in data and data["active"] is not None:
         wh["active"] = data["active"]
+    if "secret" in data:
+        if data["secret"]:
+            wh["secret"] = data["secret"]
+        else:
+            wh.pop("secret", None)
 
     _write_file(path, wh)
     logger.info(f"🔗 Webhook updated: {name}")

@@ -397,6 +397,11 @@ ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
         "- `contact.*` — presence/chat state events\n"
         "- `media.cleanup.*` — automatic media cleanup events\n"
         "- `ai.response` — Meta AI reply received",
+    "/webhooks/{name}":
+        "Updates an existing webhook by name. All fields are optional — send only "
+        "what you want to change.\n\n"
+        "Fields: url, method, headers, body, events, active, secret.\n"
+        "If secret is set/changed, outgoing payloads will be signed with HMAC-SHA256.",
     "/webhooks/{name}/test":
         "Sends a test payload to a registered webhook to verify connectivity and "
         "payload format.\n\n"

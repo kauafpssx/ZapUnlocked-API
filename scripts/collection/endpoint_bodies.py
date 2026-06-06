@@ -370,14 +370,14 @@ ENDPOINT_BODIES: Dict[str, Any] = {
     },
     "/webhooks/{name}": {
         "__commented__": {
-            "url": '"https://example.com/webhook"',
-            "method": '"GET"',
-            "headers": '{"Authorization": "Bearer ..."}',
-            "body": '{"key": "value"}',
-            "events": '["*"]',
-            "active": "true",
-            "secret": '"your-secret"',
+            "method": '"GET", | default: POST',
+            "headers": '{"Authorization": "Bearer ..."}, | custom headers',
+            "body": '{"key": "value"}, | request template body',
+            "events": '["*"], | default: same as current',
+            "active": "true, | toggle on/off",
+            "secret": '"your-secret", | enable HMAC signing',
         },
+        "url": "https://example.com/webhook",
     },
 
     # ═══════════════════════════════════════════════════════════════════

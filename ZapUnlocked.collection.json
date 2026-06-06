@@ -1284,6 +1284,84 @@
           ]
         },
         {
+          "name": "Export",
+          "item": [
+            {
+              "name": "Export Config",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/management/export",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "management",
+                    "export"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Export Config."
+              }
+            }
+          ]
+        },
+        {
+          "name": "Import",
+          "item": [
+            {
+              "name": "Import Config Route",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/management/import",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "management",
+                    "import"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "value": "",
+                      "type": "file",
+                      "src": [],
+                      "disabled": true
+                    },
+                    {
+                      "key": "phone",
+                      "value": "{{PHONE}}",
+                      "type": "text",
+                      "disabled": false
+                    }
+                  ]
+                },
+                "description": "Import Config Route.\n\nRequest body: `Body import config route management import post` schema"
+              }
+            }
+          ]
+        },
+        {
           "name": "Messages",
           "item": [
             {
@@ -3251,7 +3329,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"my-webhook\",\n    \"url\": \"https://example.com/webhook\",\n    \"events\": [\n        \"*\"\n    ],\n    \"active\": true\n    // \"secret\": \"your-secret\", | signs payload with HMAC-SHA256\n}",
+              "raw": "{\n    \"name\": \"my-webhook\",\n    \"url\": \"https://example.com/webhook\",\n    \"events\": [\n        \"*\"\n    ],\n    \"active\": true\n    // \"secret\": \"your-secret\", | signs payload with HMAC-SHA256\n    // \"method\": \"GET\", | default: POST\n    // \"headers\": {\"Authorization\": \"Bearer ...\"}, | custom headers\n    // \"body\": {\"key\": \"value\"}, | request template body\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3286,7 +3364,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"my-webhook\",\n    \"url\": \"https://example.com/webhook\",\n    \"events\": [\n        \"*\"\n    ],\n    \"active\": true\n    // \"secret\": \"your-secret\", | signs payload with HMAC-SHA256\n}",
+              "raw": "{\n    \"name\": \"my-webhook\",\n    \"url\": \"https://example.com/webhook\",\n    \"events\": [\n        \"*\"\n    ],\n    \"active\": true\n    // \"secret\": \"your-secret\", | signs payload with HMAC-SHA256\n    // \"method\": \"GET\", | default: POST\n    // \"headers\": {\"Authorization\": \"Bearer ...\"}, | custom headers\n    // \"body\": {\"key\": \"value\"}, | request template body\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3339,7 +3417,16 @@
                 "value": "{{API_KEY}}"
               }
             ],
-            "description": "Get Webhook.\n\nPath parameters: `name`"
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"url\": \"https://example.com/webhook\"\n    // \"method\": \"GET\", | default: POST\n    // \"headers\": {\"Authorization\": \"Bearer ...\"}, | custom headers\n    // \"body\": {\"key\": \"value\"}, | request template body\n    // \"events\": [\"*\"], | default: same as current\n    // \"active\": true, | toggle on/off\n    // \"secret\": \"your-secret\", | enable HMAC signing\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Updates an existing webhook by name. All fields are optional — send only what you want to change.\n\nFields: url, method, headers, body, events, active, secret.\nIf secret is set/changed, outgoing payloads will be signed with HMAC-SHA256."
           }
         },
         {
@@ -3368,14 +3455,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"url\": \"https://example.com\"\n}",
+              "raw": "{\n    \"url\": \"https://example.com/webhook\"\n    // \"method\": \"GET\", | default: POST\n    // \"headers\": {\"Authorization\": \"Bearer ...\"}, | custom headers\n    // \"body\": {\"key\": \"value\"}, | request template body\n    // \"events\": [\"*\"], | default: same as current\n    // \"active\": true, | toggle on/off\n    // \"secret\": \"your-secret\", | enable HMAC signing\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Update Webhook.\n\nPath parameters: `name`\nRequest body: `WebhookUpdate` schema"
+            "description": "Updates an existing webhook by name. All fields are optional — send only what you want to change.\n\nFields: url, method, headers, body, events, active, secret.\nIf secret is set/changed, outgoing payloads will be signed with HMAC-SHA256."
           }
         },
         {
@@ -3398,7 +3485,16 @@
                 "value": "{{API_KEY}}"
               }
             ],
-            "description": "Delete Webhook.\n\nPath parameters: `name`"
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"url\": \"https://example.com/webhook\"\n    // \"method\": \"GET\", | default: POST\n    // \"headers\": {\"Authorization\": \"Bearer ...\"}, | custom headers\n    // \"body\": {\"key\": \"value\"}, | request template body\n    // \"events\": [\"*\"], | default: same as current\n    // \"active\": true, | toggle on/off\n    // \"secret\": \"your-secret\", | enable HMAC signing\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Updates an existing webhook by name. All fields are optional — send only what you want to change.\n\nFields: url, method, headers, body, events, active, secret.\nIf secret is set/changed, outgoing payloads will be signed with HMAC-SHA256."
           }
         },
         {
