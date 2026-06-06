@@ -68,7 +68,7 @@
                 }
               }
             },
-            "description": "Sends a text message to Meta AI via WhatsApp and waits for its response.\n\nThe message is forwarded to the Meta AI contact (13135550002@s.whatsapp.net). The server blocks until a reply is received or the `timeout` is reached.\n\nResponse includes:\n- `text`: The AI's reply text\n- `hasImage`: Whether the response includes an image\n- `messageId`: The WhatsApp message ID of the reply\n\nRequires an active WhatsApp connection."
+            "description": "Sends a text message to Meta AI via WhatsApp and waits for a response.\n\nThe message is forwarded to the Meta AI contact (13135550002@s.whatsapp.net). The server blocks until a reply is received or the `timeout` is reached.\n\nRequired: `message` (your question/prompt).\nOptional: `timeout` (seconds to wait, default 30).\n\nResponse includes:\n- `text` — the AI's textual reply\n- `hasImage` — whether the response contains an image\n- `messageId` — the WhatsApp message ID of the reply\n\n⚠ Requires an active WhatsApp connection."
           }
         },
         {
@@ -104,7 +104,7 @@
                 }
               }
             },
-            "description": "Generates an image using Meta AI's /imagine feature.\n\nInternally sends `/imagine {prompt}` to the Meta AI contact and returns the generated image along with any accompanying text.\n\nResponse shape same as /ai/ask with `hasImage: true` when successful.\n\nRequires an active WhatsApp connection."
+            "description": "Generates an image using Meta AI's `/imagine` feature.\n\nInternally sends `/imagine {prompt}` to Meta AI and returns the generated image (along with any accompanying text).\n\nRequired: `prompt` — the image description.\nOptional: `timeout` (seconds to wait, default 60).\n\nResponse shape is the same as /ai/ask, with `hasImage: true` when successful.\n\n⚠ Requires an active WhatsApp connection."
           }
         }
       ]
@@ -315,7 +315,7 @@
                 }
               }
             },
-            "description": "Updates the display name of this API instance. The name appears in logs and status responses."
+            "description": "Updates the display name of this API instance. The name appears in logs and status responses.\n\nRequired: `name` (string)."
           }
         },
         {
@@ -435,7 +435,7 @@
                     }
                   }
                 },
-                "description": "Pairs a new device via pairing code. This is an alternative to QR code scanning.\n\nRequired: `phone` (the phone number to pair with, including country code). The server will request a pairing code from WhatsApp."
+                "description": "Pairs a new device using a pairing code — an alternative to QR code scanning.\n\nThe server requests a pairing code from WhatsApp and displays it. Enter this code on the WhatsApp mobile app under Linked Devices.\n\nRequired: `phone` (the phone number to pair, with country code)."
               }
             }
           ]
@@ -477,7 +477,7 @@
                     }
                   }
                 },
-                "description": "Enables or disables automatic read receipts for incoming messages. When enabled, messages are automatically marked as read upon receipt."
+                "description": "Enables or disables automatic read marking for incoming messages. When enabled, messages are marked as read immediately upon receipt.\n\nRequired: `value` (boolean)."
               }
             },
             {
@@ -514,7 +514,7 @@
                     }
                   }
                 },
-                "description": "Enables or disables automatic call rejection. When enabled, incoming calls are automatically rejected and the caller may see a configurable message."
+                "description": "Enables or disables automatic call rejection. When enabled, incoming WhatsApp calls are automatically declined without ringing the paired device.\n\nRequired: `value` (boolean)."
               }
             },
             {
@@ -551,7 +551,7 @@
                     }
                   }
                 },
-                "description": "Sets the message displayed when a call is automatically rejected. Only applies when `call-reject-auto` is enabled."
+                "description": "Sets the message sent/displayed when a call is automatically rejected.\n\nRequired: `value` (string). Only applies when `call-reject-auto` is enabled."
               }
             },
             {
@@ -614,14 +614,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\"\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"MESSAGE_ID\", // or exact text\n    // \"type\": \"id\", | id (default)\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Deletes a message for everyone (if possible) or for yourself.\n\nRequired: `phone`, `messageId`."
+                "description": "Deletes a message for everyone (if possible, within WhatsApp's time limit) or just for the bot itself.\n\nRequired: `phone`, `messageId`."
               }
             },
             {
@@ -650,14 +650,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\",\n    \"message\": \"Edited content here!\",\n    \"delay_message\": null,\n    \"delay_typing\": null,\n    \"mentioned\": null\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"MESSAGE_ID\", // or exact text\n    \"message\": \"Edited content here!\"\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Edits an existing message. Works only for messages sent by the same bot.\n\nRequired: `messageId`, `message` (new text content).\nOptional: `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Edits an existing text message. Only works for messages sent by the same bot.\n\nRequired: `phone`, `messageId`, `message` (new text content).\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             },
             {
@@ -686,14 +686,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageIds\": [\n        \"ID_PRIMEIRA_MSG\",\n        \"ID_SEGUNDA_MSG\"\n    ]\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageIds\": [\n        \"FIRST_MSG_ID\",\n        \"SECOND_MSG_ID\"\n    ]\n    // \"type\": \"id\", | id (default)\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Marks a message (or multiple messages) as read.\n\nRequired: `messageIds` (array of message IDs)."
+                "description": "Marks one or more messages as read. Triggers the blue double-check for the sender.\n\nRequired: `phone`, `messageIds` (array of message ID strings)."
               }
             }
           ]
@@ -727,14 +727,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"callPhone\": \"+5511999999999\",\n    \"button_text\": \"Call Now\",\n    \"title\": \"Contact us\",\n    \"text\": \"Call us now:\",\n    \"delay_message\": null,\n    \"delay_typing\": null,\n    \"mentioned\": null\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"callPhone\": \"+5511999999999\",\n    \"button_text\": \"Call Now\",\n    \"title\": \"Contact us\",\n    \"text\": \"Call us now:\"\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Sends a single call button message. The recipient sees a button that initiates a phone call when tapped.\n\nRequired: `callPhone`, `button_text`, `title`, `text`.\nOptional: `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Sends a single call button message. Recipient sees a button that initiates a phone call when tapped.\n\nRequired: `phone`, `callPhone`, `button_text`, `title`, `text`.\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             },
             {
@@ -763,14 +763,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Choose an option:\",\n    \"title\": \"Menu\",\n    \"text\": \"What would you like to do?\",\n    \"footer\": \"Tap a button below\",\n    \"buttons\": [\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"Yes\",\n            \"id\": \"yes\"\n        },\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"No\",\n            \"id\": \"no\"\n        },\n        {\n            \"type\": \"url\",\n            \"buttonText\": \"Visit Site\",\n            \"url\": \"https://zapunlocked.com\"\n        },\n        {\n            \"type\": \"call\",\n            \"buttonText\": \"Call Support\",\n            \"callPhone\": \"+5511999999999\"\n        },\n        {\n            \"type\": \"otp\",\n            \"buttonText\": \"Copy Code\",\n            \"code\": \"591823\"\n        }\n    ],\n    \"delay_message\": \"2-5\",\n    \"delay_typing\": 3,\n    \"mentioned\": [\n        \"5511999999999\"\n    ]\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Choose an option:\",\n    \"title\": \"Menu\",\n    \"text\": \"What would you like to do?\",\n    \"footer\": \"Tap a button below\",\n    \"buttons\": [\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"Yes\",\n            \"id\": \"yes\"\n        },\n        {\n            \"type\": \"quick_reply\",\n            \"buttonText\": \"No\",\n            \"id\": \"no\"\n        },\n        {\n            \"type\": \"url\",\n            \"buttonText\": \"Visit Site\",\n            \"url\": \"https://zapunlocked.com\"\n        },\n        {\n            \"type\": \"call\",\n            \"buttonText\": \"Call Support\",\n            \"callPhone\": \"+5511999999999\"\n        },\n        {\n            \"type\": \"otp\",\n            \"buttonText\": \"Copy Code\",\n            \"code\": \"591823\"\n        }\n    ]\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Sends an interactive button list message. Supports up to 5 buttons of mixed types.\n\nButton types available:\n- `quick_reply`: Simple reply button with `buttonText` and `id`\n- `url`: Opens a URL when tapped (`url` field)\n- `call`: Initiates a phone call (`callPhone` field)\n- `otp`: One-time password copy button (`code` field)\n\nNOTE: PIX buttons are NOT supported in combined lists — use the dedicated /messages/send-button-pix endpoint instead.\n\nOptional: `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Sends an interactive message with up to 5 buttons of mixed types.\n\nRequired: `phone`, `message`, `title`, `text`, `buttons`.\n\nButton types (mix & match):\n- `quick_reply` — simple tap button with `buttonText` and `id`\n- `url` — opens a URL when tapped (`url` field)\n- `call` — initiates a phone call (`callPhone` field)\n- `otp` — one-time password copy button (`code` field)\n\n⚠ PIX button is NOT supported in combined lists — use /messages/send-button-pix.\n\nButton object example:\n`{\"type\": \"quick_reply\", \"buttonText\": \"Yes\", \"id\": \"yes\"}`\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             },
             {
@@ -799,14 +799,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"code\": \"591823\",\n    \"button_text\": \"Copy Code\",\n    \"title\": \"Security Verification\",\n    \"text\": \"Your access code is: 591823\",\n    \"footer\": \"Valid for 5 minutes.\",\n    \"delay_typing\": 1.5\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"code\": \"591823\",\n    \"button_text\": \"Copy Code\",\n    \"title\": \"Security Verification\",\n    \"text\": \"Your access code is: 591823\",\n    \"footer\": \"Valid for 5 minutes.\"\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Sends a one-time password (OTP) button. The recipient can copy the code with one tap.\n\nRequired: `code`, `button_text`, `title`, `text`.\nOptional: `footer` (string), `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Sends a one-time password (OTP) button. Recipient can copy the code with a single tap.\n\nRequired: `phone`, `code`, `button_text`, `title`, `text`.\nOptional: `footer` (string).\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             },
             {
@@ -835,14 +835,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"pixKey\": \"suachave@email.com\",\n    \"pixType\": \"EMAIL\",\n    \"pixValue\": 19.9,\n    \"merchantName\": \"Minha Loja\",\n    \"pixCity\": \"Sao Paulo\",\n    \"pixDescription\": \"Compra #1234\",\n    \"button_text\": \"Pagar\",\n    \"title\": \"PIX Payment\",\n    \"text\": \"Use the button below to pay via PIX:\",\n    \"delay_message\": null,\n    \"delay_typing\": null,\n    \"mentioned\": null\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"pixKey\": \"yourkey@email.com\",\n    \"pixType\": \"EMAIL\",\n    \"pixValue\": 19.9,\n    \"merchantName\": \"My Store\",\n    \"pixCity\": \"Sao Paulo\",\n    \"pixDescription\": \"Order #1234\",\n    \"button_text\": \"Pay\",\n    \"title\": \"PIX Payment\",\n    \"text\": \"Use the button below to pay via PIX:\"\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Sends a PIX payment button (exclusive — cannot be combined with other button types).\n\nRequired:\n- `pixKey`: The PIX key (email, phone, CPF, CNPJ, or random)\n- `pixType`: Key type — EMAIL, PHONE, CPF, CNPJ, or RANDOM\n- `pixValue`: Amount in BRL (float)\n- `merchantName`: Your business/trading name\n- `pixCity`: Your city\n\nOptional: `pixDescription` (string), `button_text`, `title`, `text`, `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Sends a PIX payment button (⚠ exclusive — cannot be combined with other button types).\n\nRequired:\n- `pixKey` — the PIX key (email, phone, CPF, CNPJ, or random)\n- `pixType` — key type: `EMAIL`, `PHONE`, `CPF`, `CNPJ`, or `RANDOM`\n- `pixValue` — amount in BRL (float, e.g. 19.90)\n- `merchantName` — your business/trading name\n- `pixCity` — your city\n\nOptional: `pixDescription`, `button_text`, `title`, `text`.\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             },
             {
@@ -871,14 +871,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Confirm\",\n    \"text\": \"Do you agree?\",\n    \"buttons\": [\n        {\n            \"text\": \"Yes\",\n            \"id\": \"yes\"\n        },\n        {\n            \"text\": \"No\",\n            \"id\": \"no\"\n        }\n    ],\n    \"delay_message\": null,\n    \"delay_typing\": null,\n    \"mentioned\": null\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Confirm\",\n    \"text\": \"Do you agree?\",\n    \"buttons\": [\n        {\n            \"text\": \"Yes\",\n            \"id\": \"yes\"\n        },\n        {\n            \"text\": \"No\",\n            \"id\": \"no\"\n        }\n    ]\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Sends quick reply buttons (simple reply options shown as buttons).\n\nRequired: `title`, `text`, `buttons` (array of `{text, id}` objects).\nOptional: `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Sends one or more quick reply buttons — simple tap options.\n\nRequired: `phone`, `title`, `text`, `buttons` — array of `{\"text\": \"...\", \"id\": \"...\"}` objects.\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             },
             {
@@ -907,14 +907,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"url\": \"https://zapunlocked.com\",\n    \"button_text\": \"Visit Website\",\n    \"title\": \"Get in touch\",\n    \"text\": \"Visit our website:\",\n    \"delay_message\": null,\n    \"delay_typing\": null,\n    \"mentioned\": null\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"url\": \"https://zapunlocked.com\",\n    \"button_text\": \"Visit Website\",\n    \"title\": \"Get in touch\",\n    \"text\": \"Visit our website:\"\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Sends a single URL button message. The recipient sees a button that opens a URL when tapped.\n\nRequired: `url`, `button_text`, `title`, `text`.\nOptional: `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Sends a single URL button message. Recipient sees a button that opens a URL when tapped.\n\nRequired: `phone`, `url`, `button_text`, `title`, `text`.\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             },
             {
@@ -943,14 +943,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Choose an option\",\n    \"text\": \"Please select:\",\n    \"options\": [\n        {\n            \"title\": \"Option 1\",\n            \"description\": \"First option\"\n        },\n        {\n            \"title\": \"Option 2\",\n            \"description\": \"Second option\"\n        }\n    ],\n    \"button_text\": \"See options\",\n    \"footer\": \"Footer text\",\n    \"description\": \"Description text\"\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"title\": \"Choose an option\",\n    \"text\": \"Please select:\",\n    \"options\": [\n        {\n            \"title\": \"Option 1\",\n            \"description\": \"First option\"\n        },\n        {\n            \"title\": \"Option 2\",\n            \"description\": \"Second option\"\n        }\n    ],\n    \"button_text\": \"See options\",\n    \"footer\": \"Footer text\",\n    \"description\": \"Description text\"\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Sends an interactive list message with a menu of options. The user taps the button to expand the list and selects an option.\n\nRequired: `title`, `text`, `options` (array of option objects).\nOptional: `button_text`, `footer`, `description`, `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Sends an interactive list message. Recipient taps a button to expand a menu and selects one option.\n\nRequired: `phone`, `title`, `text`, `options` — array of `{\"title\": \"...\", \"description\": \"...\"}` objects.\n\nOptional: `button_text` (the expand button label), `footer`, `description`.\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             }
           ]
@@ -984,14 +984,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"What is your favorite color?\",\n    \"options\": [\n        \"Red\",\n        \"Blue\",\n        \"Green\",\n        \"Yellow\"\n    ],\n    \"delay_message\": null,\n    \"delay_typing\": null,\n    \"mentioned\": null\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"What is your favorite color?\",\n    \"options\": [\n        \"Red\",\n        \"Blue\",\n        \"Green\",\n        \"Yellow\"\n    ]\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Creates and sends a poll to a WhatsApp chat. Recipients can vote on options.\n\nRequired: `name` (poll question), `options` (array of strings, up to 12).\nOptional: `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Creates and sends a poll to a WhatsApp chat. Recipients can vote on options.\n\nRequired: `phone`, `name` (the poll question), `options` (array of strings, up to 12).\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             },
             {
@@ -1020,14 +1020,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"options\": [\n        \"Blue\"\n    ],\n    \"pollId\": \"ID_DA_ENQUETE\",\n    \"delay_message\": null,\n    \"delay_typing\": null,\n    \"mentioned\": null\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"options\": [\n        \"Blue\"\n    ],\n    \"pollId\": \"POLL_ID\"\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Votes on an existing poll.\n\nRequired: `options` (array of selected option strings), `pollId` (the poll message ID).\nOptional: `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Casts a vote on an existing poll.\n\nRequired: `phone`, `options` (array of selected option strings), `pollId` (the poll message's ID).\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             }
           ]
@@ -1103,7 +1103,7 @@
                 "value": "{{API_KEY}}"
               }
             ],
-            "description": "Returns server logs with powerful filtering. All parameters are optional query params.\n\nFilters:\n- `date` (YYYY-MM-DD): Specific day's logs (default: today)\n- `from_date` / `to_date` (YYYY-MM-DD): Date range (alternative to `date`)\n- `from_time` / `to_time` (HH:MM): Time range within the selected dates\n- `level`: Filter by log level — DEBUG, INFO, WARNING, ERROR, CRITICAL\n- `search`: Full-text search in log messages (case-insensitive)\n- `limit`: Max lines to return (default: 200, max: 10000)\n- `offset`: Skip first N matching lines (for pagination)\n\nUse `date` OR (`from_date` + `to_date`), never both.\n\nResponse includes `filters` (echo of applied filters), `total`, `returned`, `offset`, and `logs` array."
+            "description": "Returns server logs with powerful filtering. All filter parameters below are optional query params — use as many or as few as needed.\n\nDate filters (use `date` OR `from_date`+`to_date`, never both):\n- `date` (YYYY-MM-DD): Specific day's logs (default: today)\n- `from_date` / `to_date` (YYYY-MM-DD): Date range\n\nTime filter (refines within the selected date(s)):\n- `from_time` / `to_time` (HH:MM): Time range\n\nContent filters:\n- `level`: Log level — `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`\n- `search`: Case-insensitive full-text search in log messages\n\nPagination:\n- `limit`: Max lines to return (default: 200, max: 10000)\n- `offset`: Skip first N matching lines\n\nResponse: `{\"success\": true, \"filters\": {...}, \"total\": N, \"returned\": N, \"offset\": N, \"logs\": [...]}`"
           }
         },
         {
@@ -1130,7 +1130,7 @@
                 "value": "{{API_KEY}}"
               }
             ],
-            "description": "Runs log maintenance: compresses old .log files to .gz, then deletes compressed files that exceed age (LOG_MAX_AGE_DAYS, default 30) or total size (LOG_MAX_SIZE_MB, default 50 MB) limits.\n\nResponse: `{\"success\": true, \"compressed\": N, \"deleted\": N}`"
+            "description": "Runs log maintenance in two steps:\n1. **Compress** — older .log files (not today's) are gzip-compressed to .log.gz\n2. **Cleanup** — compressed files are deleted if they exceed age (LOG_MAX_AGE_DAYS, default 30) or total log directory size (LOG_MAX_SIZE_MB, default 50 MB)\n\nResponse: `{\"success\": true, \"compressed\": N, \"deleted\": N}`"
           }
         },
         {
@@ -1153,7 +1153,7 @@
                 "value": "{{API_KEY}}"
               }
             ],
-            "description": "Lists all available log files with their date and size. Each log file covers one day.\n\nResponse: `{\"success\": true, \"count\": N, \"files\": [{\"file\": \"...\", \"date\": \"YYYY-MM-DD\", \"sizeBytes\": N, \"sizeFormatted\": \"...\"}]}`"
+            "description": "Lists all available log files with their date, size in bytes, and a human-readable size string. Each file covers one day (zapunlocked_YYYY-MM-DD.log).\n\nResponse:\n`{\"success\": true, \"count\": N, \"files\": [{\"file\": \"...\", \"date\": \"YYYY-MM-DD\", \"sizeBytes\": N, \"sizeFormatted\": \"...\"}]}`"
           }
         }
       ]
@@ -1254,7 +1254,7 @@
                     }
                   }
                 },
-                "description": "Updates database cleanup configuration.\n\nRequired: `interval` (cleanup interval in minutes). Older messages are purged periodically based on this setting."
+                "description": "Updates the database cleanup configuration.\n\nRequired: `interval` — cleanup interval in minutes. Older messages are purged periodically based on this setting."
               }
             },
             {
@@ -1319,7 +1319,7 @@
                     }
                   }
                 },
-                "description": "Fetches stored messages from the local database.\n\nRequired: `phone` (the chat to fetch from).\nOptional: `limit` (max messages to return, default 20)."
+                "description": "Fetches stored messages from the local database for a specific chat.\n\nRequired: `phone` (the chat to fetch from).\nOptional: `limit` (max messages, default 20)."
               }
             },
             {
@@ -1355,7 +1355,7 @@
                     }
                   }
                 },
-                "description": "Returns the most recent contacts/chats the bot has interacted with.\n\nOptional: `limit` (max contacts to return, default 20)."
+                "description": "Returns the most recent contacts/chats the bot has interacted with.\n\nOptional: `limit` (max contacts, default 20)."
               }
             }
           ]
@@ -1393,14 +1393,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"name\": \"string\",\n    \"contactPhone\": \"5511999999999\"\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"contactName\": \"John Doe\",\n    \"contactPhone\": \"5511999999999\"\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Send Contact.\n\nRequest body: `SendContact` schema"
+                "description": "Sends a single contact as a vCard to a WhatsApp chat.\n\nRequired: phone, contactPhone (contact's phone), contactName (display name).\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             },
             {
@@ -1428,14 +1428,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"contacts\": [\n        {\n            \"name\": \"string\",\n            \"phone\": \"string\"\n        }\n    ]\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"contacts\": [\n        {\n            \"name\": \"John Doe\",\n            \"phone\": \"5511988888888\"\n        },\n        {\n            \"name\": \"Jane Smith\",\n            \"phone\": \"5511977777777\"\n        }\n    ]\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Send Contacts.\n\nRequest body: `SendContacts` schema"
+                "description": "Sends multiple contacts in a single message.\n\nRequired: phone, contacts — array of {name, phone} objects.\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             }
           ]
@@ -1468,14 +1468,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"url\": \"https://example.com\"\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"url\": \"https://github.com\",\n    \"message\": \"Check this out!\",\n    \"title\": \"GitHub\",\n    \"description\": \"Where the world builds software\",\n    \"imageUrl\": \"https://example.com/image.png\"\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Send Link.\n\nRequest body: `SendLink` schema"
+                "description": "Sends a message with a link preview. WhatsApp fetches and displays a preview card (title, description, image) from the URL metadata.\n\nRequired: phone, url (the link), message (text accompanying the link).\nOptional: title, description, imageUrl for custom preview overrides.\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             }
           ]
@@ -1508,14 +1508,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"lat\": -23.55052,\n    \"lng\": -46.633308,\n    \"name\": \"string\"\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"lat\": -23.55052,\n    \"lng\": -46.633308,\n    \"name\": \"Central Square\",\n    \"address\": \"Sao Paulo, Brazil\"\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Send Location.\n\nRequest body: `SendLocation` schema"
+                "description": "Sends a geographic location pin to a WhatsApp chat.\n\nRequired: phone, lat (float), lng (float).\nOptional: name (location name), address (street address).\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             }
           ]
@@ -1553,51 +1553,72 @@
                       "key": "file",
                       "value": "",
                       "type": "file",
-                      "src": []
-                    },
-                    {
-                      "key": "phone",
-                      "value": "{{PHONE}}",
-                      "type": "text"
-                    },
-                    {
-                      "key": "url",
-                      "value": "",
-                      "type": "text"
-                    },
-                    {
-                      "key": "ptt",
-                      "value": "false",
-                      "type": "text"
-                    },
-                    {
-                      "key": "as_document",
-                      "value": "false",
-                      "type": "text"
-                    },
-                    {
-                      "key": "format",
-                      "value": "m4a",
-                      "type": "text"
+                      "src": [],
+                      "disabled": true
                     },
                     {
                       "key": "delay_message",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "delay_typing",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "mentioned",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "reply",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "quoted_id",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "phone",
+                      "value": "{{PHONE}}",
+                      "type": "text",
+                      "disabled": false
+                    },
+                    {
+                      "key": "url",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "ptt",
+                      "value": "false",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "as_document",
+                      "value": "false",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "format",
+                      "value": "m4a",
+                      "type": "text",
+                      "disabled": true
                     }
                   ]
                 },
-                "description": "Sends an audio message. Accepts URL or file upload.\n\nOptional: `ptt` (boolean — send as voice note), `as_document` (boolean), `format` (string, e.g. \"m4a\", \"ogg\"), `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Sends an audio message. Accepts URL or file upload.\n\nUse `url` (text) or `file` (upload).\n\nOptional: `ptt` (send as voice note, boolean), `as_document` (boolean), `format` (e.g. \"m4a\", \"ogg\").\n\nOptional: delay_message, delay_typing, mentioned, reply (by text), quoted_id (by ID).\nNote: Media endpoints do NOT have a type field.\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- reply: reply to message by matching text content\n- quoted_id: reply to message by exact message ID"
               }
             },
             {
@@ -1630,46 +1651,66 @@
                       "key": "file",
                       "value": "",
                       "type": "file",
-                      "src": []
-                    },
-                    {
-                      "key": "phone",
-                      "value": "{{PHONE}}",
-                      "type": "text"
-                    },
-                    {
-                      "key": "url",
-                      "value": "",
-                      "type": "text"
-                    },
-                    {
-                      "key": "fileName",
-                      "value": "document.pdf",
-                      "type": "text"
-                    },
-                    {
-                      "key": "caption",
-                      "value": "Document caption",
-                      "type": "text"
+                      "src": [],
+                      "disabled": true
                     },
                     {
                       "key": "delay_message",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "delay_typing",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "mentioned",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "reply",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "quoted_id",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "phone",
+                      "value": "{{PHONE}}",
+                      "type": "text",
+                      "disabled": false
+                    },
+                    {
+                      "key": "url",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "fileName",
+                      "value": "document.pdf",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "caption",
+                      "value": "Document caption",
+                      "type": "text",
+                      "disabled": true
                     }
                   ]
                 },
-                "description": "Sends a document/file message. Accepts URL or file upload.\n\nOptional: `fileName` (string — overrides the displayed filename), `caption` (string), `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Sends a document/file message. Accepts URL or file upload.\n\nUse `url` (text) or `file` (upload).\n\nOptional: `fileName` (overrides the displayed filename, string), `caption` (string).\n\nOptional: delay_message, delay_typing, mentioned, reply (by text), quoted_id (by ID).\nNote: Media endpoints do NOT have a type field.\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- reply: reply to message by matching text content\n- quoted_id: reply to message by exact message ID"
               }
             },
             {
@@ -1702,41 +1743,60 @@
                       "key": "file",
                       "value": "",
                       "type": "file",
-                      "src": []
-                    },
-                    {
-                      "key": "phone",
-                      "value": "{{PHONE}}",
-                      "type": "text"
-                    },
-                    {
-                      "key": "url",
-                      "value": "",
-                      "type": "text"
-                    },
-                    {
-                      "key": "caption",
-                      "value": "GIF caption",
-                      "type": "text"
+                      "src": [],
+                      "disabled": true
                     },
                     {
                       "key": "delay_message",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "delay_typing",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "mentioned",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "reply",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "quoted_id",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "phone",
+                      "value": "{{PHONE}}",
+                      "type": "text",
+                      "disabled": false
+                    },
+                    {
+                      "key": "url",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "caption",
+                      "value": "GIF caption",
+                      "type": "text",
+                      "disabled": true
                     }
                   ]
                 },
-                "description": "Sends an animated GIF. Accepts URL or file upload.\n\nOptional: `caption` (string), `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Sends an animated GIF. Accepts URL or file upload.\n\nUse `url` (text) or `file` (upload).\n\nOptional: `caption` (string).\n\nOptional: delay_message, delay_typing, mentioned, reply (by text), quoted_id (by ID).\nNote: Media endpoints do NOT have a type field.\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- reply: reply to message by matching text content\n- quoted_id: reply to message by exact message ID"
               }
             },
             {
@@ -1769,46 +1829,66 @@
                       "key": "file",
                       "value": "",
                       "type": "file",
-                      "src": []
-                    },
-                    {
-                      "key": "phone",
-                      "value": "{{PHONE}}",
-                      "type": "text"
-                    },
-                    {
-                      "key": "url",
-                      "value": "",
-                      "type": "text"
-                    },
-                    {
-                      "key": "caption",
-                      "value": "Image caption",
-                      "type": "text"
-                    },
-                    {
-                      "key": "as_document",
-                      "value": "false",
-                      "type": "text"
+                      "src": [],
+                      "disabled": true
                     },
                     {
                       "key": "delay_message",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "delay_typing",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "mentioned",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "reply",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "quoted_id",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "phone",
+                      "value": "{{PHONE}}",
+                      "type": "text",
+                      "disabled": false
+                    },
+                    {
+                      "key": "url",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "caption",
+                      "value": "Image caption",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "as_document",
+                      "value": "false",
+                      "type": "text",
+                      "disabled": true
                     }
                   ]
                 },
-                "description": "Sends an image message. Accepts either a URL or a file upload.\n\nUse `url` (text field) to send from a remote URL, or `file` (file field) to upload from your local machine. If both are provided, `url` takes precedence.\n\nOptional: `caption` (string), `as_document` (boolean — send as file instead of image), `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Sends an image message. Accepts either a URL or a file upload.\n\nUse `url` (text field) to send from a remote URL, or `file` (file field) to upload from your machine. If both are provided, `url` takes precedence.\n\nOptional: `caption` (string), `as_document` (send as file instead of image, boolean).\n\nOptional: delay_message, delay_typing, mentioned, reply (by text), quoted_id (by ID).\nNote: Media endpoints do NOT have a type field.\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- reply: reply to message by matching text content\n- quoted_id: reply to message by exact message ID"
               }
             },
             {
@@ -1841,61 +1921,84 @@
                       "key": "file",
                       "value": "",
                       "type": "file",
-                      "src": []
-                    },
-                    {
-                      "key": "phone",
-                      "value": "{{PHONE}}",
-                      "type": "text"
-                    },
-                    {
-                      "key": "url",
-                      "value": "https://www.gstatic.com/webp/gallery/1.webp",
-                      "type": "text"
-                    },
-                    {
-                      "key": "pack",
-                      "value": "My Sticker Pack",
-                      "type": "text"
-                    },
-                    {
-                      "key": "author",
-                      "value": "ZapUnlocked",
-                      "type": "text"
-                    },
-                    {
-                      "key": "resize_mode",
-                      "value": "pad",
-                      "type": "text"
-                    },
-                    {
-                      "key": "pad_color",
-                      "value": "black",
-                      "type": "text"
-                    },
-                    {
-                      "key": "blur_intensity",
-                      "value": "20",
-                      "type": "text"
+                      "src": [],
+                      "disabled": true
                     },
                     {
                       "key": "delay_message",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "delay_typing",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "mentioned",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "reply",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "quoted_id",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "phone",
+                      "value": "{{PHONE}}",
+                      "type": "text",
+                      "disabled": false
+                    },
+                    {
+                      "key": "url",
+                      "value": "https://www.gstatic.com/webp/gallery/1.webp",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "pack",
+                      "value": "Sticker Pack",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "author",
+                      "value": "Author Name",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "resize_mode",
+                      "value": "pad",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "pad_color",
+                      "value": "black",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "blur_intensity",
+                      "value": "20",
+                      "type": "text",
+                      "disabled": true
                     }
                   ]
                 },
-                "description": "Sends a sticker image. Accepts URL or file upload.\n\nAdditional sticker-specific fields:\n- `pack`: Sticker pack name\n- `author`: Sticker author\n- `resize_mode`: 'pad' (add padding) or 'crop' (crop to fit)\n- `pad_color`: Background color when using pad mode, e.g. 'black', 'white', '#FF0000'\n- `blur_intensity`: Blur strength for the background padding (int)\n\nOptional: `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Sends a sticker image. Accepts URL or file upload.\n\nUse `url` (text) or `file` (upload).\n\nSticker-specific fields:\n- `pack` — sticker pack name\n- `author` — sticker author\n- `resize_mode` — `\"pad\"` (adds padding) or `\"crop\"` (crops to fit)\n- `pad_color` — background hex/name when using pad mode (e.g. `\"black\"`, `\"#FF0000\"`)\n- `blur_intensity` — background blur strength when padding (integer)\n\nOptional: delay_message, delay_typing, mentioned, reply (by text), quoted_id (by ID).\nNote: Media endpoints do NOT have a type field.\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- reply: reply to message by matching text content\n- quoted_id: reply to message by exact message ID"
               }
             },
             {
@@ -1928,46 +2031,66 @@
                       "key": "file",
                       "value": "",
                       "type": "file",
-                      "src": []
-                    },
-                    {
-                      "key": "phone",
-                      "value": "{{PHONE}}",
-                      "type": "text"
-                    },
-                    {
-                      "key": "url",
-                      "value": "",
-                      "type": "text"
-                    },
-                    {
-                      "key": "caption",
-                      "value": "Video caption",
-                      "type": "text"
-                    },
-                    {
-                      "key": "as_document",
-                      "value": "false",
-                      "type": "text"
+                      "src": [],
+                      "disabled": true
                     },
                     {
                       "key": "delay_message",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "delay_typing",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
                     },
                     {
                       "key": "mentioned",
                       "value": "",
-                      "type": "text"
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "reply",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "quoted_id",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "phone",
+                      "value": "{{PHONE}}",
+                      "type": "text",
+                      "disabled": false
+                    },
+                    {
+                      "key": "url",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "caption",
+                      "value": "Video caption",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "as_document",
+                      "value": "false",
+                      "type": "text",
+                      "disabled": true
                     }
                   ]
                 },
-                "description": "Sends a video message. Accepts URL or file upload.\n\nOptional: `caption` (string), `as_document` (boolean), `delay_message`, `delay_typing`, `mentioned`."
+                "description": "Sends a video message. Accepts URL or file upload.\n\nUse `url` (text) or `file` (upload).\n\nOptional: `caption` (string), `as_document` (boolean).\n\nOptional: delay_message, delay_typing, mentioned, reply (by text), quoted_id (by ID).\nNote: Media endpoints do NOT have a type field.\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- reply: reply to message by matching text content\n- quoted_id: reply to message by exact message ID"
               }
             }
           ]
@@ -2000,14 +2123,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"ID_DA_MENSAGEM\",\n    \"emoji\": \"\\\\uD83D\\\\uDC4D\"\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"MESSAGE_ID\", // or exact text\n    \"emoji\": \"👍\"\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n    // \"reaction\": null,\n    // \"text\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Send Reaction.\n\nRequest body: `SendReaction` schema"
+                "description": "Sends an emoji reaction to a specific message.\n\nRequired: phone, messageId (target message ID), emoji.\nTo remove a reaction, send an empty string as emoji.\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             }
           ]
@@ -2040,14 +2163,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Hello! This is a test message.\",\n    \"delay_message\": null,\n    \"delay_typing\": 2,\n    \"mentioned\": null\n}",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Hello! This is a test message.\"\n    // \"type\": \"text\", | text or id\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"quoted_id\": null,\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Sends a plain text message to a WhatsApp contact or group.\n\nOptional parameters:\n- `delay_message`: Server-side delay before sending. Can be a number (seconds) or a range string like \"2-5\" for random delay.\n- `delay_typing`: Shows the \"typing…\" indicator for N seconds before sending. Simulates a human typing.\n- `mentioned`: Array of phone numbers to @mention in group messages. Marked via ContextInfo — does NOT add @ symbol in text automatically. Add @ manually in `message` if you want visible mentions."
+                "description": "Sends a plain text message to a WhatsApp contact or group.\n\nRequired:\n- `phone` — recipient phone number (or group ID)\n- `message` — the text content to send\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
               }
             },
             {
@@ -2075,14 +2198,14 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"phones\": [\n        \"{{PHONE}}\",\n        \"5511988888888\"\n    ],\n    \"message\": \"Hello! This is a bulk test message.\",\n    \"delay_message\": null,\n    \"delay_typing\": 2,\n    \"delay_between\": \"1-3\",\n    \"mentioned\": null\n}",
+                  "raw": "{\n    \"phones\": [\n        \"{{PHONE}}\",\n        \"5511988888888\"\n    ],\n    \"message\": \"Hello! This is a bulk test message.\"\n    // \"delay_message\": null,\n    // \"delay_typing\": null,\n    // \"mentioned\": null,\n    // \"delay_between\": \"1-3\", | number or range like \"2-5\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "Sends the same text message to multiple WhatsApp contacts in sequence.\n\nRequired:\n- `phones`: Array of phone numbers (strings) to send the message to\n- `message`: The text content to send\n\nOptional:\n- `delay_message`: Per-message server-side delay before sending\n- `delay_typing`: Per-message typing indicator duration\n- `delay_between`: Delay BETWEEN messages (not per-message). Can be a number or a range like \"1-3\" for random delay.\n- `mentioned`: Array of phone numbers to @mention in group messages\n\nResponse: `{\"sent\": N, \"failed\": N, \"results\": [...]}`"
+                "description": "Sends the same text message to multiple WhatsApp contacts sequentially.\n\nRequired: phones (array), message (text).\nOptional: delay_message, delay_typing, mentioned, delay_between (delay between messages, number or range like \"1-3\").\n\nResponse includes per-phone results:\n{\"success\": true, \"sent\": N, \"failed\": N, \"results\": [{\"phone\": \"...\", \"success\": true/false, \"error\": \"...\"}]}"
               }
             }
           ]
@@ -2124,7 +2247,7 @@
                     }
                   }
                 },
-                "description": "Enables or disables IP-based access control. When enabled, only whitelisted IPs can access the API. Requests from non-whitelisted IPs are blocked."
+                "description": "Enables or disables IP-based access control. When enabled, only whitelisted IPs can reach the API. Requests from non-whitelisted IPs receive a 403.\n\nRequired: `enabled` (boolean)."
               }
             },
             {
@@ -2160,7 +2283,7 @@
                     }
                   }
                 },
-                "description": "Enables or disables IP-based access control. When enabled, only whitelisted IPs can access the API. Requests from non-whitelisted IPs are blocked."
+                "description": "Enables or disables IP-based access control. When enabled, only whitelisted IPs can reach the API. Requests from non-whitelisted IPs receive a 403.\n\nRequired: `enabled` (boolean)."
               }
             }
           ]
@@ -2225,7 +2348,7 @@
                     }
                   }
                 },
-                "description": "Adds an IP address to the blacklist. Requires `ip-control` to be enabled."
+                "description": "Adds an IP address to the blacklist. Requires `ip-control` to be enabled.\n\nRequired: `ip` (string)."
               }
             },
             {
@@ -2287,7 +2410,7 @@
                     }
                   }
                 },
-                "description": "Adds an IP address to the whitelist. Requires `ip-control` to be enabled."
+                "description": "Adds an IP address to the whitelist. Requires `ip-control` to be enabled.\n\nRequired: `ip` (string, e.g. `\"192.168.1.100\"`)."
               }
             },
             {
@@ -2658,7 +2781,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "description": "Returns real-time runtime statistics including uptime (seconds + formatted), connection duration, message counters (sent/received), and webhook fire count. All counters reset on server restart.\n\nResponse shape:\n`{\"uptime\": {\"seconds\": 3600, \"formatted\": \"1h 0m 0s\"}, \"connected\": {...}, \"messages\": {\"sent\": 42, \"received\": 128}, \"webhooks\": {\"fired\": 7}}`"
+                "description": "Returns real-time runtime statistics accumulated since the server started:\n\n- **uptime**: seconds + human-readable uptime string\n- **connected**: duration of the current WhatsApp connection (if connected)\n- **messages**: total sent/received count\n- **webhooks**: total webhook events fired\n\nResponse example:\n`{\"uptime\": {\"seconds\": 3600, \"formatted\": \"1h 0m 0s\"}, \"connected\": {...}, \"messages\": {\"sent\": 42, \"received\": 128}, \"webhooks\": {\"fired\": 7}}`"
               }
             },
             {
@@ -2680,7 +2803,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "description": "Resets all runtime statistics counters (messages sent/received, webhooks fired) back to zero. Does NOT restart the server or disconnect WhatsApp.\n\nResponse: `{\"success\": true}`"
+                "description": "Resets all runtime counters (messages sent/received, webhooks fired) back to zero. The server continues running — only the in-memory + persisted counters are cleared.\n\nResponse: `{\"success\": true}`"
               }
             },
             {
@@ -2703,7 +2826,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "description": "Returns delivery statistics for all registered webhooks, including fire count and last-fired timestamp for each.\n\nResponse: `{\"total\": N, \"webhooks\": [{\"name\": \"...\", \"fired\": N, \"last_fired\": \"...\"}]}`"
+                "description": "Returns per-webhook delivery statistics: how many times each webhook was fired and the timestamp of the last fire.\n\nResponse:\n`{\"total\": N, \"webhooks\": [{\"name\": \"...\", \"fired\": N, \"last_fired\": \"...\"}]}`"
               }
             },
             {
@@ -2726,7 +2849,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "description": "Resets delivery statistics for ALL webhooks. Fire counts go back to zero.\n\nResponse: `{\"success\": true}`"
+                "description": "Resets delivery statistics for ALL webhooks. Each webhook's fired count goes to 0 and last_fired becomes null.\n\nResponse: `{\"success\": true}`"
               }
             },
             {
@@ -2750,7 +2873,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "description": "Returns delivery statistics for a single webhook by name.\n\nResponse: `{\"name\": \"...\", \"fired\": N, \"last_fired\": \"...\"}`"
+                "description": "Returns delivery stats for a single webhook by name.\n\nResponse: `{\"name\": \"...\", \"fired\": N, \"last_fired\": \"...\"}`\n\nReturns 404 if the webhook name has no recorded stats."
               }
             },
             {
@@ -2774,7 +2897,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "description": "Resets delivery statistics for a single webhook by name.\n\nResponse: `{\"success\": true}`"
+                "description": "Resets delivery statistics for a single webhook by name.\n\nResponse: `{\"success\": true}`\n\nReturns 404 if the webhook name has no recorded stats."
               }
             },
             {
@@ -2796,7 +2919,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "description": "Returns general connection and instance status. Use this endpoint to check whether the WhatsApp client is connected, the server is ready, and the instance name/ID."
+                "description": "Returns the current server and WhatsApp connection status: client readiness, instance name/ID, and connection state (connected/disconnected/connecting)."
               }
             }
           ]
@@ -2818,7 +2941,7 @@
                     "health"
                   ]
                 },
-                "description": "Simple health-check endpoint. Returns HTTP 200 with a JSON body confirming the server is alive. Does not check WhatsApp connection status."
+                "description": "Simple liveness check. Returns HTTP 200 immediately regardless of WhatsApp state. Use `/status/readiness` for a deeper check."
               }
             },
             {
@@ -2835,7 +2958,7 @@
                     "readiness"
                   ]
                 },
-                "description": "Readiness probe — returns HTTP 200 only when the server has completed its initialization (WhatsApp client ready). Useful for container orchestration health checks."
+                "description": "Readiness probe. Returns HTTP 200 only after the server has fully initialized and the WhatsApp client is ready. Useful for container orchestration (Kubernetes, Docker)."
               }
             }
           ]
@@ -2870,7 +2993,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "description": "Returns current memory usage statistics: RSS, heap total, heap used, external, and array buffers. Useful for monitoring resource consumption."
+                "description": "Returns memory usage from the Node/V8 heap: RSS, heap total, heap used, external memory, and array buffers. Useful for resource monitoring."
               }
             },
             {
@@ -2893,7 +3016,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "description": "Returns the current WhatsApp stream/connection state: connected, disconnected, connecting, etc."
+                "description": "Returns the current WhatsApp stream/connection state: `connected`, `disconnected`, `connecting`, etc. Also includes reconnect attempts if applicable."
               }
             },
             {
@@ -2916,7 +3039,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "description": "Returns the volume (data usage) statistics for the current WhatsApp session. Includes sent/received byte counts."
+                "description": "Returns data usage statistics for the current WhatsApp session, including bytes sent and received."
               }
             }
           ]
@@ -3061,7 +3184,7 @@
                     }
                   }
                 },
-                "description": "Updates environment variables at runtime. Changes take effect immediately without server restart.\n\nRequired: key-value pairs of environment variables to update (e.g. `{\"PORT\": \"8300\"}`)."
+                "description": "Updates environment variables at runtime. Changes take effect immediately without requiring a server restart.\n\nRequired: key-value pairs of env vars to set, e.g. `{\"PORT\": \"8300\"}`."
               }
             },
             {
@@ -3097,7 +3220,7 @@
                     }
                   }
                 },
-                "description": "Updates environment variables at runtime. Changes take effect immediately without server restart.\n\nRequired: key-value pairs of environment variables to update (e.g. `{\"PORT\": \"8300\"}`)."
+                "description": "Updates environment variables at runtime. Changes take effect immediately without requiring a server restart.\n\nRequired: key-value pairs of env vars to set, e.g. `{\"PORT\": \"8300\"}`."
               }
             }
           ]
@@ -3128,14 +3251,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"my-webhook\",\n    \"url\": \"https://myserver.com/hook\",\n    \"events\": [\n        \"*\"\n    ],\n    \"active\": true\n}",
+              "raw": "{\n    \"name\": \"my-webhook\",\n    \"url\": \"https://example.com/webhook\",\n    \"events\": [\n        \"*\"\n    ],\n    \"active\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Creates a new webhook endpoint. The server will POST event data to this URL whenever matching events occur.\n\nRequired: `name`, `url` (your endpoint URL), `events` (array of event names or [\"*\"] for all events), `active` (boolean).\n\nAvailable events:\n- `message.*` — All message events\n- `message.text`, `message.image`, `message.audio`, etc.\n- `message.contacts` — Contact array messages\n- `status.*` — Status changes\n- `qr.*` — QR code events\n- `call.*` — Call events"
+            "description": "Creates a new webhook endpoint. The server will POST event payloads to this URL whenever matching events occur.\n\nRequired: `name`, `url` (your endpoint), `events` (array of event names, or `[\"*\"]` for all), `active` (boolean to enable immediately).\n\nAvailable event types:\n- `message.*` / `message.text` / `message.image` / `message.audio` / etc.\n- `message.contacts` — contact array messages\n- `message.sent` / `message.delivered` / `message.read` — delivery receipts\n- `message.poll_created` / `message.poll_vote` — poll events\n- `connection.*` — connection state changes\n- `qr.*` — QR code events\n- `call.*` — call events\n- `group.*` — group events\n- `contact.*` — presence/chat state events\n- `media.cleanup.*` — automatic media cleanup events\n- `ai.response` — Meta AI reply received"
           }
         },
         {
@@ -3163,14 +3286,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"my-webhook\",\n    \"url\": \"https://myserver.com/hook\",\n    \"events\": [\n        \"*\"\n    ],\n    \"active\": true\n}",
+              "raw": "{\n    \"name\": \"my-webhook\",\n    \"url\": \"https://example.com/webhook\",\n    \"events\": [\n        \"*\"\n    ],\n    \"active\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Creates a new webhook endpoint. The server will POST event data to this URL whenever matching events occur.\n\nRequired: `name`, `url` (your endpoint URL), `events` (array of event names or [\"*\"] for all events), `active` (boolean).\n\nAvailable events:\n- `message.*` — All message events\n- `message.text`, `message.image`, `message.audio`, etc.\n- `message.contacts` — Contact array messages\n- `status.*` — Status changes\n- `qr.*` — QR code events\n- `call.*` — Call events"
+            "description": "Creates a new webhook endpoint. The server will POST event payloads to this URL whenever matching events occur.\n\nRequired: `name`, `url` (your endpoint), `events` (array of event names, or `[\"*\"]` for all), `active` (boolean to enable immediately).\n\nAvailable event types:\n- `message.*` / `message.text` / `message.image` / `message.audio` / etc.\n- `message.contacts` — contact array messages\n- `message.sent` / `message.delivered` / `message.read` — delivery receipts\n- `message.poll_created` / `message.poll_vote` — poll events\n- `connection.*` — connection state changes\n- `qr.*` — QR code events\n- `call.*` — call events\n- `group.*` — group events\n- `contact.*` — presence/chat state events\n- `media.cleanup.*` — automatic media cleanup events\n- `ai.response` — Meta AI reply received"
           }
         },
         {
@@ -3303,7 +3426,7 @@
                 "value": "{{API_KEY}}"
               }
             ],
-            "description": "Sends a test payload to a registered webhook URL to verify connectivity and payload format.\n\nOptional body — specify an `event` to choose which payload template to send. If omitted, defaults to `message.text`.\n\nAvailable event types:\n- `message.text`, `message.image`, `message.video`, `message.audio`, `message.document`\n- `message.sticker`, `message.reaction`, `message.location`\n- `message.button_reply`, `message.list_reply`, `message.deleted`\n- `message.poll_created`, `message.poll_vote`\n- `message.sent`, `message.delivered`, `message.read`\n- `connection.connected`, `connection.disconnected`, `connection.qr_ready`\n- `group.join`, `contact.presence`, `contact.chat_presence`\n- `call.received`, `media.cleanup.completed`, `ai.response`\n\nExample body:\n```json\n{\"event\": \"message.image\"}\n```\n\nResponse includes the HTTP `statusCode` and `response` body from the target URL."
+            "description": "Sends a test payload to a registered webhook to verify connectivity and payload format.\n\nThe `{name}` path param specifies which webhook to test.\n\nOptional body — specify an `event` to choose which payload template to send. If omitted, defaults to `message.text`.\n\nAvailable event types for testing:\n- `message.text`, `message.image`, `message.video`, `message.audio`\n- `message.document`, `message.sticker`, `message.reaction`\n- `message.location`, `message.button_reply`, `message.list_reply`\n- `message.deleted`, `message.poll_created`, `message.poll_vote`\n- `message.sent`, `message.delivered`, `message.read`\n- `connection.connected`, `connection.disconnected`, `connection.qr_ready`\n- `group.join`, `contact.presence`, `contact.chat_presence`\n- `call.received`, `media.cleanup.completed`, `ai.response`\n\nExample body: `{\"event\": \"message.image\"}`\n\nResponse includes the target's HTTP `statusCode` and `response` body."
           }
         },
         {

@@ -101,26 +101,58 @@ def build_collection(openapi_schema: Dict) -> Dict:
             body = None
             if url_path in ENDPOINT_BODIES:
                 body_data = dict(ENDPOINT_BODIES[url_path])
+                commented = body_data.pop("__commented__", {})
+                inline_comments = body_data.pop("__inline_comments__", {})
                 if body_data.pop("__formdata__", False):
                     file_field = body_data.pop("__file_field__", "file")
                     formdata = []
                     for key, val in body_data.items():
+                        is_optional = key != "phone"
                         formdata.append({
                             "key": key,
                             "value": str(val).lower() if isinstance(val, bool) else str(val),
                             "type": "text",
+                            "disabled": is_optional,
                         })
                     formdata.insert(0, {
                         "key": file_field,
                         "value": "",
                         "type": "file",
                         "src": [],
+                        "disabled": True,
                     })
                     body = {"mode": "formdata", "formdata": formdata}
                 else:
+                    if commented or inline_comments:
+                        # Build active JSON fields, then append // comments
+                        active_json = json.dumps(body_data, indent=4, ensure_ascii=False)
+                        lines = active_json.rstrip().split('\n')
+                        # Remove trailing "}" — we'll re-add after comments
+                        if lines[-1].strip() == '}':
+                            body_lines = lines[:-1]
+                        else:
+                            body_lines = lines
+                        # Add inline comments on active field lines
+                        if inline_comments:
+                            for field, comment in inline_comments.items():
+                                for i, line in enumerate(body_lines):
+                                    stripped = line.strip()
+                                    if stripped.startswith(f'"{field}"'):
+                                        if stripped.endswith(','):
+                                            body_lines[i] = line.rstrip() + ' ' + comment
+                                        else:
+                                            body_lines[i] = line.rstrip() + ', ' + comment
+                                        break
+                        # Append commented optional fields
+                        for key, val_str in commented.items():
+                            body_lines.append(f'    // "{key}": {val_str}')
+                        body_lines.append('}')
+                        raw_body = '\n'.join(body_lines)
+                    else:
+                        raw_body = json.dumps(body_data, indent=4, ensure_ascii=False)
                     body = {
                         "mode": "raw",
-                        "raw": json.dumps(body_data, indent=4, ensure_ascii=False),
+                        "raw": raw_body,
                         "options": {"raw": {"language": "json"}},
                     }
             elif "requestBody" in operation:
@@ -133,8 +165,8 @@ def build_collection(openapi_schema: Dict) -> Dict:
                             continue
                         if "default" in prop:
                             form_fields[key] = prop["default"]
-                    formdata = [{"key": k, "value": str(v), "type": "text"} for k, v in form_fields.items()]
-                    formdata.insert(0, {"key": "file", "value": "", "type": "file", "src": []})
+                    formdata = [{"key": k, "value": str(v), "type": "text", "disabled": k != "phone"} for k, v in form_fields.items()]
+                    formdata.insert(0, {"key": "file", "value": "", "type": "file", "src": [], "disabled": True})
                     body = {"mode": "formdata", "formdata": formdata}
                 else:
                     body_text = generate_request_body(operation["requestBody"], openapi_schema)

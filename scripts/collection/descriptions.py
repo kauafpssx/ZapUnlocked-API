@@ -1,327 +1,426 @@
 """Rich endpoint descriptions in English for Postman/Insomnia Docs tab.
 
-ENDPOINT_DESCRIPTIONS: manual docs for key endpoints.
-auto_generate_description(): fallback generator for endpoints without manual docs,
-  producing a sensible description from OpenAPI operation metadata.
+ENDPOINT_DESCRIPTIONS: manual docs for all endpoints.
+auto_generate_description(): fallback for any endpoint without manual docs.
 """
 
 from typing import Any, Dict, List, Optional
 
 
-# ── Manual descriptions (keyed by method + path OR just path) ────────────
-# When method-specific: "GET /path" or "POST /path".
-# When path-only: matches any method on that path.
-ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
-    # ── Logs ─────────────────────────────────────────────────────────────
-    "/logs":
-        "Returns server logs with powerful filtering. All parameters are optional query params.\n\n"
-        "Filters:\n"
-        "- `date` (YYYY-MM-DD): Specific day's logs (default: today)\n"
-        "- `from_date` / `to_date` (YYYY-MM-DD): Date range (alternative to `date`)\n"
-        "- `from_time` / `to_time` (HH:MM): Time range within the selected dates\n"
-        "- `level`: Filter by log level — DEBUG, INFO, WARNING, ERROR, CRITICAL\n"
-        "- `search`: Full-text search in log messages (case-insensitive)\n"
-        "- `limit`: Max lines to return (default: 200, max: 10000)\n"
-        "- `offset`: Skip first N matching lines (for pagination)\n\n"
-        "Use `date` OR (`from_date` + `to_date`), never both.\n\n"
-        "Response includes `filters` (echo of applied filters), `total`, `returned`, `offset`, and `logs` array.",
-    "/logs/files":
-        "Lists all available log files with their date and size. Each log file covers one day.\n\n"
-        'Response: `{"success": true, "count": N, "files": [{"file": "...", "date": "YYYY-MM-DD", "sizeBytes": N, "sizeFormatted": "..."}]}`',
-    "POST /logs/cleanup":
-        "Runs log maintenance: compresses old .log files to .gz, then deletes compressed "
-        "files that exceed age (LOG_MAX_AGE_DAYS, default 30) or total size (LOG_MAX_SIZE_MB, default 50 MB) limits.\n\n"
-        'Response: `{"success": true, "compressed": N, "deleted": N}`',
+# ── Shared optional fields note ────────────────────────────────────────────
+# Used by all message-sending endpoints that extend BaseWhatsAppRequest.
+# These fields are shown as // comments in the request body — uncomment to use.
 
-    # ── Status ───────────────────────────────────────────────────────────
+_OPTIONAL_NOTE = """\
+Optional: delay_message, delay_typing, mentioned, quoted_id (by ID), type ("text" or "id").
+- delay_message: server-side delay (seconds or range like "2-5")
+- delay_typing: shows typing indicator for N seconds
+- mentioned: array of phones to @mention in groups
+- quoted_id: reply to message by exact message ID
+- type: "id" (match by ID, default) or "text" (match by text content)"""
+
+_OPTIONAL_FORM_NOTE = """\
+Optional: delay_message, delay_typing, mentioned, reply (by text), quoted_id (by ID).
+Note: Media endpoints do NOT have a type field.
+- delay_message: server-side delay (seconds or range like "2-5")
+- delay_typing: shows typing indicator for N seconds
+- mentioned: array of phones to @mention in groups
+- reply: reply to message by matching text content
+- quoted_id: reply to message by exact message ID"""
+
+
+def _with_options(desc: str) -> str:
+    """Append the optional fields note to a description."""
+    return desc + "\n\n" + _OPTIONAL_NOTE
+
+def _with_form_options(desc: str) -> str:
+    """Append the formdata optional fields note (no type) to a description."""
+    return desc + "\n\n" + _OPTIONAL_FORM_NOTE
+
+
+# ── Manual descriptions (keyed by method + path OR just path) ────────────
+ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
+
+    # ═════════════════════════════════════════════════════════════════════
+    # LOGS
+    # ═════════════════════════════════════════════════════════════════════
+    "/logs":
+        "Returns server logs with powerful filtering. All filter parameters below "
+        "are optional query params — use as many or as few as needed.\n\n"
+        "Date filters (use `date` OR `from_date`+`to_date`, never both):\n"
+        "- `date` (YYYY-MM-DD): Specific day's logs (default: today)\n"
+        "- `from_date` / `to_date` (YYYY-MM-DD): Date range\n\n"
+        "Time filter (refines within the selected date(s)):\n"
+        "- `from_time` / `to_time` (HH:MM): Time range\n\n"
+        "Content filters:\n"
+        "- `level`: Log level — `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`\n"
+        "- `search`: Case-insensitive full-text search in log messages\n\n"
+        "Pagination:\n"
+        "- `limit`: Max lines to return (default: 200, max: 10000)\n"
+        "- `offset`: Skip first N matching lines\n\n"
+        "Response: `{\"success\": true, \"filters\": {...}, \"total\": N, \"returned\": N, \"offset\": N, \"logs\": [...]}`",
+    "/logs/files":
+        "Lists all available log files with their date, size in bytes, and a human-readable "
+        "size string. Each file covers one day (zapunlocked_YYYY-MM-DD.log).\n\n"
+        "Response:\n"
+        '`{"success": true, "count": N, "files": [{"file": "...", "date": "YYYY-MM-DD", "sizeBytes": N, "sizeFormatted": "..."}]}`',
+    "POST /logs/cleanup":
+        "Runs log maintenance in two steps:\n"
+        "1. **Compress** — older .log files (not today's) are gzip-compressed to .log.gz\n"
+        "2. **Cleanup** — compressed files are deleted if they exceed age (LOG_MAX_AGE_DAYS, "
+        "default 30) or total log directory size (LOG_MAX_SIZE_MB, default 50 MB)\n\n"
+        "Response: `{\"success\": true, \"compressed\": N, \"deleted\": N}`",
+
+    # ═════════════════════════════════════════════════════════════════════
+    # STATUS
+    # ═════════════════════════════════════════════════════════════════════
     "/stats":
-        "Returns real-time runtime statistics including uptime (seconds + formatted), "
-        "connection duration, message counters (sent/received), and webhook fire count. "
-        "All counters reset on server restart.\n\n"
-        "Response shape:\n"
+        "Returns real-time runtime statistics accumulated since the server started:\n\n"
+        "- **uptime**: seconds + human-readable uptime string\n"
+        "- **connected**: duration of the current WhatsApp connection (if connected)\n"
+        "- **messages**: total sent/received count\n"
+        "- **webhooks**: total webhook events fired\n\n"
+        "Response example:\n"
         '`{"uptime": {"seconds": 3600, "formatted": "1h 0m 0s"}, '
         '"connected": {...}, '
         '"messages": {"sent": 42, "received": 128}, '
         '"webhooks": {"fired": 7}}`',
     "DELETE /stats":
-        "Resets all runtime statistics counters (messages sent/received, webhooks fired) "
-        "back to zero. Does NOT restart the server or disconnect WhatsApp.\n\n"
+        "Resets all runtime counters (messages sent/received, webhooks fired) back to zero. "
+        "The server continues running — only the in-memory + persisted counters are cleared.\n\n"
         'Response: `{"success": true}`',
-
-    # ── Webhook Stats ─────────────────────────────────────────────────────
     "/stats/webhooks":
-        "Returns delivery statistics for all registered webhooks, including fire count "
-        "and last-fired timestamp for each.\n\n"
-        'Response: `{"total": N, "webhooks": [{"name": "...", "fired": N, "last_fired": "..."}]}`',
+        "Returns per-webhook delivery statistics: how many times each webhook was fired "
+        "and the timestamp of the last fire.\n\n"
+        "Response:\n"
+        '`{"total": N, "webhooks": [{"name": "...", "fired": N, "last_fired": "..."}]}`',
     "GET /stats/webhooks/{name}":
-        "Returns delivery statistics for a single webhook by name.\n\n"
-        'Response: `{"name": "...", "fired": N, "last_fired": "..."}`',
+        "Returns delivery stats for a single webhook by name.\n\n"
+        'Response: `{"name": "...", "fired": N, "last_fired": "..."}`\n\n'
+        "Returns 404 if the webhook name has no recorded stats.",
     "DELETE /stats/webhooks":
-        "Resets delivery statistics for ALL webhooks. Fire counts go back to zero.\n\n"
+        "Resets delivery statistics for ALL webhooks. Each webhook's fired count goes to 0 "
+        "and last_fired becomes null.\n\n"
         'Response: `{"success": true}`',
     "DELETE /stats/webhooks/{name}":
         "Resets delivery statistics for a single webhook by name.\n\n"
-        'Response: `{"success": true}`',
+        'Response: `{"success": true}`\n\n'
+        "Returns 404 if the webhook name has no recorded stats.",
     "/status":
-        "Returns general connection and instance status. Use this endpoint to check "
-        "whether the WhatsApp client is connected, the server is ready, and the instance name/ID.",
+        "Returns the current server and WhatsApp connection status: client readiness, "
+        "instance name/ID, and connection state (connected/disconnected/connecting).",
     "/status/health":
-        "Simple health-check endpoint. Returns HTTP 200 with a JSON body confirming "
-        "the server is alive. Does not check WhatsApp connection status.",
+        "Simple liveness check. Returns HTTP 200 immediately regardless of WhatsApp state. "
+        "Use `/status/readiness` for a deeper check.",
     "/status/readiness":
-        "Readiness probe — returns HTTP 200 only when the server has completed its "
-        "initialization (WhatsApp client ready). Useful for container orchestration health checks.",
+        "Readiness probe. Returns HTTP 200 only after the server has fully initialized "
+        "and the WhatsApp client is ready. Useful for container orchestration (Kubernetes, Docker).",
     "/status/memory":
-        "Returns current memory usage statistics: RSS, heap total, heap used, "
-        "external, and array buffers. Useful for monitoring resource consumption.",
+        "Returns memory usage from the Node/V8 heap: RSS, heap total, heap used, "
+        "external memory, and array buffers. Useful for resource monitoring.",
     "/status/stream":
-        "Returns the current WhatsApp stream/connection state: connected, "
-        "disconnected, connecting, etc.",
+        "Returns the current WhatsApp stream/connection state: `connected`, `disconnected`, "
+        "`connecting`, etc. Also includes reconnect attempts if applicable.",
     "/status/volume":
-        "Returns the volume (data usage) statistics for the current WhatsApp session. "
-        "Includes sent/received byte counts.",
+        "Returns data usage statistics for the current WhatsApp session, including "
+        "bytes sent and received.",
 
-    # ── Send ─────────────────────────────────────────────────────────────
-    "/send":
+    # ═════════════════════════════════════════════════════════════════════
+    # SEND — TEXT
+    # ═════════════════════════════════════════════════════════════════════
+    "/send": _with_options(
         "Sends a plain text message to a WhatsApp contact or group.\n\n"
-        "Optional parameters:\n"
-        "- `delay_message`: Server-side delay before sending. Can be a number (seconds) "
-        'or a range string like "2-5" for random delay.\n'
-        "- `delay_typing`: Shows the \"typing…\" indicator for N seconds before sending. "
-        "Simulates a human typing.\n"
-        "- `mentioned`: Array of phone numbers to @mention in group messages. "
-        "Marked via ContextInfo — does NOT add @ symbol in text automatically. "
-        "Add @ manually in `message` if you want visible mentions.",
-    "/send_bulk":
-        "Sends the same text message to multiple WhatsApp contacts in sequence.\n\n"
         "Required:\n"
-        "- `phones`: Array of phone numbers (strings) to send the message to\n"
-        "- `message`: The text content to send\n\n"
-        "Optional:\n"
-        "- `delay_message`: Per-message server-side delay before sending\n"
-        "- `delay_typing`: Per-message typing indicator duration\n"
-        '- `delay_between`: Delay BETWEEN messages (not per-message). Can be a number '
-        'or a range like "1-3" for random delay.\n'
-        "- `mentioned`: Array of phone numbers to @mention in group messages\n\n"
-        "Response: `{\"sent\": N, \"failed\": N, \"results\": [...]}`",
+        "- `phone` — recipient phone number (or group ID)\n"
+        "- `message` — the text content to send"
+    ),
+    "/send_bulk":
+        "Sends the same text message to multiple WhatsApp contacts sequentially.\n\n"
+        "Required: phones (array), message (text).\n"
+        "Optional: delay_message, delay_typing, mentioned, delay_between (delay between messages, "
+        'number or range like "1-3").\n\n'
+        "Response includes per-phone results:\n"
+        '{"success": true, "sent": N, "failed": N, "results": [{"phone": "...", "success": true/false, "error": "..."}]}',
 
-    # ── Media ──────────────────────────────────────────────────────────
-    "/send_image":
+    # ═════════════════════════════════════════════════════════════════════
+    # SEND — MEDIA (multipart/form-data)
+    # ═════════════════════════════════════════════════════════════════════
+    "/send_image": _with_form_options(
         "Sends an image message. Accepts either a URL or a file upload.\n\n"
         "Use `url` (text field) to send from a remote URL, or `file` (file field) "
-        "to upload from your local machine. If both are provided, `url` takes precedence.\n\n"
-        "Optional: `caption` (string), `as_document` (boolean — send as file instead of image), "
-        "`delay_message`, `delay_typing`, `mentioned`.",
-    "/send_audio":
+        "to upload from your machine. If both are provided, `url` takes precedence.\n\n"
+        "Optional: `caption` (string), `as_document` (send as file instead of image, boolean)."
+    ),
+    "/send_audio": _with_form_options(
         "Sends an audio message. Accepts URL or file upload.\n\n"
-        "Optional: `ptt` (boolean — send as voice note), `as_document` (boolean), "
-        '`format` (string, e.g. "m4a", "ogg"), '
-        "`delay_message`, `delay_typing`, `mentioned`.",
-    "/send_video":
+        "Use `url` (text) or `file` (upload).\n\n"
+        "Optional: `ptt` (send as voice note, boolean), `as_document` (boolean), "
+        '`format` (e.g. "m4a", "ogg").'
+    ),
+    "/send_video": _with_form_options(
         "Sends a video message. Accepts URL or file upload.\n\n"
-        "Optional: `caption` (string), `as_document` (boolean), "
-        "`delay_message`, `delay_typing`, `mentioned`.",
-    "/send_document":
+        "Use `url` (text) or `file` (upload).\n\n"
+        "Optional: `caption` (string), `as_document` (boolean)."
+    ),
+    "/send_document": _with_form_options(
         "Sends a document/file message. Accepts URL or file upload.\n\n"
-        "Optional: `fileName` (string — overrides the displayed filename), "
-        "`caption` (string), `delay_message`, `delay_typing`, `mentioned`.",
-    "/send_sticker":
+        "Use `url` (text) or `file` (upload).\n\n"
+        "Optional: `fileName` (overrides the displayed filename, string), "
+        "`caption` (string)."
+    ),
+    "/send_sticker": _with_form_options(
         "Sends a sticker image. Accepts URL or file upload.\n\n"
-        "Additional sticker-specific fields:\n"
-        "- `pack`: Sticker pack name\n"
-        "- `author`: Sticker author\n"
-        "- `resize_mode`: 'pad' (add padding) or 'crop' (crop to fit)\n"
-        "- `pad_color`: Background color when using pad mode, e.g. 'black', 'white', '#FF0000'\n"
-        "- `blur_intensity`: Blur strength for the background padding (int)\n\n"
-        "Optional: `delay_message`, `delay_typing`, `mentioned`.",
-    "/send_gif":
+        "Use `url` (text) or `file` (upload).\n\n"
+        "Sticker-specific fields:\n"
+        "- `pack` — sticker pack name\n"
+        "- `author` — sticker author\n"
+        "- `resize_mode` — `\"pad\"` (adds padding) or `\"crop\"` (crops to fit)\n"
+        "- `pad_color` — background hex/name when using pad mode (e.g. `\"black\"`, `\"#FF0000\"`)\n"
+        "- `blur_intensity` — background blur strength when padding (integer)"
+    ),
+    "/send_gif": _with_form_options(
         "Sends an animated GIF. Accepts URL or file upload.\n\n"
-        "Optional: `caption` (string), `delay_message`, `delay_typing`, `mentioned`.",
+        "Use `url` (text) or `file` (upload).\n\n"
+        "Optional: `caption` (string)."
+    ),
 
-    # ── Location / Contact / Link / Reaction ───────────────────────────
-    "/messages/send-location":
-        "Sends a geographic location to a WhatsApp chat.\n\n"
-        "Required: `lat` (float), `lng` (float).\n"
-        "Optional: `name` (string), `address` (string).",
-    "/messages/send-contact":
-        "Sends a single contact (vCard) to a WhatsApp chat.\n\n"
-        "Required: `phone` (recipient), `contactPhone` (contact number), "
-        "`contactName` (display name).",
-    "/messages/send-contacts":
+    # ═════════════════════════════════════════════════════════════════════
+    # SEND — LOCATION / CONTACT / LINK / REACTION
+    # ═════════════════════════════════════════════════════════════════════
+    "/send_location": _with_options(
+        "Sends a geographic location pin to a WhatsApp chat.\n\n"
+        "Required: phone, lat (float), lng (float).\n"
+        "Optional: name (location name), address (street address)."
+    ),
+    "/send_contact": _with_options(
+        "Sends a single contact as a vCard to a WhatsApp chat.\n\n"
+        "Required: phone, contactPhone (contact's phone), contactName (display name)."
+    ),
+    "/send_contacts": _with_options(
         "Sends multiple contacts in a single message.\n\n"
-        "Required: `phone` (recipient), `contacts` (array of `{name, phone}` objects).",
-    "/messages/send-link":
-        "Sends a link preview message. WhatsApp will fetch and display a preview "
-        "card with the URL's metadata (title, description, image).\n\n"
-        "Required: `url` (the link), `message` (text accompanying the link).",
-    "/messages/send-reaction":
-        "Sends a reaction (emoji) to a specific message.\n\n"
-        "Required: `messageId` (the ID of the target message), `emoji` (the emoji to react with). "
-        "To remove a reaction, send an empty string as `emoji`.",
+        "Required: phone, contacts — array of {name, phone} objects."
+    ),
+    "/send_link": _with_options(
+        "Sends a message with a link preview. WhatsApp fetches and displays a preview "
+        "card (title, description, image) from the URL metadata.\n\n"
+        "Required: phone, url (the link), message (text accompanying the link).\n"
+        "Optional: title, description, imageUrl for custom preview overrides."
+    ),
+    "/send_reaction": _with_options(
+        "Sends an emoji reaction to a specific message.\n\n"
+        "Required: phone, messageId (target message ID), emoji.\n"
+        "To remove a reaction, send an empty string as emoji."
+    ),
 
-    # ── Interactive: Buttons ───────────────────────────────────────────
-    "/messages/send-button-list":
-        "Sends an interactive button list message. Supports up to 5 buttons of mixed types.\n\n"
-        "Button types available:\n"
-        "- `quick_reply`: Simple reply button with `buttonText` and `id`\n"
-        "- `url`: Opens a URL when tapped (`url` field)\n"
-        "- `call`: Initiates a phone call (`callPhone` field)\n"
-        "- `otp`: One-time password copy button (`code` field)\n\n"
-        "NOTE: PIX buttons are NOT supported in combined lists — use the dedicated "
-        "/messages/send-button-pix endpoint instead.\n\n"
-        "Optional: `delay_message`, `delay_typing`, `mentioned`.",
-    "/messages/send-button-url":
-        "Sends a single URL button message. The recipient sees a button that opens "
+    # ═════════════════════════════════════════════════════════════════════
+    # INTERACTIVE — BUTTONS
+    # ═════════════════════════════════════════════════════════════════════
+    "/messages/send-button-list": _with_options(
+        "Sends an interactive message with up to 5 buttons of mixed types.\n\n"
+        "Required: `phone`, `message`, `title`, `text`, `buttons`.\n\n"
+        "Button types (mix & match):\n"
+        "- `quick_reply` — simple tap button with `buttonText` and `id`\n"
+        "- `url` — opens a URL when tapped (`url` field)\n"
+        "- `call` — initiates a phone call (`callPhone` field)\n"
+        "- `otp` — one-time password copy button (`code` field)\n\n"
+        "⚠ PIX button is NOT supported in combined lists — use /messages/send-button-pix.\n\n"
+        "Button object example:\n"
+        '`{"type": "quick_reply", "buttonText": "Yes", "id": "yes"}`'
+    ),
+    "/messages/send-button-url": _with_options(
+        "Sends a single URL button message. Recipient sees a button that opens "
         "a URL when tapped.\n\n"
-        "Required: `url`, `button_text`, `title`, `text`.\n"
-        "Optional: `delay_message`, `delay_typing`, `mentioned`.",
-    "/messages/send-button-call":
-        "Sends a single call button message. The recipient sees a button that initiates "
+        "Required: `phone`, `url`, `button_text`, `title`, `text`."
+    ),
+    "/messages/send-button-call": _with_options(
+        "Sends a single call button message. Recipient sees a button that initiates "
         "a phone call when tapped.\n\n"
-        "Required: `callPhone`, `button_text`, `title`, `text`.\n"
-        "Optional: `delay_message`, `delay_typing`, `mentioned`.",
-    "/messages/send-button-otp":
-        "Sends a one-time password (OTP) button. The recipient can copy the code "
-        "with one tap.\n\n"
-        "Required: `code`, `button_text`, `title`, `text`.\n"
-        "Optional: `footer` (string), `delay_message`, `delay_typing`, `mentioned`.",
-    "/messages/send-button-pix":
-        "Sends a PIX payment button (exclusive — cannot be combined with other button types).\n\n"
+        "Required: `phone`, `callPhone`, `button_text`, `title`, `text`."
+    ),
+    "/messages/send-button-otp": _with_options(
+        "Sends a one-time password (OTP) button. Recipient can copy the code with "
+        "a single tap.\n\n"
+        "Required: `phone`, `code`, `button_text`, `title`, `text`.\n"
+        "Optional: `footer` (string)."
+    ),
+    "/messages/send-button-pix": _with_options(
+        "Sends a PIX payment button (⚠ exclusive — cannot be combined with other button types).\n\n"
         "Required:\n"
-        "- `pixKey`: The PIX key (email, phone, CPF, CNPJ, or random)\n"
-        "- `pixType`: Key type — EMAIL, PHONE, CPF, CNPJ, or RANDOM\n"
-        "- `pixValue`: Amount in BRL (float)\n"
-        "- `merchantName`: Your business/trading name\n"
-        "- `pixCity`: Your city\n\n"
-        "Optional: `pixDescription` (string), `button_text`, `title`, `text`, "
-        "`delay_message`, `delay_typing`, `mentioned`.",
-    "/messages/send-button-quick-reply":
-        "Sends quick reply buttons (simple reply options shown as buttons).\n\n"
-        "Required: `title`, `text`, `buttons` (array of `{text, id}` objects).\n"
-        "Optional: `delay_message`, `delay_typing`, `mentioned`.",
+        "- `pixKey` — the PIX key (email, phone, CPF, CNPJ, or random)\n"
+        "- `pixType` — key type: `EMAIL`, `PHONE`, `CPF`, `CNPJ`, or `RANDOM`\n"
+        "- `pixValue` — amount in BRL (float, e.g. 19.90)\n"
+        "- `merchantName` — your business/trading name\n"
+        "- `pixCity` — your city\n\n"
+        "Optional: `pixDescription`, `button_text`, `title`, `text`."
+    ),
+    "/messages/send-button-quick-reply": _with_options(
+        "Sends one or more quick reply buttons — simple tap options.\n\n"
+        "Required: `phone`, `title`, `text`, `buttons` — array of "
+        '`{"text": "...", "id": "..."}` objects.'
+    ),
 
-    # ── Interactive: Option List ───────────────────────────────────────
-    "/messages/send-option-list":
-        "Sends an interactive list message with a menu of options. The user taps "
-        "the button to expand the list and selects an option.\n\n"
-        "Required: `title`, `text`, `options` (array of option objects).\n"
-        "Optional: `button_text`, `footer`, `description`, "
-        "`delay_message`, `delay_typing`, `mentioned`.",
+    # ═════════════════════════════════════════════════════════════════════
+    # INTERACTIVE — OPTION LIST
+    # ═════════════════════════════════════════════════════════════════════
+    "/messages/send-option-list": _with_options(
+        "Sends an interactive list message. Recipient taps a button to expand "
+        "a menu and selects one option.\n\n"
+        "Required: `phone`, `title`, `text`, `options` — array of "
+        '`{"title": "...", "description": "..."}` objects.\n\n'
+        "Optional: `button_text` (the expand button label), `footer`, `description`."
+    ),
 
-    # ── Interactive: Poll ──────────────────────────────────────────────
-    "/messages/send-poll":
+    # ═════════════════════════════════════════════════════════════════════
+    # INTERACTIVE — POLL
+    # ═════════════════════════════════════════════════════════════════════
+    "/messages/send-poll": _with_options(
         "Creates and sends a poll to a WhatsApp chat. Recipients can vote on options.\n\n"
-        "Required: `name` (poll question), `options` (array of strings, up to 12).\n"
-        "Optional: `delay_message`, `delay_typing`, `mentioned`.",
-    "/messages/send-poll-vote":
-        "Votes on an existing poll.\n\n"
-        "Required: `options` (array of selected option strings), `pollId` (the poll message ID).\n"
-        "Optional: `delay_message`, `delay_typing`, `mentioned`.",
+        "Required: `phone`, `name` (the poll question), `options` (array of strings, up to 12)."
+    ),
+    "/messages/send-poll-vote": _with_options(
+        "Casts a vote on an existing poll.\n\n"
+        "Required: `phone`, `options` (array of selected option strings), "
+        "`pollId` (the poll message's ID)."
+    ),
 
-    # ── Interactive: Actions ─────────────────────────────────────────
-    "/messages/edit":
-        "Edits an existing message. Works only for messages sent by the same bot.\n\n"
-        "Required: `messageId`, `message` (new text content).\n"
-        "Optional: `delay_message`, `delay_typing`, `mentioned`.",
+    # ═════════════════════════════════════════════════════════════════════
+    # INTERACTIVE — ACTIONS (edit / delete / read)
+    # ═════════════════════════════════════════════════════════════════════
+    "/messages/edit": _with_options(
+        "Edits an existing text message. Only works for messages sent by the same bot.\n\n"
+        "Required: `phone`, `messageId`, `message` (new text content)."
+    ),
     "/messages/delete":
-        "Deletes a message for everyone (if possible) or for yourself.\n\n"
+        "Deletes a message for everyone (if possible, within WhatsApp's time limit) "
+        "or just for the bot itself.\n\n"
         "Required: `phone`, `messageId`.",
     "/messages/read":
-        "Marks a message (or multiple messages) as read.\n\n"
-        "Required: `messageIds` (array of message IDs).",
+        "Marks one or more messages as read. Triggers the blue double-check "
+        "for the sender.\n\n"
+        "Required: `phone`, `messageIds` (array of message ID strings).",
 
-    # ── AI ───────────────────────────────────────────────────────────────
+    # ═════════════════════════════════════════════════════════════════════
+    # AI
+    # ═════════════════════════════════════════════════════════════════════
     "/ai/ask":
-        "Sends a text message to Meta AI via WhatsApp and waits for its response.\n\n"
+        "Sends a text message to Meta AI via WhatsApp and waits for a response.\n\n"
         "The message is forwarded to the Meta AI contact (13135550002@s.whatsapp.net). "
         "The server blocks until a reply is received or the `timeout` is reached.\n\n"
+        "Required: `message` (your question/prompt).\n"
+        "Optional: `timeout` (seconds to wait, default 30).\n\n"
         "Response includes:\n"
-        "- `text`: The AI's reply text\n"
-        "- `hasImage`: Whether the response includes an image\n"
-        "- `messageId`: The WhatsApp message ID of the reply\n\n"
-        "Requires an active WhatsApp connection.",
+        "- `text` — the AI's textual reply\n"
+        "- `hasImage` — whether the response contains an image\n"
+        "- `messageId` — the WhatsApp message ID of the reply\n\n"
+        "⚠ Requires an active WhatsApp connection.",
     "/ai/imagine":
-        "Generates an image using Meta AI's /imagine feature.\n\n"
-        "Internally sends `/imagine {prompt}` to the Meta AI contact and returns "
-        "the generated image along with any accompanying text.\n\n"
-        "Response shape same as /ai/ask with `hasImage: true` when successful.\n\n"
-        "Requires an active WhatsApp connection.",
+        "Generates an image using Meta AI's `/imagine` feature.\n\n"
+        "Internally sends `/imagine {prompt}` to Meta AI and returns "
+        "the generated image (along with any accompanying text).\n\n"
+        "Required: `prompt` — the image description.\n"
+        "Optional: `timeout` (seconds to wait, default 60).\n\n"
+        "Response shape is the same as /ai/ask, with `hasImage: true` when successful.\n\n"
+        "⚠ Requires an active WhatsApp connection.",
 
-    # ── Settings ─────────────────────────────────────────────────────────
+    # ═════════════════════════════════════════════════════════════════════
+    # SETTINGS
+    # ═════════════════════════════════════════════════════════════════════
     "/settings/instance/call-reject-auto":
-        "Enables or disables automatic call rejection. When enabled, incoming "
-        "calls are automatically rejected and the caller may see a configurable message.",
+        "Enables or disables automatic call rejection. When enabled, incoming WhatsApp "
+        "calls are automatically declined without ringing the paired device.\n\n"
+        "Required: `value` (boolean).",
     "/settings/instance/call-reject-message":
-        "Sets the message displayed when a call is automatically rejected. "
-        "Only applies when `call-reject-auto` is enabled.",
+        "Sets the message sent/displayed when a call is automatically rejected.\n\n"
+        "Required: `value` (string). Only applies when `call-reject-auto` is enabled.",
     "/settings/instance/auto-read-message":
-        "Enables or disables automatic read receipts for incoming messages. "
-        "When enabled, messages are automatically marked as read upon receipt.",
+        "Enables or disables automatic read marking for incoming messages. "
+        "When enabled, messages are marked as read immediately upon receipt.\n\n"
+        "Required: `value` (boolean).",
     "/settings/ip-control":
         "Enables or disables IP-based access control. When enabled, only whitelisted "
-        "IPs can access the API. Requests from non-whitelisted IPs are blocked.",
+        "IPs can reach the API. Requests from non-whitelisted IPs receive a 403.\n\n"
+        "Required: `enabled` (boolean).",
     "/settings/ip-rules/whitelist":
-        "Adds an IP address to the whitelist. Requires `ip-control` to be enabled.",
+        "Adds an IP address to the whitelist. Requires `ip-control` to be enabled.\n\n"
+        "Required: `ip` (string, e.g. `\"192.168.1.100\"`).",
     "/settings/ip-rules/blacklist":
-        "Adds an IP address to the blacklist. Requires `ip-control` to be enabled.",
+        "Adds an IP address to the blacklist. Requires `ip-control` to be enabled.\n\n"
+        "Required: `ip` (string).",
 
-    # ── Instance ─────────────────────────────────────────────────────────
+    # ═════════════════════════════════════════════════════════════════════
+    # INSTANCE / SESSION
+    # ═════════════════════════════════════════════════════════════════════
     "/session/pair":
-        "Pairs a new device via pairing code. This is an alternative to QR code scanning.\n\n"
-        "Required: `phone` (the phone number to pair with, including country code). "
-        "The server will request a pairing code from WhatsApp.",
+        "Pairs a new device using a pairing code — an alternative to QR code scanning.\n\n"
+        "The server requests a pairing code from WhatsApp and displays it. "
+        "Enter this code on the WhatsApp mobile app under Linked Devices.\n\n"
+        "Required: `phone` (the phone number to pair, with country code).",
     "/instance/update-name":
         "Updates the display name of this API instance. The name appears in logs "
-        "and status responses.",
+        "and status responses.\n\n"
+        "Required: `name` (string).",
+
+    # ═════════════════════════════════════════════════════════════════════
+    # MANAGEMENT
+    # ═════════════════════════════════════════════════════════════════════
     "/management/database/config":
-        "Updates database cleanup configuration.\n\n"
-        "Required: `interval` (cleanup interval in minutes). "
-        "Older messages are purged periodically based on this setting.",
+        "Updates the database cleanup configuration.\n\n"
+        "Required: `interval` — cleanup interval in minutes. Older messages "
+        "are purged periodically based on this setting.",
     "/management/fetch_messages":
-        "Fetches stored messages from the local database.\n\n"
+        "Fetches stored messages from the local database for a specific chat.\n\n"
         "Required: `phone` (the chat to fetch from).\n"
-        "Optional: `limit` (max messages to return, default 20).",
+        "Optional: `limit` (max messages, default 20).",
     "/management/recent_contacts":
         "Returns the most recent contacts/chats the bot has interacted with.\n\n"
-        "Optional: `limit` (max contacts to return, default 20).",
+        "Optional: `limit` (max contacts, default 20).",
 
-    # ── Webhooks ─────────────────────────────────────────────────────────
+    # ═════════════════════════════════════════════════════════════════════
+    # WEBHOOKS
+    # ═════════════════════════════════════════════════════════════════════
     "/webhooks":
-        "Creates a new webhook endpoint. The server will POST event data to this URL "
-        "whenever matching events occur.\n\n"
-        "Required: `name`, `url` (your endpoint URL), `events` (array of event names "
-        'or ["*"] for all events), `active` (boolean).\n\n'
-        "Available events:\n"
-        "- `message.*` — All message events\n"
-        "- `message.text`, `message.image`, `message.audio`, etc.\n"
-        "- `message.contacts` — Contact array messages\n"
-        "- `status.*` — Status changes\n"
-        "- `qr.*` — QR code events\n"
-        "- `call.*` — Call events",
-
-    # ── Webhooks ──────────────────────────────────────────────────────────
-    "/webhooks/{name}/test":
-        "Sends a test payload to a registered webhook URL to verify connectivity and payload format.\n\n"
-        "Optional body — specify an `event` to choose which payload template to send. If omitted, "
-        "defaults to `message.text`.\n\n"
+        "Creates a new webhook endpoint. The server will POST event payloads to "
+        "this URL whenever matching events occur.\n\n"
+        "Required: `name`, `url` (your endpoint), "
+        "`events` (array of event names, or `[\"*\"]` for all), "
+        "`active` (boolean to enable immediately).\n\n"
         "Available event types:\n"
-        "- `message.text`, `message.image`, `message.video`, `message.audio`, `message.document`\n"
-        "- `message.sticker`, `message.reaction`, `message.location`\n"
-        "- `message.button_reply`, `message.list_reply`, `message.deleted`\n"
-        "- `message.poll_created`, `message.poll_vote`\n"
+        "- `message.*` / `message.text` / `message.image` / `message.audio` / etc.\n"
+        "- `message.contacts` — contact array messages\n"
+        "- `message.sent` / `message.delivered` / `message.read` — delivery receipts\n"
+        "- `message.poll_created` / `message.poll_vote` — poll events\n"
+        "- `connection.*` — connection state changes\n"
+        "- `qr.*` — QR code events\n"
+        "- `call.*` — call events\n"
+        "- `group.*` — group events\n"
+        "- `contact.*` — presence/chat state events\n"
+        "- `media.cleanup.*` — automatic media cleanup events\n"
+        "- `ai.response` — Meta AI reply received",
+    "/webhooks/{name}/test":
+        "Sends a test payload to a registered webhook to verify connectivity and "
+        "payload format.\n\n"
+        "The `{name}` path param specifies which webhook to test.\n\n"
+        "Optional body — specify an `event` to choose which payload template to send. "
+        "If omitted, defaults to `message.text`.\n\n"
+        "Available event types for testing:\n"
+        "- `message.text`, `message.image`, `message.video`, `message.audio`\n"
+        "- `message.document`, `message.sticker`, `message.reaction`\n"
+        "- `message.location`, `message.button_reply`, `message.list_reply`\n"
+        "- `message.deleted`, `message.poll_created`, `message.poll_vote`\n"
         "- `message.sent`, `message.delivered`, `message.read`\n"
         "- `connection.connected`, `connection.disconnected`, `connection.qr_ready`\n"
         "- `group.join`, `contact.presence`, `contact.chat_presence`\n"
         "- `call.received`, `media.cleanup.completed`, `ai.response`\n\n"
-        "Example body:\n"
-        '```json\n{"event": "message.image"}\n```\n\n'
-        "Response includes the HTTP `statusCode` and `response` body from the target URL.",
+        "Example body: `{\"event\": \"message.image\"}`\n\n"
+        "Response includes the target's HTTP `statusCode` and `response` body.",
 
-    # ── System ───────────────────────────────────────────────────────────
+    # ═════════════════════════════════════════════════════════════════════
+    # SYSTEM
+    # ═════════════════════════════════════════════════════════════════════
     "/system/env":
         "Updates environment variables at runtime. Changes take effect immediately "
-        "without server restart.\n\n"
-        "Required: key-value pairs of environment variables to update (e.g. `{\"PORT\": \"8300\"}`).",
+        "without requiring a server restart.\n\n"
+        "Required: key-value pairs of env vars to set, e.g. `{\"PORT\": \"8300\"}`.",
 }
 
 
@@ -334,7 +433,7 @@ def auto_generate_description(
     """Generate a sensible description for any endpoint that lacks a manual one.
 
     Uses OpenAPI metadata (summary, description, parameter names, request body)
-    to build a concise English description.
+    to build a concise English description with optional field details.
     """
     parts = []
 
@@ -371,13 +470,12 @@ def auto_generate_description(
         names = [f"`{p['name']}`" for p in query_params]
         param_details.append(f"Query parameters: {', '.join(names)}")
 
-    # Request body fields
+    # Request body — required fields
     if body:
         content = body.get("content", {})
         for media_type, media_obj in content.items():
             schema = media_obj.get("schema", {})
             if "$ref" in schema:
-                # Try to get a name from the $ref
                 ref_name = schema["$ref"].split("/")[-1]
                 readable = ref_name.replace("Request", "").replace("_", " ").strip()
                 param_details.append(f"Request body: `{readable}` schema")
@@ -385,18 +483,31 @@ def auto_generate_description(
             props = schema.get("properties", {})
             if props:
                 required = set(schema.get("required", []))
-                field_list = []
-                for fname, fprops in props.items():
-                    req_mark = " (required)" if fname in required else ""
-                    ftype = fprops.get("type", "any")
-                    field_list.append(f"`{fname}`: {ftype}{req_mark}")
-                if field_list:
-                    param_details.append("Fields: " + ", ".join(field_list[:8]))
-                    if len(field_list) > 8:
-                        param_details[-1] += f" and {len(field_list) - 8} more"
+                req_fields = [f"`{f}`" for f in props if f in required]
+                opt_fields = [f"`{f}`" for f in props if f not in required and f not in ("reply", "type", "quoted_id", "delay_message", "delay_typing", "mentioned")]
+                if req_fields:
+                    param_details.append("Required: " + ", ".join(req_fields[:6]))
+                if opt_fields:
+                    param_details.append("Optional: " + ", ".join(opt_fields[:6]))
+                    if len(opt_fields) > 6:
+                        param_details[-1] += f" and {len(opt_fields) - 6} more"
 
     if param_details:
         parts.append("\n\n" + "\n".join(param_details))
+
+    # Append note about common optional fields if the schema has "phone"
+    if body:
+        content = body.get("content", {})
+        for media_obj in content.values():
+            schema = media_obj.get("schema", {})
+            props = schema.get("properties", {})
+            if "phone" in props and ("reply" in props or "delay_message" in props):
+                parts.append(
+                    "\n\nCommon optional fields (see other message endpoints for details): "
+                    "`delay_message`, `delay_typing`, `mentioned`, "
+                    "`reply` (by text), `quoted_id` (by ID), `type` (`\"text\"` default or `\"id\"`)."
+                )
+                break
 
     description = operation.get("description", "")
     if description and description != summary:

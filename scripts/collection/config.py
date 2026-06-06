@@ -90,4 +90,4 @@ COLLECTION_VARS = [
 ]
 
 # ── Fields to SKIP in generated examples (too verbose / rarely used) ─────
-SKIP_FIELDS = {"reply", "quoted_id"}
+SKIP_FIELDS = set()

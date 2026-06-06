@@ -4,27 +4,23 @@ ENDPOINT_BODIES provides realistic example payloads for each route.
 Uses special keys:
   - __formdata__: True → render as multipart/form-data instead of JSON
   - __file_field__: name of the file upload field (default: "file")
+  - __commented__: dict of optional fields to show as // comments in JSON body
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Set
 
 # ── Known field mappings for better examples ────────────────────────────
 FIELD_EXAMPLES: Dict[str, Any] = {
     "phone": "{{PHONE}}",
     "url": "https://example.com",
-    "image_url": "https://picsum.photos/800/600",
-    "video_url": "https://test-videos.co.uk/vids/bigbuckbunny/mp4/av1/360/Big_Buck_Bunny_360_10s_1MB.mp4",
-    "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    "document_url": "https://raw.githubusercontent.com/KAUAxiis/database/main/README.md",
-    "sticker_url": "https://www.gstatic.com/webp/gallery/1.webp",
     "callPhone": "+5511999999999",
     "contactPhone": "5511999999999",
-    "messageId": "ID_DA_MENSAGEM",
-    "emoji": "\\uD83D\\uDC4D",
-    "pixKey": "suachave@email.com",
-    "merchantName": "Minha Loja",
+    "messageId": "MESSAGE_ID",
+    "emoji": "👍",
+    "pixKey": "yourkey@email.com",
+    "merchantName": "My Store",
     "pixCity": "Sao Paulo",
-    "pixDescription": "Compra #1234",
+    "pixDescription": "Order #1234",
     "name": "string",
     "message": "Hello! This is a test message.",
     "code": "123456",
@@ -37,130 +33,178 @@ FIELD_EXAMPLES: Dict[str, Any] = {
     "timeout": 30,
 }
 
+# ── Commented (optional) field templates ─────────────────────────────────
+# Values = string representation that goes after `// "key": `
+# The `|` separates example value from description of alternatives.
+
+# For JSON endpoints with BaseWhatsAppRequest (type default = "text")
+_COMMENTED_BASE = {
+    "type": '"text", | text or id',
+    "delay_message": "null,",
+    "delay_typing": "null,",
+    "mentioned": "null,",
+    "quoted_id": "null,",
+}
+
+# For /messages/delete and /messages/read (type default = "id")
+_COMMENTED_ID = {
+    "type": '"id", | id (default)',
+    "delay_message": "null,",
+    "delay_typing": "null,",
+    "mentioned": "null,",
+    "quoted_id": "null,",
+}
+
+# For /send_bulk (no reply/quoted_id/type)
+_COMMENTED_BULK = {
+    "delay_message": "null,",
+    "delay_typing": "null,",
+    "mentioned": "null,",
+    "delay_between": '"1-3", | number or range like "2-5"',
+}
+
+# For /send_reaction (extra fields)
+_COMMENTED_REACTION = {
+    "type": '"text", | text or id',
+    "delay_message": "null,",
+    "delay_typing": "null,",
+    "mentioned": "null,",
+    "quoted_id": "null,",
+    "reaction": "null,",
+    "text": "null,",
+}
+
+
+def _json_body(req: Dict[str, Any], *, commented: Dict[str, str] | None = None) -> Dict[str, Any]:
+    """Build JSON body with active required fields + __commented__ optionals.
+
+    Args:
+        req: Required (active) fields with example values.
+        commented: Optional fields dict. If omitted, uses _COMMENTED_BASE.
+                   Key = field name, Value = string after `// "key": `.
+    Returns:
+        Dict with __commented__ + required fields.
+    """
+    return {
+        "__commented__": commented or dict(_COMMENTED_BASE),
+        **req,
+    }
+
+
+def _form_body(req: Dict[str, Any], extra_opts: Set[str] | None = None) -> Dict[str, Any]:
+    """Build a multipart/form-data body with required fields + disabled optionals."""
+    opts = {k: "" for k in ("delay_message", "delay_typing", "mentioned", "reply", "quoted_id")}
+    if extra_opts:
+        for k in extra_opts:
+            opts[k] = ""
+    result = {**opts, **req}
+    result["__formdata__"] = True
+    result["__file_field__"] = "file"
+    return result
+
+
 # ── Endpoint-specific body overrides ─────────────────────────────────────
 # Key = URL path (without method — method is inferred from OpenAPI).
-# Priority over auto-generated bodies from OpenAPI schemas.
 ENDPOINT_BODIES: Dict[str, Any] = {
-    "/send": {
+
+    # ═══════════════════════════════════════════════════════════════════
+    # TEXT
+    # ═══════════════════════════════════════════════════════════════════
+    "/send": _json_body({
         "phone": "{{PHONE}}",
         "message": "Hello! This is a test message.",
-        "delay_message": None,
-        "delay_typing": 2,
-        "mentioned": None,
-    },
+    }),
     "/send_bulk": {
+        "__commented__": dict(_COMMENTED_BULK),
         "phones": ["{{PHONE}}", "5511988888888"],
         "message": "Hello! This is a bulk test message.",
-        "delay_message": None,
-        "delay_typing": 2,
-        "delay_between": "1-3",
-        "mentioned": None,
     },
-    # ── Media (unified: url OR file upload) ──────────────────────────
-    "/send_image": {
+    "/send_reaction": {
+        "__commented__": dict(_COMMENTED_REACTION),
+        "__inline_comments__": {"messageId": "// or exact text"},
+        "phone": "{{PHONE}}",
+        "messageId": "MESSAGE_ID",
+        "emoji": "👍",
+    },
+
+    # ═══════════════════════════════════════════════════════════════════
+    # MEDIA (multipart/form-data) — uses disabled fields, not // comments
+    # ═══════════════════════════════════════════════════════════════════
+    "/send_image": _form_body({
         "phone": "{{PHONE}}",
         "url": "",
         "caption": "Image caption",
         "as_document": False,
-        "delay_message": "",
-        "delay_typing": "",
-        "mentioned": "",
-        "__formdata__": True,
-        "__file_field__": "file",
-    },
-    "/send_audio": {
+    }),
+    "/send_audio": _form_body({
         "phone": "{{PHONE}}",
         "url": "",
         "ptt": False,
         "as_document": False,
         "format": "m4a",
-        "delay_message": "",
-        "delay_typing": "",
-        "mentioned": "",
-        "__formdata__": True,
-        "__file_field__": "file",
-    },
-    "/send_video": {
+    }),
+    "/send_video": _form_body({
         "phone": "{{PHONE}}",
         "url": "",
         "caption": "Video caption",
         "as_document": False,
-        "delay_message": "",
-        "delay_typing": "",
-        "mentioned": "",
-        "__formdata__": True,
-        "__file_field__": "file",
-    },
-    "/send_document": {
+    }),
+    "/send_document": _form_body({
         "phone": "{{PHONE}}",
         "url": "",
         "fileName": "document.pdf",
         "caption": "Document caption",
-        "delay_message": "",
-        "delay_typing": "",
-        "mentioned": "",
-        "__formdata__": True,
-        "__file_field__": "file",
-    },
-    "/send_sticker": {
+    }),
+    "/send_sticker": _form_body({
         "phone": "{{PHONE}}",
         "url": "https://www.gstatic.com/webp/gallery/1.webp",
-        "pack": "My Sticker Pack",
-        "author": "ZapUnlocked",
+        "pack": "Sticker Pack",
+        "author": "Author Name",
         "resize_mode": "pad",
         "pad_color": "black",
         "blur_intensity": 20,
-        "delay_message": "",
-        "delay_typing": "",
-        "mentioned": "",
-        "__formdata__": True,
-        "__file_field__": "file",
-    },
-    "/send_gif": {
+    }),
+    "/send_gif": _form_body({
         "phone": "{{PHONE}}",
         "url": "",
         "caption": "GIF caption",
-        "delay_message": "",
-        "delay_typing": "",
-        "mentioned": "",
-        "__formdata__": True,
-        "__file_field__": "file",
-    },
-    # ── Location / Contact / Link / Reaction ──────────────────────────
-    "/messages/send-location": {
+    }),
+
+    # ═══════════════════════════════════════════════════════════════════
+    # LOCATION / CONTACT / LINK
+    # ═══════════════════════════════════════════════════════════════════
+    "/send_location": _json_body({
         "phone": "{{PHONE}}",
         "lat": -23.550520,
         "lng": -46.633308,
         "name": "Central Square",
         "address": "Sao Paulo, Brazil",
-    },
-    "/messages/send-contact": {
+    }),
+    "/send_contact": _json_body({
         "phone": "{{PHONE}}",
         "contactName": "John Doe",
         "contactPhone": "5511999999999",
-    },
-    "/messages/send-contacts": {
+    }),
+    "/send_contacts": _json_body({
         "phone": "{{PHONE}}",
         "contacts": [
             {"name": "John Doe", "phone": "5511988888888"},
             {"name": "Jane Smith", "phone": "5511977777777"},
         ],
-    },
-    "/messages/send-link": {
+    }),
+    "/send_link": _json_body({
         "phone": "{{PHONE}}",
         "url": "https://github.com",
         "message": "Check this out!",
-        "description": "Where the world builds software",
-        "imageUrl": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
         "title": "GitHub",
-    },
-    "/messages/send-reaction": {
-        "phone": "{{PHONE}}",
-        "messageId": "ID_DA_MENSAGEM",
-        "emoji": "\\uD83D\\uDC4D",
-    },
-    # ── Interactive: Buttons ──────────────────────────────────────────
-    "/messages/send-button-list": {
+        "description": "Where the world builds software",
+        "imageUrl": "https://example.com/image.png",
+    }),
+
+    # ═══════════════════════════════════════════════════════════════════
+    # BUTTONS
+    # ═══════════════════════════════════════════════════════════════════
+    "/messages/send-button-list": _json_body({
         "phone": "{{PHONE}}",
         "message": "Choose an option:",
         "title": "Menu",
@@ -173,11 +217,42 @@ ENDPOINT_BODIES: Dict[str, Any] = {
             {"type": "call", "buttonText": "Call Support", "callPhone": "+5511999999999"},
             {"type": "otp", "buttonText": "Copy Code", "code": "591823"},
         ],
-        "delay_message": "2-5",
-        "delay_typing": 3,
-        "mentioned": ["5511999999999"],
-    },
-    "/messages/send-button-quick-reply": {
+    }),
+    "/messages/send-button-url": _json_body({
+        "phone": "{{PHONE}}",
+        "url": "https://zapunlocked.com",
+        "button_text": "Visit Website",
+        "title": "Get in touch",
+        "text": "Visit our website:",
+    }),
+    "/messages/send-button-call": _json_body({
+        "phone": "{{PHONE}}",
+        "callPhone": "+5511999999999",
+        "button_text": "Call Now",
+        "title": "Contact us",
+        "text": "Call us now:",
+    }),
+    "/messages/send-button-otp": _json_body({
+        "phone": "{{PHONE}}",
+        "code": "591823",
+        "button_text": "Copy Code",
+        "title": "Security Verification",
+        "text": "Your access code is: 591823",
+        "footer": "Valid for 5 minutes.",
+    }),
+    "/messages/send-button-pix": _json_body({
+        "phone": "{{PHONE}}",
+        "pixKey": "yourkey@email.com",
+        "pixType": "EMAIL",
+        "pixValue": 19.90,
+        "merchantName": "My Store",
+        "pixCity": "Sao Paulo",
+        "pixDescription": "Order #1234",
+        "button_text": "Pay",
+        "title": "PIX Payment",
+        "text": "Use the button below to pay via PIX:",
+    }),
+    "/messages/send-button-quick-reply": _json_body({
         "phone": "{{PHONE}}",
         "title": "Confirm",
         "text": "Do you agree?",
@@ -185,87 +260,12 @@ ENDPOINT_BODIES: Dict[str, Any] = {
             {"text": "Yes", "id": "yes"},
             {"text": "No", "id": "no"},
         ],
-        "delay_message": None,
-        "delay_typing": None,
-        "mentioned": None,
-    },
-    "/messages/send-button-url": {
-        "phone": "{{PHONE}}",
-        "url": "https://zapunlocked.com",
-        "button_text": "Visit Website",
-        "title": "Get in touch",
-        "text": "Visit our website:",
-        "delay_message": None,
-        "delay_typing": None,
-        "mentioned": None,
-    },
-    "/messages/send-button-call": {
-        "phone": "{{PHONE}}",
-        "callPhone": "+5511999999999",
-        "button_text": "Call Now",
-        "title": "Contact us",
-        "text": "Call us now:",
-        "delay_message": None,
-        "delay_typing": None,
-        "mentioned": None,
-    },
-    "/messages/send-button-otp": {
-        "phone": "{{PHONE}}",
-        "code": "591823",
-        "button_text": "Copy Code",
-        "title": "Security Verification",
-        "text": "Your access code is: 591823",
-        "footer": "Valid for 5 minutes.",
-        "delay_typing": 1.5,
-    },
-    "/messages/send-button-pix": {
-        "phone": "{{PHONE}}",
-        "pixKey": "suachave@email.com",
-        "pixType": "EMAIL",
-        "pixValue": 19.90,
-        "merchantName": "Minha Loja",
-        "pixCity": "Sao Paulo",
-        "pixDescription": "Compra #1234",
-        "button_text": "Pagar",
-        "title": "PIX Payment",
-        "text": "Use the button below to pay via PIX:",
-        "delay_message": None,
-        "delay_typing": None,
-        "mentioned": None,
-    },
-    "/messages/send-poll": {
-        "phone": "{{PHONE}}",
-        "name": "What is your favorite color?",
-        "options": ["Red", "Blue", "Green", "Yellow"],
-        "delay_message": None,
-        "delay_typing": None,
-        "mentioned": None,
-    },
-    "/messages/send-poll-vote": {
-        "phone": "{{PHONE}}",
-        "options": ["Blue"],
-        "pollId": "ID_DA_ENQUETE",
-        "delay_message": None,
-        "delay_typing": None,
-        "mentioned": None,
-    },
-    "/messages/delete": {
-        "phone": "{{PHONE}}",
-        "messageId": "ID_DA_MENSAGEM",
-    },
-    "/messages/edit": {
-        "phone": "{{PHONE}}",
-        "messageId": "ID_DA_MENSAGEM",
-        "message": "Edited content here!",
-        "delay_message": None,
-        "delay_typing": None,
-        "mentioned": None,
-    },
-    "/messages/read": {
-        "phone": "{{PHONE}}",
-        "messageIds": ["ID_PRIMEIRA_MSG", "ID_SEGUNDA_MSG"],
-    },
-    "/messages/send-option-list": {
+    }),
+
+    # ═══════════════════════════════════════════════════════════════════
+    # OPTION LIST
+    # ═══════════════════════════════════════════════════════════════════
+    "/messages/send-option-list": _json_body({
         "phone": "{{PHONE}}",
         "title": "Choose an option",
         "text": "Please select:",
@@ -276,18 +276,55 @@ ENDPOINT_BODIES: Dict[str, Any] = {
         "button_text": "See options",
         "footer": "Footer text",
         "description": "Description text",
-    },
-    # ── Contacts ──────────────────────────────────────────────────────
-    "/contacts/info": {
-        "phone": "{{PHONE}}",
-    },
-    "/settings/block": {"phone": "{{PHONE}}"},
+    }),
 
-    # ── Session ────────────────────────────────────────────────────────
+    # ═══════════════════════════════════════════════════════════════════
+    # POLL
+    # ═══════════════════════════════════════════════════════════════════
+    "/messages/send-poll": _json_body({
+        "phone": "{{PHONE}}",
+        "name": "What is your favorite color?",
+        "options": ["Red", "Blue", "Green", "Yellow"],
+    }),
+    "/messages/send-poll-vote": _json_body({
+        "phone": "{{PHONE}}",
+        "options": ["Blue"],
+        "pollId": "POLL_ID",
+    }),
+
+    # ═══════════════════════════════════════════════════════════════════
+    # ACTIONS (edit / delete / read)
+    # ═══════════════════════════════════════════════════════════════════
+    "/messages/delete": {
+        "__commented__": dict(_COMMENTED_ID),
+        "__inline_comments__": {"messageId": "// or exact text"},
+        "phone": "{{PHONE}}",
+        "messageId": "MESSAGE_ID",
+    },
+    "/messages/read": {
+        "__commented__": dict(_COMMENTED_ID),
+        "phone": "{{PHONE}}",
+        "messageIds": ["FIRST_MSG_ID", "SECOND_MSG_ID"],
+    },
+    "/messages/edit": {
+        "__commented__": dict(_COMMENTED_BASE),
+        "__inline_comments__": {"messageId": "// or exact text"},
+        "phone": "{{PHONE}}",
+        "messageId": "MESSAGE_ID",
+        "message": "Edited content here!",
+    },
+
+    # ═══════════════════════════════════════════════════════════════════
+    # CONTACTS / SESSION (no commented optionals needed)
+    # ═══════════════════════════════════════════════════════════════════
+    "/contacts/info": {"phone": "{{PHONE}}"},
+    "/settings/block": {"phone": "{{PHONE}}"},
     "/session/pair": {"phone": "{{PHONE}}"},
     "/session/logout": {},
 
-    # ── Settings ──────────────────────────────────────────────────────
+    # ═══════════════════════════════════════════════════════════════════
+    # SETTINGS / INSTANCE
+    # ═══════════════════════════════════════════════════════════════════
     "/settings/profile": {
         "name": "My Bot",
         "about": "Powered by ZapUnlocked",
@@ -299,22 +336,36 @@ ENDPOINT_BODIES: Dict[str, Any] = {
     "/settings/ip-rules/whitelist": {"ip": "192.168.1.100"},
     "/settings/ip-rules/blacklist": {"ip": "10.0.0.50"},
     "/instance/update-name": {"name": "New Instance"},
+
+    # ═══════════════════════════════════════════════════════════════════
+    # MANAGEMENT
+    # ═══════════════════════════════════════════════════════════════════
     "/management/fetch_messages": {
         "phone": "{{PHONE}}",
         "limit": 20,
     },
     "/management/recent_contacts": {"limit": 20},
     "/management/database/config": {"interval": 1440},
+
+    # ═══════════════════════════════════════════════════════════════════
+    # SYSTEM
+    # ═══════════════════════════════════════════════════════════════════
     "/system/env": {"PORT": "8300"},
     "/system/cleanup/settings": {"interval": 1440},
+
+    # ═══════════════════════════════════════════════════════════════════
+    # WEBHOOK
+    # ═══════════════════════════════════════════════════════════════════
     "/webhooks": {
         "name": "my-webhook",
-        "url": "https://myserver.com/hook",
+        "url": "https://example.com/webhook",
         "events": ["*"],
         "active": True,
     },
 
-    # ── AI ────────────────────────────────────────────────────────────
+    # ═══════════════════════════════════════════════════════════════════
+    # AI
+    # ═══════════════════════════════════════════════════════════════════
     "/ai/ask": {
         "message": "What is the capital of Brazil?",
         "timeout": 30,
