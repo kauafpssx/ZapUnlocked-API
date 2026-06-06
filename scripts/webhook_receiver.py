@@ -16,7 +16,7 @@ def out(text: str):
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(line)
     try:
-        os.write(1, line.encode("utf-8", errors="replace"))
+        print(text, flush=True)
     except Exception:
         pass
 
@@ -39,13 +39,10 @@ class WebhookHandler(BaseHTTPRequestHandler):
 
             try:
                 parsed = json.loads(body)
-                # File: real UTF-8. Terminal: ensure_ascii avoids garbled output in PowerShell
+                pretty = json.dumps(parsed, indent=2, ensure_ascii=False)
                 with open(LOG_FILE, "a", encoding="utf-8") as f:
-                    f.write(json.dumps(parsed, indent=2, ensure_ascii=False) + "\n")
-                try:
-                    os.write(1, (json.dumps(parsed, indent=2, ensure_ascii=True) + "\n").encode("utf-8"))
-                except Exception:
-                    pass
+                    f.write(pretty + "\n")
+                print(pretty, flush=True)
             except Exception:
                 out(body.decode("utf-8", errors="replace"))
 
@@ -59,8 +56,42 @@ class WebhookHandler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    import socket, signal, sys
+
+    # Kill any process already holding the port
+    def _kill_port(port: int) -> None:
+        try:
+            import subprocess
+            result = subprocess.run(
+                ["netstat", "-ano"],
+                capture_output=True, text=True
+            )
+            for line in result.stdout.splitlines():
+                if f":{port}" in line and "LISTENING" in line:
+                    pid = line.strip().split()[-1]
+                    if pid and pid != "0":
+                        subprocess.run(["taskkill", "/F", "/PID", pid],
+                                       capture_output=True)
+                        print(f"Killed PID {pid} on port {port}", flush=True)
+        except Exception as e:
+            print(f"[warn] Could not kill port {port}: {e}", flush=True)
+
+    _kill_port(PORT)
+
+    # SO_REUSEADDR so TIME_WAIT sockets don't block rebind
+    HTTPServer.allow_reuse_address = True
+
     open(LOG_FILE, "w").close()
     server = HTTPServer(("0.0.0.0", PORT), WebhookHandler)
+
+    def _shutdown(sig, frame):
+        print("\n[Receiver] Shutting down.", flush=True)
+        server.shutdown()
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, _shutdown)
+    signal.signal(signal.SIGTERM, _shutdown)
+
     out(f"[Webhook Receiver] http://localhost:{PORT}")
     out(f"Log at: {LOG_FILE}")
     out("Waiting for payloads...")

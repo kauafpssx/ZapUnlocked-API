@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Body
+from typing import Optional
 from src.middleware.auth import auth
 from src.controllers.webhook.webhookCrudController import (
     list_webhooks,
@@ -20,4 +21,7 @@ router.get("/{name}")(get_webhook)
 router.put("/{name}")(update_webhook)
 router.delete("/{name}")(delete_webhook)
 router.post("/{name}/toggle")(toggle_webhook)
-router.post("/{name}/test")(test_webhook)
+
+@router.post("/{name}/test")
+async def test_webhook_route(name: str, data: Optional[dict] = Body(default=None)):
+    return await test_webhook(name, data)

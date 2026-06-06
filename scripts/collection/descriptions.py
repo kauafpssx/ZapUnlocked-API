@@ -272,6 +272,24 @@ ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
         "- `qr.*` — QR code events\n"
         "- `call.*` — Call events",
 
+    # ── Webhooks ──────────────────────────────────────────────────────────
+    "/webhooks/{name}/test":
+        "Sends a test payload to a registered webhook URL to verify connectivity and payload format.\n\n"
+        "Optional body — specify an `event` to choose which payload template to send. If omitted, "
+        "defaults to `message.text`.\n\n"
+        "Available event types:\n"
+        "- `message.text`, `message.image`, `message.video`, `message.audio`, `message.document`\n"
+        "- `message.sticker`, `message.reaction`, `message.location`\n"
+        "- `message.button_reply`, `message.list_reply`, `message.deleted`\n"
+        "- `message.poll_created`, `message.poll_vote`\n"
+        "- `message.sent`, `message.delivered`, `message.read`\n"
+        "- `connection.connected`, `connection.disconnected`, `connection.qr_ready`\n"
+        "- `group.join`, `contact.presence`, `contact.chat_presence`\n"
+        "- `call.received`, `media.cleanup.completed`, `ai.response`\n\n"
+        "Example body:\n"
+        '```json\n{"event": "message.image"}\n```\n\n'
+        "Response includes the HTTP `statusCode` and `response` body from the target URL.",
+
     # ── System ───────────────────────────────────────────────────────────
     "/system/env":
         "Updates environment variables at runtime. Changes take effect immediately "
