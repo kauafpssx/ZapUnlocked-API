@@ -4,6 +4,7 @@ from src.utils.logger import logger
 from src.utils.quote import build_send_options
 from src.utils.formatter import format_text
 from src.utils.decorators import require_whatsapp, handle_errors
+from src.utils.time import sent_response
 from src.schemas import SendMessageRequest
 
 
@@ -19,7 +20,7 @@ async def send_message(data: SendMessageRequest):
 
     options = await build_send_options(
         jid,
-        reply_identifier=data.reply or data.quoted_id,
+        reply_identifier=data.quoted_id,
         reply_type=data.type or "id",
         delay_message=data.delay_message,
         delay_typing=data.delay_typing,
@@ -27,7 +28,5 @@ async def send_message(data: SendMessageRequest):
     )
 
     formatted_message = format_text(data.message)
-
-    await whatsapp_send_message(jid, formatted_message, options)
-
-    return {"success": True, "message": "Message sent."}
+    res = await whatsapp_send_message(jid, formatted_message, options)
+    return sent_response(res, "Message sent.")

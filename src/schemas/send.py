@@ -6,7 +6,6 @@ from typing import Optional, List, Dict, Any, Union
 
 class BaseWhatsAppRequest(BaseModel):
     phone: str
-    reply: Optional[str] = None
     type: Optional[str] = None
     quoted_id: Optional[str] = None
     delay_message: Optional[Union[int, float, str]] = None

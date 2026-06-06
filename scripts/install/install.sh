@@ -125,6 +125,7 @@ PKGS = [
     ("aiocontextvars",      "0.2.2",    "py3-none-any"),
     ("aiofiles",            "24.1.0",   "py3-none-any"),
     ("python-multipart",    "0.0.20",   "py3-none-any"),
+    ("tzdata",              "2025.2",   "py3-none-any"),
 ]
 
 def fetch(url):

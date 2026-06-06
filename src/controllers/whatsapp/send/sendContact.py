@@ -10,7 +10,7 @@ from src.schemas import SendContactRequest
 async def send_contact(data: SendContactRequest):
     async def process_task():
         jid = f"{data.phone}@s.whatsapp.net"
-        options = await build_send_options(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
+        options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
         await send_contact_message(
             jid,
             contact_name=data.name,

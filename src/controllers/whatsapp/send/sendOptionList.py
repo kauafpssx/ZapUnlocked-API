@@ -22,7 +22,7 @@ async def send_option_list(data: SendOptionListRequest):
 
     options = await resolve_quote(
         jid,
-        reply_identifier=data.reply or data.quoted_id,
+        reply_identifier=data.quoted_id,
         reply_type=data.type or "id",
     )
 

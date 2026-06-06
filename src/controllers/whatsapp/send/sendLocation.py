@@ -10,7 +10,7 @@ from src.schemas import SendLocationRequest
 async def send_location(data: SendLocationRequest):
     async def process_task():
         jid = f"{data.phone}@s.whatsapp.net"
-        options = await build_send_options(jid, reply_identifier=data.reply or data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
+        options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
         await send_location_message(
             jid,
             latitude=data.lat,

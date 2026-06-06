@@ -6,6 +6,7 @@ from src.services.whatsapp.sender.helpers import _parse_delay
 from src.utils.decorators import require_whatsapp, handle_errors
 from src.utils.formatter import format_text
 from src.utils.quote import build_send_options
+from src.utils.time import now_ts
 from src.utils.logger import logger
 
 
@@ -28,8 +29,9 @@ async def send_bulk(data: BulkSendTextRequest):
                 delay_typing=data.delay_typing,
                 mentioned=data.mentioned,
             )
-            await whatsapp_send_message(jid, formatted, options)
-            results.append({"phone": phone, "success": True})
+            res = await whatsapp_send_message(jid, formatted, options)
+            msg_id = getattr(res, "ID", None) if res else None
+            results.append({"phone": phone, "success": True, "messageId": msg_id, "timestamp": now_ts()})
             logger.debug(f"Bulk send [{i+1}/{len(data.phones)}] → {phone}")
         except Exception as e:
             results.append({"phone": phone, "success": False, "error": str(e)})

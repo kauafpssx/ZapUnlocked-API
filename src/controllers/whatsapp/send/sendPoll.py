@@ -3,6 +3,7 @@ from src.services.whatsapp.sender import send_poll_message, send_poll_vote_messa
 from src.utils.logger import logger
 from src.utils.quote import build_send_options
 from src.utils.decorators import require_whatsapp, handle_errors
+from src.utils.time import sent_response
 from src.schemas import SendPollRequest, SendPollVoteRequest
 
 @require_whatsapp
@@ -12,7 +13,7 @@ async def send_poll(data: SendPollRequest):
 
     options_dict = await build_send_options(
         jid,
-        reply_identifier=data.reply or data.quoted_id,
+        reply_identifier=data.quoted_id,
         reply_type=data.type or "id",
         delay_message=data.delay_message,
         delay_typing=data.delay_typing,
@@ -22,14 +23,14 @@ async def send_poll(data: SendPollRequest):
     if not data.options or len(data.options) < 2:
         raise HTTPException(status_code=400, detail={"error": "INVALID_FIELD", "message": "A poll must have at least 2 options."})
         
-    await send_poll_message(
-        jid, 
-        name=data.name, 
-        options=data.options, 
+    res = await send_poll_message(
+        jid,
+        name=data.name,
+        options=data.options,
         selectable_count=data.selectableCount or 1,
         message_options=options_dict
     )
-    return {"success": True, "message": "Poll sent."}
+    return sent_response(res, "Poll sent.")
 
 @require_whatsapp
 @handle_errors("send poll vote")

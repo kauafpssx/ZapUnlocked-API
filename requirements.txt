@@ -29,3 +29,4 @@ loguru>=0.7.0
 psutil>=7.0.0
 aiofiles>=24.1.0
 python-multipart>=0.0.20
+tzdata>=2024.1                     # IANA timezone database (required for zoneinfo on Windows)
