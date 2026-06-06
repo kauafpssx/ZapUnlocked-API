@@ -1,0 +1,318 @@
+"""Endpoint-specific request body overrides and field example values.
+
+ENDPOINT_BODIES provides realistic example payloads for each route.
+Uses special keys:
+  - __formdata__: True → render as multipart/form-data instead of JSON
+  - __file_field__: name of the file upload field (default: "file")
+"""
+
+from typing import Any, Dict, List
+
+# ── Known field mappings for better examples ────────────────────────────
+FIELD_EXAMPLES: Dict[str, Any] = {
+    "phone": "{{PHONE}}",
+    "url": "https://example.com",
+    "image_url": "https://picsum.photos/800/600",
+    "video_url": "https://test-videos.co.uk/vids/bigbuckbunny/mp4/av1/360/Big_Buck_Bunny_360_10s_1MB.mp4",
+    "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    "document_url": "https://raw.githubusercontent.com/KAUAxiis/database/main/README.md",
+    "sticker_url": "https://www.gstatic.com/webp/gallery/1.webp",
+    "callPhone": "+5511999999999",
+    "contactPhone": "5511999999999",
+    "messageId": "ID_DA_MENSAGEM",
+    "emoji": "\\uD83D\\uDC4D",
+    "pixKey": "suachave@email.com",
+    "merchantName": "Minha Loja",
+    "pixCity": "Sao Paulo",
+    "pixDescription": "Compra #1234",
+    "name": "string",
+    "message": "Hello! This is a test message.",
+    "code": "123456",
+    "caption": "Image caption",
+    "fileName": "document.pdf",
+    "lat": -23.550520,
+    "lng": -46.633308,
+    "pixValue": 19.90,
+    "prompt": "A cute cat wearing a hat, digital art",
+    "timeout": 30,
+}
+
+# ── Endpoint-specific body overrides ─────────────────────────────────────
+# Key = URL path (without method — method is inferred from OpenAPI).
+# Priority over auto-generated bodies from OpenAPI schemas.
+ENDPOINT_BODIES: Dict[str, Any] = {
+    "/send": {
+        "phone": "{{PHONE}}",
+        "message": "Hello! This is a test message.",
+        "delay_message": None,
+        "delay_typing": 2,
+        "mentioned": None,
+    },
+    # ── Media (unified: url OR file upload) ──────────────────────────
+    "/send_image": {
+        "phone": "{{PHONE}}",
+        "url": "",
+        "caption": "Image caption",
+        "as_document": False,
+        "delay_message": "",
+        "delay_typing": "",
+        "mentioned": "",
+        "__formdata__": True,
+        "__file_field__": "file",
+    },
+    "/send_audio": {
+        "phone": "{{PHONE}}",
+        "url": "",
+        "ptt": False,
+        "as_document": False,
+        "format": "m4a",
+        "delay_message": "",
+        "delay_typing": "",
+        "mentioned": "",
+        "__formdata__": True,
+        "__file_field__": "file",
+    },
+    "/send_video": {
+        "phone": "{{PHONE}}",
+        "url": "",
+        "caption": "Video caption",
+        "as_document": False,
+        "delay_message": "",
+        "delay_typing": "",
+        "mentioned": "",
+        "__formdata__": True,
+        "__file_field__": "file",
+    },
+    "/send_document": {
+        "phone": "{{PHONE}}",
+        "url": "",
+        "fileName": "document.pdf",
+        "caption": "Document caption",
+        "delay_message": "",
+        "delay_typing": "",
+        "mentioned": "",
+        "__formdata__": True,
+        "__file_field__": "file",
+    },
+    "/send_sticker": {
+        "phone": "{{PHONE}}",
+        "url": "https://www.gstatic.com/webp/gallery/1.webp",
+        "pack": "My Sticker Pack",
+        "author": "ZapUnlocked",
+        "resize_mode": "pad",
+        "pad_color": "black",
+        "blur_intensity": 20,
+        "delay_message": "",
+        "delay_typing": "",
+        "mentioned": "",
+        "__formdata__": True,
+        "__file_field__": "file",
+    },
+    "/send_gif": {
+        "phone": "{{PHONE}}",
+        "url": "",
+        "caption": "GIF caption",
+        "delay_message": "",
+        "delay_typing": "",
+        "mentioned": "",
+        "__formdata__": True,
+        "__file_field__": "file",
+    },
+    # ── Location / Contact / Link / Reaction ──────────────────────────
+    "/messages/send-location": {
+        "phone": "{{PHONE}}",
+        "lat": -23.550520,
+        "lng": -46.633308,
+        "name": "Central Square",
+        "address": "Sao Paulo, Brazil",
+    },
+    "/messages/send-contact": {
+        "phone": "{{PHONE}}",
+        "contactName": "John Doe",
+        "contactPhone": "5511999999999",
+    },
+    "/messages/send-contacts": {
+        "phone": "{{PHONE}}",
+        "contacts": [
+            {"name": "John Doe", "phone": "5511988888888"},
+            {"name": "Jane Smith", "phone": "5511977777777"},
+        ],
+    },
+    "/messages/send-link": {
+        "phone": "{{PHONE}}",
+        "url": "https://github.com",
+        "message": "Check this out!",
+        "description": "Where the world builds software",
+        "imageUrl": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+        "title": "GitHub",
+    },
+    "/messages/send-reaction": {
+        "phone": "{{PHONE}}",
+        "messageId": "ID_DA_MENSAGEM",
+        "emoji": "\\uD83D\\uDC4D",
+    },
+    # ── Interactive: Buttons ──────────────────────────────────────────
+    "/messages/send-button-list": {
+        "phone": "{{PHONE}}",
+        "message": "Choose an option:",
+        "title": "Menu",
+        "text": "What would you like to do?",
+        "footer": "Tap a button below",
+        "buttons": [
+            {"type": "quick_reply", "buttonText": "Yes", "id": "yes"},
+            {"type": "quick_reply", "buttonText": "No", "id": "no"},
+            {"type": "url", "buttonText": "Visit Site", "url": "https://zapunlocked.com"},
+            {"type": "call", "buttonText": "Call Support", "callPhone": "+5511999999999"},
+            {"type": "otp", "buttonText": "Copy Code", "code": "591823"},
+        ],
+        "delay_message": "2-5",
+        "delay_typing": 3,
+        "mentioned": ["5511999999999"],
+    },
+    "/messages/send-button-quick-reply": {
+        "phone": "{{PHONE}}",
+        "title": "Confirm",
+        "text": "Do you agree?",
+        "buttons": [
+            {"text": "Yes", "id": "yes"},
+            {"text": "No", "id": "no"},
+        ],
+        "delay_message": None,
+        "delay_typing": None,
+        "mentioned": None,
+    },
+    "/messages/send-button-url": {
+        "phone": "{{PHONE}}",
+        "url": "https://zapunlocked.com",
+        "button_text": "Visit Website",
+        "title": "Get in touch",
+        "text": "Visit our website:",
+        "delay_message": None,
+        "delay_typing": None,
+        "mentioned": None,
+    },
+    "/messages/send-button-call": {
+        "phone": "{{PHONE}}",
+        "callPhone": "+5511999999999",
+        "button_text": "Call Now",
+        "title": "Contact us",
+        "text": "Call us now:",
+        "delay_message": None,
+        "delay_typing": None,
+        "mentioned": None,
+    },
+    "/messages/send-button-otp": {
+        "phone": "{{PHONE}}",
+        "code": "591823",
+        "button_text": "Copy Code",
+        "title": "Security Verification",
+        "text": "Your access code is: 591823",
+        "footer": "Valid for 5 minutes.",
+        "delay_typing": 1.5,
+    },
+    "/messages/send-button-pix": {
+        "phone": "{{PHONE}}",
+        "pixKey": "suachave@email.com",
+        "pixType": "EMAIL",
+        "pixValue": 19.90,
+        "merchantName": "Minha Loja",
+        "pixCity": "Sao Paulo",
+        "pixDescription": "Compra #1234",
+        "button_text": "Pagar",
+        "title": "PIX Payment",
+        "text": "Use the button below to pay via PIX:",
+        "delay_message": None,
+        "delay_typing": None,
+        "mentioned": None,
+    },
+    "/messages/send-poll": {
+        "phone": "{{PHONE}}",
+        "name": "What is your favorite color?",
+        "options": ["Red", "Blue", "Green", "Yellow"],
+        "delay_message": None,
+        "delay_typing": None,
+        "mentioned": None,
+    },
+    "/messages/send-poll-vote": {
+        "phone": "{{PHONE}}",
+        "options": ["Blue"],
+        "pollId": "ID_DA_ENQUETE",
+        "delay_message": None,
+        "delay_typing": None,
+        "mentioned": None,
+    },
+    "/messages/delete": {
+        "phone": "{{PHONE}}",
+        "messageId": "ID_DA_MENSAGEM",
+    },
+    "/messages/edit": {
+        "phone": "{{PHONE}}",
+        "messageId": "ID_DA_MENSAGEM",
+        "message": "Edited content here!",
+        "delay_message": None,
+        "delay_typing": None,
+        "mentioned": None,
+    },
+    "/messages/read": {
+        "phone": "{{PHONE}}",
+        "messageIds": ["ID_PRIMEIRA_MSG", "ID_SEGUNDA_MSG"],
+    },
+    "/messages/send-option-list": {
+        "phone": "{{PHONE}}",
+        "title": "Choose an option",
+        "text": "Please select:",
+        "options": [
+            {"title": "Option 1", "description": "First option"},
+            {"title": "Option 2", "description": "Second option"},
+        ],
+        "button_text": "See options",
+        "footer": "Footer text",
+        "description": "Description text",
+    },
+    # ── Contacts ──────────────────────────────────────────────────────
+    "/contacts/info": {
+        "phone": "{{PHONE}}",
+    },
+    "/settings/block": {"phone": "{{PHONE}}"},
+
+    # ── Session ────────────────────────────────────────────────────────
+    "/session/pair": {"phone": "{{PHONE}}"},
+    "/session/logout": {},
+
+    # ── Settings ──────────────────────────────────────────────────────
+    "/settings/profile": {
+        "name": "My Bot",
+        "about": "Powered by ZapUnlocked",
+    },
+    "/settings/instance/call-reject-auto": {"value": True},
+    "/settings/instance/call-reject-message": {"value": "I can't answer right now."},
+    "/settings/instance/auto-read-message": {"value": True},
+    "/settings/ip-control": {"enabled": True},
+    "/settings/ip-rules/whitelist": {"ip": "192.168.1.100"},
+    "/settings/ip-rules/blacklist": {"ip": "10.0.0.50"},
+    "/instance/update-name": {"name": "New Instance"},
+    "/management/fetch_messages": {
+        "phone": "{{PHONE}}",
+        "limit": 20,
+    },
+    "/management/recent_contacts": {"limit": 20},
+    "/management/database/config": {"interval": 1440},
+    "/system/env": {"PORT": "8300"},
+    "/system/cleanup/settings": {"interval": 1440},
+    "/webhooks": {
+        "name": "my-webhook",
+        "url": "https://myserver.com/hook",
+        "events": ["*"],
+        "active": True,
+    },
+
+    # ── AI ────────────────────────────────────────────────────────────
+    "/ai/ask": {
+        "message": "What is the capital of Brazil?",
+        "timeout": 30,
+    },
+    "/ai/imagine": {
+        "prompt": "A cute cat wearing a hat, digital art",
+        "timeout": 60,
+    },
+}
