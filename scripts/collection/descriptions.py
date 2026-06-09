@@ -374,6 +374,33 @@ ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
     "/management/recent_contacts":
         "Returns the most recent contacts/chats the bot has interacted with.\n\n"
         "Optional: `limit` (max contacts, default 20).",
+    "/management/chats":
+        "Lists all recent chats the bot has interacted with, sorted by most recent activity.\n\n"
+        "Query parameters:\n"
+        "- `limit` — max chats to return (default: 20, max: 200)\n\n"
+        "Response: `{\"success\": true, \"total\": N, \"chats\": [...]}`",
+    "/management/chats/{phone}/messages":
+        "Retrieves the message history for a specific chat.\n\n"
+        "Path parameters:\n"
+        "- `phone` — the phone number or group JID\n\n"
+        "Query parameters:\n"
+        "- `limit` — max messages to return (default: 50, max: 500)\n"
+        "- `offset` — number of messages to skip (default: 0)\n\n"
+        "Messages are returned newest-first.\n\n"
+        "Response: `{\"success\": true, \"phone\": \"...\", \"total\": N, \"limit\": N, \"offset\": N, \"messages\": [...]}`",
+    "/management/contacts/{phone}":
+        "Retrieves detailed information about a WhatsApp contact.\n\n"
+        "Path parameters:\n"
+        "- `phone` — the phone number to look up\n\n"
+        "Returns the contact's name (from device contacts, push name, or verified name), "
+        "status text, and profile picture URL.\n\n"
+        "Response: `{\"success\": true, \"phone\": \"...\", \"jid\": \"...\", "
+        "\"name\": \"...\", \"status\": \"...\", \"profilePictureUrl\": \"...\"}`",
+    "/management/groups":
+        "Lists all WhatsApp groups the bot has joined.\n\n"
+        "Returns each group's ID, name, owner, and participant count, sorted alphabetically by name.\n\n"
+        "Response: `{\"success\": true, \"total\": N, \"groups\": [{\"groupId\": \"...\", "
+        "\"name\": \"...\", \"owner\": \"...\", \"participants\": N}]}`",
 
     # ═════════════════════════════════════════════════════════════════════
     # WEBHOOKS
@@ -419,6 +446,22 @@ ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
         "- `call.received`, `media.cleanup.completed`, `ai.response`\n\n"
         "Example body: `{\"event\": \"message.image\"}`\n\n"
         "Response includes the target's HTTP `statusCode` and `response` body.",
+    "GET /webhooks/{name}/logs":
+        "Returns the delivery log for a specific webhook.\n\n"
+        "Path parameters:\n"
+        "- `name` — the webhook name\n\n"
+        "Query parameters:\n"
+        "- `limit` — max log entries to return (default: 50, max: 100)\n\n"
+        "Each log entry contains: `timestamp`, `event`, `statusCode`, `success`, and optional `error`.\n\n"
+        "Response: `{\"success\": true, \"webhook\": \"...\", \"total\": N, \"logs\": [...]}`",
+    "DELETE /webhooks/{name}/logs":
+        "Clears the delivery log for a specific webhook.\n\n"
+        "Path parameters:\n"
+        "- `name` — the webhook name to clear logs for\n\n"
+        'Response: `{"success": true, "message": "Logs cleared for webhook \'...\'."}`',
+    "DELETE /webhooks/logs/all":
+        "Clears delivery logs for ALL webhooks at once.\n\n"
+        'Response: `{"success": true, "message": "All webhook logs cleared."}`',
 
     # ═════════════════════════════════════════════════════════════════════
     # EXPORT / IMPORT

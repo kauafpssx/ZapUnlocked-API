@@ -1162,6 +1162,78 @@
       "name": "Management",
       "item": [
         {
+          "name": "Chats",
+          "item": [
+            {
+              "name": "List Chats",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/management/chats",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "management",
+                    "chats"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "20",
+                      "description": ""
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Lists all recent chats the bot has interacted with, sorted by most recent activity.\n\nQuery parameters:\n- `limit` — max chats to return (default: 20, max: 200)\n\nResponse: `{\"success\": true, \"total\": N, \"chats\": [...]}`"
+              }
+            },
+            {
+              "name": "Get Chat Messages",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/management/chats/{{PHONE}}/messages",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "management",
+                    "chats",
+                    "{{PHONE}}",
+                    "messages"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "50",
+                      "description": ""
+                    },
+                    {
+                      "key": "offset",
+                      "value": "",
+                      "description": ""
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Retrieves the message history for a specific chat.\n\nPath parameters:\n- `phone` — the phone number or group JID\n\nQuery parameters:\n- `limit` — max messages to return (default: 50, max: 500)\n- `offset` — number of messages to skip (default: 0)\n\nMessages are returned newest-first.\n\nResponse: `{\"success\": true, \"phone\": \"...\", \"total\": N, \"limit\": N, \"offset\": N, \"messages\": [...]}`"
+              }
+            }
+          ]
+        },
+        {
           "name": "Cleanup",
           "item": [
             {
@@ -1185,6 +1257,35 @@
                   }
                 ],
                 "description": "Clear Storage."
+              }
+            }
+          ]
+        },
+        {
+          "name": "Contacts",
+          "item": [
+            {
+              "name": "Get Contact",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/management/contacts/{{PHONE}}",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "management",
+                    "contacts",
+                    "{{PHONE}}"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Retrieves detailed information about a WhatsApp contact.\n\nPath parameters:\n- `phone` — the phone number to look up\n\nReturns the contact's name (from device contacts, push name, or verified name), status text, and profile picture URL.\n\nResponse: `{\"success\": true, \"phone\": \"...\", \"jid\": \"...\", \"name\": \"...\", \"status\": \"...\", \"profilePictureUrl\": \"...\"}`"
               }
             }
           ]
@@ -1352,6 +1453,34 @@
                   ]
                 },
                 "description": "Imports configuration data from a JSON file previously exported via /management/export.\n\nAccepts a multipart file upload. The file must be a valid JSON export (the same format produced by /management/export).\n\nAll webhooks, settings, and IP rules in the file will be upserted (created if new, updated if existing).\n\nRequired: `file` — the JSON export file to upload.\n\nResponse: `{\"success\": true, \"imported\": {\"webhooks\": N, \"settings\": N, \"ipRules\": N}}`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Groups",
+          "item": [
+            {
+              "name": "List Groups",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/management/groups",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "management",
+                    "groups"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Lists all WhatsApp groups the bot has joined.\n\nReturns each group's ID, name, owner, and participant count, sorted alphabetically by name.\n\nResponse: `{\"success\": true, \"total\": N, \"groups\": [{\"groupId\": \"...\", \"name\": \"...\", \"owner\": \"...\", \"participants\": N}]}`"
               }
             }
           ]
@@ -3393,6 +3522,30 @@
           }
         },
         {
+          "name": "Delete All Webhook Logs",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{BASE_URL}}/webhooks/logs/all",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "webhooks",
+                "logs",
+                "all"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Clears delivery logs for ALL webhooks at once.\n\nResponse: `{\"success\": true, \"message\": \"All webhook logs cleared.\"}`"
+          }
+        },
+        {
           "name": "Get Webhook",
           "request": {
             "method": "GET",
@@ -3490,6 +3643,61 @@
               }
             },
             "description": "Updates an existing webhook by name. All fields are optional — send only what you want to change.\n\nFields: url, method, headers, body, events, active, secret.\nIf secret is set/changed, outgoing payloads will be signed with HMAC-SHA256."
+          }
+        },
+        {
+          "name": "Webhook Logs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/webhooks/:name/logs",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "webhooks",
+                ":name",
+                "logs"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": ""
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Returns the delivery log for a specific webhook.\n\nPath parameters:\n- `name` — the webhook name\n\nQuery parameters:\n- `limit` — max log entries to return (default: 50, max: 100)\n\nEach log entry contains: `timestamp`, `event`, `statusCode`, `success`, and optional `error`.\n\nResponse: `{\"success\": true, \"webhook\": \"...\", \"total\": N, \"logs\": [...]}`"
+          }
+        },
+        {
+          "name": "Delete Webhook Logs",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{BASE_URL}}/webhooks/:name/logs",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "webhooks",
+                ":name",
+                "logs"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Clears the delivery log for a specific webhook.\n\nPath parameters:\n- `name` — the webhook name to clear logs for\n\nResponse: `{\"success\": true, \"message\": \"Logs cleared for webhook '...'.\"}`"
           }
         },
         {
