@@ -17,6 +17,7 @@ ALL_EVENTS = [
     "message.document",
     "message.sticker",
     "message.contact",
+    "message.contacts",
     "message.location",
     "message.reaction",
     "message.poll_created",

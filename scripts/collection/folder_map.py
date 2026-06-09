@@ -75,6 +75,8 @@ FOLDER_MAP: List[Tuple[Optional[str], List[str]]] = [
     ("/management/fetch_messages",  ["Management", "Messages"]),
     ("/management/recent_contacts", ["Management", "Messages"]),
     ("/management/cleanup",         ["Management", "Cleanup"]),
+    ("/management/export",          ["Management", "Export/Import"]),
+    ("/management/import",          ["Management", "Export/Import"]),
 
     # ── Settings ──────────────────────────────────────────────────────
     ("/settings/profile",    ["Settings", "Profile"]),

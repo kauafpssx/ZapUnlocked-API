@@ -54,58 +54,78 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
         # ── Image ────────────────────────────────────────────
         if _has(raw, "imageMessage"):
             img = raw.imageMessage
+            mime = _safe_str(img, "mimetype")
+            file_length = _safe_int(img, "fileLength")
+            from src.services.whatsapp.media_receiver import try_download_media
+            media = await try_download_media(msg, file_length, mime, "image")
             await dispatch_event("message.image", {
                 **base,
                 "caption": _safe_str(img, "caption"),
-                "mimetype": _safe_str(img, "mimetype"),
-                "fileLength": _safe_int(img, "fileLength"),
+                "fileLength": file_length,
+                **media,
             })
             return
 
         # ── Video ─────────────────────────────────────────────
         if _has(raw, "videoMessage"):
             vid = raw.videoMessage
+            mime = _safe_str(vid, "mimetype")
+            file_length = _safe_int(vid, "fileLength")
+            from src.services.whatsapp.media_receiver import try_download_media
+            media = await try_download_media(msg, file_length, mime, "video")
             await dispatch_event("message.video", {
                 **base,
                 "caption": _safe_str(vid, "caption"),
-                "mimetype": _safe_str(vid, "mimetype"),
-                "fileLength": _safe_int(vid, "fileLength"),
+                "fileLength": file_length,
                 "isPTT": bool(getattr(vid, "PTT", False)),
                 "isGif": bool(getattr(vid, "gifPlayback", False)),
+                **media,
             })
             return
 
         # ── Audio ─────────────────────────────────────────────
         if _has(raw, "audioMessage"):
             aud = raw.audioMessage
+            mime = _safe_str(aud, "mimetype")
+            file_length = _safe_int(aud, "fileLength")
+            from src.services.whatsapp.media_receiver import try_download_media
+            media = await try_download_media(msg, file_length, mime, "audio")
             await dispatch_event("message.audio", {
                 **base,
-                "mimetype": _safe_str(aud, "mimetype"),
-                "fileLength": _safe_int(aud, "fileLength"),
+                "fileLength": file_length,
                 "isPTT": bool(getattr(aud, "PTT", False)),
                 "durationSeconds": _safe_int(aud, "seconds"),
+                **media,
             })
             return
 
         # ── Document ─────────────────────────────────────────
         if _has(raw, "documentMessage"):
             doc = raw.documentMessage
+            mime = _safe_str(doc, "mimetype")
+            file_length = _safe_int(doc, "fileLength")
+            orig_name = _safe_str(doc, "fileName")
+            from src.services.whatsapp.media_receiver import try_download_media
+            media = await try_download_media(msg, file_length, mime, "document", file_name=orig_name)
             await dispatch_event("message.document", {
                 **base,
-                "fileName": _safe_str(doc, "fileName"),
                 "caption": _safe_str(doc, "caption"),
-                "mimetype": _safe_str(doc, "mimetype"),
-                "fileLength": _safe_int(doc, "fileLength"),
+                "fileLength": file_length,
+                **media,
             })
             return
 
         # ── Sticker ───────────────────────────────────────────
         if _has(raw, "stickerMessage"):
             stk = raw.stickerMessage
+            mime = _safe_str(stk, "mimetype")
+            file_length = _safe_int(stk, "fileLength") if hasattr(stk, "fileLength") else 0
+            from src.services.whatsapp.media_receiver import try_download_media
+            media = await try_download_media(msg, file_length, mime, "sticker")
             await dispatch_event("message.sticker", {
                 **base,
-                "mimetype": _safe_str(stk, "mimetype"),
                 "isAnimated": bool(getattr(stk, "isAnimated", False)),
+                **media,
             })
             return
 

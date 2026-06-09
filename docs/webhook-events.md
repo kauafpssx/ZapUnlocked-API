@@ -85,6 +85,26 @@ Plain or formatted text message.
 
 ---
 
+### Media fields — `mediaBase64`, `mimeType`, `fileName`, `mediaTooLarge`
+
+All media events (`message.image`, `message.video`, `message.audio`, `message.document`, `message.sticker`) include these extra fields when `RECEIVE_MEDIA_ENABLED=true` in `.env`:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `mediaBase64` | `string \| null` | Base64-encoded file bytes. `null` when disabled or error. |
+| `mimeType` | `string \| null` | MIME type (e.g. `"image/jpeg"`, `"audio/ogg; codecs=opus"`). |
+| `fileName` | `string \| null` | File name. Documents preserve original name; others auto-generated. |
+| `mediaTooLarge` | `boolean` | `true` when file exceeds `RECEIVE_MEDIA_MAX_SIZE_MB` — not downloaded. |
+
+Files are **not** stored on disk — downloaded, encoded to base64, deleted immediately.
+
+| Env var | Default | Description |
+|---------|---------|-------------|
+| `RECEIVE_MEDIA_ENABLED` | `false` | Set `true` to enable auto-download |
+| `RECEIVE_MEDIA_MAX_SIZE_MB` | `15` | Skip files larger than this (MB) |
+
+---
+
 ### `message.image`
 
 ```json
@@ -93,11 +113,18 @@ Plain or formatted text message.
   "data": {
     "...base": "...",
     "caption": "Product photo",
-    "mimetype": "image/jpeg",
-    "fileLength": 204800
+    "fileLength": 204800,
+    "mimeType": "image/jpeg",
+    "fileName": "image_abc123.jpg",
+    "mediaBase64": "/9j/4AAQSkZJRgAB...",
+    "mediaTooLarge": false
   }
 }
 ```
+
+> `mediaBase64`, `mimeType`, `fileName` are only populated when `RECEIVE_MEDIA_ENABLED=true`.  
+> `mediaTooLarge: true` when the file exceeds `RECEIVE_MEDIA_MAX_SIZE_MB` — download was skipped.  
+> All three fields are `null` when disabled or on error.
 
 ---
 
@@ -109,10 +136,13 @@ Plain or formatted text message.
   "data": {
     "...base": "...",
     "caption": "Check out this video!",
-    "mimetype": "video/mp4",
     "fileLength": 5242880,
     "isPTT": false,
-    "isGif": false
+    "isGif": false,
+    "mimeType": "video/mp4",
+    "fileName": "video_abc123.mp4",
+    "mediaBase64": "AAAAIGZ0eXBpc29t...",
+    "mediaTooLarge": false
   }
 }
 ```
@@ -126,10 +156,13 @@ Plain or formatted text message.
   "event": "message.audio",
   "data": {
     "...base": "...",
-    "mimetype": "audio/ogg; codecs=opus",
     "fileLength": 30720,
     "isPTT": true,
-    "durationSeconds": 8
+    "durationSeconds": 8,
+    "mimeType": "audio/ogg; codecs=opus",
+    "fileName": "audio_abc123.ogg",
+    "mediaBase64": "T2dnUwACAAAAAA...",
+    "mediaTooLarge": false
   }
 }
 ```
@@ -145,13 +178,17 @@ Plain or formatted text message.
   "event": "message.document",
   "data": {
     "...base": "...",
-    "fileName": "contract.pdf",
     "caption": "Please find the contract attached",
-    "mimetype": "application/pdf",
-    "fileLength": 102400
+    "fileLength": 102400,
+    "mimeType": "application/pdf",
+    "fileName": "contract.pdf",
+    "mediaBase64": "JVBERi0xLjQK...",
+    "mediaTooLarge": false
   }
 }
 ```
+
+`fileName` preserves the original filename sent by the user.
 
 ---
 
@@ -162,8 +199,11 @@ Plain or formatted text message.
   "event": "message.sticker",
   "data": {
     "...base": "...",
-    "mimetype": "image/webp",
-    "isAnimated": false
+    "isAnimated": false,
+    "mimeType": "image/webp",
+    "fileName": "sticker_abc123.webp",
+    "mediaBase64": "UklGRlYAAABXRUJQ...",
+    "mediaTooLarge": false
   }
 }
 ```
@@ -189,7 +229,7 @@ Shared contact.
 
 ### `message.contacts`
 
-Multiple contacts shared at once.
+Multiple contacts shared at once (contact array).
 
 ```json
 {
@@ -381,7 +421,7 @@ Fired after every outgoing message, regardless of type.
 }
 ```
 
-`type` values: `text`, `image`, `audio`, `video`, `document`, `sticker`, `gif`, `interactive`, `poll`, `location`, `contact`, `contacts`, `link`, `reaction`, `edit`, `delete`.
+`type` values: `text`, `image`, `audio`, `video`, `document`, `sticker`, `gif`, `interactive`, `list`, `poll`, `poll_vote`, `location`, `contact`, `contacts`, `link`, `reaction`, `edit`, `delete`.
 
 ---
 
@@ -398,11 +438,16 @@ message.sent.document
 message.sent.sticker
 message.sent.gif
 message.sent.interactive
+message.sent.list
 message.sent.poll
+message.sent.poll_vote
 message.sent.location
 message.sent.contact
+message.sent.contacts
 message.sent.link
 message.sent.reaction
+message.sent.edit
+message.sent.delete
 ```
 
 Example:
@@ -455,6 +500,33 @@ Read / delivery receipt.
   }
 }
 ```
+
+---
+
+### `message.receipt`
+
+Raw receipt for types other than delivered (1) or read (4) — e.g. played (5), server-ack (2), etc.
+
+```json
+{
+  "event": "message.receipt",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "messageIds": ["3EB0ABCDEF123456"],
+    "type": 2,
+    "timestamp": 1704067200
+  }
+}
+```
+
+| `type` | Meaning |
+|--------|---------|
+| `1` | Delivered → fires `message.delivered` instead |
+| `2` | Server ack |
+| `3` | Read by server |
+| `4` | Read by recipient → fires `message.read` instead |
+| `5` | Played (audio/video) |
 
 ---
 

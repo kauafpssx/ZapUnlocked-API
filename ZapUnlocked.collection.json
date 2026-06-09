@@ -1284,7 +1284,7 @@
           ]
         },
         {
-          "name": "Export",
+          "name": "Export/Import",
           "item": [
             {
               "name": "Export Config",
@@ -1306,14 +1306,9 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "description": "Export Config."
+                "description": "Exports all configuration data as a downloadable JSON file.\n\nDumps all webhooks, instance settings, privacy settings, and IP rules into a single JSON export. Use /management/import to restore later.\n\nResponse example:\n`{\"success\": true, \"filename\": \"config_export_2026-06-08.json\", \"exported_at\": \"2026-06-08T23:19:00\", \"data\": {\"webhooks\": [...], \"settings\": {...}, \"ip_rules\": {...}}}`"
               }
-            }
-          ]
-        },
-        {
-          "name": "Import",
-          "item": [
+            },
             {
               "name": "Import Config Route",
               "request": {
@@ -1349,14 +1344,14 @@
                       "disabled": true
                     },
                     {
-                      "key": "phone",
-                      "value": "{{PHONE}}",
+                      "key": "file",
+                      "value": "",
                       "type": "text",
-                      "disabled": false
+                      "disabled": true
                     }
                   ]
                 },
-                "description": "Import Config Route.\n\nRequest body: `Body import config route management import post` schema"
+                "description": "Imports configuration data from a JSON file previously exported via /management/export.\n\nAccepts a multipart file upload. The file must be a valid JSON export (the same format produced by /management/export).\n\nAll webhooks, settings, and IP rules in the file will be upserted (created if new, updated if existing).\n\nRequired: `file` — the JSON export file to upload.\n\nResponse: `{\"success\": true, \"imported\": {\"webhooks\": N, \"settings\": N, \"ipRules\": N}}`"
               }
             }
           ]

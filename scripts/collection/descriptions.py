@@ -421,6 +421,27 @@ ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
         "Response includes the target's HTTP `statusCode` and `response` body.",
 
     # ═════════════════════════════════════════════════════════════════════
+    # EXPORT / IMPORT
+    # ═════════════════════════════════════════════════════════════════════
+    "/management/export":
+        "Exports all configuration data as a downloadable JSON file.\n\n"
+        "Dumps all webhooks, instance settings, privacy settings, and IP rules "
+        "into a single JSON export. Use /management/import to restore later.\n\n"
+        "Response example:\n"
+        '`{"success": true, "filename": "config_export_2026-06-08.json", '
+        '"exported_at": "2026-06-08T23:19:00", '
+        '"data": {"webhooks": [...], "settings": {...}, "ip_rules": {...}}}`',
+    "/management/import":
+        "Imports configuration data from a JSON file previously exported via "
+        "/management/export.\n\n"
+        "Accepts a multipart file upload. The file must be a valid JSON export "
+        "(the same format produced by /management/export).\n\n"
+        "All webhooks, settings, and IP rules in the file will be upserted "
+        "(created if new, updated if existing).\n\n"
+        "Required: `file` — the JSON export file to upload.\n\n"
+        "Response: `{\"success\": true, \"imported\": {\"webhooks\": N, \"settings\": N, \"ipRules\": N}}`",
+
+    # ═════════════════════════════════════════════════════════════════════
     # SYSTEM
     # ═════════════════════════════════════════════════════════════════════
     "/system/env":
