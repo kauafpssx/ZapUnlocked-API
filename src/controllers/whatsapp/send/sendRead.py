@@ -1,3 +1,4 @@
+from src.utils.phone import resolve_jid
 from fastapi import HTTPException
 from src.utils.decorators import require_whatsapp, handle_errors
 from src.services.whatsapp.sender import mark_messages_read, find_message
@@ -15,7 +16,7 @@ async def read_messages(data: ReadMessagesRequest):
     if not data.messageIds:
         raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'messageIds' cannot be empty."})
 
-    jid = f"{data.phone}@s.whatsapp.net"
+    jid = resolve_jid(data.phone)
     target_type = data.type or "id"
 
     target_ids = []

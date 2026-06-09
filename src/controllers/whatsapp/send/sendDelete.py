@@ -1,3 +1,4 @@
+from src.utils.phone import resolve_jid
 from fastapi import HTTPException
 from src.utils.decorators import require_whatsapp, handle_errors
 from src.services.whatsapp.sender import delete_message, find_message
@@ -15,7 +16,7 @@ async def delete_msg(data: DeleteMessageRequest):
     if not data.messageId:
         raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'messageId' is required."})
 
-    jid = f"{data.phone}@s.whatsapp.net"
+    jid = resolve_jid(data.phone)
     target_type = data.type or "id"
     target_id = data.messageId
 

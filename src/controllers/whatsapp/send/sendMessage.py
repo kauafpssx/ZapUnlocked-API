@@ -1,3 +1,4 @@
+from src.utils.phone import resolve_jid
 from fastapi import HTTPException
 from src.services.whatsapp.sender import send_message as whatsapp_send_message
 from src.utils.logger import logger
@@ -17,7 +18,7 @@ async def send_message(data: SendMessageRequest):
 
     logger.debug(f"📥 POST /send: text={data.message!r}")
 
-    jid = f"{data.phone}@s.whatsapp.net"
+    jid = resolve_jid(data.phone)
 
     if is_dry_run():
         return dry_run_response("Message sent.")

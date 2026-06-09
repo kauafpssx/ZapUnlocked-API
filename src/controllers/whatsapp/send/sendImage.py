@@ -1,3 +1,4 @@
+from src.utils.phone import resolve_jid
 from typing import Optional
 from fastapi import UploadFile, File, Form
 from src.services.whatsapp.sender import send_image_message
@@ -33,7 +34,7 @@ async def send_image(
 
     async def process_task():
         try:
-            jid = f"{phone}@s.whatsapp.net"
+            jid = resolve_jid(phone)
             options = await build_send_options(jid, reply_identifier=reply or quoted_id, delay_message=delay_message, delay_typing=delay_typing, mentioned=json.loads(mentioned) if mentioned else None)
             fn = file_name or (file.filename if file else None)
             await send_image_message(jid, path, caption=caption, as_document=as_document, file_name=fn, options=options)

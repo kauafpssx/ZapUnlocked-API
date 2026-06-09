@@ -1,3 +1,4 @@
+from src.utils.phone import resolve_jid
 from fastapi import HTTPException
 from src.services.whatsapp.sender import send_button_message
 from src.utils.decorators import require_whatsapp, handle_errors
@@ -18,7 +19,7 @@ async def send_option_list(data: SendOptionListRequest):
         }
     )
 
-    jid = f"{data.phone}@s.whatsapp.net"
+    jid = resolve_jid(data.phone)
 
     options = await resolve_quote(
         jid,

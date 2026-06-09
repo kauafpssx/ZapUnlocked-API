@@ -1,3 +1,4 @@
+from src.utils.phone import resolve_jid
 from typing import Optional
 from fastapi import UploadFile, File, Form
 from src.services.whatsapp.sender import send_sticker_message
@@ -38,7 +39,7 @@ async def send_sticker(
     async def process_task():
         sticker_path = None
         try:
-            jid = f"{phone}@s.whatsapp.net"
+            jid = resolve_jid(phone)
             options = await build_send_options(jid, reply_identifier=reply or quoted_id, delay_message=delay_message, delay_typing=delay_typing, mentioned=json.loads(mentioned) if mentioned else None)
 
             conv_options = {"resizeMode": resize_mode, "padColor": pad_color, "blurIntensity": blur_intensity}

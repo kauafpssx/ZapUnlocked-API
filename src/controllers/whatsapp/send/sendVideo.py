@@ -1,3 +1,4 @@
+from src.utils.phone import resolve_jid
 from typing import Optional
 from fastapi import UploadFile, File, Form
 from src.services.whatsapp.sender import send_video_message
@@ -62,7 +63,7 @@ async def _send_video_common(phone, path, size, caption, reply, quoted_id, as_do
     async def process_task():
         converted_path = None
         try:
-            jid = f"{phone}@s.whatsapp.net"
+            jid = resolve_jid(phone)
             options = await build_send_options(jid, reply_identifier=reply or quoted_id, delay_message=delay_message, delay_typing=delay_typing, mentioned=json.loads(mentioned) if mentioned else None)
 
             final_path = path

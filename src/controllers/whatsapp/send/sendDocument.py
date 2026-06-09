@@ -1,3 +1,4 @@
+from src.utils.phone import resolve_jid
 from pathlib import Path
 from typing import Optional
 from fastapi import UploadFile, File, Form
@@ -32,7 +33,7 @@ async def send_document(
 
     async def process_task():
         try:
-            jid = f"{phone}@s.whatsapp.net"
+            jid = resolve_jid(phone)
             options = await build_send_options(jid, reply_identifier=reply or quoted_id, delay_message=delay_message, delay_typing=delay_typing, mentioned=json.loads(mentioned) if mentioned else None)
             fn = file_name or (file.filename if file else None) or Path(path).name
             await send_document_message(jid, path, fn, "application/octet-stream", options=options)

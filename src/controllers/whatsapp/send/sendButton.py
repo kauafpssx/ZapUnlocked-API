@@ -1,3 +1,4 @@
+from src.utils.phone import resolve_jid
 from fastapi import HTTPException
 from src.services.whatsapp.sender import send_button_message
 from src.utils.decorators import require_whatsapp, handle_errors
@@ -20,7 +21,7 @@ from src.schemas import (
 @require_whatsapp
 @handle_errors("send button")
 async def send_with_buttons(data: SendButtonRequest):
-    jid = f"{data.phone}@s.whatsapp.net"
+    jid = resolve_jid(data.phone)
 
     options = await build_send_options(
         jid,
@@ -122,7 +123,7 @@ async def send_with_buttons(data: SendButtonRequest):
 @require_whatsapp
 @handle_errors("send otp")
 async def send_otp(data: SendButtonOtpRequest):
-    jid = f"{data.phone}@s.whatsapp.net"
+    jid = resolve_jid(data.phone)
     options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     buttons = [{"type": "otp", "text": data.button_text or "Copy code", "code": data.code}]
@@ -135,7 +136,7 @@ async def send_otp(data: SendButtonOtpRequest):
 @require_whatsapp
 @handle_errors("send pix")
 async def send_pix(data: SendButtonPixRequest):
-    jid = f"{data.phone}@s.whatsapp.net"
+    jid = resolve_jid(data.phone)
     options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     ptype = (data.pixType or "EVP").upper()
@@ -159,7 +160,7 @@ async def send_pix(data: SendButtonPixRequest):
 @require_whatsapp
 @handle_errors("send quick reply")
 async def send_quick_reply(data: SendButtonQuickReplyRequest):
-    jid = f"{data.phone}@s.whatsapp.net"
+    jid = resolve_jid(data.phone)
     options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     buttons = []
@@ -180,7 +181,7 @@ async def send_quick_reply(data: SendButtonQuickReplyRequest):
 @require_whatsapp
 @handle_errors("send url button")
 async def send_url(data: SendButtonUrlRequest):
-    jid = f"{data.phone}@s.whatsapp.net"
+    jid = resolve_jid(data.phone)
     options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     buttons = [{"type": "url", "url": data.url, "text": data.button_text or "Acessar", "buttonText": data.button_text or "Acessar"}]
@@ -193,7 +194,7 @@ async def send_url(data: SendButtonUrlRequest):
 @require_whatsapp
 @handle_errors("send call button")
 async def send_call(data: SendButtonCallRequest):
-    jid = f"{data.phone}@s.whatsapp.net"
+    jid = resolve_jid(data.phone)
     options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     buttons = [{"type": "call", "phoneNumber": data.callPhone, "text": data.button_text or "Ligar", "buttonText": data.button_text or "Ligar"}]

@@ -1,3 +1,4 @@
+from src.utils.phone import resolve_jid
 import asyncio
 
 from src.schemas import BulkSendTextRequest
@@ -26,7 +27,7 @@ async def send_bulk(data: BulkSendTextRequest):
     results = []
 
     for i, phone in enumerate(data.phones):
-        jid = f"{phone}@s.whatsapp.net"
+        jid = resolve_jid(phone)
         try:
             options = await build_send_options(
                 jid,

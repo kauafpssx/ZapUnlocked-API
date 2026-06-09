@@ -1,3 +1,4 @@
+from src.utils.phone import resolve_jid
 from fastapi import HTTPException
 from src.services.whatsapp.sender import send_reaction as whatsapp_send_reaction
 from src.utils.logger import logger
@@ -13,7 +14,7 @@ async def send_reaction(data: SendReactionRequest):
     if not data.phone or not identifier or data.emoji is None:
         raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'phone', a message identifier ('reaction'/'messageId'), and 'emoji' are required. Send an empty emoji to remove."})
 
-    jid = f"{data.phone}@s.whatsapp.net"
+    jid = resolve_jid(data.phone)
 
     await whatsapp_send_reaction(jid, identifier, data.emoji, identification_type)
     return {"success": True, "message": "Reaction sent."}

@@ -11,19 +11,24 @@ from src.utils.logger import logger
 
 
 def build_jid(phone_or_jid: str):
-    """Build a proper neonize JID from a phone number or jid string."""
+    """Build a proper neonize JID from a phone number or full JID string.
+
+    Accepts:
+      - Phone number: "5511999999999" → @s.whatsapp.net
+      - Group JID:    "120363XXXXXXXX@g.us" → @g.us (group)
+      - Full JID:     "5511999999999@s.whatsapp.net" → @s.whatsapp.net
+    """
     from neonize.utils.jid import build_jid as neonize_build_jid
 
     clean = phone_or_jid.replace(" ", "").replace("+", "")
     if "@" in clean:
         user, server = clean.split("@", 1)
-        # Preserve LID server if explicitly provided
         if server == "lid":
             return neonize_build_jid(user, "lid")
-        server = server.replace("@s.whatsapp.net", "").replace("@g.us", "")
-        if not server or server == "s.whatsapp.net":
-            server = "s.whatsapp.net"
-        return neonize_build_jid(user, server)
+        if server in ("g.us", "s.whatsapp.net", "broadcast"):
+            return neonize_build_jid(user, server)
+        # unknown suffix — default to s.whatsapp.net
+        return neonize_build_jid(user, "s.whatsapp.net")
     return neonize_build_jid(clean, "s.whatsapp.net")
 
 

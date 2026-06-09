@@ -1,3 +1,4 @@
+from src.utils.phone import resolve_jid
 from fastapi import HTTPException
 from src.services.whatsapp.sender import send_poll_message, send_poll_vote_message, find_message
 from src.utils.logger import logger
@@ -10,7 +11,7 @@ from src.schemas import SendPollRequest, SendPollVoteRequest
 @require_whatsapp
 @handle_errors("send poll")
 async def send_poll(data: SendPollRequest):
-    jid = f"{data.phone}@s.whatsapp.net"
+    jid = resolve_jid(data.phone)
 
     options_dict = await build_send_options(
         jid,
@@ -38,7 +39,7 @@ async def send_poll(data: SendPollRequest):
 @require_whatsapp
 @handle_errors("send poll vote")
 async def send_poll_vote(data: SendPollVoteRequest):
-    jid = f"{data.phone}@s.whatsapp.net"
+    jid = resolve_jid(data.phone)
 
     if not data.options:
         raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "At least one option must be selected to vote."})

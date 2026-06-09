@@ -1,3 +1,4 @@
+from src.utils.phone import resolve_jid
 import time as time_module
 from typing import Optional
 from fastapi import UploadFile, File, Form
@@ -35,7 +36,7 @@ async def send_audio(
 
     async def process_task():
         try:
-            jid = f"{phone}@s.whatsapp.net"
+            jid = resolve_jid(phone)
             options = await build_send_options(jid, reply_identifier=reply or quoted_id, delay_message=delay_message, delay_typing=delay_typing, mentioned=json.loads(mentioned) if mentioned else None)
             file_size = get_file_size(path)
             is_too_big = file_size > (15 * 1024 * 1024)

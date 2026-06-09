@@ -1,3 +1,4 @@
+from src.utils.phone import resolve_jid
 from fastapi import HTTPException
 from src.utils.decorators import require_whatsapp, handle_errors
 from src.services.whatsapp.sender import edit_message, find_message
@@ -8,7 +9,7 @@ from src.schemas import SendEditMessageRequest
 @handle_errors("edit message")
 async def send_edit(data: SendEditMessageRequest):
     """Edit a previously sent message."""
-    jid = f"{data.phone}@s.whatsapp.net"
+    jid = resolve_jid(data.phone)
     target_type = data.type or "id"
     target_id = data.messageId
 
