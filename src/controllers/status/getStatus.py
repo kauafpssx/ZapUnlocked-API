@@ -15,6 +15,7 @@ import psutil
 import qrcode
 
 from src.services.whatsapp.client import get_is_ready, get_qr, get_qr_expires_in
+from src.utils.dry_run import is_dry_run
 
 _START_TIME = time.time()
 
@@ -59,6 +60,7 @@ async def get_status_controller() -> dict:
 
     return {
         "status": health,
+        "dryRun": is_dry_run(),
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "uptime": _fmt_uptime(uptime_s),
         "uptime_seconds": int(uptime_s),

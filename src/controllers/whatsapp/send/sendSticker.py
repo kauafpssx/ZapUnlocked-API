@@ -9,6 +9,7 @@ from src.services.media.resolver import resolve_media
 from src.services.media import upload_tracker
 from src.services.media.validator import is_animated_sticker_source
 from src.utils.logger import logger
+from src.utils.dry_run import is_dry_run, dry_run_media_response
 import json
 from src.utils.quote import build_send_options
 
@@ -60,5 +61,7 @@ async def send_sticker(
             if sticker_path:
                 cleanup(sticker_path)
 
+    if is_dry_run():
+        return dry_run_media_response("Sticker sent successfully.")
     await task_queue.enqueue(process_task())
     return {"success": True, "message": "Sticker sent successfully."}

@@ -4,6 +4,7 @@ from src.utils.logger import logger
 from src.utils.quote import build_send_options
 from src.utils.decorators import require_whatsapp, handle_errors
 from src.utils.time import sent_response
+from src.utils.dry_run import is_dry_run, dry_run_response
 from src.schemas import SendPollRequest, SendPollVoteRequest
 
 @require_whatsapp
@@ -22,7 +23,9 @@ async def send_poll(data: SendPollRequest):
 
     if not data.options or len(data.options) < 2:
         raise HTTPException(status_code=400, detail={"error": "INVALID_FIELD", "message": "A poll must have at least 2 options."})
-        
+
+    if is_dry_run():
+        return dry_run_response("Poll sent.")
     res = await send_poll_message(
         jid,
         name=data.name,

@@ -5,6 +5,7 @@ from src.utils.quote import build_send_options
 from src.utils.formatter import format_text
 from src.utils.decorators import require_whatsapp, handle_errors
 from src.utils.time import sent_response
+from src.utils.dry_run import is_dry_run, dry_run_response
 from src.schemas import SendMessageRequest
 
 
@@ -17,6 +18,9 @@ async def send_message(data: SendMessageRequest):
     logger.debug(f"📥 POST /send: text={data.message!r}")
 
     jid = f"{data.phone}@s.whatsapp.net"
+
+    if is_dry_run():
+        return dry_run_response("Message sent.")
 
     options = await build_send_options(
         jid,

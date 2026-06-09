@@ -8,6 +8,7 @@ from src.services.media.queue import task_queue
 from src.services.media.resolver import resolve_media
 from src.services.media import upload_tracker
 from src.utils.logger import logger
+from src.utils.dry_run import is_dry_run, dry_run_media_response
 import json
 from src.utils.quote import build_send_options
 
@@ -29,6 +30,8 @@ async def send_video(
     mentioned: Optional[str] = Form(None),
 ):
     logger.debug(f"🔍 POST /send_video: phone={phone}")
+    if is_dry_run():
+        return dry_run_media_response("Video sent successfully.")
     path, size = await resolve_media(url, file, media_type="video")
     await _send_video_common(phone, path, size, caption, reply, quoted_id, as_document, gif_playback, ptv, delay_message, delay_typing, mentioned)
     return {"success": True, "message": "Video sent successfully."}
@@ -48,6 +51,8 @@ async def send_gif(
     mentioned: Optional[str] = Form(None),
 ):
     logger.debug(f"🔍 POST /send_gif: phone={phone}")
+    if is_dry_run():
+        return dry_run_media_response("GIF sent successfully.")
     path, size = await resolve_media(url, file, media_type="gif")
     await _send_video_common(phone, path, size, caption, reply, quoted_id, as_document=False, gif_playback=True, ptv=False, delay_message=delay_message, delay_typing=delay_typing, mentioned=mentioned)
     return {"success": True, "message": "GIF sent successfully."}

@@ -6,6 +6,7 @@ from src.utils.security.callback_token import create_callback_payload
 from src.utils.quote import build_send_options
 from src.utils.formatter import format_text
 from src.utils.time import sent_response
+from src.utils.dry_run import is_dry_run, dry_run_response
 from src.schemas import (
     SendButtonRequest,
     SendButtonOtpRequest,
@@ -104,6 +105,8 @@ async def send_with_buttons(data: SendButtonRequest):
                 final_footer = f"{ptype}: {pkey}"
                 break
 
+    if is_dry_run():
+        return dry_run_response("Interactive message sent.")
     res = await send_button_message(
         jid,
         formatted_text,
@@ -123,6 +126,8 @@ async def send_otp(data: SendButtonOtpRequest):
     options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     buttons = [{"type": "otp", "text": data.button_text or "Copy code", "code": data.code}]
+    if is_dry_run():
+        return dry_run_response("OTP message sent.")
     res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)
     return sent_response(res, "OTP message sent.")
 
@@ -145,6 +150,8 @@ async def send_pix(data: SendButtonPixRequest):
         "pixDescription": data.pixDescription or "",
         "text": data.button_text or "Pagar",
     }]
+    if is_dry_run():
+        return dry_run_response("PIX message sent.")
     res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=footer, image_url=data.image)
     return sent_response(res, "PIX message sent.")
 
@@ -164,6 +171,8 @@ async def send_quick_reply(data: SendButtonQuickReplyRequest):
             token = create_callback_payload({**(webhook or {}), "reaction": reaction or (webhook.get("reaction") if webhook else None)})
             btn_id = f"cb={token}"
         buttons.append({"type": "quick_reply", "buttonText": format_text(btn.get("text", btn.get("buttonText", f"Button {i}"))), "id": btn_id})
+    if is_dry_run():
+        return dry_run_response("Quick reply message sent.")
     res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)
     return sent_response(res, "Quick reply message sent.")
 
@@ -175,6 +184,8 @@ async def send_url(data: SendButtonUrlRequest):
     options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     buttons = [{"type": "url", "url": data.url, "text": data.button_text or "Acessar", "buttonText": data.button_text or "Acessar"}]
+    if is_dry_run():
+        return dry_run_response("URL button message sent.")
     res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)
     return sent_response(res, "URL button message sent.")
 
@@ -186,5 +197,7 @@ async def send_call(data: SendButtonCallRequest):
     options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     buttons = [{"type": "call", "phoneNumber": data.callPhone, "text": data.button_text or "Ligar", "buttonText": data.button_text or "Ligar"}]
+    if is_dry_run():
+        return dry_run_response("Call button message sent.")
     res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)
     return sent_response(res, "Call button message sent.")

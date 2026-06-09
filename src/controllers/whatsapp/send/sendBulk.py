@@ -7,6 +7,7 @@ from src.utils.decorators import require_whatsapp, handle_errors
 from src.utils.formatter import format_text
 from src.utils.quote import build_send_options
 from src.utils.time import now_ts
+from src.utils.dry_run import is_dry_run
 from src.utils.logger import logger
 
 
@@ -16,6 +17,10 @@ async def send_bulk(data: BulkSendTextRequest):
     if not data.phones:
         from fastapi import HTTPException
         raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'phones' cannot be empty."})
+
+    if is_dry_run():
+        results = [{"phone": p, "success": True, "dryRun": True, "messageId": None, "timestamp": now_ts()} for p in data.phones]
+        return {"success": True, "dryRun": True, "sent": len(results), "failed": 0, "results": results}
 
     formatted = format_text(data.message)
     results = []

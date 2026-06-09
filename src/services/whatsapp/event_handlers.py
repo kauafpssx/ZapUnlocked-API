@@ -583,15 +583,29 @@ async def _handle_meta_ai_response(message, parsed: dict) -> None:
 
     push_chunk(payload)
 
-    await _fire("ai.response", payload)
+    # Debounce: if streaming edits follow immediately, cancel and let last one fire
+    global _meta_ai_edit_debounce_task
+    if _meta_ai_edit_debounce_task and not _meta_ai_edit_debounce_task.done():
+        _meta_ai_edit_debounce_task.cancel()
+
+    async def _delayed_fire_initial(p: dict) -> None:
+        await asyncio.sleep(_meta_ai_edit_debounce_delay)
+        await _fire("ai.response", p)
+
+    _meta_ai_edit_debounce_task = asyncio.create_task(_delayed_fire_initial(payload))
+
+
+_meta_ai_edit_debounce_task: asyncio.Task | None = None
+_meta_ai_edit_debounce_delay: float = 0.6  # seconds of silence before firing webhook
 
 
 async def _handle_meta_ai_edit(proto) -> None:
-    """Handle Meta AI streaming edit (protocolMessage type=14). Extracts full edited text and pushes as chunk."""
+    """Handle Meta AI streaming edit (protocolMessage type=14). Extracts full edited text and pushes as chunk.
+    Debounces the ai.response webhook — only fires after streaming stops for 600ms."""
+    global _meta_ai_edit_debounce_task
     from src.services.whatsapp.ai.response_tracker import push_chunk
 
     try:
-        # editedMessage wraps the actual updated message content
         edited = proto.editedMessage
         text = ""
         has_image = False
@@ -615,7 +629,16 @@ async def _handle_meta_ai_edit(proto) -> None:
         payload = {"text": text, "hasImage": has_image, "messageId": msg_id_str}
         logger.debug(f"[Meta AI edit] text={repr(text[:80])} hasImage={has_image}")
         push_chunk(payload)
-        await _fire("ai.response", payload)
+
+        # Cancel previous debounce timer, reschedule
+        if _meta_ai_edit_debounce_task and not _meta_ai_edit_debounce_task.done():
+            _meta_ai_edit_debounce_task.cancel()
+
+        async def _delayed_fire(p: dict) -> None:
+            await asyncio.sleep(_meta_ai_edit_debounce_delay)
+            await _fire("ai.response", p)
+
+        _meta_ai_edit_debounce_task = asyncio.create_task(_delayed_fire(payload))
     except Exception as e:
         logger.debug(f"_handle_meta_ai_edit failed: {e}")
 

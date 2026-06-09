@@ -7,6 +7,7 @@ from src.services.media.queue import task_queue
 from src.services.media.resolver import resolve_media
 from src.services.media import upload_tracker
 from src.utils.logger import logger
+from src.utils.dry_run import is_dry_run, dry_run_media_response
 import json
 from src.utils.quote import build_send_options
 
@@ -40,5 +41,7 @@ async def send_image(
             await upload_tracker.release(size)
             cleanup(path)
 
+    if is_dry_run():
+        return dry_run_media_response("Image sent successfully.")
     await task_queue.enqueue(process_task())
     return {"success": True, "message": "Image sent successfully."}
