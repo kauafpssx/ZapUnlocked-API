@@ -2,6 +2,9 @@ from fastapi import APIRouter, Depends, UploadFile, File
 from src.middleware.auth import auth
 from src.controllers.whatsapp.management.fetchMessages import fetch_messages
 from src.controllers.whatsapp.management.getRecentChats import get_recent_chats
+from src.controllers.whatsapp.management.chatsController import list_chats, get_chat_messages
+from src.controllers.whatsapp.management.contactsController import get_contact
+from src.controllers.whatsapp.management.groupsController import list_groups
 from src.controllers.system.clearStorage import clear_storage
 from src.controllers.whatsapp.management.databaseController import manual_cleanup, update_config, get_status
 from src.controllers.system.exportImportController import export_config, import_config
@@ -10,6 +13,12 @@ router = APIRouter(dependencies=[Depends(auth)])
 
 router.post("/fetch_messages")(fetch_messages)
 router.post("/recent_contacts")(get_recent_chats)
+
+# Chats & Contacts
+router.get("/chats")(list_chats)
+router.get("/chats/{phone}/messages")(get_chat_messages)
+router.get("/contacts/{phone}")(get_contact)
+router.get("/groups")(list_groups)
 router.delete("/cleanup")(clear_storage)
 
 # Database Management
