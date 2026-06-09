@@ -29,7 +29,7 @@ async def dispatch_event(event_type: str, data: dict) -> None:
         from src.services.stats import increment, increment_webhook
         for wh in webhooks:
             asyncio.create_task(
-                trigger_webhook(wh, context, default_payload=default_payload)
+                trigger_webhook(wh, context, default_payload=default_payload, _event=event_type)
             )
             increment_webhook(wh.get("name", "unknown"))
 
