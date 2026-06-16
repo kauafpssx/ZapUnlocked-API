@@ -256,7 +256,7 @@
                 "value": "{{API_KEY}}"
               }
             ],
-            "description": "Get Instance Device.\n\nReturn device data (Device, RawAgent, Integrator, etc)."
+            "description": "Get Instance Device."
           }
         },
         {
@@ -279,7 +279,7 @@
                 "value": "{{API_KEY}}"
               }
             ],
-            "description": "Get Instance Me.\n\nReturn instance profile data (phone, jid, PushName, etc)."
+            "description": "Get Instance Me."
           }
         },
         {
@@ -575,7 +575,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "description": "Get Phone Pair Code.\n\nPath parameters: `phone`\n\nGenerate a pairing code to connect a number without QR Code.\nEnter the code directly in WhatsApp (Linked Devices > Link with phone number).\n\nRequires client to be awaiting connection (no active session)."
+                "description": "Get Phone Pair Code.\n\nPath parameters: `phone`"
               }
             }
           ]
@@ -1092,7 +1092,7 @@
                 },
                 {
                   "key": "offset",
-                  "value": "",
+                  "value": "0",
                   "description": "Skip first N matching lines"
                 }
               ]
@@ -1217,7 +1217,7 @@
                     },
                     {
                       "key": "offset",
-                      "value": "",
+                      "value": "0",
                       "description": ""
                     }
                   ]
@@ -2415,6 +2415,217 @@
       ]
     },
     {
+      "name": "Sessions",
+      "item": [
+        {
+          "name": "List Sessions Handler",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/sessions",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "sessions"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}\n    // \"name\": \"My Session\", | auto-generates if omitted\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Lists all registered WhatsApp sessions and their active/inactive status.\n\nEach session represents an independent WhatsApp connection with its own authentication state and database.\n\nResponse: `{\"success\": true, \"sessions\": [{\"id\": \"1\", \"name\": \"Principal\", \"created_at\": \"...\", \"active\": true}]}`"
+          }
+        },
+        {
+          "name": "Create Session Handler",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/sessions",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "sessions"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}\n    // \"name\": \"My Session\", | auto-generates if omitted\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Creates a new WhatsApp session. A session is an independent connection with its own QR code and authentication.\n\nOptional body:\n- `name` — display name for the session (auto-generated if omitted)\n\nAfter creation, use `POST /sessions/{id}/connect` to start the QR pairing process.\n\nResponse: `{\"success\": true, \"session\": {\"id\": \"...\", \"name\": \"...\", \"created_at\": \"...\", \"active\": true}}`"
+          }
+        },
+        {
+          "name": "Delete Session Handler",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{BASE_URL}}/sessions/:session_id",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "sessions",
+                ":session_id"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Deactivates/deletes a WhatsApp session. The session is soft-deleted (marked as inactive), preserving its data for potential reactivation.\n\nPath parameters:\n- `session_id` — the session ID to deactivate\n\nResponse: `{\"success\": true, \"message\": \"Session '...' deactivated.\"}`"
+          }
+        },
+        {
+          "name": "Connect Session Handler",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/sessions/:session_id/connect",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "sessions",
+                ":session_id",
+                "connect"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Starts the connection process for a session, initiating QR code generation and WhatsApp pairing.\n\nPath parameters:\n- `session_id` — the session ID to connect\n\nThe session must have been created first via POST /sessions. After calling this endpoint, use GET /qr or GET /sessions/{id}/status to retrieve the pairing QR code.\n\nResponse: `{\"success\": true, \"message\": \"Session '...' connecting...\"}`"
+          }
+        },
+        {
+          "name": "Disconnect Session Handler",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/sessions/:session_id/disconnect",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "sessions",
+                ":session_id",
+                "disconnect"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Disconnects an active WhatsApp session. The session is gracefully disconnected from WhatsApp but remains registered.\n\nPath parameters:\n- `session_id` — the session ID to disconnect\n\nResponse: `{\"success\": true, \"message\": \"Session '...' disconnected.\"}`"
+          }
+        },
+        {
+          "name": "Rename Session Handler",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{BASE_URL}}/sessions/:session_id/rename",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "sessions",
+                ":session_id",
+                "rename"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Renamed Session\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Renames an existing session.\n\nPath parameters:\n- `session_id` — the session ID to rename\n\nRequired body: `{\"name\": \"New Name\"}`\n\nResponse: `{\"success\": true, \"session\": {\"id\": \"...\", \"name\": \"New Name\", ...}}`"
+          }
+        },
+        {
+          "name": "Session Status Handler",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/sessions/:session_id/status",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "sessions",
+                ":session_id",
+                "status"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Returns the current connection status of a session.\n\nPath parameters:\n- `session_id` — the session ID to check\n\nShows whether the session is connected to WhatsApp and if a QR code is available for pairing.\n\nResponse: `{\"success\": true, \"sessionId\": \"...\", \"name\": \"...\", \"connected\": true/false, \"hasQr\": true/false}`"
+          }
+        }
+      ]
+    },
+    {
       "name": "Settings",
       "item": [
         {
@@ -3184,7 +3395,7 @@
                   "query": [
                     {
                       "key": "gc",
-                      "value": "",
+                      "value": "false",
                       "description": ""
                     }
                   ]
@@ -3241,7 +3452,7 @@
                     "value": "{{API_KEY}}"
                   }
                 ],
-                "description": "Returns data usage statistics for the current WhatsApp session, including bytes sent and received."
+                "description": "Scans the data directory and returns disk usage for all sessions.\n\nRecursively traverses all session folders (e.g. `1/`, `2/`, `3/`) and their subfolders, calculating total size and file count.\n\nResponse:\n`{\"success\": true, \"totalSizeBytes\": N, \"totalSizeFormatted\": \"...\", \"fileCount\": N, \"structure\": [...]}`"
               }
             }
           ]
@@ -3753,15 +3964,6 @@
                 "value": "{{API_KEY}}"
               }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"active\": false\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
             "description": "Toggle Webhook.\n\nPath parameters: `name`\nRequest body: `WebhookToggle` schema"
           }
         }
