@@ -1,7 +1,4 @@
-"""Tests for the IP rules service (blacklist/whitelist)."""
-
-from pathlib import Path
-from unittest.mock import patch
+"""Tests for the IP rules service (blacklist/whitelist, SQLite-backed)."""
 
 import pytest
 
@@ -15,13 +12,8 @@ from src.services.ip_rules_service import (
 
 
 @pytest.fixture(autouse=True)
-def temp_rules_file(tmp_path: Path):
-    """Redirect RULES_FILE to a temp path and seed with defaults."""
-    dummy_file = tmp_path / "ip_rules.json"
-    dummy_file.parent.mkdir(parents=True, exist_ok=True)
-    dummy_file.write_text('{"whitelist": [], "blacklist": []}')
-    with patch("src.services.ip_rules_service.RULES_FILE", dummy_file):
-        yield
+def use_temp_db(temp_db):
+    pass
 
 
 class TestGetIpRules:

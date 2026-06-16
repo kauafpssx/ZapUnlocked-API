@@ -33,7 +33,7 @@ class TestActivateQR:
             with patch("src.services.whatsapp.client.state.set_qr_generation_active") as mock_set:
                 from src.services.whatsapp.client import activate_qr
                 activate_qr()
-                mock_set.assert_called_once_with(True)
+                mock_set.assert_called_once_with(True, None)
 
     def test_restarts_bot_if_qr_expired(self):
         mock_loop = MagicMock()
@@ -45,8 +45,8 @@ class TestActivateQR:
                         with patch("src.services.whatsapp.client.state.set_keep_qr_active_on_restart") as mock_keep:
                             from src.services.whatsapp.client import activate_qr
                             activate_qr()
-                            mock_set.assert_called_once_with(True)
-                            mock_keep.assert_called_once_with(True)
+                            mock_set.assert_called_once_with(True, None)
+                            mock_keep.assert_called_once_with(True, None)
 
     def test_does_not_restart_if_qr_active(self):
         with patch("src.services.whatsapp.client.state.get_is_ready", return_value=False):
@@ -270,7 +270,7 @@ class TestLogout:
         with patch("src.services.whatsapp.client.state.get_client", return_value=mock_client):
             with patch("src.services.whatsapp.client.state.reset_for_logout"):
                 with patch("src.services.whatsapp.client.state.get_main_loop", return_value=None):
-                    with patch("src.services.whatsapp.client.AUTH_DIR", str(tmp_path)):
+                    with patch("src.services.whatsapp.client.get_auth_dir", return_value=str(tmp_path)):
                         with patch("src.services.whatsapp.storage.clear_all_data", new_callable=AsyncMock):
                             from src.services.whatsapp.client import logout
                             await logout(keep_data=True)

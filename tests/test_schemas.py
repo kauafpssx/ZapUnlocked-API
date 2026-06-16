@@ -33,7 +33,6 @@ class TestSendMessageRequest:
         req = SendMessageRequest(phone="5511999999999", message="Hello")
         assert req.phone == "5511999999999"
         assert req.message == "Hello"
-        assert req.reply is None
 
     def test_missing_phone_raises(self):
         with pytest.raises(ValidationError):
@@ -42,10 +41,6 @@ class TestSendMessageRequest:
     def test_missing_message_raises(self):
         with pytest.raises(ValidationError):
             SendMessageRequest(phone="5511999999999")
-
-    def test_with_reply(self):
-        req = SendMessageRequest(phone="5511999999999", message="Hi", reply="abc123")
-        assert req.reply == "abc123"
 
 
 class TestSendMediaRequest:

@@ -103,7 +103,7 @@ class TestDispatchMessageEvent:
         args, _ = mock_dispatch_event.call_args
         assert args[0] == "message.image"
         assert args[1]["caption"] == "Photo!"
-        assert args[1]["mimetype"] == "image/jpeg"
+        assert args[1]["mimeType"] == "image/jpeg"
 
     async def test_video_message(self, mock_dispatch_event):
         msg = _make_msg(

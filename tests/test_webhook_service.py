@@ -7,6 +7,11 @@ import pytest
 from src.services.webhooks.service import trigger_webhook
 
 
+@pytest.fixture(autouse=True)
+def use_temp_db(temp_db):
+    pass
+
+
 class TestTriggerWebhook:
     CONFIG = {
         "url": "https://example.com/hook",

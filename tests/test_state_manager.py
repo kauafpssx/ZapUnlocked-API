@@ -12,20 +12,21 @@ from src.services.whatsapp.state_manager import WhatsAppState
 
 @pytest.fixture(autouse=True)
 def reset_state():
-    """Reset the singleton state before and after each test."""
-    state = WhatsAppState()
-    state.reset()
+    """Clear per-session state registry before and after each test."""
+    import src.services.whatsapp.state_manager as sm
+    sm._states.clear()
     yield
-    state.reset()
+    sm._states.clear()
 
 
 class TestWhatsAppStateSingleton:
-    """Verify singleton behavior."""
+    """Verify per-session state behavior."""
 
     def test_same_instance(self):
-        """Multiple instantiations return the same object."""
-        s1 = WhatsAppState()
-        s2 = WhatsAppState()
+        """get_state() returns same object for same session_id."""
+        from src.services.whatsapp.state_manager import get_state
+        s1 = get_state("test_session")
+        s2 = get_state("test_session")
         assert s1 is s2
 
     def test_reset_clears_all_state(self):

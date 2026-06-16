@@ -10,8 +10,8 @@ from src.utils.decorators import require_whatsapp, handle_errors
 
 @pytest.fixture(autouse=True)
 def mock_get_is_ready():
-    """Patch get_is_ready which is imported lazily inside require_whatsapp."""
-    with patch("src.services.whatsapp.client.get_is_ready") as mock:
+    """Patch get_is_ready at the state module level (where decorators.py reads it)."""
+    with patch("src.services.whatsapp.state.get_is_ready") as mock:
         yield mock
 
 
@@ -60,7 +60,7 @@ class TestHandleErrors:
         with pytest.raises(HTTPException) as exc:
             await decorated()
         assert exc.value.status_code == 500
-        assert "boom" in str(exc.value.detail)
+        assert "INTERNAL_ERROR" in str(exc.value.detail)
 
     async def test_custom_action_name_in_log(self):
         mock_fn = AsyncMock(side_effect=RuntimeError("fail"))

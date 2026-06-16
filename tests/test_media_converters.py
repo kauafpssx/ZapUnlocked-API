@@ -132,44 +132,44 @@ class TestAudioConverter:
         input_file.write_text("fake audio")
         mock_result = MagicMock()
         mock_result.returncode = 0
-        with patch("src.services.media.audioConverter.subprocess.run", return_value=mock_result):
-            with patch("src.services.media.audioConverter.get_ffmpeg_path", return_value="/usr/bin/ffmpeg"):
-                from src.services.media.audioConverter import convert_audio
-                result_path, duration = await convert_audio(str(input_file), "ogg")
-                assert ".ogg" in result_path
+        mock_result.stderr = b""
+        with patch("src.services.media.audioConverter.run_ffmpeg_sync", return_value=mock_result):
+            from src.services.media.audioConverter import convert_audio
+            result_path, duration = await convert_audio(str(input_file), "ogg")
+            assert ".ogg" in result_path
 
     async def test_convert_to_mp3_success(self, tmp_path):
         input_file = tmp_path / "test.wav"
         input_file.write_text("fake audio")
         mock_result = MagicMock()
         mock_result.returncode = 0
-        with patch("src.services.media.audioConverter.subprocess.run", return_value=mock_result):
-            with patch("src.services.media.audioConverter.get_ffmpeg_path", return_value="/usr/bin/ffmpeg"):
-                from src.services.media.audioConverter import convert_audio
-                result_path, duration = await convert_audio(str(input_file), "mp3")
-                assert ".mp3" in result_path
+        mock_result.stderr = b""
+        with patch("src.services.media.audioConverter.run_ffmpeg_sync", return_value=mock_result):
+            from src.services.media.audioConverter import convert_audio
+            result_path, duration = await convert_audio(str(input_file), "mp3")
+            assert ".mp3" in result_path
 
     async def test_convert_to_wav_success(self, tmp_path):
         input_file = tmp_path / "test.ogg"
         input_file.write_text("fake audio")
         mock_result = MagicMock()
         mock_result.returncode = 0
-        with patch("src.services.media.audioConverter.subprocess.run", return_value=mock_result):
-            with patch("src.services.media.audioConverter.get_ffmpeg_path", return_value="/usr/bin/ffmpeg"):
-                from src.services.media.audioConverter import convert_audio
-                result_path, duration = await convert_audio(str(input_file), "wav")
-                assert ".wav" in result_path
+        mock_result.stderr = b""
+        with patch("src.services.media.audioConverter.run_ffmpeg_sync", return_value=mock_result):
+            from src.services.media.audioConverter import convert_audio
+            result_path, duration = await convert_audio(str(input_file), "wav")
+            assert ".wav" in result_path
 
     async def test_convert_to_m4a_success(self, tmp_path):
         input_file = tmp_path / "test.ogg"
         input_file.write_text("fake audio")
         mock_result = MagicMock()
         mock_result.returncode = 0
-        with patch("src.services.media.audioConverter.subprocess.run", return_value=mock_result):
-            with patch("src.services.media.audioConverter.get_ffmpeg_path", return_value="/usr/bin/ffmpeg"):
-                from src.services.media.audioConverter import convert_audio
-                result_path, duration = await convert_audio(str(input_file), "m4a")
-                assert ".m4a" in result_path
+        mock_result.stderr = b""
+        with patch("src.services.media.audioConverter.run_ffmpeg_sync", return_value=mock_result):
+            from src.services.media.audioConverter import convert_audio
+            result_path, duration = await convert_audio(str(input_file), "m4a")
+            assert ".m4a" in result_path
 
     async def test_invalid_format_raises(self, tmp_path):
         input_file = tmp_path / "test.ogg"
@@ -183,31 +183,30 @@ class TestAudioConverter:
         input_file.write_text("fake")
         mock_result = MagicMock()
         mock_result.returncode = 1
-        mock_result.stderr = "encode error"
-        with patch("src.services.media.audioConverter.subprocess.run", return_value=mock_result):
-            with patch("src.services.media.audioConverter.get_ffmpeg_path", return_value="/usr/bin/ffmpeg"):
-                from src.services.media.audioConverter import convert_audio
-                with pytest.raises(Exception, match="encode error"):
-                    await convert_audio(str(input_file), "ogg")
+        mock_result.stderr = b"encode error"
+        with patch("src.services.media.audioConverter.run_ffmpeg_sync", return_value=mock_result):
+            from src.services.media.audioConverter import convert_audio
+            with pytest.raises(Exception, match="encode error"):
+                await convert_audio(str(input_file), "ogg")
 
     async def test_duration_extraction(self, tmp_path):
         input_file = tmp_path / "test.ogg"
-        (tmp_path / "test.ogg").write_text("fake audio")
+        input_file.write_text("fake audio")
         output_file = tmp_path / "test.ogg"
 
-        def run_side_effect(cmd, *args, **kwargs):
+        def run_side_effect(cmd):
             result = MagicMock()
-            if "-i" in cmd and str(output_file) in cmd:
+            if len(cmd) == 3:  # probe: ["ffmpeg", "-i", filepath]
                 result.returncode = 0
-                result.stderr = "Duration: 00:01:30.50, start: 0.000000, bitrate: 64 kb/s"
+                result.stderr = b"Duration: 00:01:30.50, start: 0.000000, bitrate: 64 kb/s"
             else:
                 result.returncode = 0
+                result.stderr = b""
             return result
 
-        with patch("src.services.media.audioConverter.subprocess.run", side_effect=run_side_effect):
-            with patch("src.services.media.audioConverter.get_ffmpeg_path", return_value="/usr/bin/ffmpeg"):
-                from src.services.media.audioConverter import convert_audio
-                result_path, duration = await convert_audio(str(input_file), "ogg")
-                assert duration == 90
+        with patch("src.services.media.audioConverter.run_ffmpeg_sync", side_effect=run_side_effect):
+            from src.services.media.audioConverter import convert_audio
+            result_path, duration = await convert_audio(str(input_file), "ogg")
+            assert duration == 90
 
 

@@ -17,6 +17,10 @@ class TestUtcNow:
 
 class TestDispatchEvent:
     @pytest.fixture(autouse=True)
+    def use_temp_db(self, temp_db):
+        pass
+
+    @pytest.fixture(autouse=True)
     def mock_dependencies(self):
         """Mock imports inside dispatch_event body."""
         mock_registry = MagicMock()

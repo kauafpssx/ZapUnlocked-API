@@ -38,7 +38,7 @@ class TestHandleMessage:
             with patch("src.handlers.callback.parse_message", return_value=parsed):
                 with patch("src.handlers.callback.dispatch_message_event") as mock_dispatch:
                     await handleMessage(None, msg)
-                    mock_dispatch.assert_called_once_with(msg, "5511999999999", parsed)
+                    mock_dispatch.assert_called_once_with(msg, "5511999999999", parsed, "1")
 
     async def test_callback_in_button_response(self, msg, parsed):
         parsed["buttonResponse"] = "cb=valid_token"

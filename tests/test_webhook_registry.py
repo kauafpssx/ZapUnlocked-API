@@ -1,7 +1,4 @@
-"""Tests for the webhook registry (file-based CRUD)."""
-
-from pathlib import Path
-from unittest.mock import patch
+"""Tests for the webhook registry (SQLite-backed CRUD)."""
 
 import pytest
 
@@ -18,11 +15,8 @@ from src.services.webhooks.registry import (
 
 
 @pytest.fixture(autouse=True)
-def temp_webhook_dir(tmp_path: Path):
-    dummy_dir = tmp_path / "webhooks"
-    dummy_dir.mkdir(parents=True, exist_ok=True)
-    with patch("src.services.webhooks.registry.WEBHOOKS_DIR", dummy_dir):
-        yield dummy_dir
+def use_temp_db(temp_db):
+    pass
 
 
 class TestSlugify:

@@ -18,4 +18,16 @@ if os.path.isdir(_libmagic_dir):
 def reset_whatsapp_state():
     """Reset the state singleton after each test to prevent cross-test leakage."""
     yield
-    state.reset_for_logout()
+    state.reset_for_logout("1")
+
+
+@pytest.fixture
+def temp_db(tmp_path, monkeypatch):
+    """Redirect DB_PATH to a temp file and initialise a fresh schema for each test."""
+    import src.utils.db as db_module
+    from src.utils.db import init_db
+    monkeypatch.setattr(db_module, "DB_PATH", tmp_path / "test.db")
+    db_module._local.__dict__.clear()
+    init_db()
+    yield
+    db_module._local.__dict__.clear()

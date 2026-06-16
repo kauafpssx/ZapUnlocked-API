@@ -28,7 +28,7 @@ def _get_fire_event(mock_fire):
 @pytest.fixture(autouse=True)
 def mock_run_in_loop():
     with patch("src.services.whatsapp.event_handlers._run_in_loop") as mock:
-        mock.side_effect = lambda fn: fn()
+        mock.side_effect = lambda fn, sid="1": fn()
         yield mock
 
 
@@ -60,7 +60,7 @@ class TestQrHandler:
         c = MagicMock()
         _on_qr(c, b"qr_code_data_123")
 
-        mock_state.set_current_qr.assert_called_once_with("qr_code_data_123")
+        mock_state.set_current_qr.assert_called_once_with("qr_code_data_123", "1")
         mock_state.set_qr_last_generated_at.assert_called_once()
         mock_fire.assert_called_once()
         assert _get_fire_event(mock_fire) == "connection.qr_ready"
@@ -75,7 +75,7 @@ class TestQrHandler:
     def test_on_qr_logs_url_once(self, mock_state, mock_fire, mock_build_qr_url):
         mock_state.get_qr_url_logged.return_value = False
         _on_qr(MagicMock(), b"data")
-        mock_state.set_qr_url_logged.assert_called_once_with(True)
+        mock_state.set_qr_url_logged.assert_called_once_with(True, "1")
 
     def test_on_qr_skipped_when_generation_inactive(self, mock_state, mock_fire):
         mock_state.get_qr_generation_active.return_value = False
@@ -99,7 +99,7 @@ class TestConnectionHandlers:
 
     def test_on_pair_code_not_connected_sets_code(self, mock_state, mock_fire):
         _on_pair_code(MagicMock(), "ABCD-1234", False)
-        mock_state.set_current_pair_code.assert_called_once_with("ABCD-1234")
+        mock_state.set_current_pair_code.assert_called_once_with("ABCD-1234", "1")
         mock_fire.assert_called_once()
         assert _get_fire_event(mock_fire) == "connection.pair_code"
 
