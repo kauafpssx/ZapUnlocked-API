@@ -56,6 +56,17 @@ Se o webhook tiver um `body` personalizado, os placeholders (`{{from}}`, `{{text
 
 Use `"events": ["*"]` para receber todos, ou especifique uma lista.
 
+### Campos de Mídia
+
+Eventos de mídia (`message.image`, `message.video`, `message.audio`, `message.document`, `message.sticker`) incluem campos extras quando `RECEIVE_MEDIA_ENABLED=true` no `.env`:
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `mediaBase64` | `string \| null` | Arquivo em Base64. `null` quando desabilitado ou erro. |
+| `mimeType` | `string \| null` | Tipo MIME (ex: `"image/jpeg"`, `"audio/ogg; codecs=opus"`). |
+| `fileName` | `string \| null` | Nome do arquivo. Documentos preservam o nome original. |
+| `mediaTooLarge` | `boolean` | `true` quando o arquivo excede `RECEIVE_MEDIA_MAX_SIZE_MB`. |
+
 <AccordionGroup>
 
 <Accordion title="message.text — Mensagem de texto recebida" icon="message">
@@ -396,7 +407,10 @@ Ocorre quando a chave de sessão está desatualizada. Peça ao contato para reen
   "timestamp": "2026-05-28T02:00:00Z",
   "data": {
     "from": "5511999999999",
-    "messageId": "3EB0C4A1234567890"
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "messageIds": ["3EB0C4A1234567890"],
+    "type": 1,
+    "timestamp": 1704067200
   }
 }
 ```
@@ -409,12 +423,42 @@ Ocorre quando a chave de sessão está desatualizada. Peça ao contato para reen
   "timestamp": "2026-05-28T02:00:00Z",
   "data": {
     "from": "5511999999999",
-    "messageId": "3EB0C4A1234567890",
-    "receiptType": 2
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "messageIds": ["3EB0C4A1234567890"],
+    "type": 2,
+    "timestamp": 1704067200
   }
 }
 ```
-`receiptType`: `1` = entregue, `2/3` = lido em grupo, `5+` = outros.
+| `type` | Significado |
+|--------|-------------|
+| `1` | Entregue → dispara `message.delivered` |
+| `2` | Confirmação do servidor |
+| `3` | Lido pelo servidor |
+| `4` | Lido pelo destinatário → dispara `message.read` |
+| `5` | Reproduzido (áudio/vídeo) |
+</Accordion>
+
+<Accordion title="message.contacts — Múltiplos contatos recebidos" icon="address-card">
+```json
+{
+  "event": "message.contacts",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "John Doe",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "displayName": "2 contacts",
+    "count": 2,
+    "contacts": [
+      {"displayName": "Maria Souza", "vcard": "BEGIN:VCARD\n..."},
+      {"displayName": "João Silva", "vcard": "BEGIN:VCARD\n..."}
+    ]
+  }
+}
+```
 </Accordion>
 
 <Accordion title="connection.connected — WhatsApp conectado" icon="circle-check">
@@ -693,157 +737,6 @@ Outra instância assumiu a conexão.
 `reason` pode ser `"timeout"`, `"rejected"`, `"busy"`, etc.
 </Accordion>
 
-<Accordion title="contact.picture_change — Foto de perfil alterada" icon="image-portrait">
-```json
-{
-  "event": "contact.picture_change",
-  "timestamp": "2026-05-28T02:00:00Z",
-  "data": {
-    "from": "5511999999999",
-    "fromJid": "5511999999999@s.whatsapp.net",
-    "author": "5511999999999@s.whatsapp.net",
-    "action": "changed"
-  }
-}
-```
-`action` pode ser `"changed"` ou `"removed"`.
-</Accordion>
-
-<Accordion title="contact.identity_change — Chave de segurança alterada" icon="shield-halved">
-```json
-{
-  "event": "contact.identity_change",
-  "timestamp": "2026-05-28T02:00:00Z",
-  "data": {
-    "from": "5511999999999",
-    "fromJid": "5511999999999@s.whatsapp.net",
-    "implicit": false,
-    "timestamp": 1704067200
-  }
-}
-```
-</Accordion>
-
-<Accordion title="message.contacts — Múltiplos contatos recebidos" icon="address-card">
-```json
-{
-  "event": "message.contacts",
-  "timestamp": "2026-05-28T02:00:00Z",
-  "data": {
-    "messageId": "3EB0C4A1234567890",
-    "from": "5511999999999",
-    "fromName": "John Doe",
-    "fromJid": "5511999999999@s.whatsapp.net",
-    "isGroup": false,
-    "displayName": "2 contacts",
-    "count": 2,
-    "contacts": [
-      {"displayName": "Maria Souza", "vcard": "BEGIN:VCARD\n..."},
-      {"displayName": "João Silva", "vcard": "BEGIN:VCARD\n..."}
-    ]
-  }
-}
-```
-</Accordion>
-
-<Accordion title="message.receipt — Outras confirmações de entrega" icon="check-double">
-```json
-{
-  "event": "message.receipt",
-  "timestamp": "2026-05-28T02:00:00Z",
-  "data": {
-    "from": "5511999999999",
-    "fromJid": "5511999999999@s.whatsapp.net",
-    "messageIds": ["3EB0C4A1234567890"],
-    "type": 2,
-    "timestamp": 1704067200
-  }
-}
-```
-| `type` | Significado |
-|--------|-------------|
-| `1` | Entregue → dispara `message.delivered` |
-| `2` | Confirmação do servidor |
-| `3` | Lido pelo servidor |
-| `4` | Lido pelo destinatário → dispara `message.read` |
-| `5` | Reproduzido (áudio/vídeo) |
-</Accordion>
-
-<Accordion title="connection.pair_status — Status do pareamento" icon="mobile-screen-button">
-```json
-{
-  "event": "connection.pair_status",
-  "timestamp": "2026-05-28T02:00:00Z",
-  "data": {
-    "jid": "5511999999999@s.whatsapp.net",
-    "businessName": "Meu Negócio",
-    "platform": "WEB",
-    "status": "OK",
-    "error": ""
-  }
-}
-```
-</Accordion>
-
-<Accordion title="connection.connect_failure — Falha de conexão" icon="triangle-exclamation">
-```json
-{
-  "event": "connection.connect_failure",
-  "timestamp": "2026-05-28T02:00:00Z",
-  "data": {
-    "reason": "ERROR_CONNECT",
-    "message": "Connection timed out"
-  }
-}
-```
-</Accordion>
-
-<Accordion title="connection.stream_error — Erro de stream" icon="bolt">
-```json
-{
-  "event": "connection.stream_error",
-  "timestamp": "2026-05-28T02:00:00Z",
-  "data": {
-    "code": "STREAM_ERR"
-  }
-}
-```
-</Accordion>
-
-<Accordion title="connection.temporary_ban — Banimento temporário" icon="ban">
-```json
-{
-  "event": "connection.temporary_ban",
-  "timestamp": "2026-05-28T02:00:00Z",
-  "data": {
-    "code": "BAN_CODE",
-    "expire": 1704153600
-  }
-}
-```
-</Accordion>
-
-<Accordion title="connection.client_outdated — Cliente desatualizado" icon="rotate">
-```json
-{
-  "event": "connection.client_outdated",
-  "timestamp": "2026-05-28T02:00:00Z",
-  "data": {}
-}
-```
-</Accordion>
-
-<Accordion title="connection.stream_replaced — Sessão substituída" icon="arrows-rotate">
-```json
-{
-  "event": "connection.stream_replaced",
-  "timestamp": "2026-05-28T02:00:00Z",
-  "data": {}
-}
-```
-Outra instância assumiu a conexão.
-</Accordion>
-
 <Accordion title="media.cleanup.completed — Limpeza de mídia concluída" icon="eraser">
 ```json
 {
@@ -859,6 +752,7 @@ Outra instância assumiu a conexão.
 </Accordion>
 
 <Accordion title="ai.response — Resposta do Meta AI" icon="robot">
+**Resposta de texto** (de `POST /ai/ask`):
 ```json
 {
   "event": "ai.response",
@@ -873,7 +767,29 @@ Outra instância assumiu a conexão.
   }
 }
 ```
-A resposta pode conter texto, imagem ou ambos. Quando `hasImage` é `true`, `imageBase64` ou `imageUrl` estarão presentes. Use o webhook `ai.response` para processar respostas da IA de forma assíncrona.
+**Resposta com imagem** (de `POST /ai/imagine`):
+```json
+{
+  "event": "ai.response",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "text": "What kind of hat is the cat wearing?",
+    "hasImage": true,
+    "imageBase64": "/9j/4AAQSkZJRgAB...",
+    "imageUrl": null,
+    "mimeType": "image/jpeg",
+    "messageId": "3EB0C4A1234567890"
+  }
+}
+```
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `text` | `string` | Texto da resposta. Para `/imagine`, é a legenda da imagem. |
+| `hasImage` | `boolean` | `true` quando Meta AI enviou uma imagem. |
+| `imageBase64` | `string \| null` | Imagem em Base64. Presente quando `hasImage: true`. |
+| `imageUrl` | `string \| null` | URL da imagem salva. Só definido com `META_AI_KEEP_IMAGES=true`. |
+| `mimeType` | `string \| null` | Tipo MIME da imagem (ex: `"image/jpeg"`). |
+| `messageId` | `string` | ID da mensagem de resposta no WhatsApp. |
 </Accordion>
 
 </AccordionGroup>
@@ -897,8 +813,6 @@ Além de `message.sent`, você pode se inscrever em eventos específicos por tip
   }
 }
 ```
-
----
 
 ---
 
