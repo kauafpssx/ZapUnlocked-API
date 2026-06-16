@@ -15,10 +15,23 @@ Retorna informações sobre o volume de dados armazenados, incluindo tamanho do 
 ```json 200 Sucesso
 {
   "success": true,
-  "database_size": "45.2 MB",
-  "media_size": "120.5 MB",
-  "log_size": "8.1 MB",
-  "total": "173.8 MB"
+  "totalSizeBytes": 52428800,
+  "totalSizeFormatted": "50.0 MB",
+  "fileCount": 128,
+  "structure": [
+    {
+      "path": "1/",
+      "sizeBytes": 20971520,
+      "sizeFormatted": "20.0 MB",
+      "files": 45
+    },
+    {
+      "path": "2/",
+      "sizeBytes": 31457280,
+      "sizeFormatted": "30.0 MB",
+      "files": 83
+    }
+  ]
 }
 ```
 

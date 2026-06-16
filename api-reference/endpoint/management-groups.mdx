@@ -15,12 +15,13 @@ Retorna a lista de grupos do WhatsApp que a sessão participa, com metadados com
 ```json 200 Sucesso
 {
   "success": true,
+  "total": 1,
   "groups": [
     {
-      "id": "5511999999999-123456@g.us",
+      "groupId": "5511999999999-123456@g.us",
       "name": "Meu Grupo",
-      "participants": 10,
-      "description": "Grupo de exemplo"
+      "owner": "5511999999999@c.us",
+      "participants": 10
     }
   ]
 }

@@ -8,18 +8,18 @@ api: "POST /sessions/{session_id}/connect"
   Chave de autenticação da API.
 </ParamField>
 
-<ParamField header="session_id" type="string" required>
+<ParamField path="session_id" type="string" required>
   ID da sessão a ser conectada.
 </ParamField>
 
-Inicia o processo de conexão da sessão ao WhatsApp. Se o QR Code for necessário, ele será gerado e poderá ser obtido via `/qr`.
+Inicia o processo de conexão da sessão, gerando QR Code para pareamento.
 
 <ResponseExample>
 
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Session connected."
+  "message": "Session '1' connecting..."
 }
 ```
 

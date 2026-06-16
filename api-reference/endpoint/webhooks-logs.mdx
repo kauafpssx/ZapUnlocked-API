@@ -8,24 +8,26 @@ api: "GET /webhooks/{name}/logs"
   Chave de autenticação da API.
 </ParamField>
 
-<ParamField header="name" type="string" required>
+<ParamField path="name" type="string" required>
   Nome do webhook cadastrado.
 </ParamField>
 
-Retorna o histórico de chamadas de um webhook específico, incluindo status HTTP, payload e resposta.
+Retorna o histórico de delivery de um webhook específico.
 
 <ResponseExample>
 
 ```json 200 Sucesso
 {
   "success": true,
+  "webhook": "my-webhook",
+  "total": 3,
   "logs": [
     {
-      "id": "log_1",
-      "event": "message",
-      "status": 200,
-      "timestamp": "2024-01-01T12:00:00.000Z",
-      "response": "OK"
+      "timestamp": "2026-06-08T23:19:00Z",
+      "event": "message.text",
+      "statusCode": 200,
+      "success": true,
+      "error": null
     }
   ]
 }

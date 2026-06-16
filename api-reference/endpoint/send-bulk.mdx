@@ -41,7 +41,20 @@ Envia mensagens em massa para múltiplos números. O sistema processa a lista se
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Bulk messages sent."
+  "sent": 2,
+  "failed": 0,
+  "results": [
+    {
+      "phone": "5511999999999",
+      "success": true,
+      "error": null
+    },
+    {
+      "phone": "5511888888888",
+      "success": true,
+      "error": null
+    }
+  ]
 }
 ```
 

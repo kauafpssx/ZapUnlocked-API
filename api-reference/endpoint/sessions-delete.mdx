@@ -8,22 +8,18 @@ api: "DELETE /sessions/{session_id}"
   Chave de autenticação da API.
 </ParamField>
 
-<ParamField header="session_id" type="string" required>
-  ID da sessão a ser deletada.
+<ParamField path="session_id" type="string" required>
+  ID da sessão a ser desativada.
 </ParamField>
 
-Remove permanentemente uma sessão WhatsApp e seus dados associados.
-
-<Warning>
-  Esta ação é irreversível. Todos os dados da sessão serão perdidos.
-</Warning>
+Desativa uma sessão WhatsApp. A sessão é marcada como inativa, mas seus dados são preservados.
 
 <ResponseExample>
 
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Session deleted."
+  "message": "Session '1' deactivated."
 }
 ```
 

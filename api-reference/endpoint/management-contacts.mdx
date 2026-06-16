@@ -8,23 +8,22 @@ api: "GET /management/contacts/{phone}"
   Chave de autenticação da API.
 </ParamField>
 
-<ParamField header="phone" type="string" required>
+<ParamField path="phone" type="string" required>
   Número do telefone do contato com código do país (ex: `5511999999999`).
 </ParamField>
 
-Retorna informações detalhadas de um contato específico, como nome, foto e presença no WhatsApp.
+Retorna informações detalhadas de um contato: nome, status e foto de perfil.
 
 <ResponseExample>
 
 ```json 200 Sucesso
 {
   "success": true,
-  "contact": {
-    "id": "5511999999999@c.us",
-    "name": "João",
-    "pushname": "João Silva",
-    "isBusiness": false
-  }
+  "phone": "5511999999999",
+  "jid": "5511999999999@s.whatsapp.net",
+  "name": "João Silva",
+  "status": "Disponível",
+  "profilePictureUrl": "https://pps.whatsapp.net/..."
 }
 ```
 

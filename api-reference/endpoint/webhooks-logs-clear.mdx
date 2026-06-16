@@ -8,18 +8,18 @@ api: "DELETE /webhooks/{name}/logs"
   Chave de autenticação da API.
 </ParamField>
 
-<ParamField header="name" type="string" required>
+<ParamField path="name" type="string" required>
   Nome do webhook cujos logs serão removidos.
 </ParamField>
 
-Remove todo o histórico de logs de um webhook específico.
+Remove todo o histórico de delivery de um webhook específico.
 
 <ResponseExample>
 
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Webhook logs cleared."
+  "message": "Logs cleared for webhook 'my-webhook'."
 }
 ```
 

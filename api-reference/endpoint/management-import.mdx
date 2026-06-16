@@ -23,7 +23,11 @@ Enviar como `multipart/form-data` com o campo `file` contendo o arquivo JSON de 
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Configuration imported successfully."
+  "imported": {
+    "webhooks": 2,
+    "settings": 5,
+    "ipRules": 3
+  }
 }
 ```
 

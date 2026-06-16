@@ -4,29 +4,20 @@ icon: "check"
 api: "GET /status/readiness"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
-
-Verifica se o servidor está pronto para receber requisições. Verifica dependências como banco de dados e conexão WhatsApp.
+Verifica se o servidor está totalmente inicializado e o cliente WhatsApp pronto. Retorna HTTP 200 apenas quando pronto. Útil para Kubernetes, Docker e load balancers.
 
 <ResponseExample>
 
 ```json 200 Sucesso
 {
-  "success": true,
-  "ready": true,
-  "dependencies": {
-    "database": "ok",
-    "whatsapp": "connected"
-  }
+  "ok": true
 }
 ```
 
-```json 401 Não autorizado
+```json 503 Indisponível
 {
-  "error": "Unauthorized",
-  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+  "error": "Service Unavailable",
+  "message": "Server is not ready yet."
 }
 ```
 

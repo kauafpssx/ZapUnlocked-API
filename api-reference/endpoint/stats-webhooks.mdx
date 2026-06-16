@@ -14,13 +14,19 @@ Retorna estatísticas detalhadas dos webhooks, incluindo total de chamadas, falh
 
 ```json 200 Sucesso
 {
-  "success": true,
-  "webhooks": {
-    "total_calls": 500,
-    "success": 480,
-    "failures": 20,
-    "success_rate": 96.0
-  }
+  "total": 3,
+  "webhooks": [
+    {
+      "name": "my-webhook",
+      "fired": 150,
+      "last_fired": "2026-06-08T23:19:00Z"
+    },
+    {
+      "name": "alerts",
+      "fired": 42,
+      "last_fired": "2026-06-08T22:00:00Z"
+    }
+  ]
 }
 ```
 

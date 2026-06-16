@@ -10,38 +10,24 @@ api: "GET /stats"
 
 Retorna estatísticas gerais do servidor.
 
-### Resposta
-
-<ResponseField name="uptime" type="number">
-  Tempo de atividade do servidor em segundos.
-</ResponseField>
-
-<ResponseField name="connected" type="boolean">
-  Indica se a sessão WhatsApp está conectada.
-</ResponseField>
-
-<ResponseField name="messages" type="object">
-  Estatísticas de mensagens processadas.
-</ResponseField>
-
-<ResponseField name="webhooks" type="object">
-  Estatísticas dos webhooks cadastrados.
-</ResponseField>
-
 <ResponseExample>
 
 ```json 200 Sucesso
 {
-  "success": true,
-  "uptime": 3600,
-  "connected": true,
+  "uptime": {
+    "seconds": 3600,
+    "formatted": "1h 0m 0s"
+  },
+  "connected": {
+    "duration": 300,
+    "formatted": "5m 0s"
+  },
   "messages": {
-    "sent": 150,
-    "received": 200
+    "sent": 42,
+    "received": 128
   },
   "webhooks": {
-    "total": 3,
-    "active": 3
+    "fired": 7
   }
 }
 ```

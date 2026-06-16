@@ -45,14 +45,21 @@ Retorna os logs do sistema com suporte a filtros por data, nível e busca.
 ```json 200 Sucesso
 {
   "success": true,
+  "filters": {
+    "date": "2026-06-08",
+    "level": "info",
+    "search": ""
+  },
+  "total": 1,
+  "returned": 1,
+  "offset": 0,
   "logs": [
     {
-      "timestamp": "2024-01-01T12:00:00.000Z",
+      "timestamp": "2026-06-08T12:00:00.000Z",
       "level": "info",
       "message": "Servidor iniciado."
     }
-  ],
-  "total": 1
+  ]
 }
 ```
 

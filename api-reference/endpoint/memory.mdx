@@ -8,29 +8,22 @@ api: "GET /status/memory"
   Chave de autenticação da API.
 </ParamField>
 
-Retorna estatísticas de memória do processo e do sistema.
+Retorna estatísticas de memória do heap V8/Node.js. Útil para monitoramento de recursos.
 
-<ParamField query="gc" type="string">
-  Passe `gc=true` para forçar a coleta de lixo do Python antes de retornar as métricas.
+<ParamField query="gc" type="boolean">
+  Se `true`, força a coleta de lixo (garbage collection) antes de retornar as métricas.
 </ParamField>
 
 <ResponseExample>
 
 ```json 200 Sucesso
 {
-  "process": {
-    "rss": "48.32 MB",
-    "vms": "312.10 MB"
-  },
-  "whatsapp": {
-    "contactsInMemory": 0
-  },
-  "system": {
-    "total": "256.00 MB",
-    "free": "58.44 MB",
-    "usagePercent": "77.2%"
-  },
-  "uptime": "2d 3h 45m 12s"
+  "success": true,
+  "rss": 52428800,
+  "heapTotal": 33554432,
+  "heapUsed": 18874368,
+  "external": 1048576,
+  "arrayBuffers": 524288
 }
 ```
 
@@ -38,9 +31,10 @@ Retorna estatísticas de memória do processo e do sistema.
 
 ### Campos
 
-| Campo | Descrição |
-|---|---|
-| `process.rss` | RAM física usada pelo processo |
-| `process.vms` | Memória virtual total alocada |
-| `system.usagePercent` | % de RAM consumida no servidor |
-| `uptime` | Uptime do processo |
+| Campo | Tipo | Descrição |
+|---|---|---|
+| `rss` | `number` | RSS (Resident Set Size) em bytes |
+| `heapTotal` | `number` | Heap total alocado em bytes |
+| `heapUsed` | `number` | Heap usado em bytes |
+| `external` | `number` | Memória externa em bytes |
+| `arrayBuffers` | `number` | ArrayBuffers em bytes |

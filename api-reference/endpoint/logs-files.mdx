@@ -15,9 +15,20 @@ Lista todos os arquivos de log disponíveis no sistema.
 ```json 200 Sucesso
 {
   "success": true,
+  "count": 2,
   "files": [
-    "2024-01-01.log",
-    "2024-01-02.log"
+    {
+      "file": "zapunlocked_2026-06-07.log",
+      "date": "2026-06-07",
+      "sizeBytes": 4096,
+      "sizeFormatted": "4.0 KB"
+    },
+    {
+      "file": "zapunlocked_2026-06-08.log",
+      "date": "2026-06-08",
+      "sizeBytes": 8192,
+      "sizeFormatted": "8.0 KB"
+    }
   ]
 }
 ```

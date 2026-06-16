@@ -8,18 +8,18 @@ api: "POST /sessions/{session_id}/disconnect"
   Chave de autenticação da API.
 </ParamField>
 
-<ParamField header="session_id" type="string" required>
+<ParamField path="session_id" type="string" required>
   ID da sessão a ser desconectada.
 </ParamField>
 
-Desconecta a sessão do WhatsApp sem deletar seus dados. A sessão poderá ser reconectada posteriormente.
+Desconecta a sessão do WhatsApp. A sessão permanece registrada e pode ser reconectada depois.
 
 <ResponseExample>
 
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Session disconnected."
+  "message": "Session '1' disconnected."
 }
 ```
 

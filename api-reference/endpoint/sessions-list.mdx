@@ -10,12 +10,6 @@ api: "GET /sessions"
 
 Lista todas as sessões WhatsApp ativas e inativas.
 
-### Resposta
-
-<ResponseField name="sessions" type="array">
-  Lista de sessões com seus respectivos dados (id, nome, status, etc.).
-</ResponseField>
-
 <ResponseExample>
 
 ```json 200 Sucesso
@@ -23,10 +17,10 @@ Lista todas as sessões WhatsApp ativas e inativas.
   "success": true,
   "sessions": [
     {
-      "id": "default",
-      "name": "Minha Sessão",
-      "status": "connected",
-      "connected": true
+      "id": "1",
+      "name": "Principal",
+      "created_at": "2026-06-01T10:00:00Z",
+      "active": true
     }
   ]
 }

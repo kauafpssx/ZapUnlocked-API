@@ -8,7 +8,7 @@ api: "PUT /sessions/{session_id}/rename"
   Chave de autenticação da API.
 </ParamField>
 
-<ParamField header="session_id" type="string" required>
+<ParamField path="session_id" type="string" required>
   ID da sessão a ser renomeada.
 </ParamField>
 
@@ -25,7 +25,11 @@ Renomeia uma sessão WhatsApp existente.
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Session renamed to: Novo Nome"
+  "session": {
+    "id": "1",
+    "name": "Renamed Session",
+    "active": true
+  }
 }
 ```
 

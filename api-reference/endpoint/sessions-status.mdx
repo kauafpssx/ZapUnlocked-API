@@ -8,29 +8,21 @@ api: "GET /sessions/{session_id}/status"
   Chave de autenticação da API.
 </ParamField>
 
-<ParamField header="session_id" type="string" required>
+<ParamField path="session_id" type="string" required>
   ID da sessão a ser consultada.
 </ParamField>
 
-Retorna o status atual de conexão da sessão WhatsApp.
-
-### Resposta
-
-<ResponseField name="status" type="string">
-  Status atual: `connected`, `disconnected`, `connecting`, `qr_read`.
-</ResponseField>
-
-<ResponseField name="connected" type="boolean">
-  Indica se a sessão está conectada.
-</ResponseField>
+Retorna o status atual de conexão da sessão.
 
 <ResponseExample>
 
 ```json 200 Sucesso
 {
   "success": true,
-  "status": "connected",
-  "connected": true
+  "sessionId": "1",
+  "name": "Principal",
+  "connected": true,
+  "hasQr": false
 }
 ```
 
