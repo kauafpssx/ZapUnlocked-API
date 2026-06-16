@@ -83,10 +83,25 @@ def build_collection(openapi_schema: Dict) -> Dict:
             for param in operation.get("parameters", []):
                 if param.get("in") == "query":
                     schema = param.get("schema", {})
-                    default = schema.get("default", "")
+                    param_type = schema.get("type", "")
+                    default = schema.get("default")
+
+                    # Format value based on param type
+                    if default is not None:
+                        if param_type == "boolean":
+                            value = "true" if default else "false"
+                        else:
+                            value = str(default)
+                    elif param_type == "boolean":
+                        value = "false"
+                    elif param_type in ("integer", "number"):
+                        value = "0"
+                    else:
+                        value = ""
+
                     query_params.append({
                         "key": param["name"],
-                        "value": str(default) if default else "",
+                        "value": value,
                         "description": param.get("description", ""),
                     })
 

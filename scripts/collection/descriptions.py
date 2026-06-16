@@ -122,8 +122,12 @@ ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
         "Returns the current WhatsApp stream/connection state: `connected`, `disconnected`, "
         "`connecting`, etc. Also includes reconnect attempts if applicable.",
     "/status/volume":
-        "Returns data usage statistics for the current WhatsApp session, including "
-        "bytes sent and received.",
+        "Scans the data directory and returns disk usage for all sessions.\n\n"
+        "Recursively traverses all session folders (e.g. `1/`, `2/`, `3/`) and their "
+        "subfolders, calculating total size and file count.\n\n"
+        "Response:\n"
+        '`{"success": true, "totalSizeBytes": N, "totalSizeFormatted": "...", '
+        '"fileCount": N, "structure": [...]}`',
 
     # ═════════════════════════════════════════════════════════════════════
     # SEND — TEXT
@@ -321,6 +325,59 @@ ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
         "Optional: `timeout` (seconds to wait, default 60).\n\n"
         "Response shape is the same as /ai/ask, with `hasImage: true` when successful.\n\n"
         "⚠ Requires an active WhatsApp connection.",
+
+    # ═════════════════════════════════════════════════════════════════════
+    # SESSIONS — Multi-session management
+    # ═════════════════════════════════════════════════════════════════════
+    "/sessions":
+        "Lists all registered WhatsApp sessions and their active/inactive status.\n\n"
+        "Each session represents an independent WhatsApp connection with its own "
+        "authentication state and database.\n\n"
+        "Response: `{\"success\": true, \"sessions\": [{\"id\": \"1\", \"name\": \"Principal\", "
+        "\"created_at\": \"...\", \"active\": true}]}`",
+    "POST /sessions":
+        "Creates a new WhatsApp session. A session is an independent connection "
+        "with its own QR code and authentication.\n\n"
+        "Optional body:\n"
+        "- `name` — display name for the session (auto-generated if omitted)\n\n"
+        "After creation, use `POST /sessions/{id}/connect` to start the QR pairing process.\n\n"
+        "Response: `{\"success\": true, \"session\": {\"id\": \"...\", \"name\": \"...\", "
+        "\"created_at\": \"...\", \"active\": true}}`",
+    "/sessions/{session_id}/rename":
+        "Renames an existing session.\n\n"
+        "Path parameters:\n"
+        "- `session_id` — the session ID to rename\n\n"
+        "Required body: `{\"name\": \"New Name\"}`\n\n"
+        "Response: `{\"success\": true, \"session\": {\"id\": \"...\", \"name\": \"New Name\", ...}}`",
+    "DELETE /sessions/{session_id}":
+        "Deactivates/deletes a WhatsApp session. The session is soft-deleted "
+        "(marked as inactive), preserving its data for potential reactivation.\n\n"
+        "Path parameters:\n"
+        "- `session_id` — the session ID to deactivate\n\n"
+        'Response: `{"success": true, "message": "Session \'...\' deactivated."}`',
+    "/sessions/{session_id}/connect":
+        "Starts the connection process for a session, initiating QR code generation "
+        "and WhatsApp pairing.\n\n"
+        "Path parameters:\n"
+        "- `session_id` — the session ID to connect\n\n"
+        "The session must have been created first via POST /sessions. "
+        "After calling this endpoint, use GET /qr or GET /sessions/{id}/status to "
+        "retrieve the pairing QR code.\n\n"
+        'Response: `{"success": true, "message": "Session \'...\' connecting..."}`',
+    "/sessions/{session_id}/disconnect":
+        "Disconnects an active WhatsApp session. The session is gracefully "
+        "disconnected from WhatsApp but remains registered.\n\n"
+        "Path parameters:\n"
+        "- `session_id` — the session ID to disconnect\n\n"
+        'Response: `{"success": true, "message": "Session \'...\' disconnected."}`',
+    "/sessions/{session_id}/status":
+        "Returns the current connection status of a session.\n\n"
+        "Path parameters:\n"
+        "- `session_id` — the session ID to check\n\n"
+        "Shows whether the session is connected to WhatsApp and if a QR code is available "
+        "for pairing.\n\n"
+        "Response: `{\"success\": true, \"sessionId\": \"...\", \"name\": \"...\", "
+        "\"connected\": true/false, \"hasQr\": true/false}`",
 
     # ═════════════════════════════════════════════════════════════════════
     # SETTINGS
