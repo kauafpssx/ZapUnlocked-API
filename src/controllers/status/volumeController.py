@@ -3,7 +3,7 @@ from src.config.constants import DATA_DIR
 
 
 async def get_volume_status():
-    data_dir = Path(DATA_DIR) / "chats"
+    data_dir = Path(DATA_DIR)
     data_dir.mkdir(parents=True, exist_ok=True)
 
     total_bytes = 0
@@ -12,7 +12,11 @@ async def get_volume_status():
     def scan(directory: Path):
         nonlocal total_bytes, file_count
         entries = []
-        for item in sorted(directory.iterdir()):
+        try:
+            items = sorted(directory.iterdir())
+        except PermissionError:
+            return entries
+        for item in items:
             try:
                 if item.is_dir():
                     children = scan(item)
