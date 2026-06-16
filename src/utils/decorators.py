@@ -1,4 +1,4 @@
-"""
+﻿"""
 Reusable FastAPI decorators for controller boilerplate.
 
 Usage:
@@ -12,12 +12,27 @@ import functools
 from fastapi import HTTPException
 
 
+def get_session_id(request) -> str:
+    """Extract session_id from request.state, defaulting to '1'."""
+    if request is None:
+        return "1"
+    return getattr(getattr(request, "state", None), "session_id", "1")
+
+
 def require_whatsapp(fn):
     """Raise 503 immediately if WhatsApp is not connected."""
     @functools.wraps(fn)
     async def wrapper(*args, **kwargs):
-        from src.services.whatsapp.client import get_is_ready
-        if not get_is_ready():
+        from src.services.whatsapp import state
+        # Try to extract session_id from request if present
+        req = kwargs.get("request")
+        if req is None:
+            for a in args:
+                if hasattr(a, "state") and hasattr(a.state, "session_id"):
+                    req = a
+                    break
+        sid = get_session_id(req)
+        if not state.get_is_ready(sid):
             raise HTTPException(
                 status_code=503,
                 detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."},
@@ -47,7 +62,7 @@ def handle_errors(action_name: str = "perform operation"):
                 logger.error(f"❌ Failed to {action_name}: {e}")
                 raise HTTPException(
                     status_code=500,
-                    detail={"error": "INTERNAL_ERROR", "message": str(e)},
+                    detail={"error": "INTERNAL_ERROR", "message": "An internal error occurred."},
                 )
         return wrapper
     return decorator

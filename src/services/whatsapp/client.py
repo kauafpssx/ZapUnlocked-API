@@ -25,7 +25,7 @@ from neonize.events import (
 from neonize.utils import log as neonize_logger
 
 from src.utils.logger import logger
-from src.config.constants import AUTH_DIR, RECONNECT_DELAY
+from src.config.constants import RECONNECT_DELAY, get_auth_dir
 
 from src.services.whatsapp import state
 
@@ -54,6 +54,7 @@ from src.services.whatsapp.event_handlers import (
 
 
 _shutting_down = False
+_reconnect_attempts: dict[str, int] = {}
 
 
 def set_shutting_down(value: bool) -> None:
@@ -65,20 +66,25 @@ def is_shutting_down() -> bool:
     return _shutting_down
 
 
+def reset_reconnect_counter(session_id: str) -> None:
+    _reconnect_attempts.pop(session_id, None)
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 # QR ACTIVATION
 # ═══════════════════════════════════════════════════════════════════════════
 
-def activate_qr() -> None:
+def activate_qr(session_id: str | None = None) -> None:
     """Authorize QR storage after valid /qr or /qr/image access.
     No-op if already connected. Restarts bot if QR has expired."""
-    if state.get_is_ready() or _shutting_down:
+    if state.get_is_ready(session_id) or _shutting_down:
         return
-    state.set_qr_generation_active(True)
-    if state.get_qr() is None and state.get_main_loop() and state.get_main_loop().is_running():
-        state.set_keep_qr_active_on_restart(True)
-        state.get_main_loop().call_soon_threadsafe(
-            lambda: asyncio.create_task(start_bot())
+    state.set_qr_generation_active(True, session_id)
+    if state.get_qr(session_id) is None and state.get_main_loop(session_id) and state.get_main_loop(session_id).is_running():
+        state.set_keep_qr_active_on_restart(True, session_id)
+        _sid = session_id
+        state.get_main_loop(session_id).call_soon_threadsafe(
+            lambda: asyncio.create_task(start_bot(_sid))
         )
 
 
@@ -178,44 +184,51 @@ def _patch_neonize_logging() -> None:
 # BOOTSTRAP
 # ═══════════════════════════════════════════════════════════════════════════
 
-async def start_bot() -> None:
-    """Initialize the Neonize client: configure logging, register handlers and connect."""
+async def start_bot(session_id: str | None = None) -> None:
+    """Initialize the Neonize client for session_id."""
     if _shutting_down:
         return
 
-    state.set_main_loop(asyncio.get_running_loop())
+    from src.services.sessions.registry import get_default_session_id
+    sid = session_id or get_default_session_id()
+
+    state.set_main_loop(asyncio.get_running_loop(), sid)
 
     try:
-        _reset_state()
-        auth_file = str(Path(AUTH_DIR) / "auth.sqlite")
-        _disconnect_existing()
+        _reset_state(sid)
+        auth_file = str(Path(get_auth_dir(sid)) / "auth.sqlite")
+        Path(auth_file).parent.mkdir(parents=True, exist_ok=True)
+        _disconnect_existing(sid)
         _configure_logging()
         _patch_neonize_logging()
 
-        cleanup_db()
-        state.set_client(NewClient(auth_file))
-        _register_event_handlers()
-        _load_db_config_and_start_scheduler()
+        cleanup_db(sid)
+        client = NewClient(auth_file)
+        state.set_client(client, sid)
+        _register_event_handlers(sid)
+        _load_db_config_and_start_scheduler(sid)
 
         loop = asyncio.get_running_loop()
-        await loop.run_in_executor(None, state.get_client().connect)
+        await loop.run_in_executor(None, state.get_client(sid).connect)
 
     except Exception as e:
         if _shutting_down:
             return
-        logger.error(f"❌ Error starting bot: {str(e)}")
-        await asyncio.sleep(RECONNECT_DELAY / 1000)
-        asyncio.create_task(start_bot())
+        attempts = _reconnect_attempts.get(sid, 0)
+        delay = min((RECONNECT_DELAY / 1000) * (2 ** attempts), 300)
+        _reconnect_attempts[sid] = attempts + 1
+        logger.error(f"❌ Error starting bot (session={sid}): {e} — retry in {delay:.0f}s (attempt {attempts + 1})")
+        await asyncio.sleep(delay)
+        asyncio.create_task(start_bot(sid))
 
 
-def _reset_state() -> None:
-    """Reset global state variables for a new connection."""
-    state.reset_for_reconnect()
+def _reset_state(session_id: str | None = None) -> None:
+    state.reset_for_reconnect(session_id)
 
 
-def _disconnect_existing() -> None:
+def _disconnect_existing(session_id: str | None = None) -> None:
     """Disconnect existing client if any."""
-    client = state.get_client()
+    client = state.get_client(session_id)
     if client:
         try:
             client.disconnect()
@@ -229,12 +242,15 @@ def _configure_logging() -> None:
     logging.getLogger("whatsmeow").setLevel(logging.INFO)
 
 
-def _register_event_handlers() -> None:
+def _register_event_handlers(session_id: str | None = None) -> None:
     """Register all event callbacks on the Neonize client."""
-    client = state.get_client()
+    from src.services.whatsapp.event_handlers import register_client_session
+    client = state.get_client(session_id)
     if not client:
         logger.error("Cannot register event handlers: client is None")
         return
+
+    register_client_session(client, session_id or "1")
 
     client.qr(_on_qr)
     client.event.paircode(_on_pair_code)
@@ -273,24 +289,25 @@ def _register_event_handlers() -> None:
     client.event(CallTerminateEv)(_on_call_terminate)
 
 
-def _load_db_config_and_start_scheduler() -> None:
-    """Load cleanup config and start the scheduler."""
-    load_db_config()
-    asyncio.create_task(db_cleanup_scheduler())
+def _load_db_config_and_start_scheduler(session_id: str | None = None) -> None:
+    load_db_config(session_id)
+    asyncio.create_task(db_cleanup_scheduler(session_id))
 
 
 # ═══════════════════════════════════════════════════════════════════════════
 # LOGOUT
 # ═══════════════════════════════════════════════════════════════════════════
 
-async def logout(keep_data: bool = False) -> None:
+async def logout(keep_data: bool = False, session_id: str | None = None) -> None:
     """Disconnect, clear session, and restart the bot."""
     from src.services.whatsapp import storage
     from src.services.whatsapp.event_handlers import _fire
+    from src.services.sessions.registry import get_default_session_id
 
-    logger.info(f"🗑️ Starting logout... (Keep data: {keep_data})")
+    sid = session_id or get_default_session_id()
+    logger.info(f"🗑️ Starting logout (session={sid}, keep_data={keep_data})...")
 
-    client = state.get_client()
+    client = state.get_client(sid)
     if client:
         try:
             client.logout()
@@ -298,15 +315,15 @@ async def logout(keep_data: bool = False) -> None:
         except Exception:
             pass
 
-    state.reset_for_logout()
+    state.reset_for_logout(sid)
 
-    loop = state.get_main_loop()
+    loop = state.get_main_loop(sid)
     if loop and loop.is_running():
         loop.call_soon_threadsafe(
-            lambda: asyncio.create_task(_fire("connection.disconnected", {}))
+            lambda: asyncio.create_task(_fire("connection.disconnected", {}, sid))
         )
 
-    auth_file = Path(AUTH_DIR) / "auth.sqlite"
+    auth_file = Path(get_auth_dir(sid)) / "auth.sqlite"
     if auth_file.exists():
         try:
             auth_file.unlink()
@@ -314,9 +331,9 @@ async def logout(keep_data: bool = False) -> None:
             pass
 
     if not keep_data:
-        await storage.clear_all_data()
+        await storage.clear_all_data(sid)
         logger.info("🧹 History data cleared.")
 
     logger.info("🔄 Restarting bot for new scan...")
     await asyncio.sleep(2)
-    asyncio.create_task(start_bot())
+    asyncio.create_task(start_bot(sid))

@@ -22,22 +22,48 @@ if TYPE_CHECKING:
     from neonize.client import NewClient
 
 
-class WhatsAppState:
-    """Thread-safe singleton holding all WhatsApp client connection state."""
+_states: dict[str, "WhatsAppState"] = {}
+_states_lock: threading.Lock = threading.Lock()
 
-    _instance: Optional["WhatsAppState"] = None
-    _singleton_lock: threading.Lock = threading.Lock()
+
+def get_state(session_id: str) -> "WhatsAppState":
+    """Return existing state for session_id, creating it if needed."""
+    with _states_lock:
+        if session_id not in _states:
+            _states[session_id] = WhatsAppState.__new__(WhatsAppState)
+            _states[session_id]._initialized = False
+            _states[session_id].__init__()
+        return _states[session_id]
+
+
+def create_state(session_id: str) -> "WhatsAppState":
+    """Create (or reset) state for session_id."""
+    with _states_lock:
+        st = WhatsAppState.__new__(WhatsAppState)
+        st._initialized = False
+        st.__init__()
+        _states[session_id] = st
+        return st
+
+
+def remove_state(session_id: str) -> None:
+    with _states_lock:
+        _states.pop(session_id, None)
+
+
+def all_states() -> dict[str, "WhatsAppState"]:
+    with _states_lock:
+        return dict(_states)
+
+
+class WhatsAppState:
+    """Per-session WhatsApp client connection state (no longer a singleton)."""
 
     def __new__(cls) -> "WhatsAppState":
-        if cls._instance is None:
-            with cls._singleton_lock:
-                if cls._instance is None:
-                    cls._instance = super().__new__(cls)
-                    cls._instance._initialized = False
-        return cls._instance
+        return super().__new__(cls)
 
     def __init__(self) -> None:
-        if self._initialized:
+        if getattr(self, "_initialized", False):
             return
         self._initialized = True
         self._reset()
@@ -221,3 +247,134 @@ class WhatsAppState:
             return None
         remaining = self._qr_expiry_seconds - int(time.time() - self._qr_last_generated_at)
         return max(remaining, 0)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Functional API (previously in state.py)
+# ═══════════════════════════════════════════════════════════════════════════
+
+def _default_session_id() -> str:
+    from src.services.sessions.registry import get_default_session_id
+    return get_default_session_id()
+
+
+def _s(session_id: str | None) -> WhatsAppState:
+    sid = session_id if session_id is not None else _default_session_id()
+    return get_state(sid)
+
+
+def get_client(session_id: str | None = None) -> Optional["NewClient"]:
+    return _s(session_id).client
+
+
+def get_is_ready(session_id: str | None = None) -> bool:
+    return _s(session_id).is_ready
+
+
+def get_qr(session_id: str | None = None) -> Optional[str]:
+    return _s(session_id).current_qr
+
+
+def get_reaction_cache(session_id: str | None = None) -> dict:
+    return _s(session_id).reaction_cache
+
+
+def get_main_loop(session_id: str | None = None) -> Optional[asyncio.AbstractEventLoop]:
+    return _s(session_id).main_loop
+
+
+def get_qr_generation_active(session_id: str | None = None) -> bool:
+    return _s(session_id).qr_generation_active
+
+
+def get_qr_last_generated_at(session_id: str | None = None) -> Optional[float]:
+    return _s(session_id).qr_last_generated_at
+
+
+def get_qr_url_logged(session_id: str | None = None) -> bool:
+    return _s(session_id).qr_url_logged
+
+
+def get_keep_qr_active_on_restart(session_id: str | None = None) -> bool:
+    return _s(session_id).keep_qr_active_on_restart
+
+
+def get_qr_expires_in(session_id: str | None = None) -> Optional[int]:
+    return _s(session_id).get_qr_expires_in()
+
+
+def get_start_time(session_id: str | None = None) -> float:
+    return _s(session_id).start_time
+
+
+def get_connected_at(session_id: str | None = None) -> Optional[float]:
+    return _s(session_id).connected_at
+
+
+def get_cleanup_lock(session_id: str | None = None) -> threading.Lock:
+    return _s(session_id).cleanup_lock
+
+
+def set_client(value, session_id: str | None = None) -> None:
+    _s(session_id).client = value
+
+
+def set_is_ready(value: bool, session_id: str | None = None) -> None:
+    _s(session_id).is_ready = value
+
+
+def set_current_qr(value: Optional[str], session_id: str | None = None) -> None:
+    _s(session_id).current_qr = value
+
+
+def set_current_pair_code(value: Optional[str], session_id: str | None = None) -> None:
+    _s(session_id).current_pair_code = value
+
+
+def set_main_loop(value: Optional[asyncio.AbstractEventLoop], session_id: str | None = None) -> None:
+    _s(session_id).main_loop = value
+
+
+def set_qr_generation_active(value: bool, session_id: str | None = None) -> None:
+    _s(session_id).qr_generation_active = value
+
+
+def set_qr_last_generated_at(value: Optional[float], session_id: str | None = None) -> None:
+    _s(session_id).qr_last_generated_at = value
+
+
+def set_qr_url_logged(value: bool, session_id: str | None = None) -> None:
+    _s(session_id).qr_url_logged = value
+
+
+def set_keep_qr_active_on_restart(value: bool, session_id: str | None = None) -> None:
+    _s(session_id).keep_qr_active_on_restart = value
+
+
+def set_connected_at(value: Optional[float], session_id: str | None = None) -> None:
+    _s(session_id).connected_at = value
+
+
+def mark_connected(session_id: str | None = None) -> None:
+    st = _s(session_id)
+    st.is_ready = True
+    st.connected_at = time.time()
+    st.current_qr = None
+    st.current_pair_code = None
+    st.qr_generation_active = False
+    st.qr_last_generated_at = None
+    st.qr_url_logged = False
+
+
+def mark_disconnected(session_id: str | None = None) -> None:
+    st = _s(session_id)
+    st.is_ready = False
+    st.current_qr = None
+
+
+def reset_for_reconnect(session_id: str | None = None) -> None:
+    _s(session_id).reset_for_reconnect()
+
+
+def reset_for_logout(session_id: str | None = None) -> None:
+    _s(session_id).reset_for_logout()
