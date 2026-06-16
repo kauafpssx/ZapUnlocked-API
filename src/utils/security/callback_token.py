@@ -76,7 +76,7 @@ def verify_and_decode_payload(token: str) -> dict | None:
             .hexdigest()[:16]
         )
 
-        if signature != expected_sig:
+        if not hmac.compare_digest(signature, expected_sig):
             return None
 
         return {

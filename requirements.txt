@@ -16,7 +16,6 @@ neonize>=0.3.18.post0
 Pillow>=11.0.0
 python-magic>=0.4.14; sys_platform != "win32"    # MIME detection — Linux/macOS (needs system libmagic)
 python-magic-bin>=0.4.14; sys_platform == "win32" # MIME detection — Windows (bundles libmagic.dll)
-ffmpeg-python>=0.2.0
 imageio-ffmpeg>=0.5.1              # Bundled ffmpeg binary (no manual install)
 
 # ── HTTP Requests ─────────────────────────────────────────
