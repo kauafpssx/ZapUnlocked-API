@@ -1,0 +1,44 @@
+---
+title: "Importar Config"
+icon: "file-import"
+api: "POST /management/import"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Importa um arquivo de configuração exportado anteriormente. Restaura settings, webhooks e regras de IP.
+
+<Warning>
+  A importação sobrescreve a configuração atual. Recomenda-se exportar a configuração atual antes de importar.
+</Warning>
+
+### Corpo da Requisição
+
+Enviar como `multipart/form-data` com o campo `file` contendo o arquivo JSON de configuração.
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Configuration imported successfully."
+}
+```
+
+```json 400 Erro de validação
+{
+  "error": "INVALID_FILE",
+  "message": "Invalid configuration file."
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

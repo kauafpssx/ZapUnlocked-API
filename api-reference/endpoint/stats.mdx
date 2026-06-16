@@ -1,0 +1,56 @@
+---
+title: "Estatísticas"
+icon: "chart-simple"
+api: "GET /stats"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Retorna estatísticas gerais do servidor.
+
+### Resposta
+
+<ResponseField name="uptime" type="number">
+  Tempo de atividade do servidor em segundos.
+</ResponseField>
+
+<ResponseField name="connected" type="boolean">
+  Indica se a sessão WhatsApp está conectada.
+</ResponseField>
+
+<ResponseField name="messages" type="object">
+  Estatísticas de mensagens processadas.
+</ResponseField>
+
+<ResponseField name="webhooks" type="object">
+  Estatísticas dos webhooks cadastrados.
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "uptime": 3600,
+  "connected": true,
+  "messages": {
+    "sent": 150,
+    "received": 200
+  },
+  "webhooks": {
+    "total": 3,
+    "active": 3
+  }
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

@@ -693,7 +693,212 @@ Outra instância assumiu a conexão.
 `reason` pode ser `"timeout"`, `"rejected"`, `"busy"`, etc.
 </Accordion>
 
+<Accordion title="contact.picture_change — Foto de perfil alterada" icon="image-portrait">
+```json
+{
+  "event": "contact.picture_change",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "author": "5511999999999@s.whatsapp.net",
+    "action": "changed"
+  }
+}
+```
+`action` pode ser `"changed"` ou `"removed"`.
+</Accordion>
+
+<Accordion title="contact.identity_change — Chave de segurança alterada" icon="shield-halved">
+```json
+{
+  "event": "contact.identity_change",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "implicit": false,
+    "timestamp": 1704067200
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.contacts — Múltiplos contatos recebidos" icon="address-card">
+```json
+{
+  "event": "message.contacts",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "messageId": "3EB0C4A1234567890",
+    "from": "5511999999999",
+    "fromName": "John Doe",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "isGroup": false,
+    "displayName": "2 contacts",
+    "count": 2,
+    "contacts": [
+      {"displayName": "Maria Souza", "vcard": "BEGIN:VCARD\n..."},
+      {"displayName": "João Silva", "vcard": "BEGIN:VCARD\n..."}
+    ]
+  }
+}
+```
+</Accordion>
+
+<Accordion title="message.receipt — Outras confirmações de entrega" icon="check-double">
+```json
+{
+  "event": "message.receipt",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "messageIds": ["3EB0C4A1234567890"],
+    "type": 2,
+    "timestamp": 1704067200
+  }
+}
+```
+| `type` | Significado |
+|--------|-------------|
+| `1` | Entregue → dispara `message.delivered` |
+| `2` | Confirmação do servidor |
+| `3` | Lido pelo servidor |
+| `4` | Lido pelo destinatário → dispara `message.read` |
+| `5` | Reproduzido (áudio/vídeo) |
+</Accordion>
+
+<Accordion title="connection.pair_status — Status do pareamento" icon="mobile-screen-button">
+```json
+{
+  "event": "connection.pair_status",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "jid": "5511999999999@s.whatsapp.net",
+    "businessName": "Meu Negócio",
+    "platform": "WEB",
+    "status": "OK",
+    "error": ""
+  }
+}
+```
+</Accordion>
+
+<Accordion title="connection.connect_failure — Falha de conexão" icon="triangle-exclamation">
+```json
+{
+  "event": "connection.connect_failure",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "reason": "ERROR_CONNECT",
+    "message": "Connection timed out"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="connection.stream_error — Erro de stream" icon="bolt">
+```json
+{
+  "event": "connection.stream_error",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "code": "STREAM_ERR"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="connection.temporary_ban — Banimento temporário" icon="ban">
+```json
+{
+  "event": "connection.temporary_ban",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "code": "BAN_CODE",
+    "expire": 1704153600
+  }
+}
+```
+</Accordion>
+
+<Accordion title="connection.client_outdated — Cliente desatualizado" icon="rotate">
+```json
+{
+  "event": "connection.client_outdated",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {}
+}
+```
+</Accordion>
+
+<Accordion title="connection.stream_replaced — Sessão substituída" icon="arrows-rotate">
+```json
+{
+  "event": "connection.stream_replaced",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {}
+}
+```
+Outra instância assumiu a conexão.
+</Accordion>
+
+<Accordion title="media.cleanup.completed — Limpeza de mídia concluída" icon="eraser">
+```json
+{
+  "event": "media.cleanup.completed",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "filesRemoved": 12,
+    "remainingBytes": 52428800
+  }
+}
+```
+`filesRemoved: 0` significa que nada foi removido — o evento ainda é disparado a cada ciclo.
+</Accordion>
+
+<Accordion title="ai.response — Resposta do Meta AI" icon="robot">
+```json
+{
+  "event": "ai.response",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "text": "Brasília!",
+    "hasImage": false,
+    "imageBase64": null,
+    "imageUrl": null,
+    "mimeType": null,
+    "messageId": "3EB0C4A1234567890"
+  }
+}
+```
+A resposta pode conter texto, imagem ou ambos. Quando `hasImage` é `true`, `imageBase64` ou `imageUrl` estarão presentes. Use o webhook `ai.response` para processar respostas da IA de forma assíncrona.
+</Accordion>
+
 </AccordionGroup>
+
+---
+
+### Eventos Específicos de Envio
+
+Além de `message.sent`, você pode se inscrever em eventos específicos por tipo de mensagem enviada:
+
+`message.sent.text`, `message.sent.image`, `message.sent.audio`, `message.sent.video`, `message.sent.document`, `message.sent.sticker`, `message.sent.gif`, `message.sent.interactive`, `message.sent.list`, `message.sent.poll`, `message.sent.poll_vote`, `message.sent.location`, `message.sent.contact`, `message.sent.contacts`, `message.sent.link`, `message.sent.reaction`, `message.sent.edit`, `message.sent.delete`
+
+```json
+{
+  "event": "message.sent.image",
+  "timestamp": "2026-05-28T02:00:00Z",
+  "data": {
+    "to": "5511999999999",
+    "type": "image",
+    "messageId": "3EB0C4A1234567890"
+  }
+}
+```
+
+---
 
 ---
 

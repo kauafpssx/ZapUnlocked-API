@@ -16,16 +16,8 @@ Registra um voto em uma enquete existente. Útil para simular participação do 
   Telefone do chat onde a enquete foi enviada (ex: `5511999999999`).
 </ParamField>
 
-<ParamField body="pollId" type="string">
-  ID da mensagem da enquete. Use com `type: "id"`.
-</ParamField>
-
-<ParamField body="pollName" type="string">
-  Texto exato da pergunta da enquete. Use com `type: "text"`.
-</ParamField>
-
-<ParamField body="type" type="string" default="id">
-  Como localizar a enquete: `"id"` (pelo ID) ou `"text"` (pela pergunta).
+<ParamField body="pollId" type="string" required>
+  ID da mensagem da enquete.
 </ParamField>
 
 <ParamField body="options" type="array" required>

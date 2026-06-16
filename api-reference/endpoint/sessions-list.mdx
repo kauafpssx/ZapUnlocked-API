@@ -1,0 +1,42 @@
+---
+title: "Listar Sessões"
+icon: "list"
+api: "GET /sessions"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Lista todas as sessões WhatsApp ativas e inativas.
+
+### Resposta
+
+<ResponseField name="sessions" type="array">
+  Lista de sessões com seus respectivos dados (id, nome, status, etc.).
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "sessions": [
+    {
+      "id": "default",
+      "name": "Minha Sessão",
+      "status": "connected",
+      "connected": true
+    }
+  ]
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,29 @@
+---
+title: "Logout"
+icon: "right-from-bracket"
+api: "POST /session/logout"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Desconecta a sessão atual do WhatsApp. O QR Code será exigido novamente para reconectar.
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Logged out successfully."
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

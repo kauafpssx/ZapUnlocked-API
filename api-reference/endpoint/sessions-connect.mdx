@@ -1,0 +1,33 @@
+---
+title: "Conectar Sessão"
+icon: "plug"
+api: "POST /sessions/{session_id}/connect"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+<ParamField header="session_id" type="string" required>
+  ID da sessão a ser conectada.
+</ParamField>
+
+Inicia o processo de conexão da sessão ao WhatsApp. Se o QR Code for necessário, ele será gerado e poderá ser obtido via `/qr`.
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Session connected."
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

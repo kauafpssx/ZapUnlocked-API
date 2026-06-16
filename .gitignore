@@ -16,3 +16,7 @@ Thumbs.db
 
 # CLI
 .antigravitycli/
+
+# Source material (non-Mintlify)
+MATERIAL/
+ZapUnlocked.collection.json

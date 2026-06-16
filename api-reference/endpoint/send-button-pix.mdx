@@ -9,7 +9,11 @@ description: "Envia uma mensagem com botão de pagamento PIX."
   Chave de autenticação da API.
 </ParamField>
 
-Envia um botão de **pagamento PIX**. O WhatsApp exibe a chave PIX com um botão para o usuário copiar e pagar diretamente no app.
+Envia um **botão de pagamento PIX** exclusivo. O WhatsApp exibe a chave PIX com um botão para o usuário copiar e pagar diretamente no app.
+
+<Note>
+  Este endpoint é exclusivo para PIX — **não pode** ser combinado com outros tipos de botão. Use `/messages/send-button-list` para botões mistos.
+</Note>
 
 ### Corpo da Requisição
 
@@ -17,34 +21,48 @@ Envia um botão de **pagamento PIX**. O WhatsApp exibe a chave PIX com um botão
   Número do destinatário com código do país (ex: `5511999999999`).
 </ParamField>
 
+<ParamField body="pixKey" type="string" required>
+  Chave PIX de destino. Tipos: `EMAIL`, `PHONE`, `CPF`, `CNPJ` ou `RANDOM`.
+</ParamField>
+
+<ParamField body="pixType" type="string" required>
+  Tipo da chave PIX. Valores: `EMAIL`, `PHONE`, `CPF`, `CNPJ`, `RANDOM`.
+</ParamField>
+
+<ParamField body="pixValue" type="number" required>
+  Valor em BRL (ex: `19.90`).
+</ParamField>
+
+<ParamField body="merchantName" type="string" required>
+  Nome do beneficiário exibido na tela de pagamento.
+</ParamField>
+
+<ParamField body="pixCity" type="string" required>
+  Cidade do beneficiário (ex: `"Sao Paulo"`).
+</ParamField>
+
+<ParamField body="pixDescription" type="string">
+  Descrição opcional do pagamento (ex: `"Order #1234"`).
+</ParamField>
+
+<ParamField body="button_text" type="string" default="Pay">
+  Texto exibido no botão de cópia do PIX.
+</ParamField>
+
 <ParamField body="title" type="string">
   Título exibido no topo da mensagem.
 </ParamField>
 
-<ParamField body="message" type="string">
+<ParamField body="text" type="string">
   Texto da mensagem exibido acima do botão.
 </ParamField>
 
-<ParamField body="buttons" type="array" required>
-  Array com **exatamente 1 botão** PIX:
+<ParamField body="type" type="string" default="id">
+  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
+</ParamField>
 
-  <Expandable title="Estrutura do botão PIX">
-    <ParamField body="type" type="string" required>
-      Deve ser `"pix"`.
-    </ParamField>
-    <ParamField body="buttonText" type="string" required>
-      Texto exibido no botão (ex: `"Copiar PIX"`).
-    </ParamField>
-    <ParamField body="pixKey" type="string" required>
-      Chave PIX de destino (CPF, e-mail, telefone, chave aleatória ou CNPJ).
-    </ParamField>
-    <ParamField body="pixType" type="string">
-      Tipo da chave PIX. Valores aceitos: `CPF`, `CNPJ`, `EMAIL`, `PHONE`, `EVP`.
-    </ParamField>
-    <ParamField body="merchantName" type="string">
-      Nome do beneficiário exibido na tela de pagamento.
-    </ParamField>
-  </Expandable>
+<ParamField body="quoted_id" type="string">
+  ID da mensagem a citar diretamente.
 </ParamField>
 
 <ResponseExample>
@@ -58,8 +76,8 @@ Envia um botão de **pagamento PIX**. O WhatsApp exibe a chave PIX com um botão
 
 ```json 400 Campo ausente
 {
-  "error": "MISSING_FIELD",
-  "message": "'phone' and 'pixKey' are required."
+  "error": "VALIDATION_ERROR",
+  "message": "'pixKey', 'pixType', 'pixValue' and 'merchantName' are required."
 }
 ```
 

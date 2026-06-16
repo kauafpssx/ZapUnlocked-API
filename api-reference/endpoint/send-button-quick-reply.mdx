@@ -1,0 +1,56 @@
+---
+title: "Botão Resposta Rápida"
+icon: "comments"
+api: "POST /messages/send-button-quick-reply"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Envia uma mensagem com botões de resposta rápida. Aparecem como chips abaixo da mensagem. Quando o usuário clica, o evento `message.button_reply` é disparado para o(s) webhook(s) cadastrado(s).
+
+### Corpo da Requisição
+
+<ParamField body="phone" type="string" required>
+  Número do destinatário com código do país (ex: `5511999999999`).
+</ParamField>
+
+<ParamField body="title" type="string" required>
+  Título exibido no topo da mensagem.
+</ParamField>
+
+<ParamField body="text" type="string" required>
+  Texto principal exibido acima dos botões.
+</ParamField>
+
+<ParamField body="buttons" type="array" required>
+  Lista de botões de resposta rápida. Cada item:
+
+  <Expandable title="Estrutura do botão">
+    <ParamField body="text" type="string" required>
+      Texto exibido no botão.
+    </ParamField>
+    <ParamField body="id" type="string">
+      ID retornado no evento `message.button_reply` (gerado automaticamente se omitido).
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Quick reply sent."
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

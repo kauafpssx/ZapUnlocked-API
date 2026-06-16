@@ -1,14 +1,14 @@
 ---
-title: "Enviar Imagem"
-icon: "image"
-api: "POST /send_image"
+title: "Enviar GIF"
+icon: "file-gif"
+api: "POST /send_gif"
 ---
 
 <ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Envia uma imagem. Aceita URL pública ou upload direto de arquivo via `multipart/form-data`.
+Envia um GIF animado. Aceita URL pública ou upload direto via `multipart/form-data`.
 
 ### Corpo da Requisição (JSON ou multipart/form-data)
 
@@ -17,19 +17,15 @@ Envia uma imagem. Aceita URL pública ou upload direto de arquivo via `multipart
 </ParamField>
 
 <ParamField body="url" type="string">
-  URL pública da imagem. Se omitido, use `file` para upload direto.
+  URL pública do GIF. Se omitido, use `file` para upload direto.
 </ParamField>
 
 <ParamField body="file" type="file">
-  Arquivo de imagem enviado via multipart/form-data. Alternativa a `url`.
+  Arquivo GIF via multipart/form-data. Alternativa a `url`.
 </ParamField>
 
 <ParamField body="caption" type="string">
-  Legenda opcional para a imagem.
-</ParamField>
-
-<ParamField body="as_document" type="boolean" default="false">
-  Se `true`, envia a imagem como arquivo/documento (não inline).
+  Legenda exibida abaixo do GIF.
 </ParamField>
 
 <ParamField body="reply" type="string">
@@ -40,13 +36,12 @@ Envia uma imagem. Aceita URL pública ou upload direto de arquivo via `multipart
   ID da mensagem a citar diretamente.
 </ParamField>
 
-
 <ResponseExample>
 
 ```json 200 Sucesso
 {
   "success": true,
-  "message": "Image sent successfully."
+  "message": "GIF sent."
 }
 ```
 

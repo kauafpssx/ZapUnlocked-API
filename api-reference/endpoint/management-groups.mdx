@@ -1,0 +1,36 @@
+---
+title: "Grupos"
+icon: "users"
+api: "GET /management/groups"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Retorna a lista de grupos do WhatsApp que a sessão participa, com metadados como nome, participantes e descrição.
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "groups": [
+    {
+      "id": "5511999999999-123456@g.us",
+      "name": "Meu Grupo",
+      "participants": 10,
+      "description": "Grupo de exemplo"
+    }
+  ]
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

@@ -8,23 +8,27 @@ api: "POST /send_audio"
   Chave de autenticação da API.
 </ParamField>
 
-Envia um arquivo de áudio. Arquivos com menos de 15 MB são enviados como áudio padrão (ou PTT). Arquivos maiores são enviados como documentos.
+Envia um arquivo de áudio. Aceita URL pública ou upload direto via `multipart/form-data`. Arquivos < 15 MB são enviados como áudio (ou PTT). Maiores viram documentos.
 
-### Corpo da Requisição
+### Corpo da Requisição (JSON ou multipart/form-data)
 
 <ParamField body="phone" type="string" required>
   Número do destinatário com código do país.
 </ParamField>
 
-<ParamField body="audio_url" type="string" required>
-  URL pública do arquivo de áudio (mp3, wav, ogg).
+<ParamField body="url" type="string">
+  URL pública do áudio. Se omitido, use `file` para upload direto.
+</ParamField>
+
+<ParamField body="file" type="file">
+  Arquivo de áudio via multipart/form-data. Alternativa a `url`.
 </ParamField>
 
 <ParamField body="ptt" default="false" type="boolean">
   Se `true`, envia como nota de voz (PTT). Apenas para arquivos pequenos.
 </ParamField>
 
-<ParamField body="asDocument" default="false" type="boolean">
+<ParamField body="as_document" default="false" type="boolean">
   Força o envio como anexo de arquivo.
 </ParamField>
 
@@ -34,10 +38,6 @@ Envia um arquivo de áudio. Arquivos com menos de 15 MB são enviados como áudi
 
 <ParamField body="reply" type="string">
   ID ou texto da mensagem para responder.
-</ParamField>
-
-<ParamField body="type" type="string" default="id">
-  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
 </ParamField>
 
 <ParamField body="quoted_id" type="string">

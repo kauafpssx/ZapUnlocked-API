@@ -1,0 +1,38 @@
+---
+title: "Detalhes do Contato"
+icon: "address-card"
+api: "GET /management/contacts/{phone}"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+<ParamField header="phone" type="string" required>
+  Número do telefone do contato com código do país (ex: `5511999999999`).
+</ParamField>
+
+Retorna informações detalhadas de um contato específico, como nome, foto e presença no WhatsApp.
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "contact": {
+    "id": "5511999999999@c.us",
+    "name": "João",
+    "pushname": "João Silva",
+    "isBusiness": false
+  }
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

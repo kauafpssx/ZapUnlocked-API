@@ -1,0 +1,40 @@
+---
+title: "Mensagens da Conversa"
+icon: "message"
+api: "GET /management/chats/{phone}/messages"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+<ParamField header="phone" type="string" required>
+  Número do telefone da conversa com código do país (ex: `5511999999999`).
+</ParamField>
+
+Retorna o histórico de mensagens de uma conversa específica.
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "messages": [
+    {
+      "id": "true_5511999999999@c.us_ABCD1234",
+      "from": "5511999999999@c.us",
+      "body": "Olá!",
+      "timestamp": "2024-01-01T12:00:00.000Z"
+    }
+  ]
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,32 @@
+---
+title: "Volume de Dados"
+icon: "hard-drive"
+api: "GET /status/volume"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Retorna informações sobre o volume de dados armazenados, incluindo tamanho do banco de dados e arquivos de mídia.
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "database_size": "45.2 MB",
+  "media_size": "120.5 MB",
+  "log_size": "8.1 MB",
+  "total": "173.8 MB"
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

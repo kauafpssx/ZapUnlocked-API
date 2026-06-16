@@ -8,40 +8,32 @@ api: "POST /send_video"
   Chave de autenticação da API.
 </ParamField>
 
-Envia um vídeo. Arquivos com menos de 15 MB são enviados como vídeo normal. Arquivos maiores são enviados como documentos (qualidade integral).
+Envia um vídeo. Aceita URL pública ou upload direto via `multipart/form-data`. Arquivos < 15 MB são enviados como vídeo normal. Maiores viram documentos (qualidade integral).
 
-### Corpo da Requisição
+### Corpo da Requisição (JSON ou multipart/form-data)
 
 <ParamField body="phone" type="string" required>
   Número do destinatário com código do país.
 </ParamField>
 
-<ParamField body="video_url" type="string" required>
-  URL pública do arquivo de vídeo (mp4).
+<ParamField body="url" type="string">
+  URL pública do vídeo. Se omitido, use `file` para upload direto.
+</ParamField>
+
+<ParamField body="file" type="file">
+  Arquivo de vídeo via multipart/form-data. Alternativa a `url`.
 </ParamField>
 
 <ParamField body="caption" type="string">
   Legenda opcional para o vídeo.
 </ParamField>
 
-<ParamField body="gifPlayback" type="boolean" default="false">
-  Se `true`, envia o vídeo como GIF (em loop, sem som).
-</ParamField>
-
-<ParamField body="ptv" type="boolean" default="false">
-  Se `true`, envia como vídeo redondo (clipe curto).
-</ParamField>
-
-<ParamField body="asDocument" type="boolean" default="false">
+<ParamField body="as_document" type="boolean" default="false">
   Força o envio como documento (até 2 GB).
 </ParamField>
 
 <ParamField body="reply" type="string">
   ID ou texto da mensagem para responder.
-</ParamField>
-
-<ParamField body="type" type="string" default="id">
-  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
 </ParamField>
 
 <ParamField body="quoted_id" type="string">

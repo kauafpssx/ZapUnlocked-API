@@ -1,0 +1,41 @@
+---
+title: "Logs do Webhook"
+icon: "scroll"
+api: "GET /webhooks/{name}/logs"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+<ParamField header="name" type="string" required>
+  Nome do webhook cadastrado.
+</ParamField>
+
+Retorna o histórico de chamadas de um webhook específico, incluindo status HTTP, payload e resposta.
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "logs": [
+    {
+      "id": "log_1",
+      "event": "message",
+      "status": 200,
+      "timestamp": "2024-01-01T12:00:00.000Z",
+      "response": "OK"
+    }
+  ]
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

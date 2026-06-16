@@ -1,34 +1,31 @@
 ---
-title: 'Bloquear Contato'
-icon: 'user-lock'
-api: "POST /settings/block"
+title: "Criar Sessão"
+icon: "plus"
+api: "POST /sessions"
 ---
 
 <ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
   Chave de autenticação da API.
 </ParamField>
 
-Bloqueia ou desbloqueia um contato do WhatsApp.
+Cria uma nova sessão WhatsApp. Útil para gerenciar múltiplas contas simultaneamente.
 
 ### Corpo da Requisição
 
-<ParamField body="phone" type="string" required>
-  Número do contato com código do país (ex: `5511999999999`).
+<ParamField body="name" type="string">
+  Nome da nova sessão. Se omitido, um nome padrão será gerado.
 </ParamField>
 
 <ResponseExample>
 
-```json 200 Bloqueado
+```json 200 Sucesso
 {
   "success": true,
-  "message": "User 5511999999999 blocked successfully."
-}
-```
-
-```json 200 Desbloqueado
-{
-  "success": true,
-  "message": "User 5511999999999 unblocked successfully."
+  "message": "Session created.",
+  "session": {
+    "id": "nova-sessao",
+    "name": "Nova Sessão"
+  }
 }
 ```
 

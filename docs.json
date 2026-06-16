@@ -67,7 +67,9 @@
               "api-reference/endpoint/send-location",
               "api-reference/endpoint/send-contact",
               "api-reference/endpoint/send-contacts",
-              "api-reference/endpoint/send-link"
+              "api-reference/endpoint/send-link",
+              "api-reference/endpoint/send-bulk",
+              "api-reference/endpoint/send-gif"
             ]
           },
           {
@@ -87,26 +89,33 @@
               "api-reference/endpoint/send-button-pix",
               "api-reference/endpoint/send-poll",
               "api-reference/endpoint/send-poll-vote",
-              "api-reference/endpoint/send-option-list"
+              "api-reference/endpoint/send-option-list",
+              "api-reference/endpoint/send-button-url",
+              "api-reference/endpoint/send-button-call",
+              "api-reference/endpoint/send-button-quick-reply"
             ]
           },
           {
             "group": "Consultas",
             "pages": [
               "api-reference/endpoint/contact-info",
-              "api-reference/endpoint/memory",
-              "api-reference/endpoint/volume-stats",
               "api-reference/endpoint/fetch-messages",
-              "api-reference/endpoint/recent-contacts",
-              "api-reference/endpoint/cleanup"
+              "api-reference/endpoint/recent-contacts"
             ]
           },
           {
-            "group": "Banco Auth",
+            "group": "Gerenciamento",
             "pages": [
               "api-reference/endpoint/database-cleanup",
               "api-reference/endpoint/database-config",
-              "api-reference/endpoint/database-status"
+              "api-reference/endpoint/database-status",
+              "api-reference/endpoint/management-chats",
+              "api-reference/endpoint/management-chat-messages",
+              "api-reference/endpoint/management-contacts",
+              "api-reference/endpoint/management-groups",
+              "api-reference/endpoint/management-export",
+              "api-reference/endpoint/management-import",
+              "api-reference/endpoint/cleanup"
             ]
           },
           {
@@ -114,7 +123,6 @@
             "pages": [
               "api-reference/endpoint/get",
               "api-reference/endpoint/status",
-              "api-reference/endpoint/status-stream",
               "api-reference/endpoint/qr",
               "api-reference/endpoint/qr-image",
               "api-reference/endpoint/pair",
@@ -132,20 +140,9 @@
               "api-reference/endpoint/webhooks-delete",
               "api-reference/endpoint/webhooks-toggle",
               "api-reference/endpoint/webhooks-test",
-              "api-reference/endpoint/webhooks-events"
-            ]
-          },
-          {
-            "group": "Privacidade",
-            "pages": [
-              "api-reference/endpoint/privacy"
-            ]
-          },
-          {
-            "group": "Perfil",
-            "pages": [
-              "api-reference/endpoint/block",
-              "api-reference/endpoint/profile"
+              "api-reference/endpoint/webhooks-events",
+              "api-reference/endpoint/webhooks-logs",
+              "api-reference/endpoint/webhooks-logs-clear"
             ]
           },
           {
@@ -156,7 +153,12 @@
               "api-reference/endpoint/call-reject-auto",
               "api-reference/endpoint/call-reject-message",
               "api-reference/endpoint/auto-read",
-              "api-reference/endpoint/settings-phone-code"
+              "api-reference/endpoint/settings-phone-code",
+              "api-reference/endpoint/privacy",
+              "api-reference/endpoint/block",
+              "api-reference/endpoint/profile",
+              "api-reference/endpoint/settings-profile",
+              "api-reference/endpoint/ip-control"
             ]
           },
           {
@@ -175,6 +177,45 @@
               "api-reference/endpoint/instance-me",
               "api-reference/endpoint/instance-device",
               "api-reference/endpoint/instance-update-name"
+            ]
+          },
+          {
+            "group": "Sessões",
+            "pages": [
+              "api-reference/endpoint/sessions-list",
+              "api-reference/endpoint/sessions-create",
+              "api-reference/endpoint/sessions-rename",
+              "api-reference/endpoint/sessions-delete",
+              "api-reference/endpoint/sessions-connect",
+              "api-reference/endpoint/sessions-disconnect",
+              "api-reference/endpoint/sessions-status"
+            ]
+          },
+          {
+            "group": "IA",
+            "pages": [
+              "api-reference/endpoint/ai-ask",
+              "api-reference/endpoint/ai-imagine"
+            ]
+          },
+          {
+            "group": "Status",
+            "pages": [
+              "api-reference/endpoint/status-health",
+              "api-reference/endpoint/status-readiness",
+              "api-reference/endpoint/status-stream",
+              "api-reference/endpoint/status-volume",
+              "api-reference/endpoint/memory",
+              "api-reference/endpoint/stats",
+              "api-reference/endpoint/stats-webhooks"
+            ]
+          },
+          {
+            "group": "Logs",
+            "pages": [
+              "api-reference/endpoint/logs",
+              "api-reference/endpoint/logs-files",
+              "api-reference/endpoint/logs-cleanup"
             ]
           },
           {

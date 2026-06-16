@@ -1,0 +1,66 @@
+---
+title: "Visualizar Logs"
+icon: "scroll"
+api: "GET /logs"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Retorna os logs do sistema com suporte a filtros por data, nível e busca.
+
+### Parâmetros de Query
+
+<ParamField query="date" type="string">
+  Filtra logs de uma data específica (formato: `YYYY-MM-DD`).
+</ParamField>
+
+<ParamField query="from_date" type="string">
+  Data inicial do intervalo (formato: `YYYY-MM-DD`).
+</ParamField>
+
+<ParamField query="to_date" type="string">
+  Data final do intervalo (formato: `YYYY-MM-DD`).
+</ParamField>
+
+<ParamField query="level" type="string">
+  Nível do log: `info`, `warn`, `error`, `debug`.
+</ParamField>
+
+<ParamField query="search" type="string">
+  Termo de busca no conteúdo dos logs.
+</ParamField>
+
+<ParamField query="limit" type="number">
+  Número máximo de registros a retornar.
+</ParamField>
+
+<ParamField query="offset" type="number">
+  Número de registros a pular (para paginação).
+</ParamField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "logs": [
+    {
+      "timestamp": "2024-01-01T12:00:00.000Z",
+      "level": "info",
+      "message": "Servidor iniciado."
+    }
+  ],
+  "total": 1
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,33 @@
+---
+title: "Limpar Logs do Webhook"
+icon: "eraser"
+api: "DELETE /webhooks/{name}/logs"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+<ParamField header="name" type="string" required>
+  Nome do webhook cujos logs serão removidos.
+</ParamField>
+
+Remove todo o histórico de logs de um webhook específico.
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Webhook logs cleared."
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

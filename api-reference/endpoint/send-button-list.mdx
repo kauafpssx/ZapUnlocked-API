@@ -9,7 +9,11 @@ description: "Envia uma mensagem com botões de resposta rápida."
   Chave de autenticação da API.
 </ParamField>
 
-Envia botões do tipo **resposta rápida**. Aparecem como chips abaixo da mensagem. Quando o usuário clica, o evento `message.button_reply` é disparado para o(s) webhook(s) cadastrado(s) inscrito(s) nesse evento.
+Envia uma mensagem com botões de tipos mistos (URL, ligação, OTP, resposta rápida) em um único array. Aparecem como chips abaixo da mensagem. Quando o usuário clica, o evento `message.button_reply` é disparado para o(s) webhook(s) cadastrado(s) inscrito(s) nesse evento.
+
+<Note>
+  ⚠ Botão PIX **não** é suportado em listas combinadas — use `/messages/send-button-pix` separadamente.
+</Note>
 
 ### Corpo da Requisição
 
@@ -25,22 +29,62 @@ Envia botões do tipo **resposta rápida**. Aparecem como chips abaixo da mensag
   Título da mensagem exibido no topo.
 </ParamField>
 
+<ParamField body="text" type="string" required>
+  Texto descritivo abaixo do título.
+</ParamField>
+
 <ParamField body="footer" type="string">
   Texto de rodapé exibido abaixo dos botões.
 </ParamField>
 
 <ParamField body="buttons" type="array" required>
-  Lista de botões de resposta rápida. Cada item:
+  Lista de botões (máx 5). Tipos podem ser misturados:
 
-  <Expandable title="Estrutura do botão">
+  <Expandable title="Botão quick_reply">
     <ParamField body="type" type="string" required>
-      Deve ser `"quick_reply"`.
+      `"quick_reply"` — gera evento `message.button_reply` ao clicar.
     </ParamField>
     <ParamField body="buttonText" type="string" required>
       Texto exibido no botão.
     </ParamField>
     <ParamField body="id" type="string">
-      ID retornado no evento `message.button_reply` (gerado automaticamente se omitido).
+      ID retornado no evento (gerado automaticamente se omitido).
+    </ParamField>
+  </Expandable>
+
+  <Expandable title="Botão url">
+    <ParamField body="type" type="string" required>
+      `"url"` — abre uma URL ao clicar.
+    </ParamField>
+    <ParamField body="buttonText" type="string" required>
+      Texto exibido no botão.
+    </ParamField>
+    <ParamField body="url" type="string" required>
+      URL a abrir (ex: `"https://zapunlocked.com"`).
+    </ParamField>
+  </Expandable>
+
+  <Expandable title="Botão call">
+    <ParamField body="type" type="string" required>
+      `"call"` — inicia uma ligação ao clicar.
+    </ParamField>
+    <ParamField body="buttonText" type="string" required>
+      Texto exibido no botão.
+    </ParamField>
+    <ParamField body="callPhone" type="string" required>
+      Número a ligar (ex: `"+5511999999999"`).
+    </ParamField>
+  </Expandable>
+
+  <Expandable title="Botão otp">
+    <ParamField body="type" type="string" required>
+      `"otp"` — copia um código ao clicar.
+    </ParamField>
+    <ParamField body="buttonText" type="string" required>
+      Texto exibido no botão.
+    </ParamField>
+    <ParamField body="code" type="string" required>
+      Código a ser copiado.
     </ParamField>
   </Expandable>
 </ParamField>

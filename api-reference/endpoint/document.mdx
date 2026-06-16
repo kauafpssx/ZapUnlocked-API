@@ -8,16 +8,20 @@ api: "POST /send_document"
   Chave de autenticação da API.
 </ParamField>
 
-Envia qualquer tipo de arquivo (PDF, DOCX, ZIP, etc.). A API está configurada para 400 MB; o protocolo suporta até 2 GB.
+Envia qualquer tipo de arquivo (PDF, DOCX, ZIP, etc.). Aceita URL pública ou upload direto via `multipart/form-data`. Limite de 400 MB.
 
-### Corpo da Requisição
+### Corpo da Requisição (JSON ou multipart/form-data)
 
 <ParamField body="phone" type="string" required>
   Número do destinatário com código do país.
 </ParamField>
 
-<ParamField body="document_url" type="string" required>
-  URL pública do arquivo.
+<ParamField body="url" type="string">
+  URL pública do arquivo. Se omitido, use `file` para upload direto.
+</ParamField>
+
+<ParamField body="file" type="file">
+  Arquivo via multipart/form-data. Alternativa a `url`.
 </ParamField>
 
 <ParamField body="fileName" type="string">
@@ -30,10 +34,6 @@ Envia qualquer tipo de arquivo (PDF, DOCX, ZIP, etc.). A API está configurada p
 
 <ParamField body="reply" type="string">
   ID ou texto da mensagem para responder.
-</ParamField>
-
-<ParamField body="type" type="string" default="id">
-  Como o campo `reply` é interpretado: `id` (padrão) ou `text`.
 </ParamField>
 
 <ParamField body="quoted_id" type="string">

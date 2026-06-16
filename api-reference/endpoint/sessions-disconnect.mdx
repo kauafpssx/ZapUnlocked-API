@@ -1,0 +1,33 @@
+---
+title: "Desconectar Sessão"
+icon: "plug-slash"
+api: "POST /sessions/{session_id}/disconnect"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+<ParamField header="session_id" type="string" required>
+  ID da sessão a ser desconectada.
+</ParamField>
+
+Desconecta a sessão do WhatsApp sem deletar seus dados. A sessão poderá ser reconectada posteriormente.
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Session disconnected."
+}
+```
+
+```json 401 Não autorizado
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
+}
+```
+
+</ResponseExample>

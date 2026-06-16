@@ -11,49 +11,31 @@ description: "Envia uma mensagem com botão de cópia para códigos OTP/verifica
 
 Envia um botão especial de **cópia de código** (OTP). O WhatsApp exibe o código com um botão "Copiar código" que o usuário clica para copiar automaticamente. Ideal para fluxos de autenticação em dois fatores.
 
-Suporta duas variantes: campo `code` direto (simplificado) ou via `buttons[]` (com mais controle sobre título e rodapé).
-
 ### Corpo da Requisição
 
 <ParamField body="phone" type="string" required>
   Número do destinatário com código do país (ex: `5511999999999`).
 </ParamField>
 
-<ParamField body="message" type="string">
-  Texto da mensagem exibido acima do botão.
+<ParamField body="code" type="string" required>
+  O código a ser copiado (ex: `"591823"`).
 </ParamField>
 
-<ParamField body="title" type="string">
+<ParamField body="button_text" type="string" required>
+  Texto exibido no botão (ex: `"Copiar Código"`).
+</ParamField>
+
+<ParamField body="title" type="string" required>
   Título exibido no topo da mensagem.
+</ParamField>
+
+<ParamField body="text" type="string" required>
+  Texto da mensagem exibido acima do botão.
 </ParamField>
 
 <ParamField body="footer" type="string">
   Texto de rodapé (ex: `"Válido por 5 minutos."`).
 </ParamField>
-
-<ParamField body="code" type="string">
-  O código a ser copiado (ex: `"123456"` ou `"AB-9921"`). Use este campo para a variante simplificada.
-</ParamField>
-
-<ParamField body="buttons" type="array">
-  Variante alternativa — define o botão OTP via array. **Aceita exatamente 1 item.**
-
-  <Expandable title="Estrutura do botão OTP">
-    <ParamField body="type" type="string" required>
-      Deve ser `"otp"`.
-    </ParamField>
-    <ParamField body="buttonText" type="string" required>
-      Texto exibido no botão (ex: `"Copiar Código"`).
-    </ParamField>
-    <ParamField body="code" type="string" required>
-      O código a ser copiado.
-    </ParamField>
-  </Expandable>
-</ParamField>
-
-<Note>
-  Use `code` direto para envios simples. Use `buttons[]` quando precisar de `title` e `footer` customizados. Em ambas as variantes, apenas **1 botão OTP** é suportado por mensagem.
-</Note>
 
 <ParamField body="reply" type="string">
   ID ou texto da mensagem para responder.
