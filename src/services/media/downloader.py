@@ -1,5 +1,4 @@
 import uuid
-import gc
 from pathlib import Path
 
 from src.config.constants import TEMP_DIR
@@ -87,7 +86,6 @@ async def download_media(url: str) -> str:
         file_path = Path(file_path_str)
         size_mb = file_path.stat().st_size / (1024 * 1024)
         logger.info(f"✅ Download complete: {file_path.name} ({size_mb:.2f} MB)")
-        gc.collect()
         return str(file_path)
 
     except Exception as e:

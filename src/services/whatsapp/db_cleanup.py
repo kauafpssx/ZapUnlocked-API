@@ -1,83 +1,87 @@
 """SQLite database cleanup and scheduler for the Neonize auth database."""
 
 import asyncio
-import gc
-import json
 import sqlite3
 import time
 from pathlib import Path
 
 from src.utils.logger import logger
-from src.config.constants import AUTH_DIR, DATA_DIR
+from src.utils.db import get_conn
 from src.services.whatsapp import state
 
-DB_CONFIG_FILE = Path(DATA_DIR) / "db_config.json"
 DEFAULT_INTERVAL = 1440  # minutes
-last_cleanup_time: int = 0
-current_interval: int = DEFAULT_INTERVAL
+
+# Per-session in-memory config cache (loaded from DB at startup)
+_session_config: dict[str, dict] = {}
+
+
+def _get_config(session_id: str = "1") -> dict:
+    if session_id not in _session_config:
+        _session_config[session_id] = {"interval": DEFAULT_INTERVAL, "last_run": 0}
+    return _session_config[session_id]
 
 
 # ══════════════════════════════════════════════════════════
 # CONFIG PERSISTENCE
 # ══════════════════════════════════════════════════════════
 
-def load_db_config() -> None:
-    global current_interval, last_cleanup_time
+def load_db_config(session_id: str = "1") -> None:
+    cfg = _get_config(session_id)
     try:
-        if DB_CONFIG_FILE.exists():
-            with open(DB_CONFIG_FILE, "r") as f:
-                config = json.load(f)
-                current_interval = config.get("interval", DEFAULT_INTERVAL)
-                last_cleanup_time = config.get("last_run", 0)
-        else:
-            current_interval = DEFAULT_INTERVAL
-            last_cleanup_time = 0
+        conn = get_conn()
+        row = conn.execute(
+            "SELECT interval, last_run FROM db_config WHERE session_id=?", (session_id,)
+        ).fetchone()
+        if row:
+            cfg["interval"] = row["interval"]
+            cfg["last_run"] = row["last_run"]
     except Exception as e:
-        logger.error(f"Error loading db config: {e}")
+        logger.error(f"Error loading db config (session={session_id}): {e}")
 
 
-def save_db_config() -> None:
+def save_db_config(session_id: str = "1") -> None:
+    cfg = _get_config(session_id)
     try:
-        with open(DB_CONFIG_FILE, "w") as f:
-            json.dump({"interval": current_interval, "last_run": last_cleanup_time}, f)
+        conn = get_conn()
+        conn.execute(
+            "INSERT OR REPLACE INTO db_config (session_id, interval, last_run) VALUES (?, ?, ?)",
+            (session_id, cfg["interval"], cfg["last_run"]),
+        )
+        conn.commit()
     except Exception as e:
-        logger.error(f"Error saving db config: {e}")
+        logger.error(f"Error saving db config (session={session_id}): {e}")
 
 
-def set_cleanup_interval(interval_minutes: int) -> None:
-    """Set the SQLite cleanup interval (in minutes)."""
-    global current_interval
-    current_interval = interval_minutes
-    save_db_config()
-    logger.info(f"⚙️ Cleanup interval updated to {interval_minutes} minutes via setter")
+def set_cleanup_interval(interval_minutes: int, session_id: str = "1") -> None:
+    _get_config(session_id)["interval"] = interval_minutes
+    save_db_config(session_id)
+    logger.info(f"⚙️ Cleanup interval updated to {interval_minutes} minutes (session={session_id})")
 
 
-def get_cleanup_state() -> dict:
-    """Return current cleanup state (for diagnostics)."""
-    return {
-        "last_cleanup_time": last_cleanup_time,
-        "current_interval": current_interval,
-    }
+def get_cleanup_state(session_id: str = "1") -> dict:
+    cfg = _get_config(session_id)
+    return {"last_cleanup_time": cfg["last_run"], "current_interval": cfg["interval"]}
 
 
 # ══════════════════════════════════════════════════════════
 # CLEANUP
 # ══════════════════════════════════════════════════════════
 
-def cleanup_db() -> None:
+def cleanup_db(session_id: str = "1") -> None:
     """Clean temporary SQLite tables and run VACUUM (thread-safe)."""
-    global last_cleanup_time
-    cleanup_lock = state.get_cleanup_lock()
+    from src.config.constants import get_auth_dir
+    cfg = _get_config(session_id)
+    cleanup_lock = state.get_cleanup_lock(session_id)
     if not cleanup_lock.acquire(blocking=False):
-        logger.warning("⚠️ A cleanup is already in progress. Skipping...")
+        logger.warning(f"⚠️ Cleanup already in progress for session={session_id}. Skipping...")
         return
 
     try:
-        auth_file = Path(AUTH_DIR) / "auth.sqlite"
+        auth_file = Path(get_auth_dir(session_id)) / "auth.sqlite"
         if not auth_file.exists():
             return
 
-        logger.info("🧹 Starting automatic SQLite cleanup...")
+        logger.info(f"🧹 Starting SQLite cleanup (session={session_id})...")
 
         conn = sqlite3.connect(str(auth_file), isolation_level=None)
         cursor = conn.cursor()
@@ -103,22 +107,22 @@ def cleanup_db() -> None:
             logger.error(f"❌ Error executing VACUUM: {e}")
 
         conn.close()
-        gc.collect()
 
-        last_cleanup_time = int(time.time())
-        save_db_config()
-        logger.info("✅ Database cleanup completed successfully.")
+        cfg["last_run"] = int(time.time())
+        save_db_config(session_id)
+        logger.info(f"✅ Database cleanup completed (session={session_id}).")
     except Exception as e:
-        logger.error(f"❌ Database cleanup failed: {e}")
+        logger.error(f"❌ Database cleanup failed (session={session_id}): {e}")
     finally:
-        state.get_cleanup_lock().release()
+        state.get_cleanup_lock(session_id).release()
 
 
-async def db_cleanup_scheduler() -> None:
+async def db_cleanup_scheduler(session_id: str = "1") -> None:
     """Infinite loop that runs cleanup periodically per configured interval."""
     while True:
+        cfg = _get_config(session_id)
         now = int(time.time())
-        elapsed = (now - last_cleanup_time) / 60
-        if elapsed >= current_interval:
-            cleanup_db()
+        elapsed = (now - cfg["last_run"]) / 60
+        if elapsed >= cfg["interval"]:
+            cleanup_db(session_id)
         await asyncio.sleep(60)

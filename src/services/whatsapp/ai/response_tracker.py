@@ -39,5 +39,3 @@ def cleanup(request_id: str) -> None:
     _pending.pop(request_id, None)
 
 
-def cleanup_done() -> None:
-    pass  # kept for backwards compat

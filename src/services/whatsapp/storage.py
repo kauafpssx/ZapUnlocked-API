@@ -4,73 +4,80 @@ import re
 from pathlib import Path
 
 from src.utils.logger import logger
+from src.utils.db import get_conn
 from src.config.constants import DATA_DIR
 
-CHATS_DIR = Path(DATA_DIR) / "chats"
-INDEX_FILE = CHATS_DIR / "index.json"
+CHATS_DIR = Path(DATA_DIR) / "chats"  # legacy fallback for tests
 
-# Ensure directories exist
-CHATS_DIR.mkdir(parents=True, exist_ok=True)
-
-# Max messages stored per chat on disk — kept low to conserve RAM
 HISTORY_LIMIT = 20
 
-async def save_chat_index(chat_info: dict):
-    try:
-        index = {}
-        if INDEX_FILE.exists():
-            with open(INDEX_FILE, "r", encoding="utf-8") as f:
-                content = f.read()
-                if content:
-                    index = json.loads(content)
 
-        # Basic LID resolution approach
-        real_phone = chat_info.get("phone")
+def _chats_dir(session_id: str = "1") -> Path:
+    from src.config.constants import get_data_dir
+    d = Path(get_data_dir(session_id)) / "chats"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+async def save_chat_index(chat_info: dict, session_id: str = "1") -> None:
+    try:
         chat_id = chat_info.get("id")
+        if not chat_id:
+            return
 
-        if not real_phone and chat_id:
-            real_phone = chat_id.split("@")[0]
+        phone = chat_info.get("phone")
+        if not phone:
+            phone = chat_id.split("@")[0]
 
-        if chat_id:
-            # Update metadata
-            if chat_id in index:
-                index[chat_id].update(chat_info)
-            else:
-                index[chat_id] = chat_info
+        name = chat_info.get("name")
+        ts = chat_info.get("lastMessageTimestamp", 0) or 0
 
-            # Save
-            with open(INDEX_FILE, "w", encoding="utf-8") as f:
-                json.dump(index, f, indent=2)
-
+        conn = get_conn()
+        conn.execute(
+            """INSERT INTO chat_index
+                   (session_id, chat_id, phone, name, last_message_timestamp)
+               VALUES (?, ?, ?, ?, ?)
+               ON CONFLICT(session_id, chat_id) DO UPDATE SET
+                   phone = excluded.phone,
+                   name = excluded.name,
+                   last_message_timestamp = excluded.last_message_timestamp""",
+            (session_id, chat_id, phone, name, ts),
+        )
+        conn.commit()
     except Exception as err:
-        logger.error(f"❌ Failed to save chat index: {str(err)}")
+        logger.error(f"❌ Failed to save chat index: {err}")
 
-def get_recent_chats_from_index() -> list:
+
+def get_recent_chats_from_index(session_id: str = "1") -> list:
     try:
-        if not INDEX_FILE.exists():
-            return []
-
-        with open(INDEX_FILE, "r", encoding="utf-8") as f:
-            content = f.read()
-            if not content:
-                return []
-            index = json.loads(content)
-
-        chats = list(index.values())
-        return sorted(chats, key=lambda x: x.get("lastMessageTimestamp", 0) or 0, reverse=True)
+        conn = get_conn()
+        rows = conn.execute(
+            """SELECT chat_id, phone, name, last_message_timestamp
+               FROM chat_index
+               WHERE session_id=?
+               ORDER BY last_message_timestamp DESC""",
+            (session_id,),
+        ).fetchall()
+        return [
+            {
+                "id": row["chat_id"],
+                "phone": row["phone"],
+                "name": row["name"],
+                "lastMessageTimestamp": row["last_message_timestamp"],
+            }
+            for row in rows
+        ]
     except Exception as err:
-        logger.error(f"❌ Failed to read chat index: {str(err)}")
+        logger.error(f"❌ Failed to read chat index: {err}")
         return []
 
-async def add_message_to_history(phone: str, message: dict):
+
+async def add_message_to_history(phone: str, message: dict, session_id: str = "1") -> None:
     if not phone:
         return
 
-    # Security sanitization: strip directory traversal characters
     safe_phone = re.sub(r'[^a-zA-Z0-9_\-\.]', '', phone)
-    
-    file_name = f"{safe_phone}.json.gz"
-    file_path = CHATS_DIR / file_name
+    file_path = _chats_dir(session_id) / f"{safe_phone}.json.gz"
     history = []
 
     try:
@@ -80,49 +87,50 @@ async def add_message_to_history(phone: str, message: dict):
                 if content:
                     history = json.loads(content)
 
-        # Avoid duplicates based on ID
         msg_id = message.get("key", {}).get("id")
         if not any(m.get("key", {}).get("id") == msg_id for m in history):
             history.append(message)
 
-        # Keep limit
         if len(history) > HISTORY_LIMIT:
             history = history[-HISTORY_LIMIT:]
 
-        # Compress and save
         with gzip.open(file_path, "wt", encoding="utf-8") as f:
             json.dump(history, f)
 
     except Exception as err:
-        logger.error(f"❌ Failed to save history for {phone}: {str(err)}")
+        logger.error(f"❌ Failed to save history for {phone}: {err}")
 
-async def get_history(phone: str) -> list:
+
+async def get_history(phone: str, session_id: str = "1") -> list:
     if not phone:
         return []
 
     safe_phone = re.sub(r'[^a-zA-Z0-9_\-\.]', '', phone)
-    file_name = f"{safe_phone}.json.gz"
-    file_path = CHATS_DIR / file_name
+    file_path = _chats_dir(session_id) / f"{safe_phone}.json.gz"
 
     try:
         if not file_path.exists():
             return []
-
         with gzip.open(file_path, "rt", encoding="utf-8") as f:
             content = f.read()
             if content:
                 return json.loads(content)
         return []
     except Exception as err:
-        logger.error(f"❌ Failed to read history for {phone}: {str(err)}")
+        logger.error(f"❌ Failed to read history for {phone}: {err}")
         return []
 
-async def clear_all_data():
+
+async def clear_all_data(session_id: str = "1") -> None:
     try:
-        if CHATS_DIR.exists():
-            for file in CHATS_DIR.iterdir():
+        chats = _chats_dir(session_id)
+        if chats.exists():
+            for file in chats.iterdir():
                 if file.is_file():
                     file.unlink()
-            logger.info("🧹 All chat history data cleared successfully.")
+        conn = get_conn()
+        conn.execute("DELETE FROM chat_index WHERE session_id=?", (session_id,))
+        conn.commit()
+        logger.info(f"🧹 All chat history data cleared (session={session_id}).")
     except Exception as err:
-        logger.error(f"❌ Failed to clear chat data: {str(err)}")
+        logger.error(f"❌ Failed to clear chat data: {err}")

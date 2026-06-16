@@ -26,4 +26,4 @@ class WebhookUpdateRequest(BaseModel):
 
 
 class WebhookToggleRequest(BaseModel):
-    active: bool
+    active: Optional[bool] = None

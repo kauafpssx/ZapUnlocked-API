@@ -1,88 +1,81 @@
-"""Persistent runtime statistics — counters survive restarts, stored in DATA_DIR/stats.json."""
+"""Persistent runtime statistics — counters survive restarts, stored per session in SQLite."""
 
-import json
-import threading
 from datetime import datetime, timezone
-from pathlib import Path
 
-from src.config.constants import DATA_DIR
+from src.utils.db import get_conn
 
-_STATS_FILE = Path(DATA_DIR) / "stats.json"
-_lock = threading.Lock()
-
-_DEFAULTS = {
-    "messages_sent": 0,
-    "messages_received": 0,
-    "webhooks_fired": 0,
-}
+_COUNTER_KEYS = ("messages_sent", "messages_received", "webhooks_fired")
 
 
-def _load_full() -> dict:
-    try:
-        data = json.loads(_STATS_FILE.read_text(encoding="utf-8"))
-        counters = {k: int(data.get(k, 0)) for k in _DEFAULTS}
-        counters["webhook_stats"] = data.get("webhook_stats", {})
-        return counters
-    except Exception:
-        return {**_DEFAULTS, "webhook_stats": {}}
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _save(data: dict) -> None:
-    try:
-        _STATS_FILE.parent.mkdir(parents=True, exist_ok=True)
-        _STATS_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
-    except Exception:
-        pass
+def increment(key: str, amount: int = 1, session_id: str = "1") -> None:
+    if key not in _COUNTER_KEYS:
+        return
+    conn = get_conn()
+    conn.execute(
+        """INSERT INTO stats (session_id, key, value) VALUES (?, ?, ?)
+           ON CONFLICT(session_id, key) DO UPDATE SET value = value + excluded.value""",
+        (session_id, key, amount),
+    )
+    conn.commit()
 
 
-def increment(key: str, amount: int = 1) -> None:
-    with _lock:
-        data = _load_full()
-        if key in _DEFAULTS:
-            data[key] = data.get(key, 0) + amount
-            _save(data)
+def increment_webhook(name: str, session_id: str = "1") -> None:
+    now = _utc_now()
+    conn = get_conn()
+    conn.execute(
+        """INSERT INTO webhook_stats (session_id, webhook_name, fired, last_fired) VALUES (?, ?, 1, ?)
+           ON CONFLICT(session_id, webhook_name)
+           DO UPDATE SET fired = fired + 1, last_fired = excluded.last_fired""",
+        (session_id, name, now),
+    )
+    conn.commit()
 
 
-def increment_webhook(name: str) -> None:
-    with _lock:
-        data = _load_full()
-        wh = data.setdefault("webhook_stats", {})
-        entry = wh.setdefault(name, {"fired": 0, "last_fired": None})
-        entry["fired"] += 1
-        entry["last_fired"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-        _save(data)
+def get_all(session_id: str = "1") -> dict:
+    conn = get_conn()
+    rows = conn.execute(
+        "SELECT key, value FROM stats WHERE session_id=?", (session_id,)
+    ).fetchall()
+    result = {k: 0 for k in _COUNTER_KEYS}
+    for row in rows:
+        if row["key"] in result:
+            result[row["key"]] = row["value"]
+    return result
 
 
-def get_all() -> dict:
-    with _lock:
-        d = _load_full()
-        return {k: d[k] for k in _DEFAULTS}
+def get_webhook_stats(name: str = None, session_id: str = "1") -> dict:
+    conn = get_conn()
+    if name is not None:
+        row = conn.execute(
+            "SELECT fired, last_fired FROM webhook_stats WHERE session_id=? AND webhook_name=?",
+            (session_id, name),
+        ).fetchone()
+        return {"fired": row["fired"], "last_fired": row["last_fired"]} if row else None
+    rows = conn.execute(
+        "SELECT webhook_name, fired, last_fired FROM webhook_stats WHERE session_id=?",
+        (session_id,),
+    ).fetchall()
+    return {r["webhook_name"]: {"fired": r["fired"], "last_fired": r["last_fired"]} for r in rows}
 
 
-def get_webhook_stats(name: str = None) -> dict:
-    with _lock:
-        data = _load_full()
-        wh = data.get("webhook_stats", {})
-        if name is not None:
-            return wh.get(name)
-        return wh
+def reset(session_id: str = "1") -> None:
+    conn = get_conn()
+    conn.execute("DELETE FROM stats WHERE session_id=?", (session_id,))
+    conn.execute("DELETE FROM webhook_stats WHERE session_id=?", (session_id,))
+    conn.commit()
 
 
-def reset() -> None:
-    with _lock:
-        data = _load_full()
-        for k in _DEFAULTS:
-            data[k] = 0
-        _save(data)
-
-
-def reset_webhook_stats(name: str = None) -> None:
-    with _lock:
-        data = _load_full()
-        wh = data.setdefault("webhook_stats", {})
-        if name is not None:
-            if name in wh:
-                wh[name] = {"fired": 0, "last_fired": None}
-        else:
-            data["webhook_stats"] = {}
-        _save(data)
+def reset_webhook_stats(name: str = None, session_id: str = "1") -> None:
+    conn = get_conn()
+    if name is not None:
+        conn.execute(
+            "UPDATE webhook_stats SET fired=0, last_fired=NULL WHERE session_id=? AND webhook_name=?",
+            (session_id, name),
+        )
+    else:
+        conn.execute("DELETE FROM webhook_stats WHERE session_id=?", (session_id,))
+    conn.commit()

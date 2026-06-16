@@ -40,7 +40,10 @@ def compress_old_logs() -> int:
             continue  # keep today's live log uncompressed
         gz_path = log_file.with_suffix(".log.gz")
         if gz_path.exists():
-            log_file.unlink()  # already compressed, remove plain copy
+            try:
+                log_file.unlink()  # already compressed, remove plain copy
+            except Exception as e:
+                logger.warning(f"[LogCleanup] Could not remove {log_file.name}: {e}")
             continue
         try:
             with open(log_file, "rb") as f_in, gzip.open(gz_path, "wb") as f_out:

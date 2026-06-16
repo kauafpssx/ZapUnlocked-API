@@ -12,7 +12,7 @@ def _sign_payload(secret: str, payload: dict) -> str:
     return "sha256=" + hmac.new(secret.encode(), body.encode(), hashlib.sha256).hexdigest()  # noqa: S324
 
 
-async def trigger_webhook(config: dict, context: dict, default_payload: dict | None = None, _event: str | None = None):
+async def trigger_webhook(config: dict, context: dict, default_payload: dict | None = None, _event: str | None = None, session_id: str = "1"):
     url = config.get("url")
     method = config.get("method", "POST")
     headers = config.get("headers", {})
@@ -68,12 +68,12 @@ async def trigger_webhook(config: dict, context: dict, default_payload: dict | N
             response = await client.send(request)
             response.raise_for_status()
             logger.info(f"✅ Webhook delivered to {url}")
-            record_dispatch(webhook_name, event_label, response.status_code, True)
+            record_dispatch(webhook_name, event_label, response.status_code, True, session_id=session_id)
 
     except httpx.HTTPStatusError as e:
         logger.error(f"❌ Webhook delivery failed for {url}: {e}")
         logger.error(f"Status: {e.response.status_code} - Body: {e.response.text}")
-        record_dispatch(webhook_name, event_label, e.response.status_code, False, str(e))
+        record_dispatch(webhook_name, event_label, e.response.status_code, False, str(e), session_id=session_id)
     except Exception as e:
         logger.error(f"❌ Webhook delivery failed for {url}: {str(e)}")
-        record_dispatch(webhook_name, event_label, None, False, str(e))
+        record_dispatch(webhook_name, event_label, None, False, str(e), session_id=session_id)

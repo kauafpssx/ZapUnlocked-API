@@ -1,53 +1,35 @@
 import json
-import os
-from pathlib import Path
-from src.config.constants import DATA_DIR
-from src.utils.logger import logger
 
-SETTINGS_FILE = Path(DATA_DIR) / "settings.json"
+from src.utils.db import get_conn
+from src.utils.logger import logger
 
 DEFAULT_SETTINGS = {
     "ip_control_enabled": False,
-    # NOTE: IP whitelist/blacklist are now stored in data/ip_rules.json
-    # and managed via /settings/ip-rules endpoints.
-    # Instance settings
     "call_reject_auto": False,
     "call_reject_message": "I'm unavailable right now. Please send a message.",
     "auto_read_message": False,
 }
 
-def get_settings():
-    try:
-        if not SETTINGS_FILE.exists():
-            return DEFAULT_SETTINGS.copy()
-        
-        with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
-            content = f.read()
-            if not content:
-                return DEFAULT_SETTINGS.copy()
-            
-            loaded = json.loads(content)
-            # Ensure all default keys exist
-            for key, val in DEFAULT_SETTINGS.items():
-                if key not in loaded:
-                    loaded[key] = val
-            return loaded
-    except Exception as e:
-        logger.error(f"❌ Failed to read settings: {e}")
-        return DEFAULT_SETTINGS.copy()
 
-def save_settings(settings: dict):
+def get_settings(session_id: str = "1") -> dict:
+    conn = get_conn()
+    rows = conn.execute(
+        "SELECT key, value FROM settings WHERE session_id=?", (session_id,)
+    ).fetchall()
+    stored = {row["key"]: json.loads(row["value"]) for row in rows}
+    return {**DEFAULT_SETTINGS, **stored}
+
+
+def save_settings(settings: dict, session_id: str = "1") -> dict | None:
     try:
-        # Merge with current
-        current = get_settings()
-        current.update(settings)
-        
-        # Ensure directory exists
-        SETTINGS_FILE.parent.mkdir(parents=True, exist_ok=True)
-        
-        with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
-            json.dump(current, f, indent=4)
-        return current
+        conn = get_conn()
+        for key, value in settings.items():
+            conn.execute(
+                "INSERT OR REPLACE INTO settings (session_id, key, value) VALUES (?, ?, ?)",
+                (session_id, key, json.dumps(value)),
+            )
+        conn.commit()
+        return get_settings(session_id)
     except Exception as e:
-        logger.error(f"❌ Failed to save settings: {e}")
+        logger.error(f"❌ Failed to save settings (session={session_id}): {e}")
         return None

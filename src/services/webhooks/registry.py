@@ -1,12 +1,9 @@
 import json
 import re
 from datetime import datetime, timezone
-from pathlib import Path
 
-from src.config.constants import DATA_DIR
+from src.utils.db import get_conn
 from src.utils.logger import logger
-
-WEBHOOKS_DIR = Path(DATA_DIR) / "webhooks"
 
 ALL_EVENTS = [
     # ── Message received ──────────────────────────────────────
@@ -59,8 +56,8 @@ ALL_EVENTS = [
 ]
 
 
-def _ensure_dir():
-    WEBHOOKS_DIR.mkdir(parents=True, exist_ok=True)
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _slugify(name: str) -> str:
@@ -68,47 +65,47 @@ def _slugify(name: str) -> str:
     return slug[:64]
 
 
-def _webhook_path(name: str) -> Path:
-    return WEBHOOKS_DIR / f"{_slugify(name)}.json"
+def _row_to_dict(row) -> dict:
+    wh = {
+        "name": row["name"],
+        "url": row["url"],
+        "method": row["method"],
+        "headers": json.loads(row["headers"]),
+        "body": json.loads(row["body"]),
+        "events": json.loads(row["events"]),
+        "active": bool(row["active"]),
+        "created_at": row["created_at"],
+    }
+    if row["secret"]:
+        wh["secret"] = row["secret"]
+    return wh
 
 
-def _read_file(path: Path) -> dict | None:
-    try:
-        if not path.exists():
-            return None
-        content = path.read_text(encoding="utf-8").strip()
-        return json.loads(content) if content else None
-    except Exception as e:
-        logger.error(f"Failed to read webhook {path}: {e}")
-        return None
+def list_webhooks(session_id: str = "1") -> list[dict]:
+    conn = get_conn()
+    rows = conn.execute(
+        "SELECT * FROM webhooks WHERE session_id=? ORDER BY name", (session_id,)
+    ).fetchall()
+    return [_row_to_dict(r) for r in rows]
 
 
-def _write_file(path: Path, data: dict):
-    path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+def get_webhook(name: str, session_id: str = "1") -> dict | None:
+    slug = _slugify(name)
+    conn = get_conn()
+    row = conn.execute(
+        "SELECT * FROM webhooks WHERE session_id=? AND name=?", (session_id, slug)
+    ).fetchone()
+    return _row_to_dict(row) if row else None
 
 
-def list_webhooks() -> list[dict]:
-    _ensure_dir()
-    result = []
-    for f in sorted(WEBHOOKS_DIR.glob("*.json")):
-        wh = _read_file(f)
-        if wh:
-            result.append(wh)
-    return result
-
-
-def get_webhook(name: str) -> dict | None:
-    return _read_file(_webhook_path(name))
-
-
-def create_webhook(data: dict) -> dict:
-    _ensure_dir()
+def create_webhook(data: dict, session_id: str = "1") -> dict:
     name = _slugify(data.get("name", ""))
     if not name:
         raise ValueError("'name' is required.")
-
-    path = _webhook_path(name)
-    if path.exists():
+    conn = get_conn()
+    if conn.execute(
+        "SELECT 1 FROM webhooks WHERE session_id=? AND name=?", (session_id, name)
+    ).fetchone():
         raise ValueError(f"Webhook '{name}' already exists. Use PUT to update.")
 
     wh = {
@@ -119,20 +116,30 @@ def create_webhook(data: dict) -> dict:
         "body": data.get("body", {}),
         "events": data.get("events", ["*"]),
         "active": data.get("active", True),
-        "created_at": data.get("created_at") or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "created_at": data.get("created_at") or _utc_now(),
+        "secret": data.get("secret"),
     }
-    if data.get("secret"):
-        wh["secret"] = data["secret"]
-    _write_file(path, wh)
-    logger.info(f"🔗 Webhook created: {name}")
-    return wh
+    conn.execute(
+        """INSERT INTO webhooks
+               (session_id, name, url, method, headers, body, events, active, created_at, secret)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        (
+            session_id, wh["name"], wh["url"], wh["method"],
+            json.dumps(wh["headers"]), json.dumps(wh["body"]), json.dumps(wh["events"]),
+            1 if wh["active"] else 0, wh["created_at"], wh["secret"],
+        ),
+    )
+    conn.commit()
+    logger.info(f"🔗 Webhook created: {name} (session={session_id})")
+    result = {k: v for k, v in wh.items() if k != "secret" or v}
+    return result
 
 
-def update_webhook(name: str, data: dict) -> dict:
-    path = _webhook_path(name)
-    wh = _read_file(path)
+def update_webhook(name: str, data: dict, session_id: str = "1") -> dict:
+    slug = _slugify(name)
+    wh = get_webhook(slug, session_id)
     if not wh:
-        raise ValueError(f"Webhook '{name}' not found.")
+        raise ValueError(f"Webhook '{slug}' not found.")
 
     if "url" in data:
         wh["url"] = data["url"]
@@ -152,37 +159,58 @@ def update_webhook(name: str, data: dict) -> dict:
         else:
             wh.pop("secret", None)
 
-    _write_file(path, wh)
-    logger.info(f"🔗 Webhook updated: {name}")
+    conn = get_conn()
+    conn.execute(
+        """UPDATE webhooks
+           SET url=?, method=?, headers=?, body=?, events=?, active=?, secret=?
+           WHERE session_id=? AND name=?""",
+        (
+            wh["url"], wh["method"],
+            json.dumps(wh["headers"]), json.dumps(wh["body"]), json.dumps(wh["events"]),
+            1 if wh.get("active", True) else 0, wh.get("secret"),
+            session_id, slug,
+        ),
+    )
+    conn.commit()
+    logger.info(f"🔗 Webhook updated: {slug} (session={session_id})")
     return wh
 
 
-def delete_webhook(name: str):
-    path = _webhook_path(name)
-    if not path.exists():
-        raise ValueError(f"Webhook '{name}' not found.")
-    path.unlink()
-    logger.info(f"🗑️ Webhook removed: {name}")
+def delete_webhook(name: str, session_id: str = "1") -> None:
+    slug = _slugify(name)
+    conn = get_conn()
+    cursor = conn.execute(
+        "DELETE FROM webhooks WHERE session_id=? AND name=?", (session_id, slug)
+    )
+    if cursor.rowcount == 0:
+        raise ValueError(f"Webhook '{slug}' not found.")
+    conn.commit()
+    logger.info(f"🗑️ Webhook removed: {slug} (session={session_id})")
 
 
-def toggle_webhook(name: str, active: bool) -> dict:
-    path = _webhook_path(name)
-    wh = _read_file(path)
-    if not wh:
-        raise ValueError(f"Webhook '{name}' not found.")
-    wh["active"] = active
-    _write_file(path, wh)
+def toggle_webhook(name: str, active: bool, session_id: str = "1") -> dict:
+    slug = _slugify(name)
+    conn = get_conn()
+    cursor = conn.execute(
+        "UPDATE webhooks SET active=? WHERE session_id=? AND name=?",
+        (1 if active else 0, session_id, slug),
+    )
+    if cursor.rowcount == 0:
+        raise ValueError(f"Webhook '{slug}' not found.")
+    conn.commit()
     status = "enabled" if active else "disabled"
-    logger.info(f"🔗 Webhook {status}: {name}")
-    return wh
+    logger.info(f"🔗 Webhook {status}: {slug} (session={session_id})")
+    return get_webhook(slug, session_id)
 
 
-def get_active_webhooks_for_event(event_type: str) -> list[dict]:
+def get_active_webhooks_for_event(event_type: str, session_id: str = "1") -> list[dict]:
+    conn = get_conn()
+    rows = conn.execute(
+        "SELECT * FROM webhooks WHERE session_id=? AND active=1", (session_id,)
+    ).fetchall()
     result = []
-    for wh in list_webhooks():
-        if not wh.get("active", True):
-            continue
-        events = wh.get("events", ["*"])
+    for row in rows:
+        events = json.loads(row["events"])
         if "*" in events or event_type in events:
-            result.append(wh)
+            result.append(_row_to_dict(row))
     return result

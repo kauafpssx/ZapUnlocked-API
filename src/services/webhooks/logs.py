@@ -1,66 +1,72 @@
-"""Webhook dispatch log — persists last N delivery attempts per webhook."""
+"""Webhook dispatch log — persists last N delivery attempts per webhook in SQLite."""
 
-import json
-import threading
 from datetime import datetime, timezone
-from pathlib import Path
 
-from src.config.constants import DATA_DIR
+from src.utils.db import get_conn
 
-_LOGS_FILE = Path(DATA_DIR) / "webhook_logs.json"
 _MAX_PER_WEBHOOK = 100
-_lock = threading.Lock()
 
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _load() -> dict:
-    try:
-        if _LOGS_FILE.exists():
-            return json.loads(_LOGS_FILE.read_text(encoding="utf-8"))
-    except Exception:
-        pass
-    return {}
+def record_dispatch(
+    webhook_name: str,
+    event: str,
+    status_code: int | None,
+    success: bool,
+    error: str | None = None,
+    session_id: str = "1",
+) -> None:
+    conn = get_conn()
+    conn.execute(
+        """INSERT INTO webhook_logs
+               (session_id, webhook_name, timestamp, event, status_code, success, error)
+           VALUES (?, ?, ?, ?, ?, ?, ?)""",
+        (session_id, webhook_name, _utc_now(), event, status_code, 1 if success else 0, error),
+    )
+    # Keep only the most recent _MAX_PER_WEBHOOK entries per webhook
+    conn.execute(
+        """DELETE FROM webhook_logs
+           WHERE session_id=? AND webhook_name=? AND id NOT IN (
+               SELECT id FROM webhook_logs
+               WHERE session_id=? AND webhook_name=?
+               ORDER BY id DESC LIMIT ?
+           )""",
+        (session_id, webhook_name, session_id, webhook_name, _MAX_PER_WEBHOOK),
+    )
+    conn.commit()
 
 
-def _save(data: dict):
-    _LOGS_FILE.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+def get_logs(webhook_name: str, limit: int = 50, session_id: str = "1") -> list:
+    conn = get_conn()
+    rows = conn.execute(
+        """SELECT timestamp, event, status_code, success, error
+           FROM webhook_logs
+           WHERE session_id=? AND webhook_name=?
+           ORDER BY id DESC LIMIT ?""",
+        (session_id, webhook_name, limit),
+    ).fetchall()
+    return [
+        {
+            "timestamp": row["timestamp"],
+            "event": row["event"],
+            "statusCode": row["status_code"],
+            "success": bool(row["success"]),
+            "error": row["error"],
+        }
+        for row in rows
+    ]
 
 
-def record_dispatch(webhook_name: str, event: str, status_code: int | None, success: bool, error: str | None = None):
-    """Append a delivery attempt to the in-memory + on-disk log for a webhook."""
-    entry = {
-        "timestamp": _utc_now(),
-        "event": event,
-        "statusCode": status_code,
-        "success": success,
-        "error": error,
-    }
-    with _lock:
-        data = _load()
-        logs = data.get(webhook_name, [])
-        logs.append(entry)
-        # keep only last N
-        if len(logs) > _MAX_PER_WEBHOOK:
-            logs = logs[-_MAX_PER_WEBHOOK:]
-        data[webhook_name] = logs
-        _save(data)
-
-
-def get_logs(webhook_name: str, limit: int = 50) -> list:
-    with _lock:
-        data = _load()
-    logs = data.get(webhook_name, [])
-    return list(reversed(logs))[:limit]
-
-
-def delete_logs(webhook_name: str | None = None):
-    with _lock:
-        if webhook_name:
-            data = _load()
-            data.pop(webhook_name, None)
-            _save(data)
-        else:
-            _save({})
+def delete_logs(webhook_name: str | None = None, session_id: str = "1") -> None:
+    conn = get_conn()
+    if webhook_name:
+        conn.execute(
+            "DELETE FROM webhook_logs WHERE session_id=? AND webhook_name=?",
+            (session_id, webhook_name),
+        )
+    else:
+        conn.execute("DELETE FROM webhook_logs WHERE session_id=?", (session_id,))
+    conn.commit()
