@@ -9,12 +9,12 @@
   </a>
   <img src="https://img.shields.io/badge/REST%20API-A855F7?style=for-the-badge&logo=fastapi&logoColor=white" alt="REST API">
   <img src="https://img.shields.io/badge/MIT%20License-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="MIT License">
-  <img src="https://img.shields.io/badge/Python%203.10%2B-A855F7?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+">
+  <img src="https://img.shields.io/badge/Python%203.13%2B-A855F7?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.13+">
 </p>
 
 ---
 
-### 🌐 Sprache Auswählen :
+### 🌐 Sprache auswählen:
 
 <table width="100%">
   <tr>
@@ -22,6 +22,7 @@
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/en.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/us.svg" width="40" title="English"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/es.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/es.svg" width="40" title="Español"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/fr.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/fr.svg" width="40" title="Français"></a></td>
+    <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/de.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/de.svg" width="40" title="Deutsch"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/zh.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/cn.svg" width="40" title="中文"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ja.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/jp.svg" width="40" title="日本語"></a></td>
     <td align="center" valign="middle"><a href="https://github.com/kauafpssx/ZapUnlocked-API/blob/main/docs/translations/ru.md"><img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/ru.svg" width="40" title="Русский"></a></td>
@@ -38,68 +39,94 @@
 
 ## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/de.svg" width="30"> Was ist ZapUnlocked-API?
 
-Der Markt für WhatsApp-APIs verlangt missbräuchliche Monatsgebühren: Dutzende bis Hunderte Reais pro Monat, mit Nutzungslimits, Gebühren pro Konversation und Daten, die über Drittanbieter-Server laufen. **ZapUnlocked-API existiert, um das zu ändern.**
+WhatsApp-APIs verlangen überhöhte monatliche Gebühren: Dutzende bis Hunderte Reais pro Monat, Nutzungslimits, Gebühren pro Konversation und Daten über Drittanbieter-Server. **ZapUnlocked-API ist kostenlos und Open Source.**
 
-Entwickelt in **Python** mit **[Neonize](https://github.com/krypton-byte/neonize)** als Verbindungsengine, bietet diese API eine einfache REST-Schnittstelle (FastAPI) zur Verwaltung von Sitzungen, zum Senden komplexer Medien und zur Erstellung intelligenter Interaktionen. **Ohne schwere Datenbank, ohne Abogebühren, ohne von irgendwem abhängig zu sein.**
-
-Unser Ansatz basiert auf **technischer Exzellenz** und **Entwicklerunabhängigkeit**. Wir glauben, dass leistungsstarke Werkzeuge für diejenigen zugänglich sein sollten, die ihre eigenen Lösungen entwickeln.
+Entwickelt in **Python** mit **[Neonize](https://github.com/krypton-byte/neonize)** als Verbindungs-Engine, verwendet die API FastAPI zum Verwalten von Sitzungen, Senden von Medien und Erstellen von Bots. Keine schwere Datenbank, keine monatlichen Gebühren, keine Server von Drittanbietern.
 
 > [!TIP]
-> Perfekt für Entwickler, die nach Agilität bei der Integration von Bots, Benachrichtigungen und automatisierten Kundenservice-Systemen suchen. **Ohne dafür zu bezahlen.**
+> Nutzen Sie für Bots, Benachrichtigungen und Kundenservice-Systeme. **100% kostenlos.**
+
+> [!IMPORTANT]
+> 🤖 **Meta AI integriert.** Nutzen Sie `/ai/ask` zum Chatten und `/ai/imagine` zum Generieren von Bildern in WhatsApp. [Route ansehen](#-meta-ai--2-endpoints).
 
 ---
 
 ## 🗺️ API-Übersicht
 
-
 ```mermaid
 mindmap
   root((⚡💬 ZapUnlocked-API))
     📨 Nachrichten
-      Text / Antworten
-      Medien 📸🎥🎵
-      Reaktionen / Standort
-      Kontakte / Links
-      Bearbeiten / Löschen / Lesen
+      Text
+      Medien
+      Reaktionen
+      Standort
+      Kontakte
+      Links
+      Bearbeiten
+      Löschen
+      Lesen
+
     🔘 Interaktiv
-      Button Liste / Aktion
-      OTP / PIX
-      Optionsliste
+      Buttons
+      Listen
+      OTP
+      PIX
       Umfragen
+
     🔍 Abfragen
-      Kontaktinfo
+      Kontakte
       Verlauf
-      Letzte Chats
-      Speicher / Festplatte
-      Datenbank / Bereinigung
+      Chats
+      Speicher
+      Festplatte
+      Datenbank
+      Bereinigung
+
     🔗 Verbindung
-      Status / SSE
-      QR-Code / PNG
-      Pairing-Code
+      Status
+      SSE
+      QR-Code
+      PNG
+      Pairing
       Abmelden
+
     📡 Webhooks
-       Erstellen / Auflisten
-       Bearbeiten / Löschen
-       Aktivieren / Testen
-       40 Ereignisse
-    ⚙️ Profil & Privatsphäre
-      Name / Foto
+      Erstellen
+      Auflisten
+      Bearbeiten
+      Löschen
+      Aktivieren
+      Testen
+      40 Ereignisse
+
+    ⚙️ Profil
+      Name
+      Foto
+      Privatsphäre
       Zuletzt gesehen
       Sperren
+
+    🤖 Meta AI
+      Chat
+      Bilder
     🤖 Bot
-      AI-Tag
-      Anrufe ablehnen
       Auto-Lesen
+      Anrufe ablehnen
+
     🛡️ IP-Regeln
-      Whitelist / Blacklist
+      Whitelist
+      Blacklist
+
     📱 Instanz
-      Kontodaten
+      Konto
       Gerät
       Umbenennen
+
     🖥️ System
       Umgebungsvariablen
       Medienbereinigung
-      Automatische Bereinigung
+      Auto-Bereinigung
 ```
 
 ---
@@ -109,13 +136,18 @@ mindmap
 | Funktion | Beschreibung |
 | :------- | :----------- |
 | 🧩 **Zustandslose Buttons** | Erstellen Sie interaktive Abläufe ohne Datenbank, mit verschlüsselten Webhooks |
-| 🔢 **Pairing ohne QR** | Verbinden Sie sich per Zahlencode · ideal für Server ohne GUI |
-| 🎵 **Automatische Audiokonvertierung** | Senden Sie Audio, das nativ als "soeben aufgenommen" (PTT) erscheint |
+| 🔢 **Pairing ohne QR-Code** | Verbinden Sie sich per Zahlencode · ideal für Server ohne GUI |
+| 🎵 **Automatische Audiokonvertierung** | Senden Sie Audios, die nativ als soeben aufgenommen (PTT) erscheinen |
 | 📦 **Intelligente Medien-Warteschlange** | Automatische Verwaltung zur Vermeidung übermäßigen Speicherverbrauchs |
-| 🏷️ **Dynamische Platzhalter** | Personalisieren Sie Nachrichten und Webhooks mit \`{{name}}\`, \`{{phone}}\` |
+| 🏷️ **Dynamische Platzhalter** | Personalisieren Sie Nachrichten und Webhooks mit `{{name}}`, `{{day}}`, `{{phone}}` |
+| 🤖 **Meta AI** | Chatten Sie und generieren Sie Bilder mit KI in WhatsApp. |
+| ⌨️ **Universelle Parameter** | `delay_message`, `delay_typing`, `reply`/`quoted_id` und `@Erwähnungen` funktionieren auf **allen** Sende-Endpoints. |
+| 🔐 **Signierte Webhooks** | Integrität via HMAC-SHA256. Ihr Webhook akzeptiert nur legitime Daten. |
+| 🔄 **Automatische Wiederverbindung** | Verbindet automatisch neu bei Trennung, Remote-Logout oder Stream-Fehler. |
+| 📁 **Datei-Upload + URL** | Senden Sie Medien per Direkt-Upload **oder** öffentlicher URL. |
 
 > [!NOTE]
-> Alle Funktionen sind **100% kostenlos** und werden von der Open-Source-Community gewartet.
+> Alle Funktionen sind **100 % kostenlos** und werden von der Open-Source-Community gewartet.
 
 ---
 
@@ -129,6 +161,7 @@ mindmap
 | `POST` | `/send` | Textnachricht senden / antworten | `phone`, `message` |
 | `POST` | `/send_image` | Bild senden | `phone`, `image_url` |
 | `POST` | `/send_video` | Video senden (unterstützt GIF und PTV) | `phone`, `video_url` |
+| `POST` | `/send_gif` | Animiertes GIF senden | `phone`, `url` |
 | `POST` | `/send_audio` | Audio senden (mit automatischer PTT-Konvertierung) | `phone`, `audio_url` |
 | `POST` | `/send_document` | Dokument senden | `phone`, `document_url` |
 | `POST` | `/send_sticker` | Sticker senden | `phone`, `sticker_url` |
@@ -142,33 +175,49 @@ mindmap
 | `POST` | `/messages/edit` | Gesendete Nachricht bearbeiten | `phone`, `messageId`, `message` |
 </details>
 
+> [!TIP]
+> **Universelle Parameter.** Verfügbar auf **jedem** Sende-Endpoint (auch interaktiv):
+>
+> | Parameter | Funktion |
+> | :-------- | :------- |
+> | `delay_message` | Wartet N Sekunden vor dem Senden. |
+> | `delay_typing` | Zeigt "tippt..." für N Sekunden vor dem Senden. |
+> | `reply` / `quoted_id` | ID der zu beantwortenden Nachricht (Zitat). |
+> | `mentioned` | JSON-Array von Telefonnummern für @Erwähnungen. Beispiel: `["5511999999999"]` |
+
 <details>
-<summary><b>🔘 Interaktive Nachrichten</b> · 7 Endpunkte</summary>
+<summary><b>🔘 Interaktive Nachrichten</b> · 9 Endpunkte</summary>
 
 | Methode | Route | Beschreibung | Body |
 | :------ | :---- | :----------- | :--- |
 | `POST` | `/messages/send-button-list` | Optionslisten-Button | `phone`, `buttons` |
-| `POST` | `/messages/send-button-actions` | Aktionsbutton | `phone`, `buttons` |
-| `POST` | `/messages/send-button-otp` | Kopierbutton (OTP) | `phone`, `code` |
+| `POST` | `/messages/send-button-quick-reply` | Schnellantwort-Button | `phone`, `title`, `buttons` |
+| `POST` | `/messages/send-button-otp` | Kopier-Button (OTP) | `phone`, `code` |
 | `POST` | `/messages/send-button-pix` | PIX-Button | `phone`, `pixKey` |
-| `POST` | `/messages/send-option-list` | Optionsliste senden | `phone`, `buttons` |
+| `POST` | `/messages/send-button-url` | Button mit Link | `phone`, `title`, `url` |
+| `POST` | `/messages/send-button-call` | Anruf-Button | `phone`, `title`, `phoneNumber` |
+| `POST` | `/messages/send-option-list` | ⛔ **Vorübergehend deaktiviert** (inkompatibel mit iPhone, Android und Web) | `phone`, `buttons` |
 | `POST` | `/messages/send-poll` | Umfrage senden | `phone`, `name`, `options` |
 | `POST` | `/messages/send-poll-vote` | In Umfrage abstimmen | `phone`, `options` |
 </details>
 
 <details>
-<summary><b>🔍 Abfragen und Verwaltung</b> · 8 Endpunkte</summary>
+<summary><b>🔍 Abfragen und Verwaltung</b> · 12 Endpunkte</summary>
 
 | Methode | Route | Beschreibung | Body |
 | :------ | :---- | :----------- | :--- |
 | `POST` | `/management/fetch_messages` | Nachrichtenverlauf abrufen | `phone` |
 | `POST` | `/management/recent_contacts` | Letzte Chats auflisten | ❌ |
-| `GET` | `/management/memory` | Speichernutzungsstatus | ❌ |
-| `GET` | `/management/volume_stats` | Festplattenutzung prüfen | ❌ |
-| `DELETE` | `/management/cleanup` | Temporäre Medien bereinigen | ❌ |
-| `GET` | `/management/database/status` | DB-Status und Statistiken | ❌ |
-| `POST` | `/management/database/config` | DB-Konfiguration aktualisieren | `interval` |
-| `POST` | `/management/database/cleanup` | Manuelle DB-Bereinigung | ❌ |
+| `GET` | `/management/chats` | Chats mit Verlauf auflisten | ❌ |
+| `GET` | `/management/chats/{phone}/messages` | Nachrichten eines bestimmten Chats | ❌ |
+| `GET` | `/management/contacts/{phone}` | Detaillierte Kontaktinformationen | ❌ |
+| `GET` | `/management/groups` | Gruppen auflisten | ❌ |
+| `DELETE` | `/management/cleanup` | Chat-Daten bereinigen | ❌ |
+| `GET` | `/management/export` | Konfiguration exportieren (Webhooks, Einstellungen, IP-Regeln) | ❌ |
+| `POST` | `/management/import` | Konfiguration per Datei-Upload importieren | `file` |
+| `GET` | `/management/database/status` | Datenbank-Status und Statistiken | ❌ |
+| `POST` | `/management/database/config` | Datenbank-Konfiguration aktualisieren | `interval` |
+| `POST` | `/management/database/cleanup` | Manuelle Datenbankbereinigung | ❌ |
 </details>
 
 <details>
@@ -180,13 +229,19 @@ mindmap
 </details>
 
 <details>
-<summary><b>🏠 Allgemein</b> · 3 Endpunkte</summary>
+<summary><b>🏠 Allgemein / Status</b> · 9 Endpunkte</summary>
 
 | Methode | Route | Beschreibung | Body |
 | :------ | :---- | :----------- | :--- |
 | `GET` | `/` | Willkommensseite (HTML) | ❌ |
-| `GET` | `/status` | Verbindungs- und Sitzungsstatus (JSON) | ❌ |
-| `GET` | `/status/stream` | Echtzeit-Status (SSE) | ❌ |
+| `GET` | `/status` | Vollständiger Status (WhatsApp, CPU, Speicher, Festplatte) | ❌ |
+| `GET` | `/status/stream` | Echtzeit-Status via SSE | ❌ |
+| `GET` | `/status/health` | Einfacher Health-Check (`{"ok":true}`) | ❌ |
+| `GET` | `/status/readiness` | Readiness-Check (503 wenn WhatsApp getrennt) | ❌ |
+| `GET` | `/status/memory` | Speicherstatus (Prozess + System) | ❌ |
+| `GET` | `/status/volume` | Festplattenstatus (Größe, Dateien) | ❌ |
+| `GET` | `/collection.json` | Postman-Collection herunterladen | ❌ |
+| `POST` | `/collection.json` | Postman-Collection aktualisieren | JSON body |
 </details>
 
 <details>
@@ -223,26 +278,34 @@ mindmap
 </details>
 
 <details>
-<summary><b>⚙️ Profil und Privatsphäre</b> · 3 Endpunkte</summary>
+<summary><b>⚙️ Profil und Privatsphäre</b> · 13 Endpunkte</summary>
 
 | Methode | Route | Beschreibung | Body |
 | :------ | :---- | :----------- | :--- |
-| `POST` | `/settings/profile` | Bot-Name und -Foto ändern | ❌ |
-| `POST` | `/settings/privacy` | Privatsphäre anpassen (zuletzt gesehen, usw.) | ❌ |
+| `POST` | `/settings/profile` | Bot-Namen und -Foto ändern | `name?`, `photo?` (Form) |
 | `POST` | `/settings/block` | Kontakt sperren / entsperren | `phone`, `action` |
+| `PUT` | `/settings/privacy/last-seen` | Zuletzt gesehen | `value` |
+| `PUT` | `/settings/privacy/online` | Online-Status | `value` |
+| `PUT` | `/settings/privacy/profile` | Foto-Sichtbarkeit | `value` |
+| `PUT` | `/settings/privacy/status` | Status-Sichtbarkeit | `value` |
+| `PUT` | `/settings/privacy/read-receipts` | Lesebestätigung | `value` |
+| `PUT` | `/settings/privacy/groups-add` | Wer kann zu Gruppen hinzufügen | `value` |
+| `PUT` | `/settings/privacy/call-add` | Wer kann zu Anrufen hinzufügen | `value` |
+| `PUT` | `/settings/privacy/about` | Info/Statusmeldung | `value?` |
+| `PUT` | `/settings/privacy/disappearing-timer` | Timer für temporäre Nachrichten | `value?` |
+| `GET` | `/settings/ip-control` | IP-Control-Status anzeigen | ❌ |
+| `PUT` | `/settings/ip-control` | IP-Control aktivieren/deaktivieren | `enabled` |
 </details>
 
 <details>
-<summary><b>🤖 Bot-Konfiguration</b> · 6 Endpunkte</summary>
+<summary><b>🤖 Bot-Konfiguration</b> · 4 Endpunkte</summary>
 
 | Methode | Route | Beschreibung | Body |
 | :------ | :---- | :----------- | :--- |
-| `GET` | `/settings/bot` | Bot-Konfiguration anzeigen | ❌ |
-| `POST` | `/settings/bot` | Konfiguration aktualisieren (AI-Tag, IP-Kontrolle) | ❌ |
 | `PUT` | `/settings/instance/call-reject-auto` | Anrufe automatisch ablehnen | `value` |
 | `PUT` | `/settings/instance/call-reject-message` | Nachricht bei abgelehntem Anruf | `value` |
 | `PUT` | `/settings/instance/auto-read-message` | Automatisches Lesen von Nachrichten | `value` |
-| `GET` | `/settings/phone-code/{phone}` | Code per Telefonnummer generieren | ❌ |
+| `GET` | `/settings/phone-code/{phone}` | Pairing-Code per Telefonnummer generieren | ❌ |
 </details>
 
 <details>
@@ -279,7 +342,63 @@ mindmap
 | `PUT` | `/system/cleanup/settings` | Auto-Bereinigungsintervall aktualisieren | ❌ |
 </details>
 
-> **Insgesamt: 68 Endpunkte**
+<details>
+<summary><b>📊 Logs</b> · 3 Endpunkte</summary>
+
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/logs/files` | Log-Dateien auflisten | ❌ |
+| `GET` | `/logs` | Logs mit Filtern anzeigen | ❌ |
+| `POST` | `/logs/cleanup` | Log-Komprimierung/-Bereinigung erzwingen | ❌ |
+</details>
+
+<details>
+<summary><b>📈 Statistiken</b> · 6 Endpunkte</summary>
+
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/stats` | Statistiken (Uptime, Nachrichten, Webhooks) | ❌ |
+| `DELETE` | `/stats` | Statistiken zurücksetzen | ❌ |
+| `GET` | `/stats/webhooks` | Stats aller Webhooks | ❌ |
+| `GET` | `/stats/webhooks/{name}` | Stats eines bestimmten Webhooks | ❌ |
+| `DELETE` | `/stats/webhooks` | Stats aller Webhooks zurücksetzen | ❌ |
+| `DELETE` | `/stats/webhooks/{name}` | Stats eines Webhooks zurücksetzen | ❌ |
+</details>
+
+<details>
+<summary><b>🤖 Meta KI</b> · 2 Endpunkte</summary>
+
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `POST` | `/ai/ask` | Meta KI fragen | `message` |
+| `POST` | `/ai/imagine` | Bild mit Meta KI generieren | `prompt` |
+</details>
+
+<details>
+<summary><b>🔐 Multi-Session</b> · 7 Endpunkte</summary>
+
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/sessions` | Alle Sitzungen auflisten | ❌ |
+| `POST` | `/sessions` | Neue Sitzung erstellen | `name?` |
+| `PUT` | `/sessions/{id}/rename` | Sitzung umbenennen | `name` |
+| `DELETE` | `/sessions/{id}` | Sitzung deaktivieren | ❌ |
+| `POST` | `/sessions/{id}/connect` | Sitzung verbinden | ❌ |
+| `POST` | `/sessions/{id}/disconnect` | Sitzung trennen | ❌ |
+| `GET` | `/sessions/{id}/status` | Sitzungsstatus | ❌ |
+</details>
+
+<details>
+<summary><b>📡 Webhooks (Logs)</b> · 3 Endpunkte</summary>
+
+| Methode | Route | Beschreibung | Body |
+| :------ | :---- | :----------- | :--- |
+| `GET` | `/webhooks/{name}/logs` | Zustellungs-Logs des Webhooks | ❌ |
+| `DELETE` | `/webhooks/{name}/logs` | Webhook-Logs löschen | ❌ |
+| `DELETE` | `/webhooks/logs/all` | Logs aller Webhooks löschen | ❌ |
+</details>
+
+> **Gesamt: 108 Endpunkte**
 
 ---
 
@@ -297,14 +416,13 @@ Alle Webhooks erhalten eine Standardhülle:
 
 Wenn der Webhook einen benutzerdefinierten `body` mit `{{placeholders}}` hat, wird dieser Body anstelle der Standardhülle gesendet.
 
-
 ---
 
 <details>
 <summary><b>🏷️ Verfügbare Platzhalter im benutzerdefinierten Body</b></summary>
 
 | Platzhalter | Wert |
-| :---------- | :--- |
+| :---------- | :---- |
 | `{{from}}` | Absendernummer |
 | `{{text}}` | Nachrichtentext |
 | `{{phone}}` | Gleich wie `{{from}}` |
@@ -317,11 +435,12 @@ Wenn der Webhook einen benutzerdefinierten `body` mit `{{placeholders}}` hat, wi
 
 ---
 
-
 <details>
-<summary><b>📥 Empfangene Nachrichten</b> · 40 Ereignisse</summary>
+<summary><b>📥 Empfangene Nachrichten</b> · 18 Ereignisse</summary>
 
-Basisfelder in empfangenen Nachrichtenereignissen:
+> **Medienfelder:** Medienereignisse (`message.image`, `message.video`, `message.audio`, `message.document`, `message.sticker`) enthalten zusätzliche Felder wenn `RECEIVE_MEDIA_ENABLED=true`: `mediaBase64` (Base64 der Datei), `fileName`, `mimeType`, `mediaTooLarge` (bool, true wenn `RECEIVE_MEDIA_MAX_SIZE_MB` überschritten).
+
+Basis-Felder in empfangenen Nachrichtenereignissen:
 
 ```json
 {
@@ -341,7 +460,7 @@ Basisfelder in empfangenen Nachrichtenereignissen:
   "event": "message.text",
   "data": {
     "...base": "...",
-    "text": "Olá! Como posso ajudar?",
+    "text": "Hallo! Wie kann ich Ihnen helfen?",
     "quoted": { "id": "3EB0...", "fromMe": true }
   }
 }
@@ -356,7 +475,7 @@ Basisfelder in empfangenen Nachrichtenereignissen:
   "event": "message.image",
   "data": {
     "...base": "...",
-    "caption": "Foto do produto",
+    "caption": "Produktfoto",
     "mimetype": "image/jpeg",
     "fileLength": 204800
   }
@@ -372,7 +491,7 @@ Basisfelder in empfangenen Nachrichtenereignissen:
   "event": "message.video",
   "data": {
     "...base": "...",
-    "caption": "Veja esse vídeo!",
+    "caption": "Schau dir dieses Video an!",
     "mimetype": "video/mp4",
     "fileLength": 5242880,
     "isPTT": false,
@@ -407,8 +526,8 @@ Basisfelder in empfangenen Nachrichtenereignissen:
   "event": "message.document",
   "data": {
     "...base": "...",
-    "fileName": "contrato.pdf",
-    "caption": "Segue o contrato",
+    "fileName": "vertrag.pdf",
+    "caption": "Anbei der Vertrag",
     "mimetype": "application/pdf",
     "fileLength": 102400
   }
@@ -441,6 +560,25 @@ Basisfelder in empfangenen Nachrichtenereignissen:
     "...base": "...",
     "displayName": "Maria Souza",
     "vcard": "BEGIN:VCARD\nVERSION:3.0\n..."
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>message.contacts</code> - Mehrere Kontakte</summary>
+
+```json
+{
+  "event": "message.contacts",
+  "data": {
+    "...base": "...",
+    "displayName": "2 Kontakte",
+    "count": 2,
+    "contacts": [
+      { "displayName": "Maria Souza", "vcard": "BEGIN:VCARD\n..." },
+      { "displayName": "João Silva", "vcard": "BEGIN:VCARD\n..." }
+    ]
   }
 }
 ```
@@ -487,15 +625,15 @@ Basisfelder in empfangenen Nachrichtenereignissen:
   "event": "message.poll_created",
   "data": {
     "...base": "...",
-    "pollName": "Qual o melhor sabor?",
-    "options": ["Chocolate", "Morango", "Baunilha"]
+    "pollName": "Was ist der beste Geschmack?",
+    "options": ["Schokolade", "Erdbeere", "Vanille"]
   }
 }
 ```
 </details>
 
 <details>
-<summary><code>message.poll_vote</code> - Umfrage-Stimme</summary>
+<summary><code>message.poll_vote</code> - Stimme in Umfrage</summary>
 
 ```json
 {
@@ -503,7 +641,7 @@ Basisfelder in empfangenen Nachrichtenereignissen:
   "data": {
     "...base": "...",
     "pollId": "3EB0ABCDEF123456",
-    "selectedOptions": ["Chocolate"]
+    "selectedOptions": ["Schokolade"]
   }
 }
 ```
@@ -517,8 +655,8 @@ Basisfelder in empfangenen Nachrichtenereignissen:
   "event": "message.button_reply",
   "data": {
     "...base": "...",
-    "buttonId": "opcao_sim",
-    "displayText": "Sim",
+    "buttonId": "option_ja",
+    "displayText": "Ja",
     "type": "quick_reply"
   }
 }
@@ -534,7 +672,7 @@ Basisfelder in empfangenen Nachrichtenereignissen:
   "data": {
     "...base": "...",
     "rowId": "1",
-    "title": "X-Burguer",
+    "title": "X-Burger",
     "description": "R$ 18,90"
   }
 }
@@ -584,10 +722,10 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 </details>
 
 <details>
-<summary><b>📤 Gesendete Nachrichten</b> · 40 Ereignisse</summary>
+<summary><b>📤 Gesendete Nachrichten</b> · 22 Ereignisse</summary>
 
 <details>
-<summary><code>message.sent</code> - Gesendete Nachricht (manuell)</summary>
+<summary><code>message.sent</code> - Nachricht gesendet (allgemein)</summary>
 
 ```json
 {
@@ -602,13 +740,18 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 </details>
 
 <details>
-<summary><code>message.read</code> - Nachricht vom Empfänger gelesen</summary>
+<summary><code>message.sent.{type}</code> - Spezifisches Ereignis nach Typ</summary>
+
+Gleiches Payload wie `message.sent`, aber mit spezifischem Ereignis. Nützlich, um einen einzelnen Sendetyp zu abonnieren.
+
+Typen: `text`, `image`, `audio`, `video`, `document`, `sticker`, `gif`, `interactive`, `list`, `poll`, `poll_vote`, `location`, `contact`, `contacts`, `link`, `reaction`, `edit`, `delete`
 
 ```json
 {
-  "event": "message.read",
+  "event": "message.sent.image",
   "data": {
-    "from": "5511999999999",
+    "to": "5511999999999",
+    "type": "image",
     "messageId": "3EB0ABCDEF123456"
   }
 }
@@ -616,7 +759,7 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 </details>
 
 <details>
-<summary><code>message.delivered</code> - Nachricht an Empfänger zugestellt (receipt type 1)</summary>
+<summary><code>message.delivered</code> - Nachricht zugestellt (receipt type 1)</summary>
 
 ```json
 {
@@ -630,7 +773,21 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 </details>
 
 <details>
-<summary><code>message.receipt</code> - Andere Zustellungsbestätigungen (receipt types 2, 3, 5+)</summary>
+<summary><code>message.read</code> - Nachricht gelesen (receipt type 4)</summary>
+
+```json
+{
+  "event": "message.read",
+  "data": {
+    "from": "5511999999999",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>message.receipt</code> - Andere Bestätigungstypen (receipt types 2, 3, 5+)</summary>
 
 ```json
 {
@@ -647,7 +804,7 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 </details>
 
 <details>
-<summary><b>🔗 Verbindung</b> · 40 Ereignisse</summary>
+<summary><b>🔗 Verbindung</b> · 11 Ereignisse</summary>
 
 <details>
 <summary><code>connection.connected</code> - WhatsApp verbunden</summary>
@@ -693,10 +850,13 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 {
   "event": "connection.pair_code",
   "data": {
-    "code": "NR62-NZSF"
+    "code": "ABCD-1234",
+    "connected": false
   }
 }
 ```
+
+`connected: true` wenn das Pairing abgeschlossen ist.
 </details>
 
 <details>
@@ -706,8 +866,11 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 {
   "event": "connection.pair_status",
   "data": {
-    "status": "waiting",
-    "phone": "5511999999999"
+    "jid": "5511999999999@s.whatsapp.net",
+    "businessName": "My Business",
+    "platform": "WEB",
+    "status": "OK",
+    "error": ""
   }
 }
 ```
@@ -719,7 +882,9 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 ```json
 {
   "event": "connection.logged_out",
-  "data": {}
+  "data": {
+    "reason": "User logout"
+  }
 }
 ```
 </details>
@@ -731,7 +896,8 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 {
   "event": "connection.connect_failure",
   "data": {
-    "reason": "network_error"
+    "reason": "ERROR_CONNECT",
+    "message": "Connection timed out"
   }
 }
 ```
@@ -744,7 +910,7 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 {
   "event": "connection.stream_error",
   "data": {
-    "error": "connection closed"
+    "code": "STREAM_ERR"
   }
 }
 ```
@@ -757,7 +923,8 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 {
   "event": "connection.temporary_ban",
   "data": {
-    "phone": "5511999999999"
+    "code": "BAN_CODE",
+    "expire": 1704153600
   }
 }
 ```
@@ -788,18 +955,19 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 </details>
 
 <details>
-<summary><b>👥 Gruppe</b> · 40 Ereignisse</summary>
+<summary><b>👥 Gruppe</b> · 2 Ereignisse</summary>
 
 <details>
-<summary><code>group.join</code> - Neues Mitglied in Gruppe</summary>
+<summary><code>group.join</code> - Bot ist der Gruppe beigetreten</summary>
 
 ```json
 {
   "event": "group.join",
   "data": {
-    "groupId": "5511999999999-123456@g.us",
-    "inviter": "5511888888888",
-    "member": "5511999999999"
+    "groupId": "123456789@g.us",
+    "groupName": "My Group",
+    "reason": "invite",
+    "type": ""
   }
 }
 ```
@@ -812,9 +980,17 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 {
   "event": "group.update",
   "data": {
-    "groupId": "5511999999999-123456@g.us",
-    "name": "Neuer Name",
-    "updatedBy": "5511888888888"
+    "groupId": "123456789@g.us",
+    "sender": "5511999999999@s.whatsapp.net",
+    "name": "New Group Name",
+    "topic": "New description",
+    "locked": false,
+    "announce": false,
+    "ephemeral": 604800,
+    "delete": false,
+    "link": null,
+    "unlink": null,
+    "newInviteLink": "https://chat.whatsapp.com/abc123"
   }
 }
 ```
@@ -823,7 +999,7 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 </details>
 
 <details>
-<summary><b>👤 Kontakt / Anwesenheit</b> · 40 Ereignisse</summary>
+<summary><b>👤 Kontakt / Anwesenheit</b> · 4 Ereignisse</summary>
 
 <details>
 <summary><code>contact.presence</code> - Anwesenheitsstatus des Kontakts</summary>
@@ -832,12 +1008,15 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 {
   "event": "contact.presence",
   "data": {
-    "from": "5511999999999@s.whatsapp.net",
-    "presence": "available",
-    "lastSeen": 1700000000
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "status": "online",
+    "lastSeen": 0
   }
 }
 ```
+
+`status`: `"online"` oder `"offline"`.
 </details>
 
 <details>
@@ -847,12 +1026,15 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 {
   "event": "contact.chat_presence",
   "data": {
-    "from": "5511999999999@s.whatsapp.net",
-    "presence": "composing",
-    "mediaType": 0
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "state": "typing",
+    "media": null
   }
 }
 ```
+
+`state`: `"typing"`, `"recording"` oder `"paused"`.
 </details>
 
 <details>
@@ -862,11 +1044,15 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 {
   "event": "contact.picture_change",
   "data": {
-    "from": "5511999999999@s.whatsapp.net",
-    "pictureId": "abc123"
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "author": "5511999999999@s.whatsapp.net",
+    "action": "changed"
   }
 }
 ```
+
+`action`: `"changed"` oder `"removed"`.
 </details>
 
 <details>
@@ -876,7 +1062,10 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 {
   "event": "contact.identity_change",
   "data": {
-    "from": "5511999999999@s.whatsapp.net"
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "implicit": false,
+    "timestamp": 1704067200
   }
 }
 ```
@@ -885,7 +1074,7 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 </details>
 
 <details>
-<summary><b>📞 Anruf</b> · 40 Ereignisse</summary>
+<summary><b>📞 Anruf</b> · 3 Ereignisse</summary>
 
 <details>
 <summary><code>call.received</code> - Anruf erhalten</summary>
@@ -934,18 +1123,47 @@ Basisfelder in empfangenen Nachrichtenereignissen:
 </details>
 
 <details>
-<summary><code>call.received</code> - Anruf erhalten</summary>
+<summary><b>🧹 Medienbereinigung</b> · 1 Ereignis</summary>
+
+<details>
+<summary><code>media.cleanup.completed</code> - Automatische Medienbereinigung ausgeführt</summary>
 
 ```json
 {
-  "event": "call.received",
+  "event": "media.cleanup.completed",
   "data": {
-    "from": "5511999999999",
-    "fromJid": "5511999999999@s.whatsapp.net",
-    "callId": "ABC123DEF456"
+    "filesRemoved": 12,
+    "remainingBytes": 52428800
   }
 }
 ```
+
+Wird stündlich automatisch ausgeführt. `filesRemoved: 0` wenn nichts entfernt wurde.
+</details>
+
+</details>
+
+<details>
+<summary><b>🤖 KI</b> · 1 Ereignis</summary>
+
+<details>
+<summary><code>ai.response</code> - Meta-KI-Antwort erhalten</summary>
+
+```json
+{
+  "event": "ai.response",
+  "data": {
+    "text": "Brasília!",
+    "hasImage": false,
+    "imageBase64": null,
+    "imageUrl": null,
+    "mimeType": null,
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+
+Wird immer ausgelöst, wenn die Meta KI antwortet. Verwenden Sie dies, wenn Sie mit asynchronen Antworten umgehen müssen (`POST /ai/ask` hat ein Timeout von 30s).
 </details>
 
 </details>
@@ -1007,7 +1225,10 @@ cd ZapUnlocked-API
 
 ### ☁️ Hosting: Alwaysdata (Kostenlos 24/7)
 
-**Alwaysdata** ist die empfohlene Option, um die API stabil und kostenlos zu hosten, ohne einen eigenen Server betreiben zu müssen.
+**Alwaysdata** hostet die API stabil und kostenlos.
+
+<details>
+<summary><b>📊 Ressourcen und Schritt-für-Schritt</b></summary>
 
 #### 📊 Ressourcen des Free-Plans
 
@@ -1023,7 +1244,7 @@ cd ZapUnlocked-API
 
 **1.** Erstellen Sie ein Konto auf [Alwaysdata.com](https://www.alwaysdata.com/) · **Free**-Plan.
 
-**2.** Greifen Sie auf SSH zu unter `https://ssh-[user].alwaysdata.net`.
+**2.** Greifen Sie auf SSH zu unter `https://ssh-[benutzer].alwaysdata.net`.
 
 **3.** Klonen und installieren:
 
@@ -1042,7 +1263,7 @@ bash scripts/generate-env/generate-env.sh
 > [!NOTE]
 > Das Installationsskript fragt bereits, ob Sie die `.env` konfigurieren möchten. Wenn Sie **ja** geantwortet haben, kann dieser Schritt übersprungen werden. Andernfalls führen Sie den obigen Befehl aus oder konfigurieren Sie die `.env` manuell.
 
-**5.** Dienst konfigurieren (24/7) unter **Advanced  Services  Add a service**:
+**5.** Dienst konfigurieren (24/7) unter **Advanced › Services › Add a service**:
 
 | Feld | Wert |
 | :--- | :--- |
@@ -1053,21 +1274,198 @@ bash scripts/generate-env/generate-env.sh
 **6.** Zugriff über:
 
 ```
-http://services-[user].alwaysdata.net:8300/
+http://services-[benutzer].alwaysdata.net:8300/
 ```
 
 > [!TIP]
-> Die URL ist bereits extern erreichbar. *(Optional)* Für eine benutzerdefinierte Domain konfigurieren Sie einen **Reverse Proxy** unter **Web  Sites  Add a site**, der auf `http://[user].alwaysdata.net` verweist.
+> Die URL ist bereits extern erreichbar. *(Optional)* Für eine benutzerdefinierte Domain konfigurieren Sie einen **Reverse Proxy** unter **Web › Sites › Add a site**, der auf `http://[benutzer].alwaysdata.net` verweist.
 
 ---
 
-## 🔐 Authentifizierung (Login)
+#### 🔐 Authentifizierung (Login)
 
 Nach dem Deployment verbinden Sie Ihr WhatsApp-Konto, indem Sie im Browser aufrufen:
 
 ```text
-http://services-[user].alwaysdata.net:8300/qr?API_KEY=IHR_GEHEIMER_SCHLÜSSEL
+http://services-[benutzer].alwaysdata.net:8300/qr?API_KEY=IHR_GEHEIMER_SCHLÜSSEL
 ```
+
+</details>
+
+---
+
+<details>
+<summary><b>📌 Weitere Informationen</b> · Umgebungsvariablen, Zeitzone, Sendeparameter, Bulk, Medienempfang</summary>
+
+### 🌐 Vollständige Umgebungsvariablen
+
+Zusätzliche `.env`-Variablen neben `API_KEY`, `INTERNAL_SECRET` und `PORT`:
+
+| Variable | Standard | Beschreibung |
+| :------- | :------- | :-------- |
+| `PUBLIC_URL` | auto | Öffentliche URL für den `/qr`-Dashboard-Link in Logs |
+| `TZ` | `UTC` | Zeitzone für Zeitstempel (z.B. `America/Sao_Paulo`) |
+| `DRY_RUN` | `false` | Testmodus, fängt Sendungen ab ohne WhatsApp aufzurufen |
+| `RECEIVE_MEDIA_ENABLED` | `false` | Empfangene Medien automatisch nach `temp_media/` herunterladen |
+| `RECEIVE_MEDIA_MAX_SIZE_MB` | `15` | Maximale Größe empfangener Medien (MB) |
+| `CORS_ORIGINS` | `*` | Erlaubte Ursprünge (kommagetrennt) |
+| `ENABLE_WHATSAPP` | `1` | WhatsApp-Bot deaktivieren (`0` zum Testen) |
+| `ENABLE_FFMPEG_WARMUP` | `1` | FFmpeg-Aufwärmphase deaktivieren (`0`) |
+| `MAX_UPLOAD_SIZE_MB` | `500` | Maximale Upload-Größe pro Datei |
+| `CLEANUP_MAX_AGE_DAYS` | `7` | Maximales Alter von Dateien in `temp_media/` |
+| `CLEANUP_MAX_SIZE_MB` | `500` | Maximale Gesamtgröße von `temp_media/` |
+| `LOG_MAX_AGE_DAYS` | `30` | Maximales Alter komprimierter Logs |
+| `LOG_MAX_SIZE_MB` | `50` | Maximale Gesamtgröße von Logs |
+| `META_AI_PHONE` | auto | Meta AI-Telefonnummer überschreiben |
+| `META_AI_TIMEOUT` | `30` | Meta AI-Antwort-Timeout (Sekunden) |
+| `META_AI_KEEP_IMAGES` | `false` | Meta AI-Bilder auf Festplatte speichern |
+| `ALWAYSDATA_ACCOUNT` | auto | Alwaysdata-Umgebung erzwingen |
+
+---
+
+### 🕐 Zeitzone (Timezone)
+
+Jeder Sende-Endpoint gibt `timestamp` im ISO 8601-Format mit Offset zurück. Konfiguration nach Priorität:
+
+1. `timezone.conf` im Projektstamm (erste nicht auskommentierte Zeile)
+2. `TZ` in `.env` oder Umgebungsvariable
+3. Standard: `UTC`
+
+Häufige Werte: `America/Sao_Paulo`, `America/New_York`, `Europe/London`, `Asia/Tokyo`.
+
+```json
+{
+  "success": true,
+  "message": "Message sent.",
+  "messageId": "3EB0ABCDEF123456",
+  "timestamp": "2026-06-15T14:30:00-0300"
+}
+```
+
+---
+
+### ✏️ Dynamische Textformatierung
+
+Platzhalter, die beim Senden ersetzt werden:
+
+| Platzhalter | Ersetzt durch |
+| :---------- | :-------------- |
+| `{{day}}` | Aktueller Tag (01-31) |
+| `{{mon}}` | Aktueller Monat (01-12) |
+| `{{yea}}` | Aktuelles Jahr (2026) |
+| `{{hou}}` | Aktuelle Stunde (00-23) |
+| `{{min}}` | Aktuelle Minute (00-59) |
+| `{{sec}}` | Aktuelle Sekunde (00-59) |
+
+```json
+{
+  "phone": "5511999999999",
+  "message": "Heute ist der {{day}}.{{mon}}.{{yea}} und es ist {{hou}}:{{min}}:{{sec}} Uhr"
+}
+```
+
+Ergebnis: `"Heute ist der 15.06.2026 und es ist 14:30:00 Uhr"`
+
+---
+
+### 🧪 DRY_RUN-Modus
+
+`DRY_RUN=true` in `.env` bewirkt, dass alle Sende-Endpoints Erfolg zurückgeben ohne WhatsApp aufzurufen. Die Antwort enthält `"dryRun": true`, `"messageId": null`.
+
+Verwendung: Integrationstests, CI/CD, Payload-Validierung.
+
+```json
+{
+  "success": true,
+  "dryRun": true,
+  "message": "Message sent.",
+  "messageId": null,
+  "timestamp": "2026-06-15T14:30:00-0300"
+}
+```
+
+---
+
+### ⚙️ Optionale Parameter der Sende-Endpoints
+
+Verfügbar auf allen `/send/*`, `/send/media`, `/send/buttons/*`-Endpoints:
+
+| Parameter | Typ | Beschreibung |
+| :-------- | :--- | :-------- |
+| `quoted_id` | `string` | ID der zu beantwortenden Nachricht |
+| `delay_message` | `number` | Verzögerung in Sekunden vor dem Senden |
+| `delay_typing` | `number` | Tippen für X Sekunden simulieren |
+| `mentioned` | `string[]` | Zu erwähnende Nummern (@mention) |
+
+```json
+{
+  "phone": "5511999999999",
+  "message": "Hallo @5511888888888!",
+  "quoted_id": "3EB0ABC123",
+  "delay_message": 2,
+  "delay_typing": 3,
+  "mentioned": ["5511888888888"]
+}
+```
+
+> [!NOTE]
+> `quoted_id` akzeptiert Nachrichten-ID (`type: "id"`) oder Text zur Suche (`type: "text"`). Wenn die ID nicht im lokalen Verlauf existiert, erstellt die API einen Platzhalter und WhatsApp rendert das Zitat trotzdem.
+
+---
+
+### 📦 Massenversand (Bulk Send)
+
+`POST /send/bulk` sendet dieselbe Nachricht an mehrere Nummern:
+
+| Parameter | Typ | Erforderlich | Beschreibung |
+| :-------- | :--- | :---------- | :-------- |
+| `phones` | `string[]` | ✅ | Array von Nummern |
+| `message` | `string` | ✅ | Nachrichtentext |
+| `delay_message` | `number` | ❌ | Verzögerung vor jedem Senden |
+| `delay_typing` | `number` | ❌ | Tippen simulieren |
+| `delay_between` | `number` | ❌ | Verzögerung zwischen Nummern |
+| `mentioned` | `string[]` | ❌ | Erwähnungen |
+
+```json
+{
+  "phones": ["5511999999999", "5511888888888", "5511777777777"],
+  "message": "Blitzangebot! 🔥",
+  "delay_between": 3,
+  "delay_typing": 2
+}
+```
+
+---
+
+### 📥 Medienempfänger
+
+Mit `RECEIVE_MEDIA_ENABLED=true` lädt die API empfangene Medien herunter (Bild, Video, Audio, Dokument, Sticker) und fügt `mediaUrl` zum Webhook hinzu:
+
+```json
+{
+  "event": "message.upsert",
+  "data": {
+    "key": { "remoteJid": "5511999999999@s.whatsapp.net" },
+    "message": { "imageMessage": {} },
+    "mediaUrl": "http://services-benutzer.alwaysdata.net:8300/media/uuid-datei.jpg"
+  }
+}
+```
+
+Dateien werden in `temp_media/` gespeichert und vom automatischen Planer bereinigt.
+
+---
+
+### 🧹 Automatische Bereinigung (temp_media)
+
+Die Bereinigung von `temp_media/` läuft stündlich. Wird ausgelöst, wenn ein Kriterium erreicht ist:
+
+* Dateien älter als `CLEANUP_MAX_AGE_DAYS` (Standard: 7 Tage)
+* Gesamtgröße überschreitet `CLEANUP_MAX_SIZE_MB` (Standard: 500 MB)
+
+Löst den Webhook `media.cleanup.completed` mit `filesRemoved` und `remainingBytes` aus.
+
+</details>
 
 ---
 
@@ -1077,14 +1475,14 @@ http://services-[user].alwaysdata.net:8300/qr?API_KEY=IHR_GEHEIMER_SCHLÜSSEL
   👉 <a href="https://zapunlocked-api.kauafpss.com.br"><strong>zapunlocked-api.kauafpss.com.br</strong></a>
 </p>
 
-Besuchen Sie unsere offizielle Website für detaillierte technische Dokumentation, Codebeispiele und eine interaktive Playground-Umgebung.
+Für detaillierte technische Dokumentation, Codebeispiele und interaktive Playground-Umgebung besuchen Sie unsere offizielle Website.
 
 > [!TIP]
-> Verwenden Sie die **LLMs.txt** als KI-Index: [`zapunlocked-api.kauafpss.com.br/llms.txt`](https://zapunlocked-api.kauafpss.com.br/llms.txt). Entdecken Sie alle Seiten, bevor Sie weiter erkunden.
+> Verwenden Sie die **LLMs.txt** als KI-Index: [`zapunlocked-api.kauafpss.com.br/llms.txt`](https://zapunlocked-api.kauafpss.com.br/llms.txt).
 
 ---
 
-## ❤️ Danksagungen
+## ❤️ Credits & Danksagungen
 
 | Projekt | Beschreibung |
 | :------ | :----------- |
