@@ -34,7 +34,7 @@ Quando o usuário clica em um botão de **resposta rápida**, o evento `message.
 <ParamField body="buttons" type="array" required>
   Lista de botões de ação. Cada item deve conter `type` e `buttonText`.
 
-  <Expandable title="Botão tipo url">
+  <Accordion title="Botão tipo url">
     <ParamField body="type" type="string" required>
       `"url"` — abre uma URL ao clicar.
     </ParamField>
@@ -44,9 +44,9 @@ Quando o usuário clica em um botão de **resposta rápida**, o evento `message.
     <ParamField body="url" type="string" required>
       URL a abrir (ex: `"https://zapunlocked.com"`).
     </ParamField>
-  </Expandable>
+  </Accordion>
 
-  <Expandable title="Botão tipo call">
+  <Accordion title="Botão tipo call">
     <ParamField body="type" type="string" required>
       `"call"` — inicia uma ligação ao clicar.
     </ParamField>
@@ -56,9 +56,9 @@ Quando o usuário clica em um botão de **resposta rápida**, o evento `message.
     <ParamField body="phoneNumber" type="string" required>
       Número a ligar (ex: `"+5511999999999"`).
     </ParamField>
-  </Expandable>
+  </Accordion>
 
-  <Expandable title="Botão tipo quick_reply">
+  <Accordion title="Botão tipo quick_reply">
     <ParamField body="type" type="string" required>
       `"quick_reply"` — gera evento `message.button_reply` ao clicar.
     </ParamField>
@@ -68,7 +68,7 @@ Quando o usuário clica em um botão de **resposta rápida**, o evento `message.
     <ParamField body="id" type="string">
       ID retornado no evento de webhook (gerado automaticamente se omitido).
     </ParamField>
-  </Expandable>
+  </Accordion>
 </ParamField>
 
 <ResponseExample>

@@ -40,7 +40,7 @@ Envia uma mensagem com botões de tipos mistos (URL, ligação, OTP, resposta r�
 <ParamField body="buttons" type="array" required>
   Lista de botões (máx 5). Tipos podem ser misturados:
 
-  <Expandable title="Botão quick_reply">
+  <Accordion title="Botão quick_reply">
     <ParamField body="type" type="string" required>
       `"quick_reply"` — gera evento `message.button_reply` ao clicar.
     </ParamField>
@@ -50,9 +50,9 @@ Envia uma mensagem com botões de tipos mistos (URL, ligação, OTP, resposta r�
     <ParamField body="id" type="string">
       ID retornado no evento (gerado automaticamente se omitido).
     </ParamField>
-  </Expandable>
+  </Accordion>
 
-  <Expandable title="Botão url">
+  <Accordion title="Botão url">
     <ParamField body="type" type="string" required>
       `"url"` — abre uma URL ao clicar.
     </ParamField>
@@ -62,9 +62,9 @@ Envia uma mensagem com botões de tipos mistos (URL, ligação, OTP, resposta r�
     <ParamField body="url" type="string" required>
       URL a abrir (ex: `"https://zapunlocked.com"`).
     </ParamField>
-  </Expandable>
+  </Accordion>
 
-  <Expandable title="Botão call">
+  <Accordion title="Botão call">
     <ParamField body="type" type="string" required>
       `"call"` — inicia uma ligação ao clicar.
     </ParamField>
@@ -74,9 +74,9 @@ Envia uma mensagem com botões de tipos mistos (URL, ligação, OTP, resposta r�
     <ParamField body="callPhone" type="string" required>
       Número a ligar (ex: `"+5511999999999"`).
     </ParamField>
-  </Expandable>
+  </Accordion>
 
-  <Expandable title="Botão otp">
+  <Accordion title="Botão otp">
     <ParamField body="type" type="string" required>
       `"otp"` — copia um código ao clicar.
     </ParamField>
@@ -86,7 +86,7 @@ Envia uma mensagem com botões de tipos mistos (URL, ligação, OTP, resposta r�
     <ParamField body="code" type="string" required>
       Código a ser copiado.
     </ParamField>
-  </Expandable>
+  </Accordion>
 </ParamField>
 
 <ParamField body="reply" type="string">

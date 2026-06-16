@@ -27,14 +27,14 @@ Envia uma lista de opções interativa. O usuário toca no botão, expande a lis
 <ParamField body="options" type="array" required>
   Lista de opções disponíveis:
 
-  <Expandable title="Estrutura da opção">
+  <Accordion title="Estrutura da opção">
     <ParamField body="title" type="string" required>
       Texto principal do item.
     </ParamField>
     <ParamField body="description" type="string">
       Descrição secundária do item (ex: preço, detalhe).
     </ParamField>
-  </Expandable>
+  </Accordion>
 </ParamField>
 
 <ParamField body="button_text" type="string" default="See options">

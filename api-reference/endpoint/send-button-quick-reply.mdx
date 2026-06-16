@@ -1,5 +1,5 @@
 ---
-title: "Botão Resposta Rápida"
+title: "Resp. Rápida"
 icon: "comments"
 api: "POST /messages/send-button-quick-reply"
 ---
@@ -27,14 +27,14 @@ Envia uma mensagem com botões de resposta rápida. Aparecem como chips abaixo d
 <ParamField body="buttons" type="array" required>
   Lista de botões de resposta rápida. Cada item:
 
-  <Expandable title="Estrutura do botão">
+  <Accordion title="Estrutura do botão">
     <ParamField body="text" type="string" required>
       Texto exibido no botão.
     </ParamField>
     <ParamField body="id" type="string">
       ID retornado no evento `message.button_reply` (gerado automaticamente se omitido).
     </ParamField>
-  </Expandable>
+  </Accordion>
 </ParamField>
 
 <ResponseExample>
