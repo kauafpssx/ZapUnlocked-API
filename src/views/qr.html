@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZapUnlocked - WhatsApp Connection</title>
+    <title>ZapUnlocked - Connection</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -12,110 +12,304 @@
         :root {
             --primary: #8b5cf6;
             --primary-hover: #7c3aed;
-            --primary-glow: rgba(139, 92, 246, 0.4);
+            --primary-glow: rgba(139, 92, 246, 0.35);
             --bg: #0b0f1a;
-            --card-bg: rgba(23, 28, 45, 0.8);
+            --sidebar-bg: rgba(13, 17, 28, 0.95);
+            --card-bg: rgba(23, 28, 45, 0.6);
             --text: #ffffff;
             --text-muted: #94a3b8;
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
             --border: rgba(148, 163, 184, 0.1);
-            --border-highlight: rgba(139, 92, 246, 0.2);
+            --border-highlight: rgba(139, 92, 246, 0.3);
+            --sidebar-width: 300px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Outfit', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+
+        html, body { height: 100%; overflow: hidden; }
 
         body {
             background-color: var(--bg);
-            background-image: 
-                radial-gradient(circle at 10% 10%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(99, 102, 241, 0.08) 0%, transparent 40%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-image:
+                radial-gradient(circle at 15% 20%, rgba(139, 92, 246, 0.07) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(99, 102, 241, 0.07) 0%, transparent 45%);
             color: var(--text);
-            padding: 20px;
+            display: flex;
         }
 
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 32px;
-            padding: 40px;
+        /* ── Layout ── */
+        .layout {
+            display: flex;
             width: 100%;
-            max-width: 480px;
-            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6);
-            text-align: center;
-            animation: cardAppear 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            height: 100vh;
+            overflow: hidden;
         }
 
-        @keyframes cardAppear {
-            from { opacity: 0; transform: translateY(30px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        /* ── Sidebar ── */
+        .sidebar {
+            width: var(--sidebar-width);
+            flex-shrink: 0;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .logo {
-            margin-bottom: 24px;
+        .sidebar-logo {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
         }
+        .sidebar-logo img { max-width: 148px; height: auto; display: block; }
+        .sidebar-close-wrap { display: flex; align-items: center; }
 
-        .logo img {
-            max-width: 220px;
-            height: auto;
-            display: block;
-        }
-
-        /* Tabs Styling */
-        .tabs {
-            display: flex;
-            background: rgba(15, 23, 42, 0.4);
-            padding: 4px;
-            border-radius: 14px;
-            margin-bottom: 32px;
-            border: 1px solid var(--border);
-        }
-
-        .tab {
-            flex: 1;
-            padding: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-radius: 10px;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .tab i { font-size: 18px; }
-
-        .tab.active {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
-        }
-
-        .tab-content {
+        .sidebar-close {
             display: none;
-            animation: fadeIn 0.4s ease-out;
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 17px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.15s;
+        }
+        .sidebar-close:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+
+        .sidebar-footer {
+            padding: 14px 20px;
+            border-top: 1px solid var(--border);
+            font-size: 11px;
+            color: rgba(148,163,184,0.35);
+            flex-shrink: 0;
+            text-align: center;
+            letter-spacing: 0.3px;
         }
 
-        .tab-content.active {
+        .sidebar-sessions-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 20px 12px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-sessions-header span {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .add-sess-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid var(--border-highlight);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .add-sess-btn:hover { background: rgba(139, 92, 246, 0.2); }
+
+        .sessions-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 12px 12px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(148,163,184,0.15) transparent;
+        }
+        .sessions-scroll::-webkit-scrollbar { width: 4px; }
+        .sessions-scroll::-webkit-scrollbar-track { background: transparent; }
+        .sessions-scroll::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.2); border-radius: 4px; }
+
+        .sessions-list { display: flex; flex-direction: column; gap: 6px; }
+
+        .sess-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            position: relative;
+        }
+
+        .sess-card:hover {
+            border-color: var(--border);
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .sess-card:hover .sess-actions { opacity: 1; }
+
+        .sess-card.active {
+            border-color: var(--border-highlight);
+            background: rgba(139, 92, 246, 0.08);
+        }
+        .sess-card.active:hover { background: rgba(139, 92, 246, 0.12); }
+
+        .sess-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: rgba(148,163,184,0.3);
+        }
+        .sess-dot.online { background: var(--success); box-shadow: 0 0 8px var(--success); animation: pulse 2s infinite; }
+        .sess-dot.pending { background: var(--warning); }
+
+        .sess-info { flex: 1; min-width: 0; }
+        .sess-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
             display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .sess-id-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-top: 2px;
+            display: block;
+        }
+
+        .sess-actions {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            flex-shrink: 0;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .sess-action-btn {
+            width: 28px; height: 28px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+        .sess-action-btn:hover { background: rgba(255,255,255,0.07); color: var(--text); }
+        .sess-action-btn.danger:hover { background: rgba(239,68,68,0.1); color: var(--danger); }
+        .sess-action-btn.connect:hover { background: rgba(16,185,129,0.1); color: var(--success); }
+        .sess-action-btn.disconnect:hover { background: rgba(245,158,11,0.1); color: var(--warning); }
+
+        .sess-rename-input {
+            width: 100%;
+            height: 28px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 0 10px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            outline: none;
+        }
+
+        /* Add session inline form */
+        .add-sess-form {
+            padding: 8px 12px 4px;
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .add-sess-form input {
+            flex: 1;
+            height: 36px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            padding: 0 12px;
+            color: white;
+            font-size: 12px;
+            outline: none;
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        .add-sess-form button {
+            height: 36px;
+            width: 36px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-confirm { background: var(--primary); color: white; }
+        .btn-confirm:hover { background: var(--primary-hover); }
+        .btn-cancel-sm { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+        .btn-cancel-sm:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
+        /* ── Main panel ── */
+        .main-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(148,163,184,0.15) transparent;
+        }
+        .main-panel::-webkit-scrollbar { width: 4px; }
+        .main-panel::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.2); border-radius: 4px; }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 48px 32px;
+            max-width: 720px;
+            width: 100%;
+            margin: 0 auto;
+            height: 100%;
+        }
+
+        /* ── Session header ── */
+        .session-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .session-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
         }
 
         .status-badge {
@@ -123,78 +317,92 @@
             align-items: center;
             gap: 8px;
             padding: 6px 14px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255,255,255,0.04);
             border: 1px solid var(--border);
             border-radius: 100px;
             font-size: 13px;
             font-weight: 500;
-            margin-bottom: 24px;
         }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--warning);
-        }
-
-        .status-dot.online {
-            background: var(--success);
-            box-shadow: 0 0 12px var(--success);
-            animation: pulse 2s infinite;
-        }
+        .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--warning); }
+        .status-dot.online { background: var(--success); box-shadow: 0 0 10px var(--success); animation: pulse 2s infinite; }
 
         @keyframes pulse {
             0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.6; }
+            50% { transform: scale(1.4); opacity: 0.6; }
             100% { transform: scale(1); opacity: 1; }
         }
 
+        /* ── Tabs — segment control ── */
+        .tabs-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 36px;
+        }
+
+        .tabs {
+            display: inline-flex;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 4px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            gap: 2px;
+        }
+
+        .tab {
+            padding: 9px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            white-space: nowrap;
+        }
+        .tab i { font-size: 16px; }
+        .tab.active { background: var(--primary); color: white; box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3); }
+
+        .tab-content { display: none; width: 100%; animation: fadeIn 0.35s ease-out; }
+        .tab-content.active { display: flex; flex-direction: column; align-items: center; }
+
+        /* ── QR ── */
         .visual-container {
             background: #fff;
-            padding: 20px;
+            padding: 8px;
             border-radius: 24px;
-            box-shadow: 0 0 40px var(--primary-glow);
-            width: 240px;
-            height: 240px;
+            box-shadow:
+                0 0 0 1px rgba(139, 92, 246, 0.15),
+                0 0 60px var(--primary-glow),
+                0 24px 64px rgba(0,0,0,0.4);
+            width: clamp(220px, calc(100vw - 140px), 312px);
+            height: clamp(220px, calc(100vw - 140px), 312px);
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            margin: 0 auto 32px;
+            margin: 0 auto 20px;
             overflow: hidden;
         }
-
         .visual-container img {
-            width: 200px;
-            height: 200px;
+            width: calc(100% - 16px);
+            height: calc(100% - 16px);
             display: block;
         }
-
-        .visual-container.connected img {
-            filter: blur(12px) grayscale(0.5);
-            opacity: 0.2;
-        }
+        .visual-container.connected img { filter: blur(12px) grayscale(0.5); opacity: 0.2; }
 
         .connected-overlay {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10;
         }
 
         .success-icon-wrap {
-            width: 72px;
-            height: 72px;
-            background: var(--success);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 72px; height: 72px;
+            background: var(--success); color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
             font-size: 36px;
             box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
             margin-bottom: 12px;
@@ -203,361 +411,596 @@
         .connected-text-badge {
             background: rgba(16, 185, 129, 0.1);
             color: var(--success);
-            padding: 6px 16px;
-            border-radius: 100px;
-            font-weight: 700;
-            font-size: 14px;
+            padding: 6px 16px; border-radius: 100px;
+            font-weight: 700; font-size: 14px;
             border: 1px solid rgba(16, 185, 129, 0.2);
         }
 
         .loader {
-            width: 48px;
-            height: 48px;
-            border: 4px solid rgba(139, 92, 246, 0.1);
+            width: 44px; height: 44px;
+            border: 3px solid rgba(139, 92, 246, 0.1);
             border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        input {
-            width: 100%;
-            height: 52px;
-            background: rgba(15, 23, 42, 0.4);
+        /* QR timer */
+        #qr-timer {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: none;
+            gap: 5px;
+            align-items: center;
+            justify-content: center;
+        }
+        #qr-timer i { font-size: 13px; }
+
+        /* Pairing tab */
+        .pairing-inner { width: 100%; max-width: 420px; }
+
+        .pairing-inner input {
+            width: 100%; height: 50px;
+            background: rgba(15, 23, 42, 0.5);
             border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 0 20px;
-            color: white;
-            font-size: 15px;
-            outline: none;
-            text-align: center;
-            margin-bottom: 16px;
+            padding: 0 18px; color: white; font-size: 15px; outline: none;
+            text-align: left; margin-bottom: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-
-        input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-glow); }
+        .pairing-inner input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-glow); }
 
         .action-button {
-            width: 100%;
-            height: 52px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
+            width: 100%; height: 50px;
+            background: var(--primary); color: white;
+            border: none; border-radius: 14px;
+            font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s;
         }
-
-        .action-button:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--primary-glow); }
+        .action-button:hover { transform: translateY(-1px); box-shadow: 0 8px 24px var(--primary-glow); }
 
         .pairing-result {
-            margin-top: 24px;
-            padding: 24px;
+            margin-top: 20px; padding: 24px;
             background: rgba(139, 92, 246, 0.05);
-            border: 1px dashed var(--primary);
-            border-radius: 20px;
+            border: 1px dashed var(--border-highlight); border-radius: 20px;
             animation: slideUp 0.4s ease-out;
         }
 
         .code-display {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--primary);
-            letter-spacing: 6px;
-            margin-bottom: 8px;
-            user-select: all;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 36px; font-weight: 700;
+            color: var(--primary); letter-spacing: 6px;
+            margin-bottom: 8px; user-select: all; cursor: pointer; transition: opacity 0.2s;
         }
         .code-display:hover { opacity: 0.8; }
 
         .logout-button {
-            margin-top: 24px;
-            background: transparent;
+            margin-top: 20px; background: transparent;
             border: 1px solid rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            padding: 10px 20px;
-            border-radius: 12px;
-            cursor: pointer;
+            color: #fca5a5; padding: 10px 20px; border-radius: 12px; cursor: pointer;
+            font-size: 14px; font-weight: 500; transition: all 0.2s;
         }
-
-        .logout-button:hover { background: rgba(239, 68, 68, 0.05); color: #ef4444; }
-
-        .footer { margin-top: 48px; font-size: 13px; color: var(--text-muted); }
+        .logout-button:hover { background: rgba(239, 68, 68, 0.06); color: #ef4444; }
 
         .hidden { display: none !important; }
 
-        /* Toast */
-        #toast-container {
+        /* ── Mobile sidebar toggle ── */
+        .mobile-toggle {
+            display: none;
             position: fixed;
-            top: 24px;
-            right: 24px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-width: 400px;
-            width: 100%;
-            pointer-events: none;
-        }
-
-        .toast {
-            pointer-events: auto;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px 20px;
-            border-radius: 16px;
-            background: rgba(23, 28, 45, 0.95);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            top: 16px;
+            left: 16px;
+            z-index: 200;
+            width: 40px; height: 40px;
+            background: var(--sidebar-bg);
             border: 1px solid var(--border);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-            animation: toastIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            transition: all 0.3s ease;
-        }
-
-        .toast.removing {
-            animation: toastOut 0.3s ease forwards;
-        }
-
-        .toast-icon {
-            font-size: 22px;
-            flex-shrink: 0;
-        }
-
-        .toast-message {
-            flex: 1;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text);
-            line-height: 1.4;
-        }
-
-        .toast-close {
-            flex-shrink: 0;
-            background: none;
-            border: none;
+            border-radius: 12px;
             color: var(--text-muted);
-            font-size: 18px;
+            font-size: 20px;
             cursor: pointer;
-            padding: 4px;
-            border-radius: 8px;
-            transition: all 0.2s;
-            display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s;
         }
+        .mobile-toggle:hover { color: var(--text); border-color: var(--border-highlight); }
+        .mobile-toggle.open { opacity: 0; pointer-events: none; }
 
-        .toast-close:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text);
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 99;
+            backdrop-filter: blur(2px);
         }
+        .sidebar-overlay.visible { display: block; }
 
-        .toast.error { border-color: rgba(239, 68, 68, 0.3); }
+        /* ── Toast ── */
+        #toast-container {
+            position: fixed; top: 20px; right: 20px; z-index: 9999;
+            display: flex; flex-direction: column; gap: 10px;
+            max-width: 380px; width: 100%; pointer-events: none;
+        }
+        .toast {
+            pointer-events: auto; display: flex; align-items: center; gap: 12px;
+            padding: 14px 18px; border-radius: 14px;
+            background: rgba(18, 22, 38, 0.98);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            animation: toastIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .toast.removing { animation: toastOut 0.3s ease forwards; }
+        .toast-icon { font-size: 20px; flex-shrink: 0; }
+        .toast-message { flex: 1; font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4; }
+        .toast-close {
+            flex-shrink: 0; background: none; border: none; color: var(--text-muted);
+            font-size: 16px; cursor: pointer; padding: 4px; border-radius: 6px;
+            transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+        }
+        .toast-close:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+        .toast.error { border-color: rgba(239,68,68,0.25); }
         .toast.error .toast-icon { color: var(--danger); }
-        .toast.warning { border-color: rgba(245, 158, 11, 0.3); }
+        .toast.warning { border-color: rgba(245,158,11,0.25); }
         .toast.warning .toast-icon { color: var(--warning); }
-        .toast.success { border-color: rgba(16, 185, 129, 0.3); }
+        .toast.success { border-color: rgba(16,185,129,0.25); }
         .toast.success .toast-icon { color: var(--success); }
 
-        @keyframes toastIn {
-            from { opacity: 0; transform: translateX(60px) scale(0.9); }
-            to { opacity: 1; transform: translateX(0) scale(1); }
-        }
-
-        @keyframes toastOut {
-            from { opacity: 1; transform: translateX(0) scale(1); }
-            to { opacity: 0; transform: translateX(60px) scale(0.9); }
-        }
-
+        @keyframes toastIn { from { opacity: 0; transform: translateX(40px) scale(0.95); } to { opacity: 1; transform: translateX(0) scale(1); } }
+        @keyframes toastOut { from { opacity: 1; transform: translateX(0) scale(1); } to { opacity: 0; transform: translateX(40px) scale(0.95); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            :root { --sidebar-width: 260px; }
+            .main-content { padding: 36px 32px 24px; }
+        }
+
+        @media (max-width: 640px) {
+            .sidebar {
+                position: fixed;
+                top: 0; left: 0;
+                height: 100%;
+                z-index: 100;
+                transform: translateX(-100%);
+            }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-close { display: flex; }
+            .mobile-toggle { display: flex; }
+            .main-content { padding: 24px 20px 24px; padding-top: 68px; }
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="logo">
-            <img src="/static/logo-text-dark.png" alt="ZapUnlocked">
-        </div>
+    <div class="layout">
+        <!-- ── Sidebar ── -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="/static/logo-text-dark.png" alt="ZapUnlocked">
+                <button class="sidebar-close" onclick="toggleSidebar(false)" aria-label="Close sidebar">
+                    <i class="ph-bold ph-x"></i>
+                </button>
+            </div>
 
-        <div id="status-badge" class="status-badge">
-            <span id="status-dot" class="status-dot"></span>
-            <span id="status-text">{{STATUS_TEXT}}</span>
-        </div>
+            <div class="sidebar-sessions-header">
+                <span><i class="ph-bold ph-devices" style="vertical-align:middle; margin-right:5px;"></i>Sessions</span>
+                <button class="add-sess-btn" onclick="toggleAddForm()">
+                    <i class="ph-bold ph-plus"></i> New
+                </button>
+            </div>
 
-        <div id="setup-view" class="{{QR_HIDDEN_CLASS}}">
-            <div class="tabs">
-                <div class="tab active" onclick="switchTab('qr')">
-                    <i class="ph-bold ph-qr-code"></i>
-                    QR Code
-                </div>
-                <div class="tab" onclick="switchTab('pairing')">
-                    <i class="ph-bold ph-key"></i>
-                    Code
+            <div class="sessions-scroll">
+                <div class="sessions-list" id="sessions-list">
+                    <div style="text-align:center; padding: 20px 0; color: var(--text-muted); font-size:13px;">
+                        <div class="loader" style="width:22px; height:22px; border-width:2px; margin: 0 auto 10px;"></div>
+                        Loading...
+                    </div>
                 </div>
             </div>
 
-            <!-- QR Tab -->
-            <div id="content-qr" class="tab-content active">
-                <h1 style="font-size: 20px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    <i class="ph-bold ph-camera"></i>
-                    Scan the QR Code
-                </h1>
-                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 32px;">Point your WhatsApp camera at the code to link the device.</p>
-                <div class="visual-container" id="qr-container">
-                    {{QR_CONTENT}}
-                </div>
-                <div id="qr-timer" style="margin-top: -16px; margin-bottom: 24px; font-size: 13px; color: var(--text-muted); display: none;">
-                    <i class="ph-bold ph-clock"></i>
-                    Expires in <span id="qr-countdown" style="color: var(--warning); font-weight: 700;"></span>s
-                </div>
+            <div id="add-sess-form" class="add-sess-form hidden">
+                <input type="text" id="new-sess-name" placeholder="Session name (optional)"
+                    onkeydown="if(event.key==='Enter') confirmAddSession(); if(event.key==='Escape') toggleAddForm(false);">
+                <button class="btn-confirm" onclick="confirmAddSession()"><i class="ph-bold ph-check"></i></button>
+                <button class="btn-cancel-sm" onclick="toggleAddForm(false)"><i class="ph-bold ph-x"></i></button>
             </div>
 
-            <!-- Pairing Tab -->
-            <div id="content-pairing" class="tab-content">
-                <h1 style="font-size: 20px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    <i class="ph-bold ph-device-mobile"></i>
-                    Phone Number Pairing
-                </h1>
-                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px; line-height: 1.5;">
-                    Link WhatsApp without QR, just enter the phone number below.
-                </p>
+            <div class="sidebar-footer">
+                <i class="ph-bold ph-sparkles" style="color:var(--primary); margin-right:4px;"></i>
+                Powered by ZapUnlocked
+            </div>
+        </aside>
 
-                <!-- Phone input area (visible before code is generated) -->
-                <div id="pair-input-area">
-                    <input type="text" id="phone-input" placeholder="Ex: 5551999999999" value="">
-                    <button onclick="getPairingCode()" id="pair-btn" class="action-button">Generate Code</button>
+        <!-- ── Main panel ── -->
+        <main class="main-panel">
+            <div class="main-content">
+
+                <!-- Session title + status -->
+                <div class="session-header">
+                    <h1 id="active-session-label">—</h1>
+                    <div id="status-badge" class="status-badge">
+                        <span id="status-dot" class="status-dot"></span>
+                        <span id="status-text">{{STATUS_TEXT}}</span>
+                    </div>
                 </div>
 
-                <!-- Result area (shows code + tutorial after generation) -->
-                <div id="pairing-result" class="pairing-result hidden">
-                    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 1.5px; margin-bottom: 8px;">YOUR PAIRING CODE</div>
-                    <div id="code-display" class="code-display" onclick="copyCode()" title="Click to copy"></div>
-                    <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">
-                        <i class="ph-bold ph-copy-simple" style="font-size: 12px; vertical-align: middle;"></i>
-                        <span id="copy-hint" style="vertical-align: middle;">Click the code to copy</span>
-                    </div>
+                <!-- Setup view: tabs + QR/pairing -->
+                <div id="setup-view" class="{{QR_HIDDEN_CLASS}}" style="width:100%;">
 
-                    <!-- Mini Divider -->
-                    <div style="display: flex; align-items: center; gap: 12px; margin: 20px 0;">
-                        <div style="flex: 1; height: 1px; background: var(--border);"></div>
-                        <span style="font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 1.5px;">HOW TO CONNECT</span>
-                        <div style="flex: 1; height: 1px; background: var(--border);"></div>
-                    </div>
-
-                    <!-- Step-by-step tutorial -->
-                    <div style="text-align: left;">
-                        <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px;">
-                            <div style="min-width: 28px; height: 28px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white;">1</div>
-                            <div>
-                                <div style="font-weight: 600; font-size: 14px;">Open WhatsApp</div>
-                                <div style="color: var(--text-muted); font-size: 12px; margin-top: 2px;">Launch WhatsApp on your phone.</div>
+                    <div class="tabs-wrap">
+                        <div class="tabs">
+                            <div class="tab active" onclick="switchTab('qr')">
+                                <i class="ph-bold ph-qr-code"></i> QR Code
+                            </div>
+                            <div class="tab" onclick="switchTab('pairing')">
+                                <i class="ph-bold ph-key"></i> Pairing Code
                             </div>
                         </div>
-                        <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px;">
-                            <div style="min-width: 28px; height: 28px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white;">2</div>
-                            <div>
-                                <div style="font-weight: 600; font-size: 14px;">Settings → Linked Devices</div>
-                                <div style="color: var(--text-muted); font-size: 12px; margin-top: 2px;">
-                                    <span style="display: inline-block; background: rgba(139,92,246,0.1); padding: 2px 8px; border-radius: 6px; font-family: monospace; font-size: 11px;">Android</span> Tap the <strong>⋮</strong> menu → <strong>Linked devices</strong><br>
-                                    <span style="display: inline-block; background: rgba(16,185,129,0.1); padding: 2px 8px; border-radius: 6px; font-family: monospace; font-size: 11px;">iOS</span> Go to <strong>Settings</strong> → <strong>Linked Devices</strong>
+                    </div>
+
+                    <!-- QR tab -->
+                    <div id="content-qr" class="tab-content active">
+                        <div class="visual-container" id="qr-container">
+                            {{QR_CONTENT}}
+                        </div>
+                        <div id="qr-timer">
+                            <i class="ph-bold ph-clock"></i>
+                            Expires in <span id="qr-countdown" style="color:var(--warning); font-weight:700;"></span>s
+                        </div>
+                    </div>
+
+                    <!-- Pairing tab -->
+                    <div id="content-pairing" class="tab-content">
+                        <div class="pairing-inner">
+                            <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px; line-height:1.6;">
+                                Link WhatsApp without scanning a QR code — just enter the phone number and enter the code on your phone.
+                            </p>
+
+                            <div id="pair-input-area">
+                                <input type="text" id="phone-input" placeholder="E.g. 5551999999999">
+                                <button onclick="getPairingCode()" id="pair-btn" class="action-button">Generate Code</button>
+                            </div>
+
+                            <div id="pairing-result" class="pairing-result hidden">
+                                <div style="font-size:11px; font-weight:600; color:var(--text-muted); letter-spacing:1.5px; margin-bottom:8px;">YOUR PAIRING CODE</div>
+                                <div id="code-display" class="code-display" onclick="copyCode()" title="Click to copy"></div>
+                                <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">
+                                    <i class="ph-bold ph-copy-simple" style="font-size:12px; vertical-align:middle;"></i>
+                                    <span id="copy-hint" style="vertical-align:middle;">Click the code to copy</span>
                                 </div>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px;">
-                            <div style="min-width: 28px; height: 28px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white;">3</div>
-                            <div>
-                                <div style="font-weight: 600; font-size: 14px;">Tap "Link a Device"</div>
-                                <div style="color: var(--text-muted); font-size: 12px; margin-top: 2px;">Then choose <strong>"Link with phone number"</strong> instead of scanning QR.</div>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 12px; align-items: flex-start;">
-                            <div style="min-width: 28px; height: 28px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white;">4</div>
-                            <div>
-                                <div style="font-weight: 600; font-size: 14px;">Enter the code above</div>
-                                <div style="color: var(--text-muted); font-size: 12px; margin-top: 2px;">Type the 8-character code exactly as shown. Your device will connect instantly.</div>
+
+                                <div style="display:flex; align-items:center; gap:12px; margin:20px 0;">
+                                    <div style="flex:1; height:1px; background:var(--border);"></div>
+                                    <span style="font-size:11px; font-weight:600; color:var(--text-muted); letter-spacing:1.5px;">HOW TO CONNECT</span>
+                                    <div style="flex:1; height:1px; background:var(--border);"></div>
+                                </div>
+
+                                <div style="text-align:left;">
+                                    <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:14px;">
+                                        <div style="min-width:26px; height:26px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:white; flex-shrink:0;">1</div>
+                                        <div><div style="font-weight:600; font-size:13px;">Open WhatsApp</div><div style="color:var(--text-muted); font-size:12px; margin-top:2px;">Launch WhatsApp on your phone.</div></div>
+                                    </div>
+                                    <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:14px;">
+                                        <div style="min-width:26px; height:26px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:white; flex-shrink:0;">2</div>
+                                        <div>
+                                            <div style="font-weight:600; font-size:13px;">Settings → Linked Devices</div>
+                                            <div style="color:var(--text-muted); font-size:12px; margin-top:2px;">
+                                                <span style="display:inline-block; background:rgba(139,92,246,0.1); padding:1px 7px; border-radius:5px; font-family:monospace; font-size:10px;">Android</span> Tap <strong>⋮</strong> → <strong>Linked devices</strong><br>
+                                                <span style="display:inline-block; background:rgba(16,185,129,0.1); padding:1px 7px; border-radius:5px; font-family:monospace; font-size:10px;">iOS</span> <strong>Settings</strong> → <strong>Linked Devices</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:14px;">
+                                        <div style="min-width:26px; height:26px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:white; flex-shrink:0;">3</div>
+                                        <div><div style="font-weight:600; font-size:13px;">Tap "Link a Device"</div><div style="color:var(--text-muted); font-size:12px; margin-top:2px;">Choose <strong>"Link with phone number"</strong> instead of scanning QR.</div></div>
+                                    </div>
+                                    <div style="display:flex; gap:12px; align-items:flex-start;">
+                                        <div style="min-width:26px; height:26px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:white; flex-shrink:0;">4</div>
+                                        <div><div style="font-weight:600; font-size:13px;">Enter the code above</div><div style="color:var(--text-muted); font-size:12px; margin-top:2px;">Type the 8-character code exactly as shown.</div></div>
+                                    </div>
+                                </div>
+
+                                <button onclick="clearPairingCode()" style="margin-top:20px; width:100%; height:42px; background:transparent; border:1px solid rgba(239,68,68,0.2); color:#fca5a5; border-radius:12px; cursor:pointer; font-weight:600; font-size:13px; transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.06)'" onmouseout="this.style.background='transparent'">
+                                    <i class="ph-bold ph-x-circle" style="vertical-align:middle;"></i> Cancel
+                                </button>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Cancel button to dismiss the code and go back -->
-                    <button onclick="clearPairingCode()" style="margin-top: 20px; width: 100%; height: 44px; background: transparent; border: 1px solid rgba(239,68,68,0.2); color: #fca5a5; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.05)'" onmouseout="this.style.background='transparent'">
-                        <i class="ph-bold ph-x-circle" style="vertical-align: middle;"></i> Cancel
+                <!-- Connected view -->
+                <div id="connected-view" class="{{INSTR_HIDDEN_CLASS_INVERSE}}" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+                    <div class="visual-container connected">
+                        <div id="connected-visual-content">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=268x268&data=ZapUnlocked" style="filter:blur(12px); opacity:0.2;">
+                        </div>
+                        <div class="connected-overlay">
+                            <div class="success-icon-wrap"><i class="ph-bold ph-check"></i></div>
+                            <div class="connected-text-badge">WhatsApp Connected</div>
+                        </div>
+                    </div>
+                    <p style="color:var(--text-muted); font-size:14px; margin-bottom:24px; text-align:center;">Ready and processing messages in real time.</p>
+                    <button onclick="logout()" class="logout-button">
+                        <i class="ph-bold ph-sign-out" style="vertical-align:middle;"></i> Disconnect Device
                     </button>
                 </div>
-            </div>
-        </div>
 
-        <!-- Connected View -->
-        <div id="connected-view" class="{{INSTR_HIDDEN_CLASS_INVERSE}}">
-            <div class="visual-container connected">
-                <div id="connected-visual-content">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=ZapUnlocked" style="filter: blur(12px); opacity: 0.2;">
-                </div>
-                <div class="connected-overlay">
-                    <div class="success-icon-wrap">
-                        <i class="ph-bold ph-check"></i>
-                    </div>
-                    <div class="connected-text-badge">WhatsApp Connected</div>
-                </div>
             </div>
-            <h1>Active Session</h1>
-            <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">The system is ready and processing messages in real time.</p>
-            <button onclick="logout()" class="logout-button">Disconnect Device</button>
-        </div>
-
-        <div class="footer">
-            <i class="ph-bold ph-sparkles" style="color: var(--primary); margin-right: 4px;"></i>
-            Powered by ZapUnlocked
-        </div>
+        </main>
     </div>
+
+    <!-- Mobile toggle -->
+    <button class="mobile-toggle" id="mobile-toggle" onclick="toggleSidebar()">
+        <i class="ph-bold ph-list"></i>
+    </button>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar(false)"></div>
+
+    <div id="toast-container"></div>
 
     <script>
         const apiKey = "{{API_KEY}}";
         let isConnected = "{{IS_CONNECTED}}" === "true";
         let qrCountdownValue = {{QR_EXPIRES_IN}};
         let qrCountdownInterval = null;
+        let qrExpiryTimestamp = null;
+        let activeSessionId = new URLSearchParams(location.search).get('session') || '1';
+        let sseSource = null;
+        let sessionsData = [];
+
+        // ── Mobile sidebar ─────────────────────────────────────────
+        function toggleSidebar(forceOpen) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const toggle = document.getElementById('mobile-toggle');
+            const isOpen = sidebar.classList.contains('open');
+            const open = forceOpen !== undefined ? forceOpen : !isOpen;
+            sidebar.classList.toggle('open', open);
+            overlay.classList.toggle('visible', open);
+            toggle.classList.toggle('open', open);
+        }
+
+        // ── Sessions CRUD ──────────────────────────────────────────
+
+        async function loadSessions() {
+            try {
+                const r = await fetch(`/sessions?API_KEY=${apiKey}`);
+                const d = await r.json();
+                sessionsData = (d.sessions || []).filter(s => s.active !== false);
+                renderSessions();
+            } catch (e) {
+                document.getElementById('sessions-list').innerHTML =
+                    '<div style="color:var(--danger); font-size:12px; text-align:center; padding:16px;">Failed to load sessions</div>';
+            }
+        }
+
+        function renderSessions() {
+            const list = document.getElementById('sessions-list');
+            if (!sessionsData.length) {
+                list.innerHTML = '<div style="color:var(--text-muted); font-size:12px; text-align:center; padding:20px;">No sessions yet</div>';
+                return;
+            }
+
+            list.innerHTML = '';
+            for (const s of sessionsData) {
+                const isActive = s.id === activeSessionId;
+                const card = document.createElement('div');
+                card.className = 'sess-card' + (isActive ? ' active' : '');
+                card.dataset.id = s.id;
+
+                const dotClass = s._connected ? 'online' : (s._pending ? 'pending' : '');
+                const displayName = s.name || `Session ${s.id}`;
+
+                card.innerHTML = `
+                    <div class="sess-dot ${dotClass}" id="sess-dot-${s.id}"></div>
+                    <div class="sess-info">
+                        <span class="sess-name" id="sess-name-${s.id}">${escHtml(displayName)}</span>
+                        <span class="sess-id-label">ID: ${s.id}</span>
+                    </div>
+                    <div class="sess-actions">
+                        <button class="sess-action-btn" title="Rename" onclick="startRename(event, '${s.id}')"><i class="ph-bold ph-pencil-simple"></i></button>
+                        <button class="sess-action-btn connect" title="Connect" id="btn-connect-${s.id}" onclick="connectSession(event, '${s.id}')"><i class="ph-bold ph-plug"></i></button>
+                        <button class="sess-action-btn disconnect hidden" title="Disconnect" id="btn-disconnect-${s.id}" onclick="disconnectSession(event, '${s.id}')"><i class="ph-bold ph-plug-charging"></i></button>
+                        <button class="sess-action-btn danger" title="Delete" onclick="deleteSession(event, '${s.id}')"><i class="ph-bold ph-trash"></i></button>
+                    </div>
+                `;
+
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('.sess-actions') || e.target.closest('.sess-rename-input')) return;
+                    selectSession(s.id);
+                    toggleSidebar(false);
+                });
+
+                list.appendChild(card);
+                refreshSessionDot(s.id);
+            }
+        }
+
+        async function refreshSessionDot(sid) {
+            try {
+                const r = await fetch(`/sessions/${sid}/status?API_KEY=${apiKey}`);
+                const d = await r.json();
+                _setSessionDot(sid, d.connected ? 'online' : (d.hasQr ? 'pending' : ''));
+            } catch (_) {}
+        }
+
+        function selectSession(sid) {
+            activeSessionId = sid;
+            const sess = sessionsData.find(s => s.id === sid);
+            const label = sess ? (sess.name || `Session ${sid}`) : `Session ${sid}`;
+            document.getElementById('active-session-label').textContent = label;
+
+            document.querySelectorAll('.sess-card').forEach(c => {
+                c.classList.toggle('active', c.dataset.id === sid);
+            });
+
+            document.getElementById('qr-container').innerHTML = '<div class="loader"></div>';
+            document.getElementById('status-dot').className = 'status-dot';
+            document.getElementById('status-text').innerText = 'Connecting...';
+            document.getElementById('setup-view').classList.remove('hidden');
+            document.getElementById('connected-view').classList.add('hidden');
+            clearInterval(qrCountdownInterval);
+            document.getElementById('qr-timer').style.display = 'none';
+
+            startStatusStream();
+        }
+
+        function toggleAddForm(show) {
+            const form = document.getElementById('add-sess-form');
+            const visible = show !== undefined ? show : form.classList.contains('hidden');
+            form.classList.toggle('hidden', !visible);
+            if (visible) {
+                const inp = document.getElementById('new-sess-name');
+                inp.value = '';
+                inp.focus();
+            }
+        }
+
+        async function confirmAddSession() {
+            const name = document.getElementById('new-sess-name').value.trim();
+            toggleAddForm(false);
+            try {
+                const r = await fetch(`/sessions?API_KEY=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name || null })
+                });
+                const d = await r.json();
+                if (!r.ok) throw new Error(d.detail || 'Failed');
+                const sid = d.session.id;
+                showToast(`Session "${d.session.name || sid}" created`, 'success');
+                await fetch(`/sessions/${sid}/connect?API_KEY=${apiKey}`, { method: 'POST' });
+                await loadSessions();
+                selectSession(sid);
+            } catch (e) {
+                showToast('Error: ' + e.message, 'error');
+            }
+        }
+
+        function startRename(e, sid) {
+            e.stopPropagation();
+            const nameEl = document.getElementById(`sess-name-${sid}`);
+            if (!nameEl) return;
+            const current = sessionsData.find(s => s.id === sid);
+            const currentName = current ? (current.name || '') : '';
+
+            const input = document.createElement('input');
+            input.className = 'sess-rename-input';
+            input.value = currentName;
+            input.placeholder = `Session ${sid}`;
+
+            const finish = async (save) => {
+                if (save) {
+                    const newName = input.value.trim();
+                    if (newName && newName !== currentName) {
+                        try {
+                            const r = await fetch(`/sessions/${sid}/rename?API_KEY=${apiKey}`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ name: newName })
+                            });
+                            const d = await r.json();
+                            if (!r.ok) throw new Error(d.detail || 'Failed');
+                            showToast('Renamed', 'success');
+                        } catch (err) { showToast('Error: ' + err.message, 'error'); }
+                    }
+                }
+                await loadSessions();
+                if (sid === activeSessionId) {
+                    const s = sessionsData.find(x => x.id === sid);
+                    if (s) document.getElementById('active-session-label').textContent = s.name || `Session ${sid}`;
+                }
+            };
+
+            input.addEventListener('keydown', (ev) => {
+                if (ev.key === 'Enter') finish(true);
+                if (ev.key === 'Escape') finish(false);
+            });
+            input.addEventListener('blur', () => finish(true));
+
+            nameEl.replaceWith(input);
+            input.focus();
+            input.select();
+        }
+
+        async function deleteSession(e, sid) {
+            e.stopPropagation();
+            if (!confirm(`Delete session "${sid}"? This cannot be undone.`)) return;
+            try {
+                const r = await fetch(`/sessions/${sid}?API_KEY=${apiKey}`, { method: 'DELETE' });
+                const d = await r.json();
+                if (!r.ok) throw new Error(d.detail || 'Failed');
+                showToast('Session deleted', 'success');
+                if (sid === activeSessionId) {
+                    await loadSessions();
+                    if (sessionsData.length) selectSession(sessionsData[0].id);
+                } else {
+                    await loadSessions();
+                }
+            } catch (err) { showToast('Error: ' + err.message, 'error'); }
+        }
+
+        async function connectSession(e, sid) {
+            e.stopPropagation();
+            try {
+                const r = await fetch(`/sessions/${sid}/connect?API_KEY=${apiKey}`, { method: 'POST' });
+                const d = await r.json();
+                if (!r.ok) throw new Error(d.detail || 'Failed');
+                showToast('Connecting...', 'success');
+                setTimeout(() => refreshSessionDot(sid), 2000);
+                if (sid !== activeSessionId) selectSession(sid);
+            } catch (err) { showToast('Error: ' + err.message, 'error'); }
+        }
+
+        async function disconnectSession(e, sid) {
+            e.stopPropagation();
+            try {
+                const r = await fetch(`/sessions/${sid}/disconnect?API_KEY=${apiKey}`, { method: 'POST' });
+                const d = await r.json();
+                if (!r.ok) throw new Error(d.detail || 'Failed');
+                showToast('Disconnected', 'success');
+                setTimeout(() => refreshSessionDot(sid), 1000);
+            } catch (err) { showToast('Error: ' + err.message, 'error'); }
+        }
+
+        // ── QR / Status ────────────────────────────────────────────
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            
             if (tabId === 'qr') {
-                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.querySelector('.tabs .tab:nth-child(1)').classList.add('active');
                 document.getElementById('content-qr').classList.add('active');
             } else {
-                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.querySelector('.tabs .tab:nth-child(2)').classList.add('active');
                 document.getElementById('content-pairing').classList.add('active');
             }
         }
-
-        let qrExpiryTimestamp = null;
 
         function startQrCountdown(secondsFromNow) {
             clearInterval(qrCountdownInterval);
             const timer = document.getElementById('qr-timer');
             const countdown = document.getElementById('qr-countdown');
             if (secondsFromNow == null || secondsFromNow <= 0) { timer.style.display = 'none'; return; }
-
-            // Store absolute expiry time so SSE updates don't reset the count
             qrExpiryTimestamp = Date.now() + (secondsFromNow * 1000);
-            timer.style.display = 'block';
-
+            timer.style.display = 'flex';
             function tick() {
                 const remaining = Math.max(0, Math.round((qrExpiryTimestamp - Date.now()) / 1000));
                 countdown.innerText = remaining;
-                if (remaining <= 0) {
-                    clearInterval(qrCountdownInterval);
-                    timer.style.display = 'none';
-                }
+                if (remaining <= 0) { clearInterval(qrCountdownInterval); timer.style.display = 'none'; }
             }
-
             tick();
             qrCountdownInterval = setInterval(tick, 1000);
+        }
+
+        function _setSessionDot(sid, state) {
+            const dot = document.getElementById(`sess-dot-${sid}`);
+            const btnC = document.getElementById(`btn-connect-${sid}`);
+            const btnD = document.getElementById(`btn-disconnect-${sid}`);
+            if (!dot) return;
+            dot.className = 'sess-dot' + (state === 'online' ? ' online' : state === 'pending' ? ' pending' : '');
+            if (btnC) btnC.classList.toggle('hidden', state === 'online');
+            if (btnD) btnD.classList.toggle('hidden', state !== 'online');
         }
 
         function updateUI(data) {
@@ -568,29 +1011,30 @@
             const qrContainer = document.getElementById('qr-container');
 
             if (data.state === 'CONNECTED') {
-                statusDot.classList.add('online');
+                statusDot.className = 'status-dot online';
                 statusText.innerText = 'Connected';
                 setupView.classList.add('hidden');
                 connectedView.classList.remove('hidden');
+                connectedView.style.display = 'flex';
                 clearInterval(qrCountdownInterval);
                 document.getElementById('qr-timer').style.display = 'none';
                 isConnected = true;
+                _setSessionDot(activeSessionId, 'online');
             } else {
-                statusDot.classList.remove('online');
+                statusDot.className = 'status-dot';
                 statusText.innerText = data.qr_string ? 'Awaiting Scan' : 'Initializing';
                 setupView.classList.remove('hidden');
                 connectedView.classList.add('hidden');
+                _setSessionDot(activeSessionId, data.qr_string ? 'pending' : '');
 
                 if (data.qr) {
                     const newSrc = `data:image/png;base64,${data.qr}`;
                     const currentImg = document.getElementById('qr-img');
-                    // Only restart countdown if QR image actually changed
                     if (!currentImg || currentImg.src !== newSrc) {
                         qrContainer.innerHTML = `<img src="${newSrc}" id="qr-img">`;
                         startQrCountdown(data.qr_expires_in);
                     }
                 } else if (!data.qr_string || (data.qr_expires_in != null && data.qr_expires_in <= 0)) {
-                    // No QR yet, or current QR has expired — show loader
                     qrContainer.innerHTML = '<div class="loader"></div>';
                     clearInterval(qrCountdownInterval);
                     document.getElementById('qr-timer').style.display = 'none';
@@ -600,9 +1044,10 @@
         }
 
         function startStatusStream() {
-            const eventSource = new EventSource(`/status/stream?API_KEY=${apiKey}`);
-            eventSource.onmessage = (e) => updateUI(JSON.parse(e.data));
-            eventSource.onerror = () => { eventSource.close(); setTimeout(startStatusStream, 3000); };
+            if (sseSource) { sseSource.close(); sseSource = null; }
+            sseSource = new EventSource(`/status/stream?API_KEY=${apiKey}&session=${activeSessionId}`);
+            sseSource.onmessage = (e) => updateUI(JSON.parse(e.data));
+            sseSource.onerror = () => { sseSource.close(); sseSource = null; setTimeout(startStatusStream, 3000); };
         }
 
         async function getPairingCode() {
@@ -611,45 +1056,31 @@
             const result = document.getElementById('pairing-result');
             const display = document.getElementById('code-display');
             const inputArea = document.getElementById('pair-input-area');
-
             if (!phone) return showToast('Enter the full phone number.', 'warning');
-
-            // If generating a new code, re-show the input area
-            inputArea.classList.remove('hidden');
-
             btn.disabled = true;
             btn.innerText = 'Requesting...';
-
             try {
-                console.log('🔗 Sending pairing request to:', phone);
-
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 30000);
-
+                const tid = setTimeout(() => controller.abort(), 30000);
                 const response = await fetch(`/session/pair?API_KEY=${apiKey}`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'X-Instance': activeSessionId },
                     body: JSON.stringify({ phone }),
                     signal: controller.signal
                 });
-
-                clearTimeout(timeoutId);
+                clearTimeout(tid);
                 const data = await response.json();
-                console.log('✅ Response received:', data);
-
                 if (response.ok && data.code) {
                     display.innerText = data.code;
                     result.classList.remove('hidden');
-                    document.getElementById('pair-input-area').classList.add('hidden');
+                    inputArea.classList.add('hidden');
                     btn.innerText = 'Generate New Code';
                     btn.disabled = false;
                 } else {
-                    const errorMsg = data.error || data.detail || 'Failed to generate code';
-                    throw new Error(errorMsg);
+                    throw new Error(data.error || data.detail || 'Failed to generate code');
                 }
             } catch (err) {
-                console.error('❌ Pairing error:', err);
-                const msg = (err.name === 'AbortError' ? 'Server timeout. Check if the code appeared in your terminal.' : err.message);
+                const msg = err.name === 'AbortError' ? 'Server timeout.' : err.message;
                 showToast('Error: ' + msg, 'error');
                 btn.disabled = false;
                 btn.innerText = 'Generate Code';
@@ -657,7 +1088,6 @@
         }
 
         function clearPairingCode() {
-            // Hide result, show input area, reset everything
             document.getElementById('pairing-result').classList.add('hidden');
             document.getElementById('pair-input-area').classList.remove('hidden');
             document.getElementById('code-display').innerText = '';
@@ -676,49 +1106,53 @@
         }
 
         async function logout() {
-            if (!confirm('Disconnect?')) return;
+            if (!confirm('Disconnect this session?')) return;
             try {
-                await fetch(`/session/logout?API_KEY=${apiKey}`, { method: 'POST' });
+                await fetch(`/session/logout?API_KEY=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'X-Instance': activeSessionId }
+                });
                 location.reload();
             } catch (err) { showToast('Logout error', 'error'); }
         }
 
-        if (isConnected) updateUI({ state: 'CONNECTED' });
-        if (!isConnected && qrCountdownValue != null) startQrCountdown(qrCountdownValue);
-        startStatusStream();
+        function escHtml(s) {
+            return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
 
-        // --- Toast system ---
+        // ── Toast ──────────────────────────────────────────────────
         function showToast(message, type) {
             type = type || 'error';
             const container = document.getElementById('toast-container');
             if (!container) return;
-
             const icons = { error: 'ph-x-circle', warning: 'ph-warning-circle', success: 'ph-check-circle' };
             const icon = icons[type] || 'ph-info';
-
             const toast = document.createElement('div');
             toast.className = 'toast ' + type;
             toast.innerHTML = `
                 <i class="ph-bold ${icon} toast-icon"></i>
                 <span class="toast-message">${message}</span>
-                <button class="toast-close" onclick="this.closest('.toast').classList.add('removing'); setTimeout(() => this.closest('.toast').remove(), 300);">
+                <button class="toast-close" onclick="this.closest('.toast').classList.add('removing'); setTimeout(()=>this.closest('.toast').remove(),300);">
                     <i class="ph-bold ph-x"></i>
-                </button>
-            `;
-
+                </button>`;
             container.appendChild(toast);
-
             const timeout = setTimeout(() => {
                 toast.classList.add('removing');
                 setTimeout(() => toast.remove(), 300);
             }, 5000);
-
-            toast.querySelector('.toast-close').addEventListener('click', () => {
-                clearTimeout(timeout);
-            });
+            toast.querySelector('.toast-close').addEventListener('click', () => clearTimeout(timeout));
         }
-    </script>
 
-    <div id="toast-container"></div>
+        // ── Init ───────────────────────────────────────────────────
+        if (isConnected) updateUI({ state: 'CONNECTED' });
+        if (!isConnected && qrCountdownValue != null) startQrCountdown(qrCountdownValue);
+        startStatusStream();
+        loadSessions().then(() => {
+            const sess = sessionsData.find(s => s.id === activeSessionId);
+            const label = sess ? (sess.name || `Session ${activeSessionId}`) : `Session ${activeSessionId}`;
+            document.getElementById('active-session-label').textContent = label;
+        });
+        setInterval(() => sessionsData.forEach(s => refreshSessionDot(s.id)), 10000);
+    </script>
 </body>
 </html>
