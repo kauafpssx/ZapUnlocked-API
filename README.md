@@ -9,7 +9,7 @@
   </a>
   <img src="https://img.shields.io/badge/REST%20API-A855F7?style=for-the-badge&logo=fastapi&logoColor=white" alt="REST API">
   <img src="https://img.shields.io/badge/MIT%20License-A855F7?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="MIT License">
-  <img src="https://img.shields.io/badge/Python%203.10%2B-A855F7?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+">
+  <img src="https://img.shields.io/badge/Python%203.13%2B-A855F7?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.13+">
 </p>
 
 ---
@@ -38,17 +38,15 @@
 
 ## <img src="https://github.com/lipis/flag-icons/raw/refs/heads/main/flags/4x3/br.svg" width="30"> O que é o ZapUnlocked-API?
 
-O mercado de APIs para WhatsApp cobra mensalidades abusivas: dezenas a centenas de reais por mês, com limites de uso, taxas por conversa e dados que passam por servidores de terceiros. **O ZapUnlocked-API existe pra mudar isso.**
+APIs de WhatsApp cobram caro: dezenas a centenas de reais por mês, com limites de uso e taxas por conversa. O **ZapUnlocked-API** é uma alternativa gratuita e open-source.
 
-Construída em **Python** com **[Neonize](https://github.com/krypton-byte/neonize)** como motor de conexão, esta API oferece uma interface REST simples (FastAPI) para gerenciar sessões, enviar mídias complexas e criar interações inteligentes. **Sem banco de dados pesado, sem mensalidade, sem depender de ninguém.**
-
-Nossa proposta é fundamentada na **excelência técnica** e na **independência do desenvolvedor**. Acreditamos que ferramentas poderosas devem ser acessíveis a quem constrói suas próprias soluções.
+Construída em **Python** com **[Neonize](https://github.com/krypton-byte/neonize)** como motor de conexão, a API usa FastAPI para gerenciar sessões, enviar mídia e criar bots. Sem banco de dados pesado, sem mensalidade, sem servidor de terceiros.
 
 > [!TIP]
-> Perfeito para desenvolvedores que buscam agilidade na integração de bots, notificações e sistemas de atendimento automatizados. **Sem pagar nada por isso.**
+> Use para bots, notificações e sistemas de atendimento. **100% gratuito.**
 
-> [!NOTE]
-> A API foi internacionalizada, todas as respostas, mensagens de erro e interface web agora estão em **Inglês**.
+> [!IMPORTANT]
+> 🤖 **Meta AI integrado.** Use `/ai/ask` para conversar e `/ai/imagine` para gerar imagens dentro do WhatsApp. [Ver rota](#-meta-ai--2-endpoints).
 
 ---
 
@@ -108,8 +106,10 @@ mindmap
       Visto
       Bloqueios
 
+    🤖 Meta AI
+      Chat
+      Imagens
     🤖 Bot
-      IA Tag
       Auto Read
       Rejeitar Calls
 
@@ -134,11 +134,16 @@ mindmap
 
 | Funcionalidade | Descrição |
 | :------------- | :-------- |
-| 🧩 **Botões Stateless** | Crie fluxos interativos sem banco de dados, com webhooks criptografados |
-| 🔢 **Pareamento sem QR Code** | Conecte via código numérico · ideal para servidores sem GUI |
-| 🎵 **Conversão Automática de Áudio** | Envie áudios que aparecem como gravados na hora (PTT) nativamente |
-| 📦 **Fila de Mídias Inteligente** | Gerenciamento automático para evitar consumo excessivo de memória |
-| 🏷️ **Placeholders Dinâmicos** | Personalize mensagens e webhooks com `{{name}}`, `{{day}}`, `{{phone}}` |
+| 🤖 **Meta AI Integrado** | Converse e gere imagens com IA dentro do WhatsApp. |
+| ⌨️ **Recursos Universais** | `delay_message`, `delay_typing`, `reply`/`quoted_id` e `@menções` funcionam em **todos** os endpoints de envio. |
+| 🧩 **Botões Stateless** | Fluxos interativos sem banco de dados, com webhooks criptografados. |
+| 🔢 **Pareamento sem QR Code** | Conecte via código numérico. Ideal para servidores sem GUI. |
+| 🎵 **Conversão Automática de Áudio** | Envie áudios que aparecem como gravados na hora (PTT). |
+| 📦 **Fila de Mídias Inteligente** | Gerencia memória automaticamente para evitar estouro. |
+| 🏷️ **Placeholders Dinâmicos** | Personalize mensagens e webhooks com `{{name}}`, `{{day}}`, `{{phone}}`. |
+| 🔐 **Webhooks Assinados** | Integridade via HMAC-SHA256. Seu webhook só aceita dados legítimos. |
+| 🔄 **Reconexão Automática** | Reconecta sozinho em queda, logout remoto ou erro de stream. |
+| 📁 **File Upload + URL** | Envie mídia por upload direto **ou** URL pública. |
 
 > [!NOTE]
 > Todas as funcionalidades são **100% gratuitas** e mantidas pela comunidade open-source.
@@ -155,6 +160,7 @@ mindmap
 | `POST` | `/send` | Enviar mensagem de texto / responder | `phone`, `message` |
 | `POST` | `/send_image` | Enviar imagem | `phone`, `image_url` |
 | `POST` | `/send_video` | Enviar vídeo (suporta GIF e PTV) | `phone`, `video_url` |
+| `POST` | `/send_gif` | Enviar GIF animado | `phone`, `url` |
 | `POST` | `/send_audio` | Enviar áudio (com conversão automática para PTT) | `phone`, `audio_url` |
 | `POST` | `/send_document` | Enviar documento | `phone`, `document_url` |
 | `POST` | `/send_sticker` | Enviar figurinha | `phone`, `sticker_url` |
@@ -168,30 +174,46 @@ mindmap
 | `POST` | `/messages/edit` | Editar mensagem enviada | `phone`, `messageId`, `message` |
 </details>
 
+> [!TIP]
+> **Parâmetros universais.** Disponíveis em **todo** endpoint de envio de mensagem (inclusive interativas):
+>
+> | Parâmetro | O que faz |
+> | :-------- | :-------- |
+> | `delay_message` | Aguarda N segundos antes de enviar. Ex: `"5.0"` |
+> | `delay_typing` | Mostra "digitando..." por N segundos antes de enviar. |
+> | `reply` / `quoted_id` | ID da mensagem a ser respondida (citação). |
+> | `mentioned` | JSON array de números para @mencionar. Ex: `'["5511999999999"]'` |
+
 <details>
-<summary><b>🔘 Mensagens Interativas</b> · 7 endpoints</summary>
+<summary><b>🔘 Mensagens Interativas</b> · 9 endpoints</summary>
 
 | Método | Rota | Descrição | Body |
 | :----- | :--- | :-------- | :--- |
 | `POST` | `/messages/send-button-list` | Botão de lista de opções | `phone`, `buttons` |
-| `POST` | `/messages/send-button-actions` | Botão de ação | `phone`, `buttons` |
+| `POST` | `/messages/send-button-quick-reply` | Botão de resposta rápida | `phone`, `title`, `buttons` |
 | `POST` | `/messages/send-button-otp` | Botão de cópia (OTP) | `phone`, `code` |
 | `POST` | `/messages/send-button-pix` | Botão de PIX | `phone`, `pixKey` |
-| `POST` | `/messages/send-option-list` | Enviar lista de opções | `phone`, `buttons` |
+| `POST` | `/messages/send-button-url` | Botão com link | `phone`, `title`, `url` |
+| `POST` | `/messages/send-button-call` | Botão de chamada | `phone`, `title`, `phoneNumber` |
+| `POST` | `/messages/send-option-list` | ⛔ **Temporariamente desabilitada** (incompatível com iPhone, Android e Web) | `phone`, `buttons` |
 | `POST` | `/messages/send-poll` | Enviar enquete | `phone`, `name`, `options` |
 | `POST` | `/messages/send-poll-vote` | Votar em enquete | `phone`, `options` |
 </details>
 
 <details>
-<summary><b>🔍 Consultas e Gestão</b> · 8 endpoints</summary>
+<summary><b>🔍 Consultas e Gestão</b> · 12 endpoints</summary>
 
 | Método | Rota | Descrição | Body |
 | :----- | :--- | :-------- | :--- |
 | `POST` | `/management/fetch_messages` | Buscar histórico de mensagens | `phone` |
 | `POST` | `/management/recent_contacts` | Listar chats recentes | ❌ |
-| `GET` | `/management/memory` | Status do uso de memória | ❌ |
-| `GET` | `/management/volume_stats` | Verificar uso de disco | ❌ |
-| `DELETE` | `/management/cleanup` | Limpar mídia temporária | ❌ |
+| `GET` | `/management/chats` | Listar chats com histórico | ❌ |
+| `GET` | `/management/chats/{phone}/messages` | Mensagens de um chat específico | ❌ |
+| `GET` | `/management/contacts/{phone}` | Info detalhada do contato | ❌ |
+| `GET` | `/management/groups` | Listar grupos | ❌ |
+| `DELETE` | `/management/cleanup` | Limpar dados de chat | ❌ |
+| `GET` | `/management/export` | Exportar config (webhooks, settings, IP rules) | ❌ |
+| `POST` | `/management/import` | Importar config via file upload | `file` |
 | `GET` | `/management/database/status` | Status e estatísticas do banco | ❌ |
 | `POST` | `/management/database/config` | Atualizar configurações do banco | `interval` |
 | `POST` | `/management/database/cleanup` | Limpeza manual do banco | ❌ |
@@ -206,13 +228,19 @@ mindmap
 </details>
 
 <details>
-<summary><b>🏠 Geral</b> · 3 endpoints</summary>
+<summary><b>🏠 Geral / Status</b> · 9 endpoints</summary>
 
 | Método | Rota | Descrição | Body |
 | :----- | :--- | :-------- | :--- |
 | `GET` | `/` | Página de boas-vindas (HTML) | ❌ |
-| `GET` | `/status` | Status da conexão e sessão (JSON) | ❌ |
+| `GET` | `/status` | Status completo (WhatsApp, CPU, memória, disco) | ❌ |
 | `GET` | `/status/stream` | Status em tempo real via SSE | ❌ |
+| `GET` | `/status/health` | Health check simples (`{"ok":true}`) | ❌ |
+| `GET` | `/status/readiness` | Readiness check (503 se WhatsApp desconectado) | ❌ |
+| `GET` | `/status/memory` | Status de memória (processo + sistema) | ❌ |
+| `GET` | `/status/volume` | Status de disco (tamanho, arquivos) | ❌ |
+| `GET` | `/collection.json` | Download da Collection Postman | ❌ |
+| `POST` | `/collection.json` | Atualizar Collection Postman | JSON body |
 </details>
 
 <details>
@@ -249,22 +277,30 @@ mindmap
 </details>
 
 <details>
-<summary><b>⚙️ Perfil e Privacidade</b> · 3 endpoints</summary>
+<summary><b>⚙️ Perfil e Privacidade</b> · 13 endpoints</summary>
 
 | Método | Rota | Descrição | Body |
 | :----- | :--- | :-------- | :--- |
-| `POST` | `/settings/profile` | Alterar nome e foto do bot | ❌ |
-| `POST` | `/settings/privacy` | Ajustar privacidade (visto por último, etc) | ❌ |
+| `POST` | `/settings/profile` | Alterar nome e foto do bot | `name?`, `photo?` (Form) |
 | `POST` | `/settings/block` | Bloquear / desbloquear contato | `phone`, `action` |
+| `PUT` | `/settings/privacy/last-seen` | Última vez visto | `value` |
+| `PUT` | `/settings/privacy/online` | Status online | `value` |
+| `PUT` | `/settings/privacy/profile` | Visibilidade da foto | `value` |
+| `PUT` | `/settings/privacy/status` | Visibilidade do status | `value` |
+| `PUT` | `/settings/privacy/read-receipts` | Confirmação de leitura | `value` |
+| `PUT` | `/settings/privacy/groups-add` | Quem pode adicionar a grupos | `value` |
+| `PUT` | `/settings/privacy/call-add` | Quem pode adicionar em chamada | `value` |
+| `PUT` | `/settings/privacy/about` | About/recado | `value?` |
+| `PUT` | `/settings/privacy/disappearing-timer` | Timer de mensagens temporárias | `value?` |
+| `GET` | `/settings/ip-control` | Ver status do IP control | ❌ |
+| `PUT` | `/settings/ip-control` | Ativar/desativar IP control | `enabled` |
 </details>
 
 <details>
-<summary><b>🤖 Configurações do Bot</b> · 6 endpoints</summary>
+<summary><b>🤖 Configurações do Bot</b> · 4 endpoints</summary>
 
 | Método | Rota | Descrição | Body |
 | :----- | :--- | :-------- | :--- |
-| `GET` | `/settings/bot` | Ver configurações do bot | ❌ |
-| `POST` | `/settings/bot` | Atualizar configurações (tag IA, IP control) | ❌ |
 | `PUT` | `/settings/instance/call-reject-auto` | Rejeitar chamadas automaticamente | `value` |
 | `PUT` | `/settings/instance/call-reject-message` | Mensagem de chamada rejeitada | `value` |
 | `PUT` | `/settings/instance/auto-read-message` | Leitura automática de mensagens | `value` |
@@ -305,7 +341,63 @@ mindmap
 | `PUT` | `/system/cleanup/settings` | Atualizar intervalo de limpeza automática | ❌ |
 </details>
 
-> **Total: 68 endpoints**
+<details>
+<summary><b>📊 Logs</b> · 3 endpoints</summary>
+
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/logs/files` | Listar arquivos de log | ❌ |
+| `GET` | `/logs` | Visualizar logs com filtros | ❌ |
+| `POST` | `/logs/cleanup` | Forçar compressão/limpeza de logs | ❌ |
+</details>
+
+<details>
+<summary><b>📈 Stats</b> · 6 endpoints</summary>
+
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/stats` | Estatísticas (uptime, mensagens, webhooks) | ❌ |
+| `DELETE` | `/stats` | Resetar estatísticas | ❌ |
+| `GET` | `/stats/webhooks` | Stats de todos os webhooks | ❌ |
+| `GET` | `/stats/webhooks/{name}` | Stats de um webhook específico | ❌ |
+| `DELETE` | `/stats/webhooks` | Resetar stats de todos webhooks | ❌ |
+| `DELETE` | `/stats/webhooks/{name}` | Resetar stats de um webhook | ❌ |
+</details>
+
+<details>
+<summary><b>🤖 Meta AI</b> · 2 endpoints</summary>
+
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `POST` | `/ai/ask` | Perguntar ao Meta AI | `message` |
+| `POST` | `/ai/imagine` | Gerar imagem com Meta AI | `prompt` |
+</details>
+
+<details>
+<summary><b>🔐 Multi-Session</b> · 7 endpoints</summary>
+
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/sessions` | Listar todas as sessões | ❌ |
+| `POST` | `/sessions` | Criar nova sessão | `name?` |
+| `PUT` | `/sessions/{id}/rename` | Renomear sessão | `name` |
+| `DELETE` | `/sessions/{id}` | Desativar sessão | ❌ |
+| `POST` | `/sessions/{id}/connect` | Conectar sessão | ❌ |
+| `POST` | `/sessions/{id}/disconnect` | Desconectar sessão | ❌ |
+| `GET` | `/sessions/{id}/status` | Status da sessão | ❌ |
+</details>
+
+<details>
+<summary><b>📡 Webhooks (Logs)</b> · 3 endpoints</summary>
+
+| Método | Rota | Descrição | Body |
+| :----- | :--- | :-------- | :--- |
+| `GET` | `/webhooks/{name}/logs` | Logs de entrega do webhook | ❌ |
+| `DELETE` | `/webhooks/{name}/logs` | Limpar logs do webhook | ❌ |
+| `DELETE` | `/webhooks/logs/all` | Limpar logs de todos webhooks | ❌ |
+</details>
+
+> **Total: 108 endpoints**
 
 ---
 
@@ -343,7 +435,9 @@ Se o webhook tiver um `body` customizado com `{{placeholders}}`, esse body é en
 ---
 
 <details>
-<summary><b>📥 Mensagens Recebidas</b> · 16 eventos</summary>
+<summary><b>📥 Mensagens Recebidas</b> · 18 eventos</summary>
+
+> **Media fields:** Eventos de mídia (`message.image`, `message.video`, `message.audio`, `message.document`, `message.sticker`) incluem campos extras quando `RECEIVE_MEDIA_ENABLED=true`: `mediaBase64` (base64 do arquivo), `fileName`, `mimeType`, `mediaTooLarge` (bool, true se excede `RECEIVE_MEDIA_MAX_SIZE_MB`).
 
 Campos base presentes em eventos de mensagem recebida:
 
@@ -465,6 +559,25 @@ Campos base presentes em eventos de mensagem recebida:
     "...base": "...",
     "displayName": "Maria Souza",
     "vcard": "BEGIN:VCARD\nVERSION:3.0\n..."
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>message.contacts</code> - Múltiplos contatos</summary>
+
+```json
+{
+  "event": "message.contacts",
+  "data": {
+    "...base": "...",
+    "displayName": "2 contacts",
+    "count": 2,
+    "contacts": [
+      { "displayName": "Maria Souza", "vcard": "BEGIN:VCARD\n..." },
+      { "displayName": "João Silva", "vcard": "BEGIN:VCARD\n..." }
+    ]
   }
 }
 ```
@@ -608,10 +721,10 @@ Campos base presentes em eventos de mensagem recebida:
 </details>
 
 <details>
-<summary><b>📤 Mensagens Enviadas</b> · 4 eventos</summary>
+<summary><b>📤 Mensagens Enviadas</b> · 22 eventos</summary>
 
 <details>
-<summary><code>message.sent</code> - Mensagem enviada (manual)</summary>
+<summary><code>message.sent</code> - Mensagem enviada (genérico)</summary>
 
 ```json
 {
@@ -619,6 +732,25 @@ Campos base presentes em eventos de mensagem recebida:
   "data": {
     "to": "5511999999999",
     "type": "text",
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+</details>
+
+<details>
+<summary><code>message.sent.{type}</code> - Evento específico por tipo</summary>
+
+Mesmo payload do `message.sent`, com evento específico por tipo.
+
+Tipos: `text`, `image`, `audio`, `video`, `document`, `sticker`, `gif`, `interactive`, `list`, `poll`, `poll_vote`, `location`, `contact`, `contacts`, `link`, `reaction`, `edit`, `delete`
+
+```json
+{
+  "event": "message.sent.image",
+  "data": {
+    "to": "5511999999999",
+    "type": "image",
     "messageId": "3EB0ABCDEF123456"
   }
 }
@@ -717,10 +849,13 @@ Campos base presentes em eventos de mensagem recebida:
 {
   "event": "connection.pair_code",
   "data": {
-    "code": "NR62-NZSF"
+    "code": "ABCD-1234",
+    "connected": false
   }
 }
 ```
+
+`connected: true` quando o pareamento for concluído.
 </details>
 
 <details>
@@ -730,8 +865,11 @@ Campos base presentes em eventos de mensagem recebida:
 {
   "event": "connection.pair_status",
   "data": {
-    "status": "waiting",
-    "phone": "5511999999999"
+    "jid": "5511999999999@s.whatsapp.net",
+    "businessName": "My Business",
+    "platform": "WEB",
+    "status": "OK",
+    "error": ""
   }
 }
 ```
@@ -743,7 +881,9 @@ Campos base presentes em eventos de mensagem recebida:
 ```json
 {
   "event": "connection.logged_out",
-  "data": {}
+  "data": {
+    "reason": "User logout"
+  }
 }
 ```
 </details>
@@ -755,7 +895,8 @@ Campos base presentes em eventos de mensagem recebida:
 {
   "event": "connection.connect_failure",
   "data": {
-    "reason": "network_error"
+    "reason": "ERROR_CONNECT",
+    "message": "Connection timed out"
   }
 }
 ```
@@ -768,7 +909,7 @@ Campos base presentes em eventos de mensagem recebida:
 {
   "event": "connection.stream_error",
   "data": {
-    "error": "connection closed"
+    "code": "STREAM_ERR"
   }
 }
 ```
@@ -781,7 +922,8 @@ Campos base presentes em eventos de mensagem recebida:
 {
   "event": "connection.temporary_ban",
   "data": {
-    "phone": "5511999999999"
+    "code": "BAN_CODE",
+    "expire": 1704153600
   }
 }
 ```
@@ -815,15 +957,16 @@ Campos base presentes em eventos de mensagem recebida:
 <summary><b>👥 Grupo</b> · 2 eventos</summary>
 
 <details>
-<summary><code>group.join</code> - Novo membro entrou no grupo</summary>
+<summary><code>group.join</code> - Bot entrou no grupo</summary>
 
 ```json
 {
   "event": "group.join",
   "data": {
-    "groupId": "5511999999999-123456@g.us",
-    "inviter": "5511888888888",
-    "member": "5511999999999"
+    "groupId": "123456789@g.us",
+    "groupName": "My Group",
+    "reason": "invite",
+    "type": ""
   }
 }
 ```
@@ -836,9 +979,17 @@ Campos base presentes em eventos de mensagem recebida:
 {
   "event": "group.update",
   "data": {
-    "groupId": "5511999999999-123456@g.us",
-    "name": "Novo Nome",
-    "updatedBy": "5511888888888"
+    "groupId": "123456789@g.us",
+    "sender": "5511999999999@s.whatsapp.net",
+    "name": "New Group Name",
+    "topic": "New description",
+    "locked": false,
+    "announce": false,
+    "ephemeral": 604800,
+    "delete": false,
+    "link": null,
+    "unlink": null,
+    "newInviteLink": "https://chat.whatsapp.com/abc123"
   }
 }
 ```
@@ -856,12 +1007,15 @@ Campos base presentes em eventos de mensagem recebida:
 {
   "event": "contact.presence",
   "data": {
-    "from": "5511999999999@s.whatsapp.net",
-    "presence": "available",
-    "lastSeen": 1700000000
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "status": "online",
+    "lastSeen": 0
   }
 }
 ```
+
+`status`: `"online"` ou `"offline"`.
 </details>
 
 <details>
@@ -871,12 +1025,15 @@ Campos base presentes em eventos de mensagem recebida:
 {
   "event": "contact.chat_presence",
   "data": {
-    "from": "5511999999999@s.whatsapp.net",
-    "presence": "composing",
-    "mediaType": 0
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "state": "typing",
+    "media": null
   }
 }
 ```
+
+`state`: `"typing"`, `"recording"` ou `"paused"`.
 </details>
 
 <details>
@@ -886,11 +1043,15 @@ Campos base presentes em eventos de mensagem recebida:
 {
   "event": "contact.picture_change",
   "data": {
-    "from": "5511999999999@s.whatsapp.net",
-    "pictureId": "abc123"
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "author": "5511999999999@s.whatsapp.net",
+    "action": "changed"
   }
 }
 ```
+
+`action`: `"changed"` ou `"removed"`.
 </details>
 
 <details>
@@ -900,7 +1061,10 @@ Campos base presentes em eventos de mensagem recebida:
 {
   "event": "contact.identity_change",
   "data": {
-    "from": "5511999999999@s.whatsapp.net"
+    "from": "5511999999999",
+    "fromJid": "5511999999999@s.whatsapp.net",
+    "implicit": false,
+    "timestamp": 1704067200
   }
 }
 ```
@@ -957,11 +1121,57 @@ Campos base presentes em eventos de mensagem recebida:
 
 </details>
 
+<details>
+<summary><b>🧹 Media Cleanup</b> · 1 evento</summary>
+
+<details>
+<summary><code>media.cleanup.completed</code> - Limpeza automática de mídia executada</summary>
+
+```json
+{
+  "event": "media.cleanup.completed",
+  "data": {
+    "filesRemoved": 12,
+    "remainingBytes": 52428800
+  }
+}
+```
+
+Executado a cada hora automaticamente. `filesRemoved: 0` quando nada foi removido.
+</details>
+
+</details>
+
+<details>
+<summary><b>🤖 AI</b> · 1 evento</summary>
+
+<details>
+<summary><code>ai.response</code> - Resposta do Meta AI recebida</summary>
+
+```json
+{
+  "event": "ai.response",
+  "data": {
+    "text": "Brasília!",
+    "hasImage": false,
+    "imageBase64": null,
+    "imageUrl": null,
+    "mimeType": null,
+    "messageId": "3EB0ABCDEF123456"
+  }
+}
+```
+
+Disparado quando o Meta AI responde. Use para capturar respostas assíncronas (o `POST /ai/ask` tem timeout de 30s).
+</details>
+
+</details>
+
 ---
 
 ## 🛠️ Instalação e Hospedagem
 
-> Coloque sua API profissional de WhatsApp no ar em menos de **5 minutos** com a **ZapUnlocked-API**.
+> API de WhatsApp no ar em menos de **5 minutos**.
 
 ### 💻 Instalação Local
 
@@ -1014,7 +1224,10 @@ cd ZapUnlocked-API
 
 ### ☁️ Hospedagem: Alwaysdata (Grátis 24/7)
 
-A **Alwaysdata** é a opção recomendada para hospedar a API de forma estável e gratuita sem precisar manter um servidor ligado.
+Hospedagem gratuita na **Alwaysdata**. A API fica no ar 24/7 sem manter um servidor ligado.
+
+<details>
+<summary><b>📊 Ver Recursos e Passo a Passo</b></summary>
 
 #### 📊 Recursos do Plano Free
 
@@ -1047,7 +1260,7 @@ bash scripts/generate-env/generate-env.sh
 ```
 
 > [!NOTE]
-> O script de instalação já pergunta se deseja configurar o `.env`. Se respondeu **sim**, este passo pode ser pulado. Caso contrário, execute o comando acima ou configure o `.env` manualmente.
+> O script de instalação já pergunta se quer configurar o `.env`. Se respondeu **sim**, pule este passo.
 
 **5.** Configure o Serviço (24/7) em **Advanced › Services › Add a service**:
 
@@ -1068,13 +1281,188 @@ http://services-[usuario].alwaysdata.net:8300/
 
 ---
 
-## 🔐 Autenticação (Login)
+#### 🔐 Autenticação (Login)
 
 Após o deploy, conecte sua conta do WhatsApp acessando no navegador:
 
 ```text
 http://services-[usuario].alwaysdata.net:8300/qr?API_KEY=SUA_SENHA_SECRETA
 ```
+
+</details>
+
+<details>
+<summary><b>📌 Outras Informações</b> · Variáveis de ambiente, timezone, parâmetros de envio, bulk, receptor de mídia</summary>
+
+### 🌐 Variáveis de Ambiente Completas
+
+Variáveis extras do `.env` além de `API_KEY`, `INTERNAL_SECRET` e `PORT`:
+
+| Variável | Padrão | Descrição |
+| :------- | :----- | :-------- |
+| `PUBLIC_URL` | auto | URL pública para link do dashboard `/qr` nos logs |
+| `TZ` | `UTC` | Fuso horário para timestamps (ex: `America/Sao_Paulo`) |
+| `DRY_RUN` | `false` | Modo teste, intercepta envios sem chamar WhatsApp |
+| `RECEIVE_MEDIA_ENABLED` | `false` | Baixa mídia recebida para `temp_media/` |
+| `RECEIVE_MEDIA_MAX_SIZE_MB` | `15` | Tamanho máximo de mídia recebida (MB) |
+| `CORS_ORIGINS` | `*` | Origens permitidas (separadas por vírgula) |
+| `ENABLE_WHATSAPP` | `1` | Desliga o bot do WhatsApp (`0` para testes) |
+| `ENABLE_FFMPEG_WARMUP` | `1` | Desliga o aquecimento do FFmpeg (`0`) |
+| `MAX_UPLOAD_SIZE_MB` | `500` | Tamanho máximo de upload por arquivo |
+| `CLEANUP_MAX_AGE_DAYS` | `7` | Idade máxima de arquivos em `temp_media/` |
+| `CLEANUP_MAX_SIZE_MB` | `500` | Tamanho máximo total de `temp_media/` |
+| `LOG_MAX_AGE_DAYS` | `30` | Idade máxima de logs compactados |
+| `LOG_MAX_SIZE_MB` | `50` | Tamanho máximo total de logs |
+| `META_AI_PHONE` | auto | Sobrescreve o número do Meta AI |
+| `META_AI_TIMEOUT` | `30` | Timeout de resposta do Meta AI (segundos) |
+| `META_AI_KEEP_IMAGES` | `false` | Salva imagens do Meta AI em disco |
+| `ALWAYSDATA_ACCOUNT` | auto | Força ambiente Alwaysdata |
+
+---
+
+### 🕐 Fuso Horário (Timezone)
+
+Todo endpoint de envio retorna `timestamp` no ISO 8601 com offset. Configuração por ordem de prioridade:
+
+1. `timezone.conf` na raiz do projeto (primeira linha não-comentada)
+2. `TZ` no `.env` ou environment
+3. Padrão: `UTC`
+
+Valores comuns: `America/Sao_Paulo`, `America/New_York`, `Europe/London`, `Asia/Tokyo`.
+
+```json
+{
+  "success": true,
+  "message": "Message sent.",
+  "messageId": "3EB0ABCDEF123456",
+  "timestamp": "2026-06-15T14:30:00-0300"
+}
+```
+
+---
+
+### ✏️ Formatação Dinâmica de Texto
+
+Placeholders substituídos no momento do envio:
+
+| Placeholder | Substituído por |
+| :---------- | :-------------- |
+| `{{day}}` | Dia atual (01-31) |
+| `{{mon}}` | Mês atual (01-12) |
+| `{{yea}}` | Ano atual (2026) |
+| `{{hou}}` | Hora atual (00-23) |
+| `{{min}}` | Minuto atual (00-59) |
+| `{{sec}}` | Segundo atual (00-59) |
+
+```json
+{
+  "phone": "5511999999999",
+  "message": "Hoje é dia {{day}}/{{mon}}/{{yea}} e agora são {{hou}}:{{min}}:{{sec}}"
+}
+```
+
+Resultado: `"Hoje é dia 15/06/2026 e agora são 14:30:00"`
+
+---
+
+### 🧪 Modo DRY_RUN
+
+`DRY_RUN=true` no `.env` faz todos os endpoints de envio retornarem sucesso sem chamar o WhatsApp. Resposta inclui `"dryRun": true`, `"messageId": null`.
+
+Usos: testar integração, CI/CD, validar payloads.
+
+```json
+{
+  "success": true,
+  "dryRun": true,
+  "message": "Message sent.",
+  "messageId": null,
+  "timestamp": "2026-06-15T14:30:00-0300"
+}
+```
+
+---
+
+### ⚙️ Parâmetros Opcionais nos Endpoints de Envio
+
+Disponíveis em todos os endpoints `/send/*`, `/send/media`, `/send/buttons/*`:
+
+| Parâmetro | Tipo | Descrição |
+| :-------- | :--- | :-------- |
+| `quoted_id` | `string` | ID da mensagem para responder |
+| `delay_message` | `number` | Delay em segundos antes de enviar |
+| `delay_typing` | `number` | Simula digitação por X segundos |
+| `mentioned` | `string[]` | Números para marcar (@mention) |
+
+```json
+{
+  "phone": "5511999999999",
+  "message": "Olá @5511888888888, tudo bem?",
+  "quoted_id": "3EB0ABC123",
+  "delay_message": 2,
+  "delay_typing": 3,
+  "mentioned": ["5511888888888"]
+}
+```
+
+> [!NOTE]
+> `quoted_id` aceita ID da mensagem (`type: "id"`) ou texto para busca (`type: "text"`). Se o ID não existir no histórico local, a API cria um placeholder e o WhatsApp renderiza a citação mesmo assim.
+
+---
+
+### 📦 Envio em Lote (Bulk Send)
+
+`POST /send/bulk` envia a mesma mensagem para vários números:
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+| :-------- | :--- | :---------- | :-------- |
+| `phones` | `string[]` | ✅ | Array de números |
+| `message` | `string` | ✅ | Texto da mensagem |
+| `delay_message` | `number` | ❌ | Delay antes de cada envio |
+| `delay_typing` | `number` | ❌ | Simular digitação |
+| `delay_between` | `number` | ❌ | Delay entre um número e outro |
+| `mentioned` | `string[]` | ❌ | Menções |
+
+```json
+{
+  "phones": ["5511999999999", "5511888888888", "5511777777777"],
+  "message": "Promoção relâmpago! 🔥",
+  "delay_between": 3,
+  "delay_typing": 2
+}
+```
+
+---
+
+### 📥 Receptor de Mídia
+
+Com `RECEIVE_MEDIA_ENABLED=true`, a API baixa mídia recebida (imagem, vídeo, áudio, documento, sticker) e adiciona `mediaUrl` no webhook:
+
+```json
+{
+  "event": "message.upsert",
+  "data": {
+    "key": { "remoteJid": "5511999999999@s.whatsapp.net" },
+    "message": { "imageMessage": {} },
+    "mediaUrl": "http://services-usuario.alwaysdata.net:8300/media/uuid-arquivo.jpg"
+  }
+}
+```
+
+Arquivos ficam em `temp_media/` e são limpos pelo scheduler automático.
+
+---
+
+### 🧹 Limpeza Automática (temp_media)
+
+A limpeza de `temp_media/` roda a cada hora. Dispara quando qualquer critério é atingido:
+
+* Arquivos mais velhos que `CLEANUP_MAX_AGE_DAYS` (padrão: 7 dias)
+* Tamanho total excede `CLEANUP_MAX_SIZE_MB` (padrão: 500 MB)
+
+Dispara o webhook `media.cleanup.completed` com `filesRemoved` e `remainingBytes`.
+
+</details>
 
 ---
 
@@ -1084,10 +1472,10 @@ http://services-[usuario].alwaysdata.net:8300/qr?API_KEY=SUA_SENHA_SECRETA
   👉 <a href="https://zapunlocked-api.kauafpss.com.br"><strong>zapunlocked-api.kauafpss.com.br</strong></a>
 </p>
 
-Para documentação técnica detalhada, exemplos de código e playground interativo, acesse nosso site oficial.
+Documentação técnica, exemplos de código e playground interativo no site oficial.
 
 > [!TIP]
-> Use o **LLMs.txt** como índice para IA: [`zapunlocked-api.kauafpss.com.br/llms.txt`](https://zapunlocked-api.kauafpss.com.br/llms.txt). Descubra todas as páginas antes de explorar.
+> Índice para IA: [`zapunlocked-api.kauafpss.com.br/llms.txt`](https://zapunlocked-api.kauafpss.com.br/llms.txt).
 
 ---
 
