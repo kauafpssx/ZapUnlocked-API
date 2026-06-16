@@ -62,3 +62,11 @@ MAX_UPLOAD_SIZE_BYTES = MAX_UPLOAD_SIZE_MB * 1024 * 1024
 
 CLEANUP_MAX_AGE_DAYS = int(os.getenv("CLEANUP_MAX_AGE_DAYS", "7"))
 CLEANUP_MAX_SIZE_MB = int(os.getenv("CLEANUP_MAX_SIZE_MB", "500"))
+
+
+def get_auth_dir(session_id: str) -> str:
+    return str(Path(auth_dir) / session_id)
+
+
+def get_data_dir(session_id: str) -> str:
+    return str(data_dir / session_id)
