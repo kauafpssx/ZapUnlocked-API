@@ -9,7 +9,7 @@ from src.utils.logger import logger
 from src.handlers.helpers import _has, _safe_str, _safe_int, _detect_type
 
 
-async def dispatch_message_event(msg, phone: str, parsed: dict):
+async def dispatch_message_event(msg, phone: str, parsed: dict, session_id: str = "1"):
     """Identify message type and dispatch structured event."""
     try:
         from src.services.webhooks.dispatcher import dispatch_event
@@ -48,7 +48,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 **base,
                 "text": text,
                 "quoted": quoted,
-            })
+            }, session_id)
             return
 
         # ── Image ────────────────────────────────────────────
@@ -63,7 +63,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 "caption": _safe_str(img, "caption"),
                 "fileLength": file_length,
                 **media,
-            })
+            }, session_id)
             return
 
         # ── Video ─────────────────────────────────────────────
@@ -80,7 +80,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 "isPTT": bool(getattr(vid, "PTT", False)),
                 "isGif": bool(getattr(vid, "gifPlayback", False)),
                 **media,
-            })
+            }, session_id)
             return
 
         # ── Audio ─────────────────────────────────────────────
@@ -96,7 +96,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 "isPTT": bool(getattr(aud, "PTT", False)),
                 "durationSeconds": _safe_int(aud, "seconds"),
                 **media,
-            })
+            }, session_id)
             return
 
         # ── Document ─────────────────────────────────────────
@@ -112,7 +112,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 "caption": _safe_str(doc, "caption"),
                 "fileLength": file_length,
                 **media,
-            })
+            }, session_id)
             return
 
         # ── Sticker ───────────────────────────────────────────
@@ -126,7 +126,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 **base,
                 "isAnimated": bool(getattr(stk, "isAnimated", False)),
                 **media,
-            })
+            }, session_id)
             return
 
         # ── Contact ──────────────────────────────────────────
@@ -136,7 +136,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 **base,
                 "displayName": _safe_str(ct, "displayName"),
                 "vcard": _safe_str(ct, "vcard"),
-            })
+            }, session_id)
             return
 
         # ── Contacts array ───────────────────────────────────
@@ -155,7 +155,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 "displayName": _safe_str(arr, "displayName"),
                 "count": len(contacts),
                 "contacts": contacts,
-            })
+            }, session_id)
             return
 
         # ── Location ───────────────────────────────────────────
@@ -167,7 +167,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 "lng": getattr(loc, "degreesLongitude", None),
                 "name": _safe_str(loc, "name"),
                 "address": _safe_str(loc, "address"),
-            })
+            }, session_id)
             return
 
         # ── Reaction ────────────────────────────────────────────
@@ -179,18 +179,17 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 "emoji": emoji,
                 "targetMessageId": _safe_str(react.key, "ID") if react.key else None,
                 "isRemoved": emoji == "",
-            })
+            }, session_id)
             return
 
         # ── Protocol message (Deletion) ───────────────────────
         if _has(raw, "protocolMessage"):
             pm = raw.protocolMessage
-            # Type 0 is REVOKE (deletion)
             if pm.type == 0:
                 await dispatch_event("message.deleted", {
                     **base,
                     "targetMessageId": _safe_str(pm.key, "ID") if pm.key else None,
-                })
+                }, session_id)
                 return
 
         # ── Poll created ─────────────────────────────────────
@@ -205,7 +204,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 **base,
                 "pollName": _safe_str(poll, "name"),
                 "options": options,
-            })
+            }, session_id)
             return
 
         # ── Poll vote ────────────────────────────────────────
@@ -225,7 +224,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 **base,
                 "pollId": poll_id,
                 "selectedOptions": selected,
-            })
+            }, session_id)
             return
 
         # ── Interactive response (button / list) ───────────────
@@ -256,14 +255,14 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                     **base,
                     "rowId": button_id,
                     "title": display_text,
-                })
+                }, session_id)
             else:
                 await dispatch_event("message.button_reply", {
                     **base,
                     "buttonId": button_id,
                     "displayText": display_text,
                     "type": "quick_reply",
-                })
+                }, session_id)
             return
 
         # ── Legacy: buttonsResponseMessage ────────────────────
@@ -274,7 +273,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 "buttonId": _safe_str(br, "selectedButtonID"),
                 "displayText": _safe_str(br, "selectedDisplayText"),
                 "type": "legacy_button",
-            })
+            }, session_id)
             return
 
         # ── Template button reply (Android) ──────────────────
@@ -285,7 +284,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 "buttonId": _safe_str(tbr, "selectedID"),
                 "displayText": _safe_str(tbr, "selectedDisplayText"),
                 "type": "template_button",
-            })
+            }, session_id)
             return
 
         # ── Legacy: listResponseMessage ───────────────────────
@@ -296,7 +295,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
                 "rowId": _safe_str(lr, "singleSelectReply.selectedRowId") or _safe_str(lr, "title"),
                 "title": _safe_str(lr, "title"),
                 "description": _safe_str(lr, "description"),
-            })
+            }, session_id)
             return
 
         # ── Unknown type ─────────────────────────────────────
@@ -306,7 +305,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict):
             logger.debug(f"Unknown message fields: {field_names}")
         except Exception:
             pass
-        await dispatch_event("message.unknown", {**base, "rawType": raw_type})
+        await dispatch_event("message.unknown", {**base, "rawType": raw_type}, session_id)
 
     except Exception as e:
         logger.error(f"Failed to dispatch message event: {e}")

@@ -1,26 +1,21 @@
-from fastapi import HTTPException
-from src.services.whatsapp.client import get_client, get_is_ready
+﻿from src.utils.decorators import get_session_id
+from fastapi import HTTPException, Request
+from src.services.whatsapp import state
 from src.utils.logger import logger
 import asyncio
 
 
-async def _get_client_info(info_type: str = "me") -> dict:
-    """
-    Fetch instance or device info via Neonize.
-    info_type="me" returns profile data (phone, pushname, etc).
-    info_type="device" returns device data (device, raw_agent, etc).
-    """
-    sock = get_client()
+async def _get_client_info(info_type: str = "me", session_id: str = "1") -> dict:
+    sock = state.get_client(session_id)
     if not sock:
         raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     try:
         me = await asyncio.to_thread(sock.get_me)
 
-        result = {"connected": get_is_ready()}
+        result = {"connected": state.get_is_ready(session_id)}
 
         if info_type == "device":
-            # Device-specific fields
             result.update({
                 "device": None,
                 "raw_agent": None,
@@ -40,7 +35,6 @@ async def _get_client_info(info_type: str = "me") -> dict:
                 except Exception:
                     pass
         else:
-            # User/profile fields (default: "me")
             result.update({
                 "phone": None,
                 "jid": None,
@@ -68,11 +62,11 @@ async def _get_client_info(info_type: str = "me") -> dict:
         raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
-async def get_instance_me():
-    """Return instance profile data (phone, jid, PushName, etc)."""
-    return await _get_client_info("me")
+async def get_instance_me(request: Request = None):
+    sid = get_session_id(request)
+    return await _get_client_info("me", sid)
 
 
-async def get_instance_device():
-    """Return device data (Device, RawAgent, Integrator, etc)."""
-    return await _get_client_info("device")
+async def get_instance_device(request: Request = None):
+    sid = get_session_id(request)
+    return await _get_client_info("device", sid)

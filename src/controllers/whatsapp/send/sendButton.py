@@ -1,7 +1,7 @@
-from src.utils.phone import resolve_jid
-from fastapi import HTTPException
+﻿from src.utils.phone import resolve_jid
+from fastapi import HTTPException, Request
 from src.services.whatsapp.sender import send_button_message
-from src.utils.decorators import require_whatsapp, handle_errors
+from src.utils.decorators import require_whatsapp, handle_errors, get_session_id
 from src.utils.logger import logger
 from src.utils.security.callback_token import create_callback_payload
 from src.utils.quote import build_send_options
@@ -20,7 +20,8 @@ from src.schemas import (
 
 @require_whatsapp
 @handle_errors("send button")
-async def send_with_buttons(data: SendButtonRequest):
+async def send_with_buttons(data: SendButtonRequest, request: Request):
+    sid = get_session_id(request)
     jid = resolve_jid(data.phone)
 
     options = await build_send_options(
@@ -32,15 +33,12 @@ async def send_with_buttons(data: SendButtonRequest):
         mentioned=data.mentioned,
     )
 
-    # 2. Extract and format text
     message_text = data.text or data.message or ""
     formatted_text = format_text(message_text)
 
-    # 3. Build buttons list (handling legacy and new format)
     buttons_to_send = []
 
     if data.buttons:
-        # Modern format (list of buttons)
         for btn in data.buttons:
             btn_id = btn.get("id", btn.get("buttonId", "reply_button"))
             webhook = btn.get("webhook")
@@ -60,14 +58,12 @@ async def send_with_buttons(data: SendButtonRequest):
             }
             buttons_to_send.append(btn_dict)
     elif data.code:
-        # OTP (Copy Code)
         buttons_to_send.append({
             "type": "otp",
             "text": data.button_text or "Copy code",
             "code": data.code
         })
     elif data.pixKey:
-        # PIX
         buttons_to_send.append({
             "type": "pix",
             "pixKey": data.pixKey,
@@ -78,7 +74,6 @@ async def send_with_buttons(data: SendButtonRequest):
             "pixDescription": data.pixDescription or "",
         })
     elif data.button_text:
-        # Legacy format (single button fields)
         btn_id = data.button_id or data.button_value or "reply_button"
         if data.webhook or data.reaction:
             token = create_callback_payload({
@@ -95,8 +90,6 @@ async def send_with_buttons(data: SendButtonRequest):
     if not buttons_to_send:
         raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "At least one button must be provided."})
 
-
-    # 4. Auto-generate footer for PIX if missing
     final_footer = data.footer or ""
     if not final_footer:
         for btn in buttons_to_send:
@@ -115,27 +108,30 @@ async def send_with_buttons(data: SendButtonRequest):
         options,
         title=data.title or "",
         footer=final_footer,
-        image_url=data.image
+        image_url=data.image,
+        session_id=sid,
     )
     return sent_response(res, "Interactive message sent.")
 
 
 @require_whatsapp
 @handle_errors("send otp")
-async def send_otp(data: SendButtonOtpRequest):
+async def send_otp(data: SendButtonOtpRequest, request: Request):
+    sid = get_session_id(request)
     jid = resolve_jid(data.phone)
     options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     buttons = [{"type": "otp", "text": data.button_text or "Copy code", "code": data.code}]
     if is_dry_run():
         return dry_run_response("OTP message sent.")
-    res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)
+    res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image, session_id=sid)
     return sent_response(res, "OTP message sent.")
 
 
 @require_whatsapp
 @handle_errors("send pix")
-async def send_pix(data: SendButtonPixRequest):
+async def send_pix(data: SendButtonPixRequest, request: Request):
+    sid = get_session_id(request)
     jid = resolve_jid(data.phone)
     options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
@@ -153,13 +149,14 @@ async def send_pix(data: SendButtonPixRequest):
     }]
     if is_dry_run():
         return dry_run_response("PIX message sent.")
-    res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=footer, image_url=data.image)
+    res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=footer, image_url=data.image, session_id=sid)
     return sent_response(res, "PIX message sent.")
 
 
 @require_whatsapp
 @handle_errors("send quick reply")
-async def send_quick_reply(data: SendButtonQuickReplyRequest):
+async def send_quick_reply(data: SendButtonQuickReplyRequest, request: Request):
+    sid = get_session_id(request)
     jid = resolve_jid(data.phone)
     options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
@@ -174,31 +171,33 @@ async def send_quick_reply(data: SendButtonQuickReplyRequest):
         buttons.append({"type": "quick_reply", "buttonText": format_text(btn.get("text", btn.get("buttonText", f"Button {i}"))), "id": btn_id})
     if is_dry_run():
         return dry_run_response("Quick reply message sent.")
-    res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)
+    res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image, session_id=sid)
     return sent_response(res, "Quick reply message sent.")
 
 
 @require_whatsapp
 @handle_errors("send url button")
-async def send_url(data: SendButtonUrlRequest):
+async def send_url(data: SendButtonUrlRequest, request: Request):
+    sid = get_session_id(request)
     jid = resolve_jid(data.phone)
     options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     buttons = [{"type": "url", "url": data.url, "text": data.button_text or "Acessar", "buttonText": data.button_text or "Acessar"}]
     if is_dry_run():
         return dry_run_response("URL button message sent.")
-    res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)
+    res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image, session_id=sid)
     return sent_response(res, "URL button message sent.")
 
 
 @require_whatsapp
 @handle_errors("send call button")
-async def send_call(data: SendButtonCallRequest):
+async def send_call(data: SendButtonCallRequest, request: Request):
+    sid = get_session_id(request)
     jid = resolve_jid(data.phone)
     options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
     formatted_text = format_text(data.text or "")
     buttons = [{"type": "call", "phoneNumber": data.callPhone, "text": data.button_text or "Ligar", "buttonText": data.button_text or "Ligar"}]
     if is_dry_run():
         return dry_run_response("Call button message sent.")
-    res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image)
+    res = await send_button_message(jid, formatted_text, buttons, options, title=data.title or "", footer=data.footer or "", image_url=data.image, session_id=sid)
     return sent_response(res, "Call button message sent.")

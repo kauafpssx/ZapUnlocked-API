@@ -14,7 +14,7 @@ from src.handlers.message_router import dispatch_message_event
 from src.utils.logger import logger
 
 
-async def handleMessage(client, msg):
+async def handleMessage(client, msg, session_id: str = "1"):
     """
     Main handler: detects embedded callbacks (cb=) and dispatches webhook events
     for all incoming message types.
@@ -64,4 +64,4 @@ async def handleMessage(client, msg):
         return
 
     # ── DISPATCH WEBHOOK EVENTS ──────────────────
-    asyncio.create_task(dispatch_message_event(msg, phone, parsed))
+    asyncio.create_task(dispatch_message_event(msg, phone, parsed, session_id))

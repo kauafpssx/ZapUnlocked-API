@@ -1,15 +1,17 @@
+﻿from src.utils.decorators import get_session_id
 import asyncio
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 from pydantic import BaseModel
-from src.services.whatsapp.client import get_client
+from src.services.whatsapp import state
 from src.utils.logger import logger
 from ._db import resolve_jid, query_contact_db
 
 class ContactRequest(BaseModel):
     phone: str
 
-async def get_contact_info(data: ContactRequest):
-    sock = get_client()
+async def get_contact_info(data: ContactRequest, request: Request = None):
+    sid = get_session_id(request)
+    sock = state.get_client(sid)
     if not sock:
         raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 

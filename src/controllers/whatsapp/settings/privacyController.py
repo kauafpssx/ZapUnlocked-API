@@ -1,10 +1,11 @@
+﻿from src.utils.decorators import get_session_id
 import asyncio
 from datetime import timedelta
 from pydantic import BaseModel
 from typing import Optional
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 from neonize.utils.enum import PrivacySettingType, PrivacySetting
-from src.services.whatsapp.client import get_client
+from src.services.whatsapp import state
 from src.utils.logger import logger
 
 
@@ -52,16 +53,16 @@ _FIELD_TO_PROTO_ATTR = {
 }
 
 
-async def _get_current_privacy(field: str) -> dict:
-    sock = _require_client()
+async def _get_current_privacy(field: str, session_id: str = "1") -> dict:
+    sock = _require_client(session_id)
     settings = await asyncio.to_thread(sock.get_privacy_settings)
     attr = _FIELD_TO_PROTO_ATTR.get(field)
     int_val = getattr(settings, attr, 0) if attr else 0
     return {"success": True, "field": field, "value": _SETTING_INT_TO_STR.get(int_val, "unknown")}
 
 
-def _require_client():
-    sock = get_client()
+def _require_client(session_id: str = "1"):
+    sock = state.get_client(session_id)
     if not sock:
         raise HTTPException(
             status_code=503,
@@ -110,14 +111,16 @@ def _validate_privacy_value(field: str, raw: str) -> str:
     return val
 
 
-async def _set_privacy_route(field: str, raw_value: Optional[str]) -> dict:
+async def _set_privacy_route(field: str, raw_value: Optional[str], session_id: str = "1") -> dict:
     if raw_value is None:
-        return await _get_current_privacy(field)
-    sock = _require_client()
+        return await _get_current_privacy(field, session_id)
+    sock = _require_client(session_id)
     val = _validate_privacy_value(field, raw_value)
     pstype = _FIELD_TO_TYPE[field]
     try:
-        await asyncio.to_thread(_set_privacy_direct, sock, pstype, PrivacySetting(val))
+        await asyncio.wait_for(asyncio.to_thread(_set_privacy_direct, sock, pstype, PrivacySetting(val)), timeout=15.0)
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=504, detail={"error": "TIMEOUT", "message": f"WhatsApp did not respond to privacy setting '{field}' within 15s."})
     except HTTPException:
         raise
     except Exception as e:
@@ -127,38 +130,42 @@ async def _set_privacy_route(field: str, raw_value: Optional[str]) -> dict:
     return {"success": True, "updated": field, "value": val}
 
 
-async def set_last_seen(data: PrivacyValueRequest):
-    return await _set_privacy_route("lastSeen", data.value)
+def _sid(request: Request) -> str:
+    return get_session_id(request)
 
 
-async def set_online(data: PrivacyValueRequest):
-    return await _set_privacy_route("online", data.value)
+async def set_last_seen(data: PrivacyValueRequest, request: Request = None):
+    return await _set_privacy_route("lastSeen", data.value, _sid(request))
 
 
-async def set_profile(data: PrivacyValueRequest):
-    return await _set_privacy_route("profile", data.value)
+async def set_online(data: PrivacyValueRequest, request: Request = None):
+    return await _set_privacy_route("online", data.value, _sid(request))
 
 
-async def set_status(data: PrivacyValueRequest):
-    return await _set_privacy_route("status", data.value)
+async def set_profile(data: PrivacyValueRequest, request: Request = None):
+    return await _set_privacy_route("profile", data.value, _sid(request))
 
 
-async def set_read_receipts(data: PrivacyValueRequest):
-    return await _set_privacy_route("readReceipts", data.value)
+async def set_status(data: PrivacyValueRequest, request: Request = None):
+    return await _set_privacy_route("status", data.value, _sid(request))
 
 
-async def set_groups_add(data: PrivacyValueRequest):
-    return await _set_privacy_route("groupsAdd", data.value)
+async def set_read_receipts(data: PrivacyValueRequest, request: Request = None):
+    return await _set_privacy_route("readReceipts", data.value, _sid(request))
 
 
-async def set_call_add(data: PrivacyValueRequest):
-    return await _set_privacy_route("callAdd", data.value)
+async def set_groups_add(data: PrivacyValueRequest, request: Request = None):
+    return await _set_privacy_route("groupsAdd", data.value, _sid(request))
 
 
-async def set_about(data: AboutRequest):
+async def set_call_add(data: PrivacyValueRequest, request: Request = None):
+    return await _set_privacy_route("callAdd", data.value, _sid(request))
+
+
+async def set_about(data: AboutRequest, request: Request = None):
     if data.value is None:
         return {"success": True, "field": "about", "value": None}
-    sock = _require_client()
+    sock = _require_client(_sid(request))
     try:
         await asyncio.to_thread(sock.set_status_message, data.value)
     except Exception as e:
@@ -168,10 +175,10 @@ async def set_about(data: AboutRequest):
     return {"success": True, "updated": "about", "value": data.value}
 
 
-async def set_disappearing_timer(data: DisappearingTimerRequest):
+async def set_disappearing_timer(data: DisappearingTimerRequest, request: Request = None):
     if data.value is None:
         return {"success": True, "field": "disappearingTimer", "value": None}
-    sock = _require_client()
+    sock = _require_client(_sid(request))
     try:
         if data.value == 0:
             await asyncio.to_thread(sock.set_default_disappearing_timer, 0)

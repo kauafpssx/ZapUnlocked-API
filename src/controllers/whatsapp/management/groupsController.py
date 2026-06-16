@@ -1,14 +1,16 @@
-import asyncio
-from src.utils.decorators import require_whatsapp, handle_errors
+﻿import asyncio
+from fastapi import Request
+from src.utils.decorators import require_whatsapp, handle_errors, get_session_id
 
 
 @require_whatsapp
 @handle_errors("list groups")
-async def list_groups():
-    from src.services.whatsapp.client import get_client
+async def list_groups(request: Request = None):
+    from src.services.whatsapp import state
     from neonize.utils.jid import Jid2String
 
-    client = get_client()
+    sid = get_session_id(request)
+    client = state.get_client(sid)
     groups = await asyncio.to_thread(client.get_joined_groups)
 
     result = []

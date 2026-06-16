@@ -8,13 +8,13 @@ from src.services.whatsapp import storage
 from src.utils.logger import logger
 
 
-async def send_list_message(jid: str, text: str, button_text: str, sections: list, options: dict = None, title: str = "", footer: str = ""):
+async def send_list_message(jid: str, text: str, button_text: str, sections: list, options: dict = None, title: str = "", footer: str = "", session_id: str = "1"):
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import (
         Message, ListMessage,
         MessageContextInfo, DeviceListMetadata,
     )
 
-    client = _ensure_client()
+    client = _ensure_client(session_id)
     await apply_pre_send(jid, options, client)
 
     list_msg = ListMessage()
@@ -69,8 +69,8 @@ async def send_list_message(jid: str, text: str, button_text: str, sections: lis
             "footerText": footer,
             "sections": sections,
         }
-    }, res)
-    await _dispatch_sent_event(jid, "list", res)
+    }, res, session_id)
+    await _dispatch_sent_event(jid, "list", res, session_id)
     return res
 
 
@@ -94,14 +94,14 @@ async def _reconnect_delayed(start_bot):
     asyncio.create_task(start_bot())
 
 
-async def send_button_message(jid: str, text: str, buttons: list, options: dict = None, title: str = "", footer: str = "", image_url: str = None):
+async def send_button_message(jid: str, text: str, buttons: list, options: dict = None, title: str = "", footer: str = "", image_url: str = None, session_id: str = "1"):
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import (
         Message,
         MessageContextInfo,
         InteractiveMessage,
         DeviceListMetadata,
     )
-    client = _ensure_client()
+    client = _ensure_client(session_id)
     await apply_pre_send(jid, options, client)
 
     interactive_msg = InteractiveMessage()
@@ -246,14 +246,14 @@ async def send_button_message(jid: str, text: str, buttons: list, options: dict 
             "deviceListMetadata": {},
             "deviceListMetadataVersion": 2
         }
-    }, res)
-    await _dispatch_sent_event(jid, "interactive", res)
+    }, res, session_id)
+    await _dispatch_sent_event(jid, "interactive", res, session_id)
     return res
 
 
-async def send_poll_message(jid: str, name: str, options: list, selectable_count: int = 1, message_options: dict = None):
+async def send_poll_message(jid: str, name: str, options: list, selectable_count: int = 1, message_options: dict = None, session_id: str = "1"):
     from neonize.utils.enum import VoteType
-    client = _ensure_client()
+    client = _ensure_client(session_id)
     await apply_pre_send(jid, message_options, client)
 
     vote_type = VoteType.MULTIPLE if selectable_count == 0 else VoteType.SINGLE
@@ -274,17 +274,17 @@ async def send_poll_message(jid: str, name: str, options: list, selectable_count
             "name": name,
             "options": [{"optionName": opt} for opt in options]
         }
-    }, res)
-    await _dispatch_sent_event(jid, "poll", res)
+    }, res, session_id)
+    await _dispatch_sent_event(jid, "poll", res, session_id)
     return res
 
 
-async def send_poll_vote_message(jid: str, poll_id: str, poll_name: str, options: list, from_me: bool = False, timestamp: int = 0):
+async def send_poll_vote_message(jid: str, poll_id: str, poll_name: str, options: list, from_me: bool = False, timestamp: int = 0, session_id: str = "1"):
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message
     from neonize.proto.Neonize_pb2 import MessageInfo, MessageSource, JID as NeonizeJID
     from neonize.utils.jid import Jid2String
 
-    client = _ensure_client()
+    client = _ensure_client(session_id)
     target_jid = build_jid(jid)
 
     try:
@@ -332,14 +332,14 @@ async def send_poll_vote_message(jid: str, poll_id: str, poll_name: str, options
 
     vote_msg = client.build_poll_vote(msg_info, options)
     res = client.send_message(target_jid, vote_msg)
-    await _dispatch_sent_event(jid, "poll_vote", res)
+    await _dispatch_sent_event(jid, "poll_vote", res, session_id)
     return res
 
 
-async def find_message(jid: str, identifier: str, search_type: str = "id"):
+async def find_message(jid: str, identifier: str, search_type: str = "id", session_id: str = "1"):
     import json
     phone = jid.split("@")[0]
-    msgs = await storage.get_history(phone)
+    msgs = await storage.get_history(phone, session_id)
 
     if not msgs:
         return None

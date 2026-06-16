@@ -1,6 +1,4 @@
-"""System status and health check controllers."""
-
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import asyncio
 import base64
@@ -14,7 +12,10 @@ from datetime import datetime, timezone
 import psutil
 import qrcode
 
-from src.services.whatsapp.client import get_is_ready, get_qr, get_qr_expires_in
+from fastapi import Request
+from src.utils.decorators import get_session_id
+from src.services.whatsapp import state as _wa_state
+from src.services.whatsapp.client import activate_qr
 from src.utils.dry_run import is_dry_run
 
 _START_TIME = time.time()
@@ -44,14 +45,15 @@ def _fmt_uptime(seconds: float) -> str:
     return " ".join(parts)
 
 
-async def get_status_controller() -> dict:
+async def get_status_controller(request: Request = None) -> dict:
+    sid = get_session_id(request)
     process = psutil.Process()
     mem = process.memory_info()
     sysmem = psutil.virtual_memory()
     disk = psutil.disk_usage("/")
 
     uptime_s = time.time() - _START_TIME
-    wa_ready = get_is_ready()
+    wa_ready = _wa_state.get_is_ready(sid)
 
     proc_cpu = process.cpu_percent(interval=None)
     sys_cpu = psutil.cpu_percent(interval=None)
@@ -66,7 +68,7 @@ async def get_status_controller() -> dict:
         "uptime_seconds": int(uptime_s),
         "whatsapp": {
             "connected": wa_ready,
-            "qr_pending": get_qr() is not None and not wa_ready,
+            "qr_pending": _wa_state.get_qr(sid) is not None and not wa_ready,
         },
         "process": {
             "pid": process.pid,
@@ -105,16 +107,14 @@ def _generate_qr_b64(qr_data: str) -> str:
     return base64.b64encode(buf.getvalue()).decode("utf-8")
 
 
-def _try_refresh_qr(qr: str | None, is_ready: bool, expires_in: int | None, last_refreshed: str | None) -> str | None:
+def _try_refresh_qr(qr: str | None, is_ready: bool, expires_in: int | None, last_refreshed: str | None, session_id: str = "1") -> str | None:
     if not (qr and not is_ready and expires_in is not None and expires_in <= 0):
         return None
     if last_refreshed == qr:
         return last_refreshed
-    from src.services.whatsapp.client import activate_qr
-    from src.services.whatsapp import state
-    state.set_current_qr(None)
-    state.set_qr_last_generated_at(None)
-    activate_qr()
+    _wa_state.set_current_qr(None, session_id)
+    _wa_state.set_qr_last_generated_at(None, session_id)
+    activate_qr(session_id)
     return qr
 
 
@@ -134,14 +134,18 @@ async def _build_sse_data(qr: str | None, is_ready: bool, expires_in: int | None
 
 
 async def stream_status_generator(request):
+    sid = get_session_id(request)
     last_refreshed_qr: str | None = None
+    # Subscribing to the stream counts as authenticated access — unlock QR gate
+    if not _wa_state.get_is_ready(sid):
+        activate_qr(sid)
     while True:
         if await request.is_disconnected():
             break
-        qr = get_qr()
-        is_ready = get_is_ready()
-        expires_in = get_qr_expires_in() if qr and not is_ready else None
-        refreshed = _try_refresh_qr(qr, is_ready, expires_in, last_refreshed_qr)
+        qr = _wa_state.get_qr(sid)
+        is_ready = _wa_state.get_is_ready(sid)
+        expires_in = _wa_state.get_qr_expires_in(sid) if qr and not is_ready else None
+        refreshed = _try_refresh_qr(qr, is_ready, expires_in, last_refreshed_qr, sid)
         if refreshed is not None:
             last_refreshed_qr = refreshed
         else:

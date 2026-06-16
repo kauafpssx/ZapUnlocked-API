@@ -1,18 +1,21 @@
+﻿from src.utils.decorators import get_session_id
 import base64
 import io
 import qrcode
 from fastapi import Request
 from fastapi.responses import HTMLResponse
 from pathlib import Path
-from src.services.whatsapp.client import get_qr, get_is_ready, activate_qr, get_qr_expires_in
+from src.services.whatsapp import state as _wa_state
+from src.services.whatsapp.client import activate_qr
 from src.config.constants import BASE_DIR
 
 async def get_qr_page(request: Request):
-    activate_qr()
-    qr = get_qr()
-    is_connected = get_is_ready()
+    sid = get_session_id(request)
+    activate_qr(sid)
+    qr = _wa_state.get_qr(sid)
+    is_connected = _wa_state.get_is_ready(sid)
     api_key = request.query_params.get("API_KEY", "")
-    qr_expires_in = get_qr_expires_in() if qr else None
+    qr_expires_in = _wa_state.get_qr_expires_in(sid) if qr else None
 
     try:
         qr_data_url = None

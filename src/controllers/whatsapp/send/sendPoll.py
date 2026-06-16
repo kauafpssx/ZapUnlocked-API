@@ -1,16 +1,17 @@
-from src.utils.phone import resolve_jid
-from fastapi import HTTPException
+﻿from src.utils.phone import resolve_jid
+from fastapi import HTTPException, Request
 from src.services.whatsapp.sender import send_poll_message, send_poll_vote_message, find_message
 from src.utils.logger import logger
 from src.utils.quote import build_send_options
-from src.utils.decorators import require_whatsapp, handle_errors
+from src.utils.decorators import require_whatsapp, handle_errors, get_session_id
 from src.utils.time import sent_response
 from src.utils.dry_run import is_dry_run, dry_run_response
 from src.schemas import SendPollRequest, SendPollVoteRequest
 
 @require_whatsapp
 @handle_errors("send poll")
-async def send_poll(data: SendPollRequest):
+async def send_poll(data: SendPollRequest, request: Request):
+    sid = get_session_id(request)
     jid = resolve_jid(data.phone)
 
     options_dict = await build_send_options(
@@ -32,18 +33,20 @@ async def send_poll(data: SendPollRequest):
         name=data.name,
         options=data.options,
         selectable_count=data.selectableCount or 1,
-        message_options=options_dict
+        message_options=options_dict,
+        session_id=sid,
     )
     return sent_response(res, "Poll sent.")
 
 @require_whatsapp
 @handle_errors("send poll vote")
-async def send_poll_vote(data: SendPollVoteRequest):
+async def send_poll_vote(data: SendPollVoteRequest, request: Request):
+    sid = get_session_id(request)
     jid = resolve_jid(data.phone)
 
     if not data.options:
         raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "At least one option must be selected to vote."})
-    
+
     poll_id = data.pollId
     poll_name = data.pollName or "Poll"
     from_me = False
@@ -62,7 +65,7 @@ async def send_poll_vote(data: SendPollVoteRequest):
         if not search_query:
             raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'pollId' or 'pollName' is required to search by text."})
 
-        found_msg = await find_message(jid, search_query, target_type)
+        found_msg = await find_message(jid, search_query, target_type, session_id=sid)
         if not found_msg:
             raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": f"Poll not found by text: {search_query}"})
 
@@ -76,11 +79,12 @@ async def send_poll_vote(data: SendPollVoteRequest):
     logger.debug(f"🗳️ Sending vote: ID={poll_id}, options={data.options}, fromMe={from_me}")
 
     await send_poll_vote_message(
-        jid, 
+        jid,
         poll_id=poll_id,
         poll_name=poll_name,
         options=data.options,
         from_me=from_me,
-        timestamp=timestamp
+        timestamp=timestamp,
+        session_id=sid,
     )
     return {"success": True, "message": "Poll vote sent."}

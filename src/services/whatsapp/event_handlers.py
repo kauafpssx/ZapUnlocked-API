@@ -10,7 +10,6 @@ everything so existing imports keep working.
 """
 
 import asyncio
-import gc
 import time
 
 from neonize.client import NewClient
@@ -21,18 +20,28 @@ from src.config.url_builder import build_qr_url
 from src.services.whatsapp import state
 from src.services.whatsapp import storage
 
+# ═══════════════════════════════════════════════════════════════════════════
+# CLIENT → SESSION REGISTRY
+# ═══════════════════════════════════════════════════════════════════════════
+
+_client_session_registry: dict[int, str] = {}  # id(client) → session_id
+
+
+def register_client_session(client, session_id: str) -> None:
+    _client_session_registry[id(client)] = session_id
+
+
+def _get_session_id(client) -> str:
+    return _client_session_registry.get(id(client), "1")
+
 
 # ═══════════════════════════════════════════════════════════════════════════
 # THREAD-SAFE COROUTINE SCHEDULER
 # ═══════════════════════════════════════════════════════════════════════════
 
-def _run_in_loop(coro_factory):
-    """Schedule a coroutine in the main event loop (thread-safe).
-
-    Args:
-        coro_factory: A callable that returns an awaitable coroutine.
-    """
-    loop = state.get_main_loop()
+def _run_in_loop(coro_factory, session_id: str = "1"):
+    """Schedule a coroutine in the main event loop (thread-safe)."""
+    loop = state.get_main_loop(session_id)
     if loop and loop.is_running():
         loop.call_soon_threadsafe(lambda: asyncio.create_task(coro_factory()))
 
@@ -41,11 +50,11 @@ def _run_in_loop(coro_factory):
 # WEBHOOK DISPATCH
 # ═══════════════════════════════════════════════════════════════════════════
 
-async def _fire(event_type: str, data: dict) -> None:
+async def _fire(event_type: str, data: dict, session_id: str = "1") -> None:
     """Dispatch event to the named webhooks system."""
     try:
         from src.services.webhooks.dispatcher import dispatch_event
-        await dispatch_event(event_type, data)
+        await dispatch_event(event_type, data, session_id)
     except Exception as e:
         logger.error(f"Error dispatching event '{event_type}': {e}")
 
@@ -61,31 +70,35 @@ async def _fire(event_type: str, data: dict) -> None:
 
 def _on_qr(c: NewClient, qr_bytes: bytes) -> None:
     """Handle QR code event from Neonize."""
-    if state.get_is_ready():
+    sid = _get_session_id(c)
+    if state.get_is_ready(sid):
         return
 
-    if not state.get_qr_url_logged():
-        state.set_qr_url_logged(True)
+    if not state.get_qr_url_logged(sid):
+        state.set_qr_url_logged(True, sid)
         logger.info(f"📲 QR dashboard: {build_qr_url()}")
 
-    if not state.get_qr_generation_active():
+    if not state.get_qr_generation_active(sid):
         logger.debug("🔒 QR ignored — waiting for authenticated access on /qr")
         return
 
     qr_value = qr_bytes.decode("utf-8")
-    state.set_current_qr(qr_value)
-    state.set_qr_last_generated_at(time.time())
+    state.set_current_qr(qr_value, sid)
+    state.set_qr_last_generated_at(time.time(), sid)
     logger.info(f"📲 QR Code ready! Access: {build_qr_url()}")
 
-    _run_in_loop(lambda: _fire("connection.qr_ready", {"qr": state.get_qr()}))
+    _run_in_loop(lambda: _fire("connection.qr_ready", {"qr": state.get_qr(sid)}, sid), sid)
 
 
 # ── Connection lifecycle ──────────────────────────────────────────────────
 
 def _on_connected(c: NewClient, event) -> None:
     """Handle successful connection."""
-    state.mark_connected()
-    logger.info("✅ WhatsApp connected and ready")
+    sid = _get_session_id(c)
+    state.mark_connected(sid)
+    from src.services.whatsapp.client import reset_reconnect_counter
+    reset_reconnect_counter(sid)
+    logger.info(f"✅ WhatsApp connected and ready (session={sid})")
 
     phone = ""
     try:
@@ -94,19 +107,20 @@ def _on_connected(c: NewClient, event) -> None:
     except Exception:
         pass
 
-    _run_in_loop(lambda: _fire("connection.connected", {"phone": phone}))
+    _run_in_loop(lambda: _fire("connection.connected", {"phone": phone}, sid), sid)
 
 
 def _on_pair_code(c: NewClient, code: str, connected: bool) -> None:
     """Handle pairing code event."""
+    sid = _get_session_id(c)
     if not connected:
-        state.set_current_pair_code(code)
+        state.set_current_pair_code(code, sid)
         logger.info(f"🔑 Pairing code received: {code}")
-        _run_in_loop(lambda: _fire("connection.pair_code", {"code": code}))
+        _run_in_loop(lambda: _fire("connection.pair_code", {"code": code}, sid), sid)
     else:
         _run_in_loop(lambda: _fire("connection.pair_code", {
             "code": code, "connected": True,
-        }))
+        }, sid), sid)
 
 
 def _on_history_sync(c: NewClient, event) -> None:
@@ -114,71 +128,79 @@ def _on_history_sync(c: NewClient, event) -> None:
     pass
 
 
-def _schedule_reconnect():
+def _schedule_reconnect(c=None, session_id: str = "1"):
     """Schedule an automatic bot reconnection."""
     from src.services.whatsapp.client import start_bot
-    loop = state.get_main_loop()
+    sid = _get_session_id(c) if c else session_id
+    loop = state.get_main_loop(sid)
     if loop and loop.is_running():
         loop.call_soon_threadsafe(
-            lambda: asyncio.create_task(_reconnect_delayed(start_bot))
+            lambda: asyncio.create_task(_reconnect_delayed(start_bot, sid))
         )
 
 
-async def _reconnect_delayed(start_bot):
+async def _reconnect_delayed(start_bot, session_id: str = "1"):
     await asyncio.sleep(5)
-    asyncio.create_task(start_bot())
+    asyncio.create_task(start_bot(session_id))
 
 
 def _on_logged_out(c: NewClient, event) -> None:
     """Handle remote logout."""
-    state.mark_disconnected()
+    sid = _get_session_id(c)
+    state.mark_disconnected(sid)
     logger.warning(f"🔌 Session logged out — reason: {event.Reason}")
-    _run_in_loop(lambda: _fire("connection.logged_out", {"reason": event.Reason}))
-    _schedule_reconnect()
+    _run_in_loop(lambda: _fire("connection.logged_out", {"reason": event.Reason}, sid), sid)
+    _schedule_reconnect(c)
 
 
 def _on_connect_failure(c: NewClient, event) -> None:
     """Handle connection failure."""
-    state.mark_disconnected()
+    sid = _get_session_id(c)
+    state.mark_disconnected(sid)
     logger.error(f"❌ Connect failure: {event.Reason} — {event.Message}")
     _run_in_loop(lambda: _fire("connection.connect_failure", {
         "reason": event.Reason, "message": event.Message,
-    }))
-    _schedule_reconnect()
+    }, sid), sid)
+    _schedule_reconnect(c)
 
 
 def _on_stream_error(c: NewClient, event) -> None:
     """Handle stream-level errors."""
-    state.mark_disconnected()
+    sid = _get_session_id(c)
+    state.mark_disconnected(sid)
     logger.error(f"🌊 Stream error — code: {event.Code}")
-    _run_in_loop(lambda: _fire("connection.stream_error", {"code": event.Code}))
-    _schedule_reconnect()
+    _run_in_loop(lambda: _fire("connection.stream_error", {"code": event.Code}, sid), sid)
+    _schedule_reconnect(c)
 
 
 def _on_temporary_ban(c: NewClient, event) -> None:
     """Handle temporary ban."""
+    sid = _get_session_id(c)
     logger.warning(f"🚫 Temporary ban — code: {event.Code}, expires: {event.Expire}")
     _run_in_loop(lambda: _fire("connection.temporary_ban", {
         "code": event.Code, "expire": event.Expire,
-    }))
+    }, sid), sid)
 
 
 def _on_client_outdated(c: NewClient, event) -> None:
     """Handle outdated client version."""
+    sid = _get_session_id(c)
     logger.error("⚠️ Client outdated — update required")
-    _run_in_loop(lambda: _fire("connection.client_outdated", {}))
+    _run_in_loop(lambda: _fire("connection.client_outdated", {}, sid), sid)
 
 
 def _on_stream_replaced(c: NewClient, event) -> None:
     """Handle stream replaced by another session."""
-    state.mark_disconnected()
+    sid = _get_session_id(c)
+    state.mark_disconnected(sid)
     logger.warning("🔄 Stream replaced by another session")
-    _run_in_loop(lambda: _fire("connection.stream_replaced", {}))
-    _schedule_reconnect()
+    _run_in_loop(lambda: _fire("connection.stream_replaced", {}, sid), sid)
+    _schedule_reconnect(c)
 
 
 def _on_pair_status(c: NewClient, event) -> None:
     """Handle pairing status changes."""
+    sid = _get_session_id(c)
     try:
         from neonize.utils.jid import Jid2String
         jid_str = Jid2String(event.ID) if event.ID else ""
@@ -191,13 +213,14 @@ def _on_pair_status(c: NewClient, event) -> None:
         "platform": event.Platform,
         "status": event.Status,
         "error": event.Error,
-    }))
+    }, sid), sid)
 
 
 # ── Groups ────────────────────────────────────────────────────────────────
 
 def _on_joined_group(c: NewClient, event) -> None:
     """Handle joining a group."""
+    sid = _get_session_id(c)
     try:
         from neonize.utils.jid import Jid2String
         gid = Jid2String(event.GroupInfo.JID) if event.GroupInfo.JID else ""
@@ -208,11 +231,12 @@ def _on_joined_group(c: NewClient, event) -> None:
     _run_in_loop(lambda: _fire("group.join", {
         "groupId": gid, "groupName": name,
         "reason": event.Reason, "type": event.Type,
-    }))
+    }, sid), sid)
 
 
 def _on_group_info(c: NewClient, event) -> None:
     """Handle group info changes."""
+    sid = _get_session_id(c)
     try:
         from neonize.utils.jid import Jid2String
         jid_str = Jid2String(event.JID) if event.JID else ""
@@ -233,13 +257,14 @@ def _on_group_info(c: NewClient, event) -> None:
         "link": event.Link if event.Link else None,
         "unlink": event.Unlink if event.Unlink else None,
         "newInviteLink": event.NewInviteLink if event.NewInviteLink else None,
-    }))
+    }, sid), sid)
 
 
 # ── Contact / Presence ────────────────────────────────────────────────────
 
 def _on_presence(c: NewClient, event) -> None:
     """Handle contact presence change."""
+    sid = _get_session_id(c)
     try:
         from neonize.utils.jid import Jid2String
         from_jid = Jid2String(event.From) if event.From else ""
@@ -251,11 +276,12 @@ def _on_presence(c: NewClient, event) -> None:
     _run_in_loop(lambda: _fire("contact.presence", {
         "from": phone, "fromJid": from_jid,
         "status": status, "lastSeen": event.LastSeen,
-    }))
+    }, sid), sid)
 
 
 def _on_chat_presence(c: NewClient, event) -> None:
     """Handle typing/recording indicators."""
+    sid = _get_session_id(c)
     try:
         from neonize.utils.jid import Jid2String
         src = event.MessageSource
@@ -270,11 +296,12 @@ def _on_chat_presence(c: NewClient, event) -> None:
     _run_in_loop(lambda: _fire("contact.chat_presence", {
         "from": phone, "fromJid": jid_str,
         "state": event.State, "media": event.Media if event.Media else None,
-    }))
+    }, sid), sid)
 
 
 def _on_picture(c: NewClient, event) -> None:
     """Handle profile picture changes."""
+    sid = _get_session_id(c)
     try:
         from neonize.utils.jid import Jid2String
         jid_str = Jid2String(event.JID) if event.JID else ""
@@ -288,11 +315,12 @@ def _on_picture(c: NewClient, event) -> None:
     _run_in_loop(lambda: _fire("contact.picture_change", {
         "from": phone, "fromJid": jid_str,
         "author": author_str, "action": action,
-    }))
+    }, sid), sid)
 
 
 def _on_identity_change(c: NewClient, event) -> None:
     """Handle encryption identity changes."""
+    sid = _get_session_id(c)
     try:
         from neonize.utils.jid import Jid2String
         jid_str = Jid2String(event.JID) if event.JID else ""
@@ -303,13 +331,14 @@ def _on_identity_change(c: NewClient, event) -> None:
     _run_in_loop(lambda: _fire("contact.identity_change", {
         "from": phone, "fromJid": jid_str,
         "implicit": event.Implicit, "timestamp": event.Timestamp,
-    }))
+    }, sid), sid)
 
 
 # ── Read / Delivery receipts ──────────────────────────────────────────────
 
 def _on_receipt(c: NewClient, event) -> None:
     """Handle message read/delivery receipts."""
+    sid = _get_session_id(c)
     try:
         from neonize.utils.jid import Jid2String
         src = event.MessageSource
@@ -327,16 +356,17 @@ def _on_receipt(c: NewClient, event) -> None:
         "from": phone, "fromJid": jid_str,
         "messageIds": msg_ids, "type": event.Type,
         "timestamp": event.Timestamp,
-    }))
+    }, sid), sid)
 
 
 # ── Calls ─────────────────────────────────────────────────────────────────
 
 def _on_call_offer(c: NewClient, event) -> None:
     """Handle incoming call — reject automatically if configured."""
+    sid = _get_session_id(c)
     try:
         from src.services.whatsapp.settingsService import get_settings
-        settings = get_settings()
+        settings = get_settings(sid)
 
         meta = event.basicCallMeta
         caller_jid = getattr(meta, "from")
@@ -348,13 +378,13 @@ def _on_call_offer(c: NewClient, event) -> None:
 
         _run_in_loop(lambda: _fire("call.received", {
             "from": caller_phone, "fromJid": caller_str, "callId": call_id,
-        }))
+        }, sid), sid)
 
         if not settings.get("call_reject_auto", False):
             return
 
         import time
-        connected_at = state.get_connected_at()
+        connected_at = state.get_connected_at(sid)
         if connected_at and (time.time() - connected_at) < 15:
             logger.info(f"📞 Skipping rejection message for {caller_str} — startup grace period (missed call)")
             return
@@ -376,6 +406,7 @@ def _on_call_offer(c: NewClient, event) -> None:
 
 def _on_call_accept(c: NewClient, event) -> None:
     """Handle call accepted."""
+    sid = _get_session_id(c)
     try:
         meta = event.basicCallMeta
         from neonize.utils.jid import Jid2String
@@ -389,11 +420,12 @@ def _on_call_accept(c: NewClient, event) -> None:
     _run_in_loop(lambda: _fire("call.accepted", {
         "from": caller_phone, "fromJid": caller_str,
         "callId": getattr(meta, "callID", ""),
-    }))
+    }, sid), sid)
 
 
 def _on_call_terminate(c: NewClient, event) -> None:
     """Handle call ended."""
+    sid = _get_session_id(c)
     try:
         meta = event.basicCallMeta
         from neonize.utils.jid import Jid2String
@@ -408,13 +440,14 @@ def _on_call_terminate(c: NewClient, event) -> None:
         "from": caller_phone, "fromJid": caller_str,
         "callId": getattr(meta, "callID", ""),
         "reason": event.reason,
-    }))
+    }, sid), sid)
 
 
 # ── Undecryptable messages ────────────────────────────────────────────────
 
 def _on_undecryptable(c: NewClient, event) -> None:
     """Handle undecryptable messages."""
+    sid = _get_session_id(c)
     try:
         from neonize.utils.jid import Jid2String
         src = event.Info.MessageSource
@@ -428,20 +461,21 @@ def _on_undecryptable(c: NewClient, event) -> None:
     logger.warning(f"🔒 Undecryptable message from: {phone}")
     _run_in_loop(lambda: _fire("message.undecryptable", {
         "from": phone, "fromJid": jid_str,
-    }))
+    }, sid), sid)
 
 
 # ── Messages ──────────────────────────────────────────────────────────────
 
 def _on_message(c: NewClient, message: MessageEv) -> None:
     """Schedule received message processing in the main event loop."""
-    if message.Info.Timestamp < state.get_start_time() - 10:
+    sid = _get_session_id(c)
+    if message.Info.Timestamp < state.get_start_time(sid) - 10:
         return
     try:
-        loop = state.get_main_loop()
+        loop = state.get_main_loop(sid)
         if loop and loop.is_running():
             loop.call_soon_threadsafe(
-                lambda: asyncio.create_task(handle_message_async(c, message))
+                lambda: asyncio.create_task(handle_message_async(c, message, sid))
             )
         else:
             logger.warning("🕒 Main loop not available to process message")
@@ -453,10 +487,10 @@ def _on_message(c: NewClient, message: MessageEv) -> None:
 # MESSAGE PROCESSING PIPELINE
 # ═══════════════════════════════════════════════════════════════════════════
 
-async def handle_message_async(c: NewClient, message: MessageEv) -> None:
+async def handle_message_async(c: NewClient, message: MessageEv, session_id: str = "1") -> None:
     """Process received message: filter, persist, webhook, auto-read, handlers."""
     ts = message.Info.Timestamp
-    if ts < state.get_start_time() - 10 or message.Info.MessageSource.Chat.User == "status":
+    if ts < state.get_start_time(session_id) - 10 or message.Info.MessageSource.Chat.User == "status":
         return
 
     from src.utils.parsing.message_parser import parse_message, should_ignore_message
@@ -534,23 +568,20 @@ async def handle_message_async(c: NewClient, message: MessageEv) -> None:
         "message": {"conversation": text_content} if text_content else {},
     }
 
-    await storage.add_message_to_history(phone, msg_dict)
+    await storage.add_message_to_history(phone, msg_dict, session_id)
     await storage.save_chat_index({
         "id": jid,
         "phone": phone,
         "name": resolved_name,
         "lastMessageTimestamp": int(ts),
-    })
+    }, session_id)
 
-    _auto_read_message(c, message, source)
+    _auto_read_message(c, message, source, session_id)
 
     from src.services.stats import increment
-    increment("messages_received")
+    increment("messages_received", session_id=session_id)
 
-    _forward_to_handler(c, message)
-
-    if ts % 10 == 0:
-        gc.collect()
+    _forward_to_handler(c, message, session_id)
 
 
 async def _handle_meta_ai_response(message, parsed: dict) -> None:
@@ -590,7 +621,7 @@ async def _handle_meta_ai_response(message, parsed: dict) -> None:
 
     async def _delayed_fire_initial(p: dict) -> None:
         await asyncio.sleep(_meta_ai_edit_debounce_delay)
-        await _fire("ai.response", p)
+        await _fire("ai.response", p, "1")
 
     _meta_ai_edit_debounce_task = asyncio.create_task(_delayed_fire_initial(payload))
 
@@ -636,7 +667,7 @@ async def _handle_meta_ai_edit(proto) -> None:
 
         async def _delayed_fire(p: dict) -> None:
             await asyncio.sleep(_meta_ai_edit_debounce_delay)
-            await _fire("ai.response", p)
+            await _fire("ai.response", p, "1")
 
         _meta_ai_edit_debounce_task = asyncio.create_task(_delayed_fire(payload))
     except Exception as e:
@@ -675,11 +706,11 @@ def _cache_reaction_if_present(message) -> None:
         pass
 
 
-def _auto_read_message(c, message, source) -> None:
+def _auto_read_message(c, message, source, session_id: str = "1") -> None:
     """Mark message as read automatically if configured."""
     try:
         from src.services.whatsapp.settingsService import get_settings
-        settings = get_settings()
+        settings = get_settings(session_id)
         if settings.get("auto_read_message", False) and not source.IsFromMe:
             from neonize.utils.enum import ReceiptType
             c.mark_read(
@@ -692,10 +723,10 @@ def _auto_read_message(c, message, source) -> None:
         logger.debug(f"Auto-read failed: {e}")
 
 
-def _forward_to_handler(c, message) -> None:
+def _forward_to_handler(c, message, session_id: str = "1") -> None:
     """Forward message to the callback handler."""
     try:
         from src.handlers import handleMessage
-        asyncio.create_task(handleMessage(c, message))
+        asyncio.create_task(handleMessage(c, message, session_id))
     except Exception:
         pass

@@ -1,9 +1,9 @@
-from src.utils.phone import resolve_jid
+﻿from src.utils.phone import resolve_jid
 import time as time_module
 from typing import Optional
-from fastapi import UploadFile, File, Form
+from fastapi import UploadFile, File, Form, Request
 from src.services.whatsapp.sender import send_audio_message, send_document_message
-from src.utils.decorators import require_whatsapp, handle_errors
+from src.utils.decorators import require_whatsapp, handle_errors, get_session_id
 from src.services.media.audioConverter import convert_audio
 from src.services.media.utils import cleanup, get_file_size
 from src.services.media.queue import task_queue
@@ -18,6 +18,7 @@ from src.utils.quote import build_send_options
 @require_whatsapp
 @handle_errors("send audio")
 async def send_audio(
+    request: Request,
     phone: str = Form(...),
     url: Optional[str] = Form(None),
     file: Optional[UploadFile] = File(None),
@@ -30,6 +31,7 @@ async def send_audio(
     delay_typing: Optional[float] = Form(None),
     mentioned: Optional[str] = Form(None),
 ):
+    sid = get_session_id(request)
     logger.debug(f"🔍 POST /send_audio: phone={phone}")
 
     path, size = await resolve_media(url, file, media_type="audio")
@@ -44,7 +46,7 @@ async def send_audio(
             if as_document or is_too_big:
                 logger.info("🎵 Audio will be sent as a document.")
                 filename = f"audio_{int(time_module.time() * 1000)}.mp3"
-                await send_document_message(jid, path, filename, "audio/mpeg", options=options)
+                await send_document_message(jid, path, filename, "audio/mpeg", options=options, session_id=sid)
             else:
                 converted_path = None
                 duration = 0
@@ -53,7 +55,7 @@ async def send_audio(
                 except Exception:
                     logger.error("⚠️ Audio conversion failed, sending original...")
                 try:
-                    await send_audio_message(jid, converted_path or path, is_ptt=ptt, duration=duration, options=options)
+                    await send_audio_message(jid, converted_path or path, is_ptt=ptt, duration=duration, options=options, session_id=sid)
                 finally:
                     if converted_path:
                         cleanup(converted_path)

@@ -1,15 +1,13 @@
-import gc
-
 from src.services.whatsapp.sender.helpers import _ensure_client, _build_context_info, _save_to_history, build_jid, _dispatch_sent_event, apply_pre_send
 
 
-async def send_image_message(jid: str, image_path: str, caption: str = "", as_document: bool = False, file_name: str = None, options: dict = None):
+async def send_image_message(jid: str, image_path: str, caption: str = "", as_document: bool = False, file_name: str = None, options: dict = None, session_id: str = "1"):
     import magic
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, ImageMessage, DocumentMessage
     from neonize.utils.enum import MediaType
     from pathlib import Path
 
-    client = _ensure_client()
+    client = _ensure_client(session_id)
     with open(image_path, "rb") as f:
         image_bytes = f.read()
 
@@ -34,8 +32,8 @@ async def send_image_message(jid: str, image_path: str, caption: str = "", as_do
             )
         )
         res = client.send_message(build_jid(jid), msg)
-        await _save_to_history(jid, {"documentMessage": {"fileName": final_name, "caption": caption}}, res)
-        await _dispatch_sent_event(jid, "document", res)
+        await _save_to_history(jid, {"documentMessage": {"fileName": final_name, "caption": caption}}, res, session_id)
+        await _dispatch_sent_event(jid, "document", res, session_id)
     else:
         upload = client.upload(image_bytes, MediaType.MediaImage)
         msg = Message(
@@ -52,20 +50,19 @@ async def send_image_message(jid: str, image_path: str, caption: str = "", as_do
             )
         )
         res = client.send_message(build_jid(jid), msg)
-        await _save_to_history(jid, {"imageMessage": {"caption": caption}}, res)
-        await _dispatch_sent_event(jid, "image", res)
+        await _save_to_history(jid, {"imageMessage": {"caption": caption}}, res, session_id)
+        await _dispatch_sent_event(jid, "image", res, session_id)
 
     del image_bytes
-    gc.collect()
     return res
 
 
-async def send_audio_message(jid: str, audio_path: str, is_ptt: bool = False, duration: int = 0, options: dict = None):
+async def send_audio_message(jid: str, audio_path: str, is_ptt: bool = False, duration: int = 0, options: dict = None, session_id: str = "1"):
     import magic
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, AudioMessage
     from neonize.utils.enum import MediaType
 
-    client = _ensure_client()
+    client = _ensure_client(session_id)
     with open(audio_path, "rb") as f:
         audio_bytes = f.read()
 
@@ -97,22 +94,21 @@ async def send_audio_message(jid: str, audio_path: str, is_ptt: bool = False, du
         )
     )
     res = client.send_message(build_jid(jid), msg)
-    await _save_to_history(jid, {"audioMessage": {}}, res)
-    await _dispatch_sent_event(jid, "audio", res)
+    await _save_to_history(jid, {"audioMessage": {}}, res, session_id)
+    await _dispatch_sent_event(jid, "audio", res, session_id)
     del audio_bytes
-    gc.collect()
     return res
 
 
-async def send_video_message(jid: str, video_path: str, caption: str = "", as_document: bool = False, gif_playback: bool = False, ptv: bool = False, options: dict = None):
+async def send_video_message(jid: str, video_path: str, caption: str = "", as_document: bool = False, gif_playback: bool = False, ptv: bool = False, options: dict = None, session_id: str = "1"):
     import magic
     import os
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, VideoMessage
     from neonize.utils.enum import MediaType
 
-    client = _ensure_client()
+    client = _ensure_client(session_id)
     if as_document:
-        return await send_document_message(jid, video_path, os.path.basename(video_path), options=options)
+        return await send_document_message(jid, video_path, os.path.basename(video_path), options=options, session_id=session_id)
 
     with open(video_path, "rb") as f:
         video_bytes = f.read()
@@ -140,19 +136,18 @@ async def send_video_message(jid: str, video_path: str, caption: str = "", as_do
         msg = Message(videoMessage=video_msg)
 
     res = client.send_message(build_jid(jid), msg)
-    await _save_to_history(jid, {"videoMessage": {"caption": caption}}, res)
-    await _dispatch_sent_event(jid, "video", res)
+    await _save_to_history(jid, {"videoMessage": {"caption": caption}}, res, session_id)
+    await _dispatch_sent_event(jid, "video", res, session_id)
     del video_bytes
-    gc.collect()
     return res
 
 
-async def send_document_message(jid: str, file_path: str, file_name: str, mimetype: str = None, options: dict = None):
+async def send_document_message(jid: str, file_path: str, file_name: str, mimetype: str = None, options: dict = None, session_id: str = "1"):
     import magic
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, DocumentMessage
     from neonize.utils.enum import MediaType
 
-    client = _ensure_client()
+    client = _ensure_client(session_id)
     with open(file_path, "rb") as f:
         doc_bytes = f.read()
 
@@ -175,8 +170,7 @@ async def send_document_message(jid: str, file_path: str, file_name: str, mimety
         )
     )
     res = client.send_message(build_jid(jid), msg)
-    await _save_to_history(jid, {"documentMessage": {"title": file_name}}, res)
-    await _dispatch_sent_event(jid, "document", res)
+    await _save_to_history(jid, {"documentMessage": {"title": file_name}}, res, session_id)
+    await _dispatch_sent_event(jid, "document", res, session_id)
     del doc_bytes
-    gc.collect()
     return res

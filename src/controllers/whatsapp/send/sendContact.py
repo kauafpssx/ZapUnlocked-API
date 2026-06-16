@@ -1,5 +1,6 @@
-from src.utils.phone import resolve_jid
-from src.utils.decorators import require_whatsapp, handle_errors
+﻿from src.utils.phone import resolve_jid
+from fastapi import Request
+from src.utils.decorators import require_whatsapp, handle_errors, get_session_id
 from src.services.whatsapp.sender import send_contact_message
 from src.services.media.queue import task_queue
 from src.utils.quote import build_send_options
@@ -8,7 +9,9 @@ from src.schemas import SendContactRequest
 
 @require_whatsapp
 @handle_errors("send contact")
-async def send_contact(data: SendContactRequest):
+async def send_contact(data: SendContactRequest, request: Request):
+    sid = get_session_id(request)
+
     async def process_task():
         jid = resolve_jid(data.phone)
         options = await build_send_options(jid, reply_identifier=data.quoted_id, reply_type=data.type or "id", delay_message=data.delay_message, delay_typing=data.delay_typing, mentioned=data.mentioned)
@@ -17,6 +20,7 @@ async def send_contact(data: SendContactRequest):
             contact_name=data.name,
             contact_phone=data.contactPhone,
             options=options,
+            session_id=sid,
         )
 
     await task_queue.enqueue(process_task())

@@ -1,14 +1,16 @@
-from fastapi import HTTPException
+﻿from src.utils.decorators import get_session_id
+from fastapi import HTTPException, Request
 from neonize.utils import build_jid
 from neonize.utils.enum import BlocklistAction
 
-from src.services.whatsapp.client import get_client
+from src.services.whatsapp import state
 from src.schemas import BlockRequest
 from src.utils.logger import logger
 
 
-async def block_user(data: BlockRequest):
-    sock = get_client()
+async def block_user(data: BlockRequest, request: Request = None):
+    sid = get_session_id(request)
+    sock = state.get_client(sid)
     if not sock:
         raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 

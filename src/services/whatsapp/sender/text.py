@@ -1,8 +1,8 @@
 from src.services.whatsapp.sender.helpers import _ensure_client, _build_context_info, _save_to_history, build_jid, _dispatch_sent_event, apply_pre_send
 
 
-async def send_message(jid: str, message: str, options: dict = None):
-    client = _ensure_client()
+async def send_message(jid: str, message: str, options: dict = None, session_id: str = "1"):
+    client = _ensure_client(session_id)
     await apply_pre_send(jid, options, client)
 
     ci = _build_context_info(options.get("quoted"), options.get("mentioned") if options else None) if options else None
@@ -19,6 +19,6 @@ async def send_message(jid: str, message: str, options: dict = None):
     else:
         res = client.send_message(build_jid(jid), message)
 
-    await _save_to_history(jid, {"conversation": message}, res)
-    await _dispatch_sent_event(jid, "text", res)
+    await _save_to_history(jid, {"conversation": message}, res, session_id)
+    await _dispatch_sent_event(jid, "text", res, session_id)
     return res

@@ -5,7 +5,7 @@ import re
 import time
 from google.protobuf.json_format import ParseDict
 
-from src.services.whatsapp.client import get_client, get_is_ready
+from src.services.whatsapp import state as _wa_state
 from src.services.whatsapp import storage
 from src.utils.logger import logger
 
@@ -32,15 +32,14 @@ def build_jid(phone_or_jid: str):
     return neonize_build_jid(clean, "s.whatsapp.net")
 
 
-def _ensure_client():
-    client = get_client()
-    if not client or not get_is_ready():
+def _ensure_client(session_id: str = "1"):
+    client = _wa_state.get_client(session_id)
+    if not client or not _wa_state.get_is_ready(session_id):
         raise Exception("WhatsApp is not connected.")
     return client
 
 
-async def _save_to_history(jid: str, message_content: dict, res):
-    """Save outgoing messages to local history."""
+async def _save_to_history(jid: str, message_content: dict, res, session_id: str = "1"):
     try:
         if not res or not hasattr(res, "ID"):
             return
@@ -56,13 +55,12 @@ async def _save_to_history(jid: str, message_content: dict, res):
             "pushName": "You",
             "message": message_content
         }
-        await storage.add_message_to_history(phone, msg_dict)
+        await storage.add_message_to_history(phone, msg_dict, session_id)
     except Exception:
         pass
 
 
-async def _dispatch_sent_event(jid: str, event_type: str, res):
-    """Dispatch message.sent event to webhooks."""
+async def _dispatch_sent_event(jid: str, event_type: str, res, session_id: str = "1"):
     try:
         if not res or not hasattr(res, "ID"):
             return
@@ -71,10 +69,10 @@ async def _dispatch_sent_event(jid: str, event_type: str, res):
         from src.services.stats import increment
         phone = jid.split("@")[0]
 
-        increment("messages_sent")
+        increment("messages_sent", session_id=session_id)
         payload = {"to": phone, "type": event_type, "messageId": res.ID}
-        await dispatch_event("message.sent", payload)
-        await dispatch_event(f"message.sent.{event_type}", payload)
+        await dispatch_event("message.sent", payload, session_id)
+        await dispatch_event(f"message.sent.{event_type}", payload, session_id)
     except Exception as e:
         logger.error(f"Failed to dispatch message.sent: {e}")
 

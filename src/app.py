@@ -19,6 +19,7 @@ from src.routes.instance import router as instance_router
 from src.routes.webhooks import router as webhooks_router
 from src.routes.session import router as session_router
 from src.routes.ai import router as ai_router
+from src.routes.sessions_mgmt import router as sessions_mgmt_router
 from src.middleware.ip_control import IPControlMiddleware
 from src.middleware.json_cleaner import json_comment_stripper
 
@@ -87,5 +88,6 @@ def create_app(lifespan: Any = None) -> FastAPI:
     app.include_router(webhooks_router, prefix="/webhooks")
     app.include_router(session_router, prefix="/session")
     app.include_router(ai_router, prefix="/ai")
+    app.include_router(sessions_mgmt_router)
 
     return app

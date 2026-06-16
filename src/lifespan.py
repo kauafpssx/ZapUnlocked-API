@@ -21,10 +21,13 @@ async def lifespan(app: FastAPI):
     # ── Ensure required directories ─────────────────────────
     _ensure_dirs()
 
+    # ── Initialise SQLite schema ─────────────────────────────
+    _init_db()
+
     # ── FFmpeg warmup ───────────────────────────────────────
     _warm_up_ffmpeg()
 
-    # ── WhatsApp bot ────────────────────────────────────────
+    # ── WhatsApp bot(s) ─────────────────────────────────────
     await _start_whatsapp()
 
     # ── Media auto-cleanup loop ─────────────────────────
@@ -50,7 +53,17 @@ def _ensure_dirs():
     Path(DATA_DIR).mkdir(parents=True, exist_ok=True)
     Path(TEMP_DIR).mkdir(parents=True, exist_ok=True)
     logger.info(f"📁 Auth directory: {AUTH_DIR}")
-    logger.info(f"📁 Data directory (chats): {DATA_DIR}")
+    logger.info(f"📁 Data directory: {DATA_DIR}")
+
+
+def _init_db():
+    try:
+        from src.utils.db import init_db
+        init_db()
+        logger.info("🗄️ SQLite schema ready.")
+    except Exception as e:
+        logger.error(f"Failed to initialise database: {e}")
+        raise
 
 
 def _warm_up_ffmpeg():
@@ -68,7 +81,7 @@ def _warm_up_ffmpeg():
 
 
 async def _start_whatsapp():
-    """Start the WhatsApp bot in a background task if enabled."""
+    """Start WhatsApp bot for all active sessions."""
     enable = os.getenv("ENABLE_WHATSAPP", "1") == "1"
     if not enable:
         logger.warning("WhatsApp bot disabled (ENABLE_WHATSAPP=0)")
@@ -76,30 +89,42 @@ async def _start_whatsapp():
 
     try:
         from src.services.whatsapp.client import start_bot
-        asyncio.create_task(start_bot())
-        logger.info("WhatsApp bot started")
+        from src.services.whatsapp import state as _wa_state
+        from src.services.sessions.registry import get_active_sessions, ensure_default_session
+        ensure_default_session()
+        sessions = get_active_sessions()
+        for session in sessions:
+            sid = session["id"]
+            # Allow QR to be stored when WhatsApp emits it during startup
+            _wa_state.set_keep_qr_active_on_restart(True, sid)
+            asyncio.create_task(start_bot(sid))
+            logger.info(f"WhatsApp bot started for session '{sid}' ({session.get('name', sid)})")
     except Exception as e:
         logger.error(f"Failed to start WhatsApp bot: {e}")
 
 
 async def _stop_whatsapp():
-    """Gracefully disconnect neonize client on shutdown, then force-exit to free Go runtime threads."""
+    """Gracefully disconnect all neonize clients on shutdown, then force-exit."""
     try:
         from src.services.whatsapp import state
         from src.services.whatsapp.client import set_shutting_down
+        from src.services.whatsapp.state_manager import all_states
 
         set_shutting_down(True)
 
-        client = state.get_client()
-        if client:
+        for sid, st in all_states().items():
+            client = st.client
+            if not client:
+                continue
             try:
                 await asyncio.wait_for(
                     asyncio.get_event_loop().run_in_executor(None, _safe_disconnect, client),
                     timeout=3.0,
                 )
-                logger.info("✅ WhatsApp client disconnected")
+                logger.info(f"✅ WhatsApp client disconnected (session={sid})")
             except asyncio.TimeoutError:
-                logger.warning("⚠️ Disconnect timed out — forcing exit")
+                logger.warning(f"⚠️ Disconnect timed out for session={sid}")
+        return
     except Exception as e:
         logger.warning(f"WhatsApp shutdown error (non-fatal): {e}")
     finally:

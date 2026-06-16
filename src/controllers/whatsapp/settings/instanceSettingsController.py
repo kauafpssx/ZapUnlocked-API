@@ -1,30 +1,29 @@
-"""Controller for instance settings (rename, etc)."""
-
+﻿from src.utils.decorators import get_session_id
 import asyncio
 import json
-from fastapi import HTTPException
-from src.config.constants import data_dir
+from fastapi import HTTPException, Request
+from src.config.constants import get_data_dir
 from src.schemas import UpdateInstanceNameRequest
-from src.services.whatsapp.client import get_client
+from src.services.whatsapp import state
 from src.utils.logger import logger
+from pathlib import Path
 
 
-async def update_instance_name(data: UpdateInstanceNameRequest):
-    """Rename the instance in db_config.json and update WhatsApp pushname."""
+async def update_instance_name(data: UpdateInstanceNameRequest, request: Request = None):
+    sid = get_session_id(request)
     try:
-        # ── Update pushname on WhatsApp ────────────────────
-        sock = get_client()
+        sock = state.get_client(sid)
         if not sock:
             raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
         await asyncio.to_thread(sock.set_profile_name, data.name)
 
-        # ── Persist name locally ────────────────────────────
-        db_config_file = data_dir / "db_config.json"
+        db_config_file = Path(get_data_dir(sid)) / "db_config.json"
         current = {}
         if db_config_file.exists():
             with open(db_config_file, "r") as f:
                 current.update(json.load(f))
         current["instanceName"] = data.name
+        db_config_file.parent.mkdir(parents=True, exist_ok=True)
         with open(db_config_file, "w") as f:
             json.dump(current, f)
 

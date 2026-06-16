@@ -1,13 +1,14 @@
-from src.utils.phone import resolve_jid
-from fastapi import HTTPException
+﻿from src.utils.phone import resolve_jid
+from fastapi import HTTPException, Request
 from src.services.whatsapp.sender import send_reaction as whatsapp_send_reaction
 from src.utils.logger import logger
-from src.utils.decorators import require_whatsapp, handle_errors
+from src.utils.decorators import require_whatsapp, handle_errors, get_session_id
 from src.schemas import SendReactionRequest
 
 @require_whatsapp
 @handle_errors("send reaction")
-async def send_reaction(data: SendReactionRequest):
+async def send_reaction(data: SendReactionRequest, request: Request):
+    sid = get_session_id(request)
     identifier = data.quoted_id or data.reaction or data.messageId or data.text
     identification_type = data.type or ("text" if (data.quoted_id or data.text) and not data.messageId else "id")
 
@@ -16,5 +17,5 @@ async def send_reaction(data: SendReactionRequest):
 
     jid = resolve_jid(data.phone)
 
-    await whatsapp_send_reaction(jid, identifier, data.emoji, identification_type)
+    await whatsapp_send_reaction(jid, identifier, data.emoji, identification_type, session_id=sid)
     return {"success": True, "message": "Reaction sent."}

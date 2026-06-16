@@ -1,9 +1,11 @@
-from fastapi import HTTPException
-from src.services.whatsapp.client import get_is_ready
+﻿from src.utils.decorators import get_session_id
+from fastapi import HTTPException, Request
+from src.services.whatsapp import state
 
 
-async def readiness_controller() -> dict:
-    if get_is_ready():
+async def readiness_controller(request: Request = None) -> dict:
+    sid = get_session_id(request)
+    if state.get_is_ready(sid):
         return {"ready": True}
     raise HTTPException(
         status_code=503,

@@ -1,4 +1,5 @@
-from fastapi import HTTPException
+﻿from src.utils.decorators import get_session_id
+from fastapi import HTTPException, Request
 
 from src.services import webhookRegistry
 from src.services.webhooks.registry import ALL_EVENTS
@@ -6,22 +7,29 @@ from src.utils.logger import logger
 from src.schemas import WebhookCreateRequest, WebhookUpdateRequest, WebhookToggleRequest
 
 
-async def list_webhooks():
-    webhooks = webhookRegistry.list_webhooks()
+def _sid(request: Request) -> str:
+    return get_session_id(request)
+
+
+async def list_webhooks(request: Request):
+    sid = _sid(request)
+    webhooks = webhookRegistry.list_webhooks(sid)
     return {"webhooks": webhooks, "total": len(webhooks)}
 
 
-async def get_webhook(name: str):
-    wh = webhookRegistry.get_webhook(name)
+async def get_webhook(name: str, request: Request):
+    sid = _sid(request)
+    wh = webhookRegistry.get_webhook(name, sid)
     if not wh:
         raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": f"Webhook '{name}' not found."})
     return wh
 
 
-async def create_webhook(data: WebhookCreateRequest):
+async def create_webhook(data: WebhookCreateRequest, request: Request):
+    sid = _sid(request)
     _validate_events(data.events)
     try:
-        wh = webhookRegistry.create_webhook(data.model_dump())
+        wh = webhookRegistry.create_webhook(data.model_dump(), sid)
         return {"success": True, "webhook": wh}
     except ValueError as e:
         raise HTTPException(status_code=400, detail={"error": "INVALID_FIELD", "message": str(e)})
@@ -30,11 +38,12 @@ async def create_webhook(data: WebhookCreateRequest):
         raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
-async def update_webhook(name: str, data: WebhookUpdateRequest):
+async def update_webhook(name: str, data: WebhookUpdateRequest, request: Request):
+    sid = _sid(request)
     if data.events is not None:
         _validate_events(data.events)
     try:
-        wh = webhookRegistry.update_webhook(name, data.model_dump(exclude_none=True))
+        wh = webhookRegistry.update_webhook(name, data.model_dump(exclude_none=True), sid)
         return {"success": True, "webhook": wh}
     except ValueError as e:
         raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": str(e)})
@@ -43,9 +52,10 @@ async def update_webhook(name: str, data: WebhookUpdateRequest):
         raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
-async def delete_webhook(name: str):
+async def delete_webhook(name: str, request: Request):
+    sid = _sid(request)
     try:
-        webhookRegistry.delete_webhook(name)
+        webhookRegistry.delete_webhook(name, sid)
         return {"success": True, "message": f"Webhook '{name}' removed."}
     except ValueError as e:
         raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": str(e)})
@@ -54,10 +64,15 @@ async def delete_webhook(name: str):
         raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
-async def toggle_webhook(name: str, data: WebhookToggleRequest):
+async def toggle_webhook(name: str, request: Request, data: WebhookToggleRequest = None):
+    sid = _sid(request)
     try:
-        wh = webhookRegistry.toggle_webhook(name, data.active)
-        status = "enabled" if data.active else "disabled"
+        current = webhookRegistry.get_webhook(name, sid)
+        if not current:
+            raise ValueError(f"Webhook '{name}' not found.")
+        target = (not current["active"]) if (data is None or data.active is None) else data.active
+        wh = webhookRegistry.toggle_webhook(name, target, sid)
+        status = "enabled" if target else "disabled"
         return {"success": True, "message": f"Webhook '{name}' {status}.", "webhook": wh}
     except ValueError as e:
         raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": str(e)})
@@ -66,9 +81,9 @@ async def toggle_webhook(name: str, data: WebhookToggleRequest):
         raise HTTPException(status_code=500, detail={"error": "INTERNAL_ERROR", "message": str(e)})
 
 
-async def test_webhook(name: str, data: dict = None):
-    from fastapi import Body
-    wh = webhookRegistry.get_webhook(name)
+async def test_webhook(name: str, request: Request, data: dict = None):
+    sid = _sid(request)
+    wh = webhookRegistry.get_webhook(name, sid)
     if not wh:
         raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": f"Webhook '{name}' not found."})
 

@@ -7,15 +7,15 @@ from src.services.whatsapp.sender.helpers import _ensure_client, _build_context_
 from src.utils.logger import logger
 
 
-async def send_reaction(jid: str, identifier: str, emoji: str, search_type: str = "id"):
+async def send_reaction(jid: str, identifier: str, emoji: str, search_type: str = "id", session_id: str = "1"):
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, ReactionMessage
     from neonize.proto.waCommon.WACommon_pb2 import MessageKey
     from neonize.utils.jid import Jid2String
 
     from src.services.whatsapp.sender.interactive import find_message
 
-    client = _ensure_client()
-    found = await find_message(jid, identifier, search_type)
+    client = _ensure_client(session_id)
+    found = await find_message(jid, identifier, search_type, session_id=session_id)
 
     target_id = identifier
     from_me = False
@@ -41,14 +41,14 @@ async def send_reaction(jid: str, identifier: str, emoji: str, search_type: str 
         )
     )
     res = client.send_message(target_jid, msg)
-    await _dispatch_sent_event(jid, "reaction", res)
+    await _dispatch_sent_event(jid, "reaction", res, session_id)
     return res
 
 
-async def send_location_message(jid: str, latitude: float, longitude: float, name: str = "", address: str = "", options: dict = None):
+async def send_location_message(jid: str, latitude: float, longitude: float, name: str = "", address: str = "", options: dict = None, session_id: str = "1"):
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, LocationMessage
 
-    client = _ensure_client()
+    client = _ensure_client(session_id)
     await apply_pre_send(jid, options, client)
     msg = Message(
         locationMessage=LocationMessage(
@@ -60,15 +60,15 @@ async def send_location_message(jid: str, latitude: float, longitude: float, nam
         )
     )
     res = client.send_message(build_jid(jid), msg)
-    await _save_to_history(jid, {"locationMessage": {"lat": latitude, "lng": longitude, "name": name}}, res)
-    await _dispatch_sent_event(jid, "location", res)
+    await _save_to_history(jid, {"locationMessage": {"lat": latitude, "lng": longitude, "name": name}}, res, session_id)
+    await _dispatch_sent_event(jid, "location", res, session_id)
     return res
 
 
-async def send_contact_message(jid: str, contact_name: str, contact_phone: str, options: dict = None):
+async def send_contact_message(jid: str, contact_name: str, contact_phone: str, options: dict = None, session_id: str = "1"):
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, ContactMessage
 
-    client = _ensure_client()
+    client = _ensure_client(session_id)
     await apply_pre_send(jid, options, client)
     phone_clean = contact_phone.lstrip("+").replace(" ", "").replace("-", "")
     vcard = (
@@ -86,16 +86,16 @@ async def send_contact_message(jid: str, contact_name: str, contact_phone: str, 
         )
     )
     res = client.send_message(build_jid(jid), msg)
-    await _save_to_history(jid, {"contactMessage": {"displayName": contact_name}}, res)
-    await _dispatch_sent_event(jid, "contact", res)
+    await _save_to_history(jid, {"contactMessage": {"displayName": contact_name}}, res, session_id)
+    await _dispatch_sent_event(jid, "contact", res, session_id)
     return res
 
 
-async def send_contacts_message(jid: str, contacts: list, options: dict = None):
+async def send_contacts_message(jid: str, contacts: list, options: dict = None, session_id: str = "1"):
     """contacts: list of dicts with 'name' and 'phone' keys"""
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, ContactsArrayMessage, ContactMessage
 
-    client = _ensure_client()
+    client = _ensure_client(session_id)
     await apply_pre_send(jid, options, client)
     contact_msgs = []
     for c in contacts:
@@ -118,15 +118,15 @@ async def send_contacts_message(jid: str, contacts: list, options: dict = None):
         )
     )
     res = client.send_message(build_jid(jid), msg)
-    await _save_to_history(jid, {"contactsArrayMessage": {"count": len(contacts)}}, res)
-    await _dispatch_sent_event(jid, "contacts", res)
+    await _save_to_history(jid, {"contactsArrayMessage": {"count": len(contacts)}}, res, session_id)
+    await _dispatch_sent_event(jid, "contacts", res, session_id)
     return res
 
 
-async def send_link_message(jid: str, url: str, text: str = "", title: str = "", description: str = "", thumbnail_url: str = None, options: dict = None):
+async def send_link_message(jid: str, url: str, text: str = "", title: str = "", description: str = "", thumbnail_url: str = None, options: dict = None, session_id: str = "1"):
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, ExtendedTextMessage
 
-    client = _ensure_client()
+    client = _ensure_client(session_id)
     await apply_pre_send(jid, options, client)
 
     if not title and not description:
@@ -173,25 +173,25 @@ async def send_link_message(jid: str, url: str, text: str = "", title: str = "",
 
     msg = Message(extendedTextMessage=ext)
     res = client.send_message(build_jid(jid), msg)
-    await _save_to_history(jid, {"extendedTextMessage": {"text": display_text, "canonicalUrl": url}}, res)
-    await _dispatch_sent_event(jid, "link", res)
+    await _save_to_history(jid, {"extendedTextMessage": {"text": display_text, "canonicalUrl": url}}, res, session_id)
+    await _dispatch_sent_event(jid, "link", res, session_id)
     return res
 
 
-async def delete_message(jid: str, message_id: str, is_from_me: bool = True):
-    client = _ensure_client()
+async def delete_message(jid: str, message_id: str, is_from_me: bool = True, session_id: str = "1"):
+    client = _ensure_client(session_id)
     target_jid = build_jid(jid)
     sender_jid = client.get_me().JID if is_from_me else build_jid(jid)
 
     res = client.revoke_message(target_jid, sender_jid, message_id)
-    await _dispatch_sent_event(jid, "delete", res)
+    await _dispatch_sent_event(jid, "delete", res, session_id)
     return res
 
 
-async def mark_messages_read(jid: str, message_ids: list, sender: str = None):
+async def mark_messages_read(jid: str, message_ids: list, sender: str = None, session_id: str = "1"):
     from neonize.utils.enum import ReceiptType
 
-    client = _ensure_client()
+    client = _ensure_client(session_id)
     target_jid = build_jid(jid)
     sender_jid = build_jid(sender) if sender else target_jid
 
@@ -204,16 +204,16 @@ async def mark_messages_read(jid: str, message_ids: list, sender: str = None):
     return res
 
 
-async def edit_message(jid: str, message_id: str, new_text: str, is_from_me: bool = True):
+async def edit_message(jid: str, message_id: str, new_text: str, is_from_me: bool = True, session_id: str = "1"):
     from neonize.proto.waCommon.WACommon_pb2 import MessageKey
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, ExtendedTextMessage
     from neonize.utils.jid import Jid2String
 
-    client = _ensure_client()
+    client = _ensure_client(session_id)
     target_jid = build_jid(jid)
 
     new_msg = Message(conversation=new_text)
     res = client.edit_message(target_jid, message_id, new_msg)
-    await _save_to_history(jid, {"conversation": new_text}, res)
-    await _dispatch_sent_event(jid, "edit", res)
+    await _save_to_history(jid, {"conversation": new_text}, res, session_id)
+    await _dispatch_sent_event(jid, "edit", res, session_id)
     return res

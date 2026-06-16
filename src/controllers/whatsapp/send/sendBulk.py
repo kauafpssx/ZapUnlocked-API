@@ -1,10 +1,11 @@
-from src.utils.phone import resolve_jid
+﻿from src.utils.phone import resolve_jid
 import asyncio
 
+from fastapi import Request
 from src.schemas import BulkSendTextRequest
 from src.services.whatsapp.sender import send_message as whatsapp_send_message
 from src.services.whatsapp.sender.helpers import _parse_delay
-from src.utils.decorators import require_whatsapp, handle_errors
+from src.utils.decorators import require_whatsapp, handle_errors, get_session_id
 from src.utils.formatter import format_text
 from src.utils.quote import build_send_options
 from src.utils.time import now_ts
@@ -14,7 +15,8 @@ from src.utils.logger import logger
 
 @require_whatsapp
 @handle_errors("bulk send")
-async def send_bulk(data: BulkSendTextRequest):
+async def send_bulk(data: BulkSendTextRequest, request: Request):
+    sid = get_session_id(request)
     if not data.phones:
         from fastapi import HTTPException
         raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'phones' cannot be empty."})
@@ -35,7 +37,7 @@ async def send_bulk(data: BulkSendTextRequest):
                 delay_typing=data.delay_typing,
                 mentioned=data.mentioned,
             )
-            res = await whatsapp_send_message(jid, formatted, options)
+            res = await whatsapp_send_message(jid, formatted, options, session_id=sid)
             msg_id = getattr(res, "ID", None) if res else None
             results.append({"phone": phone, "success": True, "messageId": msg_id, "timestamp": now_ts()})
             logger.debug(f"Bulk send [{i+1}/{len(data.phones)}] → {phone}")

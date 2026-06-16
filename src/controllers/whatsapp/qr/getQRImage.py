@@ -1,14 +1,17 @@
-from fastapi import HTTPException, Response
+﻿from src.utils.decorators import get_session_id
+from fastapi import HTTPException, Request, Response
 import io
 import qrcode
-from src.services.whatsapp.client import get_qr, get_is_ready, activate_qr, get_qr_expires_in
+from src.services.whatsapp import state as _wa_state
+from src.services.whatsapp.client import activate_qr
 
-async def get_qr_image():
-    activate_qr()
-    qr = get_qr()
+async def get_qr_image(request: Request = None):
+    sid = get_session_id(request)
+    activate_qr(sid)
+    qr = _wa_state.get_qr(sid)
 
     if not qr:
-        message = "WhatsApp is already connected." if get_is_ready() else "Waiting for QR code generation..."
+        message = "WhatsApp is already connected." if _wa_state.get_is_ready(sid) else "Waiting for QR code generation..."
         raise HTTPException(status_code=404, detail={"error": "NOT_FOUND", "message": message})
 
     try:
@@ -16,7 +19,7 @@ async def get_qr_image():
         buf = io.BytesIO()
         img.save(buf, format="PNG")
 
-        expires_in = get_qr_expires_in()
+        expires_in = _wa_state.get_qr_expires_in(sid)
         headers = {
             "Cache-Control": "no-cache, no-store, must-revalidate",
             "X-QR-Expires-In": str(expires_in) if expires_in is not None else "0",

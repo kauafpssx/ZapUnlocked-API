@@ -1,10 +1,10 @@
-from src.utils.phone import resolve_jid
-from fastapi import HTTPException
+﻿from src.utils.phone import resolve_jid
+from fastapi import HTTPException, Request
 from src.services.whatsapp.sender import send_message as whatsapp_send_message
 from src.utils.logger import logger
 from src.utils.quote import build_send_options
 from src.utils.formatter import format_text
-from src.utils.decorators import require_whatsapp, handle_errors
+from src.utils.decorators import require_whatsapp, handle_errors, get_session_id
 from src.utils.time import sent_response
 from src.utils.dry_run import is_dry_run, dry_run_response
 from src.schemas import SendMessageRequest
@@ -12,7 +12,8 @@ from src.schemas import SendMessageRequest
 
 @require_whatsapp
 @handle_errors("send message")
-async def send_message(data: SendMessageRequest):
+async def send_message(data: SendMessageRequest, request: Request):
+    sid = get_session_id(request)
     if not data.phone or not data.message:
         raise HTTPException(status_code=400, detail={"error": "MISSING_FIELD", "message": "'phone' and 'message' are required."})
 
@@ -33,5 +34,5 @@ async def send_message(data: SendMessageRequest):
     )
 
     formatted_message = format_text(data.message)
-    res = await whatsapp_send_message(jid, formatted_message, options)
+    res = await whatsapp_send_message(jid, formatted_message, options, session_id=sid)
     return sent_response(res, "Message sent.")

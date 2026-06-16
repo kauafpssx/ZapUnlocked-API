@@ -42,20 +42,20 @@ router.get("/stats", dependencies=[Depends(auth)])(get_stats)
 router.delete("/stats", dependencies=[Depends(auth)])(delete_stats)
 
 @router.get("/stats/webhooks", dependencies=[Depends(auth)])
-async def stats_webhooks_all():
-    return await get_webhook_stats_controller()
+async def stats_webhooks_all(request: Request):
+    return await get_webhook_stats_controller(request)
 
 @router.get("/stats/webhooks/{name}", dependencies=[Depends(auth)])
-async def stats_webhooks_one(name: str):
-    return await get_webhook_stats_controller(name)
+async def stats_webhooks_one(request: Request, name: str):
+    return await get_webhook_stats_controller(request, name)
 
 @router.delete("/stats/webhooks", dependencies=[Depends(auth)])
-async def delete_stats_webhooks_all():
-    return await delete_webhook_stats_controller()
+async def delete_stats_webhooks_all(request: Request):
+    return await delete_webhook_stats_controller(request)
 
 @router.delete("/stats/webhooks/{name}", dependencies=[Depends(auth)])
-async def delete_stats_webhooks_one(name: str):
-    return await delete_webhook_stats_controller(name)
+async def delete_stats_webhooks_one(request: Request, name: str):
+    return await delete_webhook_stats_controller(request, name)
 
 _COLLECTION_PATH = Path(__file__).resolve().parents[2] / "ZapUnlocked.collection.json"
 

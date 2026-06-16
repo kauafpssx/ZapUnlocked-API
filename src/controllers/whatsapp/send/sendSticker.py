@@ -1,8 +1,8 @@
-from src.utils.phone import resolve_jid
+﻿from src.utils.phone import resolve_jid
 from typing import Optional
-from fastapi import UploadFile, File, Form
+from fastapi import UploadFile, File, Form, Request
 from src.services.whatsapp.sender import send_sticker_message
-from src.utils.decorators import require_whatsapp, handle_errors
+from src.utils.decorators import require_whatsapp, handle_errors, get_session_id
 from src.services.media.imageConverter import convert_to_webp, convert_to_animated_webp
 from src.services.media.utils import cleanup
 from src.services.media.queue import task_queue
@@ -18,6 +18,7 @@ from src.utils.quote import build_send_options
 @require_whatsapp
 @handle_errors("send sticker")
 async def send_sticker(
+    request: Request,
     phone: str = Form(...),
     url: Optional[str] = Form(None),
     file: Optional[UploadFile] = File(None),
@@ -32,6 +33,7 @@ async def send_sticker(
     delay_typing: Optional[float] = Form(None),
     mentioned: Optional[str] = Form(None),
 ):
+    sid = get_session_id(request)
     logger.debug(f"🔍 POST /send_sticker: phone={phone}")
 
     path, size = await resolve_media(url, file, media_type="sticker")
@@ -55,7 +57,7 @@ async def send_sticker(
                 sticker_path = await convert_to_webp(path, conv_options)
 
             logger.info(f"📤 Sending sticker to {phone} (animated={animated})...")
-            await send_sticker_message(jid, sticker_path, pack or "", author or "", options=options, passthrough=animated)
+            await send_sticker_message(jid, sticker_path, pack or "", author or "", options=options, passthrough=animated, session_id=sid)
         finally:
             await upload_tracker.release(size)
             cleanup(path)

@@ -1,7 +1,8 @@
-from fastapi import HTTPException
+﻿from src.utils.decorators import get_session_id
+from fastapi import HTTPException, Request
 from pydantic import BaseModel
 from typing import Optional
-from src.services.whatsapp.client import get_is_ready
+from src.services.whatsapp import state
 from src.services.whatsapp.messageFetcher import fetch_messages as whatsapp_fetch_messages
 from src.services.webhooks.service import trigger_webhook
 from src.utils.logger import logger
@@ -16,8 +17,9 @@ class FetchMessagesRequest(BaseModel):
     query: Optional[str] = None
     onlyButtons: Optional[bool] = None
 
-async def fetch_messages(data: FetchMessagesRequest):
-    if not get_is_ready():
+async def fetch_messages(data: FetchMessagesRequest, request: Request = None):
+    sid = get_session_id(request)
+    if not state.get_is_ready(sid):
         raise HTTPException(status_code=503, detail={"error": "WHATSAPP_NOT_CONNECTED", "message": "WhatsApp is not connected."})
 
     if not data.phone:
