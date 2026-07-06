@@ -13,6 +13,7 @@ class WebhookCreateRequest(BaseModel):
     events: list[str] = ["*"]
     active: bool = True
     secret: Optional[str] = None
+    self_destruct: bool = False
 
 
 class WebhookUpdateRequest(BaseModel):
@@ -23,6 +24,7 @@ class WebhookUpdateRequest(BaseModel):
     events: Optional[list[str]] = None
     active: Optional[bool] = None
     secret: Optional[str] = None
+    self_destruct: Optional[bool] = None
 
 
 class WebhookToggleRequest(BaseModel):

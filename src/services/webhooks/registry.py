@@ -75,6 +75,7 @@ def _row_to_dict(row) -> dict:
         "events": json.loads(row["events"]),
         "active": bool(row["active"]),
         "created_at": row["created_at"],
+        "self_destruct": bool(row["self_destruct"]) if "self_destruct" in row.keys() else False,
     }
     if row["secret"]:
         wh["secret"] = row["secret"]
@@ -118,15 +119,17 @@ def create_webhook(data: dict, session_id: str = "1") -> dict:
         "active": data.get("active", True),
         "created_at": data.get("created_at") or _utc_now(),
         "secret": data.get("secret"),
+        "self_destruct": data.get("self_destruct", False),
     }
     conn.execute(
         """INSERT INTO webhooks
-               (session_id, name, url, method, headers, body, events, active, created_at, secret)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+               (session_id, name, url, method, headers, body, events, active, created_at, secret, self_destruct)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
         (
             session_id, wh["name"], wh["url"], wh["method"],
             json.dumps(wh["headers"]), json.dumps(wh["body"]), json.dumps(wh["events"]),
             1 if wh["active"] else 0, wh["created_at"], wh["secret"],
+            1 if wh["self_destruct"] else 0,
         ),
     )
     conn.commit()
@@ -158,16 +161,19 @@ def update_webhook(name: str, data: dict, session_id: str = "1") -> dict:
             wh["secret"] = data["secret"]
         else:
             wh.pop("secret", None)
+    if "self_destruct" in data:
+        wh["self_destruct"] = data["self_destruct"]
 
     conn = get_conn()
     conn.execute(
         """UPDATE webhooks
-           SET url=?, method=?, headers=?, body=?, events=?, active=?, secret=?
+           SET url=?, method=?, headers=?, body=?, events=?, active=?, secret=?, self_destruct=?
            WHERE session_id=? AND name=?""",
         (
             wh["url"], wh["method"],
             json.dumps(wh["headers"]), json.dumps(wh["body"]), json.dumps(wh["events"]),
             1 if wh.get("active", True) else 0, wh.get("secret"),
+            1 if wh.get("self_destruct", False) else 0,
             session_id, slug,
         ),
     )

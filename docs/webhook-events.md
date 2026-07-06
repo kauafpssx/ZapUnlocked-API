@@ -43,6 +43,32 @@ Use `"events": ["*"]` to receive all event types.
 
 ---
 
+### `self_destruct` — Auto-delete after webhook
+
+When `self_destruct: true`, the message is deleted from the WhatsApp chat **after** the webhook is dispatched. Supported events:
+
+- `message.audio`
+- `message.image`
+- `message.video`
+- `message.document`
+- `message.sticker`
+- `message.text`
+
+```json
+POST /webhooks
+{
+  "name": "self-destruct-audio",
+  "url": "https://myapp.com/hooks/audio",
+  "events": ["message.audio"],
+  "self_destruct": true,
+  "active": true
+}
+```
+
+> ⚠️ For messages **received** from other users, self-destruct uses "delete for me" — the message is removed from the bot's chat view but remains visible to the original sender. For messages **sent** by the bot, the message is revoked for everyone. In both cases the webhook fires regardless of whether deletion succeeds.
+
+---
+
 ## Incoming Message Events
 
 All incoming message events share these base fields in `data`:

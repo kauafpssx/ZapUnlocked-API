@@ -64,16 +64,17 @@ CREATE TABLE IF NOT EXISTS webhook_stats (
 );
 
 CREATE TABLE IF NOT EXISTS webhooks (
-    session_id  TEXT NOT NULL,
-    name        TEXT NOT NULL,
-    url         TEXT NOT NULL,
-    method      TEXT NOT NULL DEFAULT 'POST',
-    headers     TEXT NOT NULL DEFAULT '{}',
-    body        TEXT NOT NULL DEFAULT '{}',
-    events      TEXT NOT NULL DEFAULT '["*"]',
-    active      INTEGER NOT NULL DEFAULT 1,
-    created_at  TEXT NOT NULL,
-    secret      TEXT,
+    session_id    TEXT NOT NULL,
+    name          TEXT NOT NULL,
+    url           TEXT NOT NULL,
+    method        TEXT NOT NULL DEFAULT 'POST',
+    headers       TEXT NOT NULL DEFAULT '{}',
+    body          TEXT NOT NULL DEFAULT '{}',
+    events        TEXT NOT NULL DEFAULT '["*"]',
+    active        INTEGER NOT NULL DEFAULT 1,
+    created_at    TEXT NOT NULL,
+    secret        TEXT,
+    self_destruct INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (session_id, name)
 );
 
@@ -112,3 +113,12 @@ def init_db() -> None:
     """Create all tables if they don't exist. Safe to call multiple times."""
     conn = get_conn()
     conn.executescript(_SCHEMA)
+    _run_migrations(conn)
+
+
+def _run_migrations(conn):
+    """Apply incremental schema migrations."""
+    try:
+        conn.execute("ALTER TABLE webhooks ADD COLUMN self_destruct INTEGER NOT NULL DEFAULT 0")
+    except sqlite3.OperationalError:
+        pass  # column already exists
