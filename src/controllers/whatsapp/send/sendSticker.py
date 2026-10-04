@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import UploadFile, File, Form, Request
 from src.services.whatsapp.sender import send_sticker_message
 from src.utils.decorators import require_whatsapp, handle_errors, get_session_id
-from src.services.media.imageConverter import convert_to_webp, convert_to_animated_webp
+from src.services.media.imageConverter import convert_to_webp, convert_to_animated_webp, embed_sticker_exif
 from src.services.media.utils import cleanup
 from src.services.media.queue import task_queue
 from src.services.media.resolver import resolve_media
@@ -53,6 +53,7 @@ async def send_sticker(
             animated = is_animated_sticker_source(mime)
             if animated:
                 sticker_path = await convert_to_animated_webp(path, conv_options)
+                embed_sticker_exif(sticker_path, pack or "", author or "")
             else:
                 sticker_path = await convert_to_webp(path, conv_options)
 

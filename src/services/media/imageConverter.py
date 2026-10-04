@@ -114,3 +114,47 @@ async def convert_to_animated_webp(input_path: str, options: dict = None) -> str
     except Exception as e:
         logger.error(f"❌ Animated sticker conversion failed: {e}")
         raise e
+
+
+def embed_sticker_exif(webp_path: str, pack: str = "", author: str = "") -> bool:
+    """Write WhatsApp sticker metadata (pack name / author) into a WebP file.
+
+    neonize's ``passthrough`` mode (used for animated stickers) and ffmpeg's
+    libwebp both skip the EXIF chunk, so pack/author were silently dropped.
+    This patches the RIFF container directly: no re-encode, no webpmux needed.
+    Returns True if the metadata was written.
+    """
+    if not (pack or author):
+        return False
+    from neonize.utils.sticker import add_exif
+
+    data = bytearray(Path(webp_path).read_bytes())
+    if data[:4] != b"RIFF" or data[8:12] != b"WEBP":
+        logger.warning("⚠️ Cannot embed EXIF: not a RIFF/WebP file")
+        return False
+
+    # Locate VP8X (extended header) and drop any existing EXIF chunk.
+    pos, vp8x, chunks = 12, None, []
+    while pos + 8 <= len(data):
+        tag = bytes(data[pos:pos + 4])
+        size = int.from_bytes(data[pos + 4:pos + 8], "little")
+        end = pos + 8 + size + (size & 1)
+        if tag == b"VP8X":
+            vp8x = len(chunks)
+        if tag != b"EXIF":
+            chunks.append(bytes(data[pos:end]))
+        pos = end
+    if vp8x is None:
+        logger.warning("⚠️ Cannot embed EXIF: WebP has no VP8X chunk")
+        return False
+
+    head = bytearray(chunks[vp8x])
+    head[8] |= 0x08  # EXIF flag
+    chunks[vp8x] = bytes(head)
+
+    exif = add_exif(pack or "", author or "")
+    chunks.append(b"EXIF" + len(exif).to_bytes(4, "little") + exif + (b"\x00" if len(exif) & 1 else b""))
+
+    body = b"WEBP" + b"".join(chunks)
+    Path(webp_path).write_bytes(b"RIFF" + len(body).to_bytes(4, "little") + body)
+    return True

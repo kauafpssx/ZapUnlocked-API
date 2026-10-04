@@ -178,7 +178,7 @@ ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
         "Sticker-specific fields:\n"
         "- `pack` — sticker pack name\n"
         "- `author` — sticker author\n"
-        "- `resize_mode` — `\"pad\"` (adds padding) or `\"crop\"` (crops to fit)\n"
+        "- `resize_mode` — `\"pad\"` (adds padding), `\"cover\"` (crops to fill 512x512), `\"stretch\"` or `\"blur\"` (blurred background)\n"
         "- `pad_color` — background hex/name when using pad mode (e.g. `\"black\"`, `\"#FF0000\"`)\n"
         "- `blur_intensity` — background blur strength when padding (integer)"
     ),

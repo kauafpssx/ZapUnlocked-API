@@ -210,3 +210,47 @@ class TestAudioConverter:
             assert duration == 90
 
 
+
+
+class TestEmbedStickerExif:
+    @staticmethod
+    def _animated_webp(path):
+        from PIL import Image
+        frames = [Image.new("RGB", (32, 32), c) for c in ("red", "blue")]
+        frames[0].save(path, format="webp", save_all=True, append_images=frames[1:], duration=100, loop=0)
+
+    def test_writes_pack_and_author_keeping_animation(self, tmp_path):
+        from PIL import Image
+        from src.services.media.imageConverter import embed_sticker_exif
+        f = tmp_path / "a.webp"
+        self._animated_webp(f)
+        assert embed_sticker_exif(str(f), "My Pack", "My Author") is True
+        img = Image.open(f)
+        assert img.n_frames == 2
+        exif = img.info["exif"].decode("utf-8", "ignore")
+        assert '"sticker-pack-name": "My Pack"' in exif
+        assert '"sticker-pack-publisher": "My Author"' in exif
+
+    def test_replaces_existing_exif(self, tmp_path):
+        from PIL import Image
+        from src.services.media.imageConverter import embed_sticker_exif
+        f = tmp_path / "a.webp"
+        self._animated_webp(f)
+        embed_sticker_exif(str(f), "One", "A")
+        embed_sticker_exif(str(f), "Two", "B")
+        exif = Image.open(f).info["exif"].decode("utf-8", "ignore")
+        assert "Two" in exif and "One" not in exif
+
+    def test_noop_without_metadata(self, tmp_path):
+        from src.services.media.imageConverter import embed_sticker_exif
+        f = tmp_path / "a.webp"
+        self._animated_webp(f)
+        before = f.read_bytes()
+        assert embed_sticker_exif(str(f), "", "") is False
+        assert f.read_bytes() == before
+
+    def test_rejects_non_webp(self, tmp_path):
+        from src.services.media.imageConverter import embed_sticker_exif
+        f = tmp_path / "a.webp"
+        f.write_bytes(b"not a webp")
+        assert embed_sticker_exif(str(f), "x", "y") is False
