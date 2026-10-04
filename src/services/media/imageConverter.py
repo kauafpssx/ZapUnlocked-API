@@ -4,6 +4,14 @@ from src.utils.logger import logger
 import traceback
 from src.services.media.utils import run_ffmpeg_sync
 
+# WhatsApp sticker limits: animated <= 500 KB and <= 10 s (static <= 100 KB).
+ANIMATED_MAX_BYTES = 500 * 1000
+ANIMATED_MAX_SECONDS = 10
+# (libwebp quality, fps cap or None to keep source fps, internal detail px or None), best
+# first. The last steps shrink then re-enlarge the picture (softer, but the canvas stays 512x512).
+ANIMATED_QUALITY_LADDER = [(70, None, None), (55, 20, None), (45, 15, None), (35, 12, None),
+                           (25, 10, None), (20, 10, 384), (15, 8, 320), (10, 8, 256)]
+
 async def convert_to_webp(input_path: str, options: dict = None) -> str:
     if options is None:
         options = {}
@@ -90,26 +98,41 @@ async def convert_to_animated_webp(input_path: str, options: dict = None) -> str
         fmt = "format=rgba," if pcolor == "transparent" else ""
         vf = f"{fmt}scale=512:512:force_original_aspect_ratio=decrease,pad=512:512:(ow-iw)/2:(oh-ih)/2:color={color}"
 
-    cmd = [
-        "ffmpeg",
-        "-i", str(input_path),
-        "-vcodec", "libwebp",
-        "-vf", vf,
-        "-preset", "default",
-        "-loop", "0",     # animated loop
-        "-an",
-        "-vsync", "0",
-        "-y",
-        str(output_path),
-    ]
-
+    # WhatsApp rejects animated stickers > 500 KB or > 10 s when they are saved/forwarded,
+    # even though the send itself succeeds. Try the best quality first and step down
+    # (quality, fps) until the file fits, keeping the 512x512 canvas.
     logger.info(f"🎞️ Converting animated sticker: {path.name}")
     try:
-        result = await asyncio.to_thread(run_ffmpeg_sync, cmd)
-        if result.returncode != 0:
-            err_msg = result.stderr.decode(errors="replace").strip()
-            raise Exception(f"FFmpeg error: {err_msg}")
-        logger.info("✅ Animated sticker converted!")
+        for quality, fps, detail in ANIMATED_QUALITY_LADDER:
+            chain = f"fps={fps},{vf}" if fps else vf
+            if detail:
+                chain += f",scale={detail}:{detail}:flags=bilinear,scale=512:512:flags=bicubic"
+            cmd = [
+                "ffmpeg",
+                "-i", str(input_path),
+                "-t", str(ANIMATED_MAX_SECONDS),
+                "-vcodec", "libwebp",
+                "-vf", chain,
+                "-quality", str(quality),
+                "-compression_level", "6",
+                "-preset", "default",
+                "-loop", "0",     # animated loop
+                "-an",
+                "-vsync", "0",
+                "-y",
+                str(output_path),
+            ]
+            result = await asyncio.to_thread(run_ffmpeg_sync, cmd)
+            if result.returncode != 0:
+                err_msg = result.stderr.decode(errors="replace").strip()
+                raise Exception(f"FFmpeg error: {err_msg}")
+            size = output_path.stat().st_size
+            if size <= ANIMATED_MAX_BYTES:
+                break
+            logger.info(f"📏 Animated sticker {size // 1024} KB > limit, retrying (quality={quality}, fps={fps}, detail={detail})")
+        else:
+            logger.warning(f"⚠️ Animated sticker still {size // 1024} KB after lowest quality; WhatsApp may refuse to save it")
+        logger.info(f"✅ Animated sticker converted! ({size // 1024} KB)")
         return str(output_path)
     except Exception as e:
         logger.error(f"❌ Animated sticker conversion failed: {e}")

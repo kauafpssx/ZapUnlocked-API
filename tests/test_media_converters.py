@@ -254,3 +254,51 @@ class TestEmbedStickerExif:
         f = tmp_path / "a.webp"
         f.write_bytes(b"not a webp")
         assert embed_sticker_exif(str(f), "x", "y") is False
+
+
+class TestAnimatedSizeLimit:
+    @staticmethod
+    def _fake_ffmpeg(sizes, calls):
+        """run_ffmpeg_sync stand-in: writes an output file of the next size in `sizes`."""
+        from pathlib import Path
+
+        def run(cmd):
+            calls.append(cmd)
+            Path(cmd[-1]).write_bytes(b"x" * sizes[min(len(calls), len(sizes)) - 1])
+            r = MagicMock()
+            r.returncode = 0
+            return r
+        return run
+
+    async def test_steps_down_until_it_fits(self, tmp_path):
+        from src.services.media.imageConverter import ANIMATED_MAX_BYTES, convert_to_animated_webp
+        src = tmp_path / "a.gif"
+        src.write_bytes(b"gif")
+        calls = []
+        sizes = [2_000_000, 900_000, ANIMATED_MAX_BYTES - 1]
+        with patch("src.services.media.imageConverter.run_ffmpeg_sync", side_effect=self._fake_ffmpeg(sizes, calls)):
+            out = await convert_to_animated_webp(str(src), {"resizeMode": "cover"})
+        assert len(calls) == 3
+        assert (tmp_path / "a_anim.webp").stat().st_size == ANIMATED_MAX_BYTES - 1 and out.endswith("_anim.webp")
+        assert "-t" in calls[0] and calls[0][calls[0].index("-t") + 1] == "10"
+        assert "fps=" not in calls[0][calls[0].index("-vf") + 1]          # best quality keeps source fps
+        assert "fps=" in calls[1][calls[1].index("-vf") + 1]              # later steps cap fps
+
+    async def test_stops_at_first_fit(self, tmp_path):
+        from src.services.media.imageConverter import convert_to_animated_webp
+        src = tmp_path / "a.gif"
+        src.write_bytes(b"gif")
+        calls = []
+        with patch("src.services.media.imageConverter.run_ffmpeg_sync", side_effect=self._fake_ffmpeg([1000], calls)):
+            await convert_to_animated_webp(str(src))
+        assert len(calls) == 1
+
+    async def test_gives_up_after_lowest_step_but_still_returns(self, tmp_path):
+        from src.services.media.imageConverter import ANIMATED_QUALITY_LADDER, convert_to_animated_webp
+        src = tmp_path / "a.gif"
+        src.write_bytes(b"gif")
+        calls = []
+        with patch("src.services.media.imageConverter.run_ffmpeg_sync", side_effect=self._fake_ffmpeg([5_000_000], calls)):
+            out = await convert_to_animated_webp(str(src))
+        assert len(calls) == len(ANIMATED_QUALITY_LADDER)
+        assert out.endswith("_anim.webp")
