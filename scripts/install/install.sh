@@ -113,7 +113,7 @@ PKGS = [
     ("python-magic",        "0.4.27",   "py3-none-any"),
     ("ffmpeg-python",       "0.2.0",    "py3-none-any"),
     ("future",              "1.0.0",    "py3-none-any"),
-    ("neonize",             "0.3.18.post0", None),
+    ("neonize",             "0.5.2",    "py310"),
 
     ("protobuf",            "7.34.1",   None),
     ("linkpreview",         "0.11.0",   "py3-none-any"),

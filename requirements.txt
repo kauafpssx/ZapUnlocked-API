@@ -10,7 +10,7 @@ pydantic>=2.10.0
 python-dotenv>=1.0.0
 
 # ── WhatsApp Client (Neonize) ───────────────────────────
-neonize>=0.3.18.post0
+neonize>=0.5.2                      # >=0.5.2: older builds get "Client outdated (405)" from WhatsApp
 
 # ── Media Processing ──────────────────────────────────────
 Pillow>=11.0.0
