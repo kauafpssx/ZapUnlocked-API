@@ -8,7 +8,7 @@ from src.controllers.status.healthController import health_controller
 from src.controllers.status.readinessController import readiness_controller
 from src.controllers.status.memoryController import get_memory_status
 from src.controllers.status.volumeController import get_volume_status
-from src.controllers.status.logsController import get_logs, list_log_files
+from src.controllers.status.logsController import get_logs, list_log_files, delete_all_logs
 from src.services.logs_cleanup import run_logs_cleanup
 from src.controllers.status.statsController import (
     get_stats, delete_stats,
@@ -33,6 +33,7 @@ router.get("/status/memory", dependencies=[Depends(auth)])(get_memory_status)
 router.get("/status/volume", dependencies=[Depends(auth)])(get_volume_status)
 router.get("/logs/files", dependencies=[Depends(auth)])(list_log_files)
 router.get("/logs", dependencies=[Depends(auth)])(get_logs)
+router.delete("/logs", dependencies=[Depends(auth)])(delete_all_logs)
 
 @router.post("/logs/cleanup", dependencies=[Depends(auth)])
 async def logs_cleanup_route():

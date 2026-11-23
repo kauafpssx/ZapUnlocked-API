@@ -78,6 +78,45 @@ async def list_log_files():
     return {"success": True, "count": len(result), "files": result}
 
 
+async def delete_all_logs():
+    """Delete archived logs and truncate active log files."""
+    deleted = 0
+    truncated = 0
+    errors = []
+
+    for log_file in _log_files():
+        try:
+            if log_file.suffix == ".gz":
+                log_file.unlink()
+                deleted += 1
+            else:
+                # Keep the inode used by Loguru's active file sink, but remove
+                # all existing content so logging can continue normally.
+                log_file.write_text("", encoding="utf-8")
+                truncated += 1
+        except FileNotFoundError:
+            continue
+        except Exception as exc:
+            errors.append({"file": log_file.name, "error": str(exc)})
+
+    if errors:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "LOG_CLEAR_FAILED",
+                "message": "Some log files could not be cleared.",
+                "details": errors,
+            },
+        )
+
+    return {
+        "success": True,
+        "message": "All application logs cleared.",
+        "deleted": deleted,
+        "truncated": truncated,
+    }
+
+
 async def get_logs(
     date: Optional[str] = Query(default=None, description="Specific date YYYY-MM-DD (default: today)"),
     from_date: Optional[str] = Query(default=None, description="Start date YYYY-MM-DD"),

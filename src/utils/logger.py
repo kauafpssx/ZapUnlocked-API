@@ -6,6 +6,7 @@ Provides a logger with:
 """
 
 import logging
+import re
 from loguru import logger
 import sys
 from pathlib import Path
@@ -25,9 +26,16 @@ LOG_DIR.mkdir(parents=True, exist_ok=True)
 LOG_FILE = LOG_DIR / "zapunlocked_{time:YYYY-MM-DD}.log"
 
 
+_SECRET_QUERY_RE = re.compile(r"([?&](?:API_KEY|api_key)=)[^&\s]+")
+
+
 def _filter_lid_logs(record):
-    """Filter LID migration noise from Neonize."""
-    return "Migrated to LID encryption" not in record["message"]
+    """Filter noisy records and redact credentials before any sink sees them."""
+    message = record["message"]
+    if "Migrated to LID encryption" in message:
+        return False
+    record["message"] = _SECRET_QUERY_RE.sub(r"\1***", message)
+    return True
 
 
 # Console handler (stdout) with filter
