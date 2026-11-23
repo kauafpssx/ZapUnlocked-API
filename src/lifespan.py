@@ -6,6 +6,7 @@ Owns directory creation, FFmpeg warmup, and WhatsApp bot initialisation.
 
 import os
 import asyncio
+from importlib.metadata import version
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -18,6 +19,7 @@ from src.config.constants import PORT, AUTH_DIR, DATA_DIR, TEMP_DIR
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifecycle: startup tasks before yielding, shutdown after."""
+    logger.info(f"📦 Neonize version: {version('neonize')}")
     # ── Ensure required directories ─────────────────────────
     _ensure_dirs()
 

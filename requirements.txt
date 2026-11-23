@@ -10,7 +10,10 @@ pydantic>=2.10.0
 python-dotenv>=1.0.0
 
 # ── WhatsApp Client (Neonize) ───────────────────────────
-neonize>=0.5.2                      # >=0.5.2: older builds get "Client outdated (405)" from WhatsApp
+neonize==0.12.4                     # Pin core/Whatsmeow: avoids stale vendor installs and PN/LID issues
+protobuf==7.36.2                    # Neonize 0.12.4 protobufs were generated with protoc 7.36
+cryptography>=44.0.0                # Required by Neonize 0.12+
+pycryptodome>=3.20.0                # Required by Neonize 0.12+
 
 # ── Media Processing ──────────────────────────────────────
 Pillow>=11.0.0

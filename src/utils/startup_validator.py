@@ -3,6 +3,10 @@ import os
 import socket
 from pathlib import Path
 import importlib.util
+from importlib.metadata import PackageNotFoundError, version
+
+
+_REQUIRED_NEONIZE_VERSION = "0.12.4"
 
 # (pip_name, import_name)
 _REQUIRED = [
@@ -57,6 +61,35 @@ def validate_dependencies() -> None:
             "",
         ]
         print("\n".join(lines), file=sys.stderr)
+        sys.exit(1)
+
+    try:
+        installed_neonize = version("neonize")
+    except PackageNotFoundError:
+        installed_neonize = "missing"
+
+    if installed_neonize != _REQUIRED_NEONIZE_VERSION:
+        install_cmd = (
+            "bash scripts/install/install.sh"
+            if is_alwaysdata()
+            else ".venv/bin/pip install --upgrade -r requirements.txt"
+        )
+        print(
+            "\n".join([
+                "",
+                "=" * 60,
+                "❌  INCOMPATIBLE NEONIZE VERSION",
+                "=" * 60,
+                f"  Installed: {installed_neonize}",
+                f"  Required:  {_REQUIRED_NEONIZE_VERSION}",
+                "",
+                "Update dependencies with:",
+                f"  {install_cmd}",
+                "=" * 60,
+                "",
+            ]),
+            file=sys.stderr,
+        )
         sys.exit(1)
 
 
