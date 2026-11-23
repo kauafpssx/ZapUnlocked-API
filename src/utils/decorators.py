@@ -59,7 +59,13 @@ def handle_errors(action_name: str = "perform operation"):
                 raise
             except Exception as e:
                 from src.utils.logger import logger
+                from src.utils.errors import WhatsAppSendError
                 logger.error(f"❌ Failed to {action_name}: {e}")
+                if isinstance(e, WhatsAppSendError):
+                    raise HTTPException(
+                        status_code=502,
+                        detail={"error": "WHATSAPP_SEND_FAILED", "message": str(e)},
+                    )
                 raise HTTPException(
                     status_code=500,
                     detail={"error": "INTERNAL_ERROR", "message": "An internal error occurred."},
