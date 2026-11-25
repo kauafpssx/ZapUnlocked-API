@@ -1,20 +1,12 @@
 ---
 title: "Testar Webhook"
-icon: "paper-plane"
-api: "POST /webhooks/{name}/test"
+icon: "bolt"
+openapi: "POST /webhooks/{name}/test"
 ---
-
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
 
 Envia um payload de teste imediato para a URL do webhook, permitindo verificar se o endpoint externo está recebendo corretamente.
 
 ### Path
-
-<ParamField path="name" type="string" required>
-  Nome do webhook a testar (ex: `meu-crm`).
-</ParamField>
 
 O payload enviado é um envelope padrão com `event: "test"`:
 
@@ -31,32 +23,3 @@ O payload enviado é um envelope padrão com `event: "test"`:
 <Note>
   O teste usa as mesmas configurações do webhook (URL, método, headers, body). Se o webhook tiver um body personalizado, os placeholders são substituídos por valores de exemplo.
 </Note>
-
-
-<ResponseField name="success" type="boolean">
-  Indica se o payload foi disparado com sucesso (não garante que o endpoint externo recebeu).
-</ResponseField>
-
-<ResponseField name="statusCode" type="integer">
-  Código HTTP retornado pelo endpoint externo.
-</ResponseField>
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "message": "Test payload sent.",
-  "statusCode": 200
-}
-```
-
-```json 200 Endpoint retornou erro
-{
-  "success": false,
-  "message": "Test payload sent.",
-  "statusCode": 500
-}
-```
-
-</ResponseExample>

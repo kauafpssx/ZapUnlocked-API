@@ -1,28 +1,7 @@
 ---
 title: "Limpar BD"
-icon: "broom"
-api: "POST /management/database/cleanup"
-description: "Dispara uma limpeza manual imediata do banco de dados SQLite do Neonize."
+icon: "database"
+openapi: "POST /management/database/cleanup"
 ---
 
 Este endpoint remove segredos de mensagens, chaves de pareamento antigas e compacta o arquivo `auth.sqlite`.
-
-
-<ResponseField name="success" type="boolean">
-  Indica se a limpeza foi concluída.
-</ResponseField>
-
-<ResponseField name="message" type="string">
-  Mensagem de confirmação.
-</ResponseField>
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "message": "Manual cleanup completed successfully."
-}
-```
-
-</ResponseExample>

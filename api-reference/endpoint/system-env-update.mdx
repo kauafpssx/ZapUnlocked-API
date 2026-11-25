@@ -1,33 +1,11 @@
 ---
 title: 'Atualizar .env'
-icon: 'file-pen'
-api: "PUT /system/env"
+icon: "gear"
+openapi: "PUT /system/env"
 ---
-
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
 
 Atualiza variáveis no arquivo `.env` e na memória do processo. Chaves sensíveis (`API_KEY`, `DB_PASSWORD`, `SESSIONS_KEY`, `SECRET_KEY`) são bloqueadas e não podem ser alteradas por este endpoint.
 
 ### Corpo da Requisição
 
 Objeto com as variáveis a atualizar (pares chave-valor, ambos strings):
-
-<ResponseExample>
-
-```json Exemplo de body
-{
-  "PORT": "8400",
-  "AUTH_DIR": "auth_custom"
-}
-```
-
-```json 200 Sucesso
-{
-  "success": true,
-  "message": "Environment variables updated. Sensitive keys (API_KEY, etc.) cannot be changed here."
-}
-```
-
-</ResponseExample>

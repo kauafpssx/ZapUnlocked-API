@@ -1,28 +1,7 @@
 ---
 title: 'Msg. de Rejeição'
-icon: 'comment-slash'
-api: "PUT /settings/instance/call-reject-message"
+icon: "sliders"
+openapi: "PUT /settings/instance/call-reject-message"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
-
 Define a mensagem enviada automaticamente quando uma chamada é rejeitada.
-
-### Corpo da Requisição
-
-<ParamField body="value" type="string" required>
-  Texto da mensagem enviada ao chamador após a rejeição. Suporta placeholders como `{{phone}}` e `{{timestamp}}`.
-</ParamField>
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "call_reject_message": "Sorry, I cannot answer calls right now. Send me a message! 😊"
-}
-```
-
-</ResponseExample>

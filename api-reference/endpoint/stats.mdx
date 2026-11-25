@@ -1,42 +1,7 @@
 ---
 title: "Estatísticas"
-icon: "chart-simple"
-api: "GET /stats"
+icon: "chart-line"
+openapi: "GET /stats"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
-
 Retorna estatísticas gerais do servidor.
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "uptime": {
-    "seconds": 3600,
-    "formatted": "1h 0m 0s"
-  },
-  "connected": {
-    "duration": 300,
-    "formatted": "5m 0s"
-  },
-  "messages": {
-    "sent": 42,
-    "received": 128
-  },
-  "webhooks": {
-    "fired": 7
-  }
-}
-```
-
-```json 401 Não autorizado
-{
-  "error": "Unauthorized",
-  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
-}
-```
-
-</ResponseExample>

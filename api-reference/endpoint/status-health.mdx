@@ -1,24 +1,7 @@
 ---
 title: "Health Check"
 icon: "heart-pulse"
-api: "GET /status/health"
+openapi: "GET /status/health"
 ---
 
 Verifica a saúde geral do servidor. Útil para monitoramento e load balancers. Este endpoint não requer autenticação.
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "ok": true
-}
-```
-
-```json 401 Não autorizado
-{
-  "error": "Unauthorized",
-  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
-}
-```
-
-</ResponseExample>

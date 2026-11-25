@@ -1,37 +1,7 @@
 ---
 title: "Det. do Contato"
-icon: "address-card"
-api: "GET /management/contacts/{phone}"
+icon: "database"
+openapi: "GET /management/contacts/{phone}"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
-
-<ParamField path="phone" type="string" required>
-  Número do telefone do contato com código do país (ex: `5511999999999`).
-</ParamField>
-
 Retorna informações detalhadas de um contato: nome, status e foto de perfil.
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "phone": "5511999999999",
-  "jid": "5511999999999@s.whatsapp.net",
-  "name": "João Silva",
-  "status": "Disponível",
-  "profilePictureUrl": "https://pps.whatsapp.net/..."
-}
-```
-
-```json 401 Não autorizado
-{
-  "error": "Unauthorized",
-  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
-}
-```
-
-</ResponseExample>

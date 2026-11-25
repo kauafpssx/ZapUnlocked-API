@@ -1,30 +1,7 @@
 ---
 title: "Limpar Logs"
-icon: "broom"
-api: "POST /logs/cleanup"
+icon: "file-lines"
+openapi: "POST /logs/cleanup"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
-
 Remove arquivos de log antigos do sistema. Não requer corpo na requisição.
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "compressed": 3,
-  "deleted": 2
-}
-```
-
-```json 401 Não autorizado
-{
-  "error": "Unauthorized",
-  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
-}
-```
-
-</ResponseExample>

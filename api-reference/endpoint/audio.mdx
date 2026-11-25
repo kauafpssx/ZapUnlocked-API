@@ -1,64 +1,9 @@
 ---
 title: "Enviar Áudio"
-icon: "microphone"
-api: "POST /send_audio"
+icon: "paper-plane"
+openapi: "POST /send_audio"
 ---
-
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
 
 Envia um arquivo de áudio. Aceita URL pública ou upload direto via `multipart/form-data`. Arquivos < 15 MB são enviados como áudio (ou PTT). Maiores viram documentos.
 
 ### Corpo da Requisição (JSON ou multipart/form-data)
-
-<ParamField body="phone" type="string" required>
-  Número do destinatário com código do país.
-</ParamField>
-
-<ParamField body="url" type="string">
-  URL pública do áudio. Se omitido, use `file` para upload direto.
-</ParamField>
-
-<ParamField body="file" type="file">
-  Arquivo de áudio via multipart/form-data. Alternativa a `url`.
-</ParamField>
-
-<ParamField body="ptt" default="false" type="boolean">
-  Se `true`, envia como nota de voz (PTT). Apenas para arquivos pequenos.
-</ParamField>
-
-<ParamField body="as_document" default="false" type="boolean">
-  Força o envio como anexo de arquivo.
-</ParamField>
-
-<ParamField body="format" type="string" default="m4a">
-  Formato de saída do áudio: `"m4a"`, `"mp3"`, `"ogg"` ou `"wav"`.
-</ParamField>
-
-<ParamField body="reply" type="string">
-  ID ou texto da mensagem para responder.
-</ParamField>
-
-<ParamField body="quoted_id" type="string">
-  ID da mensagem a citar diretamente.
-</ParamField>
-
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "message": "Audio sent successfully."
-}
-```
-
-```json 401 Não autorizado
-{
-  "error": "Unauthorized",
-  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
-}
-```
-
-</ResponseExample>

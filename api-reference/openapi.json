@@ -18,7 +18,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Sistema"
+        ]
       }
     },
     "/status": {
@@ -46,6 +49,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Monitoramento"
         ]
       }
     },
@@ -70,6 +87,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Monitoramento"
         ]
       }
     },
@@ -90,7 +121,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Monitoramento"
+        ]
       }
     },
     "/status/readiness": {
@@ -110,7 +144,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Monitoramento"
+        ]
       }
     },
     "/status/memory": {
@@ -135,6 +172,15 @@
               "default": false,
               "title": "Gc"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -156,7 +202,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Monitoramento"
+        ]
       }
     },
     "/status/volume": {
@@ -180,6 +229,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Monitoramento"
         ]
       }
     },
@@ -204,6 +267,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Logs"
         ]
       }
     },
@@ -372,6 +449,15 @@
               "title": "Offset"
             },
             "description": "Skip first N matching lines"
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -393,7 +479,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Logs"
+        ]
       },
       "delete": {
         "summary": "Delete All Logs",
@@ -416,7 +505,21 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Logs"
+        ]
       }
     },
     "/logs/cleanup": {
@@ -440,6 +543,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Logs"
         ]
       }
     },
@@ -464,6 +581,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Estatísticas"
         ]
       },
       "delete": {
@@ -486,6 +617,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Estatísticas"
         ]
       }
     },
@@ -510,6 +655,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Estatísticas"
         ]
       },
       "delete": {
@@ -532,6 +691,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Estatísticas"
         ]
       }
     },
@@ -556,6 +729,15 @@
               "type": "string",
               "title": "Name"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -577,7 +759,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Estatísticas"
+        ]
       },
       "delete": {
         "summary": "Delete Stats Webhooks One",
@@ -599,6 +784,15 @@
               "type": "string",
               "title": "Name"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -620,7 +814,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Estatísticas"
+        ]
       }
     },
     "/collection.json": {
@@ -636,7 +833,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Sistema"
+        ]
       },
       "post": {
         "summary": "Update Collection",
@@ -658,6 +858,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Sistema"
         ]
       }
     },
@@ -683,6 +897,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Sistema"
         ]
       },
       "put": {
@@ -729,6 +957,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Sistema"
         ]
       }
     },
@@ -754,6 +996,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Sistema"
         ]
       }
     },
@@ -779,6 +1035,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Sistema"
         ]
       },
       "put": {
@@ -823,6 +1093,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Sistema"
         ]
       }
     },
@@ -867,6 +1151,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Enviar Mensagens"
         ]
       }
     },
@@ -911,6 +1209,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Enviar Mensagens"
         ]
       }
     },
@@ -955,6 +1267,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Enviar Mensagens"
         ]
       }
     },
@@ -999,6 +1325,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Enviar Mensagens"
         ]
       }
     },
@@ -1043,6 +1383,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Enviar Mensagens"
         ]
       }
     },
@@ -1087,6 +1441,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Enviar Mensagens"
         ]
       }
     },
@@ -1131,6 +1499,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Enviar Mensagens"
         ]
       }
     },
@@ -1155,6 +1537,15 @@
               "type": "string",
               "title": "Message Id"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1176,7 +1567,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Mensagens"
+        ]
       }
     },
     "/send": {
@@ -1220,6 +1614,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Enviar Mensagens"
         ]
       }
     },
@@ -1264,6 +1672,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Enviar Mensagens"
         ]
       }
     },
@@ -1308,6 +1730,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens Interativas e Mídia"
         ]
       }
     },
@@ -1352,6 +1788,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens Interativas e Mídia"
         ]
       }
     },
@@ -1396,6 +1846,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens"
         ]
       }
     },
@@ -1440,6 +1904,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens"
         ]
       }
     },
@@ -1484,6 +1962,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Enviar Mensagens"
         ]
       }
     },
@@ -1528,6 +2020,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Enviar Mensagens"
         ]
       }
     },
@@ -1572,6 +2078,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Enviar Mensagens"
         ]
       }
     },
@@ -1616,6 +2136,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Enviar Mensagens"
         ]
       }
     },
@@ -1660,6 +2194,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Enviar Mensagens"
         ]
       }
     },
@@ -1704,6 +2252,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens"
         ]
       }
     },
@@ -1748,6 +2310,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens"
         ]
       }
     },
@@ -1792,6 +2368,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens"
         ]
       }
     },
@@ -1836,6 +2426,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens Interativas e Mídia"
         ]
       }
     },
@@ -1880,6 +2484,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens Interativas e Mídia"
         ]
       }
     },
@@ -1924,6 +2542,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens Interativas e Mídia"
         ]
       }
     },
@@ -1968,6 +2600,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens Interativas e Mídia"
         ]
       }
     },
@@ -2012,6 +2658,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens Interativas e Mídia"
         ]
       }
     },
@@ -2056,6 +2716,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens Interativas e Mídia"
         ]
       }
     },
@@ -2100,6 +2774,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens Interativas e Mídia"
         ]
       }
     },
@@ -2144,6 +2832,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens Interativas e Mídia"
         ]
       }
     },
@@ -2188,6 +2890,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens Interativas e Mídia"
         ]
       }
     },
@@ -2232,6 +2948,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens Interativas e Mídia"
         ]
       }
     },
@@ -2276,6 +3006,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens Interativas e Mídia"
         ]
       }
     },
@@ -2320,6 +3064,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mensagens Interativas e Mídia"
         ]
       }
     },
@@ -2364,6 +3122,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Experimental"
         ]
       }
     },
@@ -2408,7 +3180,21 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Pedidos"
+        ]
       },
       "get": {
         "summary": "List Orders",
@@ -2495,6 +3281,15 @@
               "default": 0,
               "title": "Offset"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2516,7 +3311,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Pedidos"
+        ]
       }
     },
     "/orders/{order_id}": {
@@ -2540,6 +3338,15 @@
               "type": "string",
               "title": "Order Id"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2561,7 +3368,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Pedidos"
+        ]
       },
       "patch": {
         "summary": "Patch Order",
@@ -2582,6 +3392,15 @@
             "schema": {
               "type": "string",
               "title": "Order Id"
+            }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -2614,7 +3433,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Pedidos"
+        ]
       }
     },
     "/orders/{order_id}/refresh": {
@@ -2638,6 +3460,15 @@
               "type": "string",
               "title": "Order Id"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2659,7 +3490,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Pedidos"
+        ]
       }
     },
     "/orders/{order_id}/accept": {
@@ -2683,6 +3517,15 @@
               "type": "string",
               "title": "Order Id"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2704,7 +3547,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Pedidos"
+        ]
       }
     },
     "/orders/{order_id}/decline": {
@@ -2728,6 +3574,15 @@
               "type": "string",
               "title": "Order Id"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2749,7 +3604,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Pedidos"
+        ]
       }
     },
     "/orders/{order_id}/payment-info": {
@@ -2772,6 +3630,15 @@
             "schema": {
               "type": "string",
               "title": "Order Id"
+            }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -2804,7 +3671,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Pedidos"
+        ]
       }
     },
     "/orders/{order_id}/review-and-pay": {
@@ -2827,6 +3697,15 @@
             "schema": {
               "type": "string",
               "title": "Order Id"
+            }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -2859,7 +3738,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Pedidos"
+        ]
       }
     },
     "/qr/": {
@@ -2883,6 +3765,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Conexão"
         ]
       }
     },
@@ -2907,6 +3803,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Conexão"
         ]
       }
     },
@@ -2951,6 +3861,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Gerenciamento"
         ]
       }
     },
@@ -2995,6 +3919,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Gerenciamento"
         ]
       }
     },
@@ -3022,6 +3960,15 @@
               "default": 20,
               "title": "Limit"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3043,7 +3990,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Gerenciamento"
+        ]
       }
     },
     "/management/chats/{phone}/messages": {
@@ -3090,6 +4040,15 @@
               "default": 0,
               "title": "Offset"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3111,7 +4070,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Gerenciamento"
+        ]
       }
     },
     "/management/contacts/{phone}": {
@@ -3135,6 +4097,15 @@
               "type": "string",
               "title": "Phone"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3156,7 +4127,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Gerenciamento"
+        ]
       }
     },
     "/management/groups": {
@@ -3180,6 +4154,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Gerenciamento"
         ]
       }
     },
@@ -3204,6 +4192,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Gerenciamento"
         ]
       }
     },
@@ -3228,6 +4230,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Banco de Dados"
         ]
       }
     },
@@ -3272,6 +4288,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Banco de Dados"
         ]
       }
     },
@@ -3296,6 +4326,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Banco de Dados"
         ]
       }
     },
@@ -3320,6 +4364,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Gerenciamento"
         ]
       }
     },
@@ -3364,6 +4422,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Gerenciamento"
         ]
       }
     },
@@ -3408,6 +4480,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Configurações"
         ]
       }
     },
@@ -3452,6 +4538,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Configurações"
         ]
       }
     },
@@ -3496,6 +4596,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Privacidade"
         ]
       }
     },
@@ -3540,6 +4654,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Privacidade"
         ]
       }
     },
@@ -3584,6 +4712,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Privacidade"
         ]
       }
     },
@@ -3628,6 +4770,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Privacidade"
         ]
       }
     },
@@ -3672,6 +4828,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Privacidade"
         ]
       }
     },
@@ -3716,6 +4886,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Privacidade"
         ]
       }
     },
@@ -3760,6 +4944,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Privacidade"
         ]
       }
     },
@@ -3804,6 +5002,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Privacidade"
         ]
       }
     },
@@ -3848,6 +5060,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Privacidade"
         ]
       }
     },
@@ -3872,6 +5098,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Controle de IP"
         ]
       },
       "put": {
@@ -3914,6 +5154,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Controle de IP"
         ]
       }
     },
@@ -3958,6 +5212,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Configurações"
         ]
       }
     },
@@ -4002,6 +5270,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Configurações"
         ]
       }
     },
@@ -4046,6 +5328,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Configurações"
         ]
       }
     },
@@ -4070,6 +5366,15 @@
               "type": "string",
               "title": "Phone"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4091,7 +5396,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Configurações"
+        ]
       }
     },
     "/settings/ip-rules": {
@@ -4116,6 +5424,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Controle de IP"
         ]
       }
     },
@@ -4161,6 +5483,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Controle de IP"
         ]
       }
     },
@@ -4206,6 +5542,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Controle de IP"
         ]
       }
     },
@@ -4231,6 +5581,15 @@
               "type": "string",
               "title": "Ip"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4252,7 +5611,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Controle de IP"
+        ]
       }
     },
     "/settings/ip-rules/blacklist/{ip}": {
@@ -4277,6 +5639,15 @@
               "type": "string",
               "title": "Ip"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4298,7 +5669,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Controle de IP"
+        ]
       }
     },
     "/contacts/info": {
@@ -4342,6 +5716,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Contatos"
         ]
       }
     },
@@ -4386,6 +5774,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Contatos"
         ]
       }
     },
@@ -4410,6 +5812,15 @@
               "type": "string",
               "title": "Phone"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4431,7 +5842,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Contatos"
+        ]
       }
     },
     "/contacts/devices": {
@@ -4455,6 +5869,15 @@
               "type": "string",
               "title": "Phone"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4476,7 +5899,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Contatos"
+        ]
       }
     },
     "/contacts/blocklist": {
@@ -4500,6 +5926,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Contatos"
         ]
       }
     },
@@ -4524,6 +5964,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Contatos"
         ]
       }
     },
@@ -4548,6 +6002,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Grupos"
         ]
       },
       "post": {
@@ -4590,6 +6058,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Grupos"
         ]
       }
     },
@@ -4614,6 +6096,15 @@
               "type": "string",
               "title": "Jid"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4635,7 +6126,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Grupos"
+        ]
       },
       "patch": {
         "summary": "Update Settings",
@@ -4656,6 +6150,15 @@
             "schema": {
               "type": "string",
               "title": "Jid"
+            }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -4688,7 +6191,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Grupos"
+        ]
       }
     },
     "/groups/{jid}/leave": {
@@ -4712,6 +6218,15 @@
               "type": "string",
               "title": "Jid"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4733,7 +6248,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Grupos"
+        ]
       }
     },
     "/groups/{jid}/invite-link": {
@@ -4767,6 +6285,15 @@
               "default": false,
               "title": "Revoke"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4788,7 +6315,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Grupos"
+        ]
       }
     },
     "/groups/{jid}/participants": {
@@ -4811,6 +6341,15 @@
             "schema": {
               "type": "string",
               "title": "Jid"
+            }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -4843,7 +6382,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Grupos"
+        ]
       }
     },
     "/groups/{jid}/join-requests": {
@@ -4867,6 +6409,15 @@
               "type": "string",
               "title": "Jid"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4888,7 +6439,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Grupos"
+        ]
       },
       "post": {
         "summary": "Update Join Requests",
@@ -4909,6 +6463,15 @@
             "schema": {
               "type": "string",
               "title": "Jid"
+            }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -4941,7 +6504,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Grupos"
+        ]
       }
     },
     "/channels/invite/{invite}": {
@@ -4965,6 +6531,15 @@
               "type": "string",
               "title": "Invite"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4986,7 +6561,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Canais"
+        ]
       }
     },
     "/channels/{jid}": {
@@ -5010,6 +6588,15 @@
               "type": "string",
               "title": "Jid"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5031,7 +6618,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Canais"
+        ]
       }
     },
     "/channels/{jid}/messages": {
@@ -5075,6 +6665,15 @@
               "default": 0,
               "title": "Before"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5096,7 +6695,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Canais"
+        ]
       }
     },
     "/channels/{jid}/follow": {
@@ -5120,6 +6722,15 @@
               "type": "string",
               "title": "Jid"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5141,7 +6752,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Canais"
+        ]
       }
     },
     "/channels/{jid}/unfollow": {
@@ -5165,6 +6779,15 @@
               "type": "string",
               "title": "Jid"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5186,7 +6809,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Canais"
+        ]
       }
     },
     "/channels/{jid}/react": {
@@ -5209,6 +6835,15 @@
             "schema": {
               "type": "string",
               "title": "Jid"
+            }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -5241,7 +6876,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Canais"
+        ]
       }
     },
     "/channels/{jid}/mute": {
@@ -5264,6 +6902,15 @@
             "schema": {
               "type": "string",
               "title": "Jid"
+            }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -5296,7 +6943,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Canais"
+        ]
       }
     },
     "/instance/me": {
@@ -5320,6 +6970,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Instância"
         ]
       }
     },
@@ -5344,6 +7008,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Instância"
         ]
       }
     },
@@ -5388,6 +7066,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Instância"
         ]
       }
     },
@@ -5412,6 +7104,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Webhooks"
         ]
       }
     },
@@ -5436,6 +7142,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Webhooks"
         ]
       },
       "post": {
@@ -5478,6 +7198,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Webhooks"
         ]
       }
     },
@@ -5502,6 +7236,15 @@
               "type": "string",
               "title": "Name"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5523,7 +7266,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Webhooks"
+        ]
       },
       "put": {
         "summary": "Update Webhook",
@@ -5544,6 +7290,15 @@
             "schema": {
               "type": "string",
               "title": "Name"
+            }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -5576,7 +7331,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Webhooks"
+        ]
       },
       "delete": {
         "summary": "Delete Webhook",
@@ -5597,6 +7355,15 @@
             "schema": {
               "type": "string",
               "title": "Name"
+            }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -5619,7 +7386,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Webhooks"
+        ]
       }
     },
     "/webhooks/{name}/toggle": {
@@ -5642,6 +7412,15 @@
             "schema": {
               "type": "string",
               "title": "Name"
+            }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -5673,7 +7452,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Webhooks"
+        ]
       }
     },
     "/webhooks/{name}/test": {
@@ -5696,6 +7478,15 @@
             "schema": {
               "type": "string",
               "title": "Name"
+            }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -5736,7 +7527,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Webhooks"
+        ]
       }
     },
     "/webhooks/{name}/logs": {
@@ -5772,6 +7566,15 @@
               "default": 50,
               "title": "Limit"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5793,7 +7596,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Webhooks"
+        ]
       },
       "delete": {
         "summary": "Delete Webhook Logs",
@@ -5815,6 +7621,15 @@
               "type": "string",
               "title": "Name"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5836,7 +7651,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Webhooks"
+        ]
       }
     },
     "/webhooks/logs/all": {
@@ -5860,6 +7678,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Webhooks"
         ]
       }
     },
@@ -5905,6 +7737,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Conexão"
         ]
       }
     },
@@ -5929,6 +7775,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Conexão"
         ]
       }
     },
@@ -5973,6 +7833,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Inteligência Artificial"
         ]
       }
     },
@@ -6017,6 +7891,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Inteligência Artificial"
         ]
       }
     },
@@ -6041,6 +7929,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Sessões"
         ]
       },
       "post": {
@@ -6083,6 +7985,20 @@
           {
             "APIKeyQuery": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Sessões"
         ]
       }
     },
@@ -6106,6 +8022,15 @@
             "schema": {
               "type": "string",
               "title": "Session Id"
+            }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -6138,7 +8063,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Sessões"
+        ]
       }
     },
     "/sessions/{session_id}": {
@@ -6162,6 +8090,15 @@
               "type": "string",
               "title": "Session Id"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -6183,7 +8120,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Sessões"
+        ]
       }
     },
     "/sessions/{session_id}/connect": {
@@ -6207,6 +8147,15 @@
               "type": "string",
               "title": "Session Id"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -6228,7 +8177,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Sessões"
+        ]
       }
     },
     "/sessions/{session_id}/disconnect": {
@@ -6252,6 +8204,15 @@
               "type": "string",
               "title": "Session Id"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -6273,7 +8234,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Sessões"
+        ]
       }
     },
     "/sessions/{session_id}/status": {
@@ -6297,6 +8261,15 @@
               "type": "string",
               "title": "Session Id"
             }
+          },
+          {
+            "name": "X-Instance",
+            "in": "header",
+            "required": false,
+            "description": "ID da sessão; omitido usa a sessão padrão. Também aceita ?session=.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -6318,7 +8291,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Sessões"
+        ]
       }
     }
   },
@@ -12489,5 +14465,11 @@
         "name": "API_KEY"
       }
     }
-  }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8300",
+      "description": "Servidor local; altere para a URL da sua instância."
+    }
+  ]
 }

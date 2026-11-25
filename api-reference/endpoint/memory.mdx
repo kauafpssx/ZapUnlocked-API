@@ -1,33 +1,10 @@
 ---
 title: 'Uso de Memória'
-icon: 'microchip'
-api: "GET /status/memory"
+icon: "heart-pulse"
+openapi: "GET /status/memory"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
-
 Retorna estatísticas de memória do heap V8/Node.js. Útil para monitoramento de recursos.
-
-<ParamField query="gc" type="boolean">
-  Se `true`, força a coleta de lixo (garbage collection) antes de retornar as métricas.
-</ParamField>
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "rss": 52428800,
-  "heapTotal": 33554432,
-  "heapUsed": 18874368,
-  "external": 1048576,
-  "arrayBuffers": 524288
-}
-```
-
-</ResponseExample>
 
 ### Campos
 

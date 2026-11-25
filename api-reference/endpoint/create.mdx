@@ -1,12 +1,8 @@
 ---
 title: "Enviar Texto"
 icon: "paper-plane"
-api: "POST /send"
+openapi: "POST /send"
 ---
-
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
 
 Envia uma mensagem de texto simples para um número específico do WhatsApp.
 
@@ -24,57 +20,6 @@ Você pode usar variáveis no texto da mensagem que são substituídas automatic
 | `{{found}}` | Quantidade encontrada (fetchMessages) |
 | `{{timestamp}}` | Timestamp UTC atual |
 
-### Corpo da Requisição
-
-<ParamField body="phone" type="string" required>
-  Número do destinatário com código do país (ex: `5511999999999`).
-</ParamField>
-
-<ParamField body="message" type="string" required>
-  Conteúdo de texto da mensagem. Use `\n` para quebrar linha (ex: `"Linha 1\nLinha 2"`).
-</ParamField>
-
-<ParamField body="reply" type="string">
-  Responder a uma mensagem específica. Pode ser o **ID da mensagem** ou o **texto exato** (dependendo do `type`).
-</ParamField>
-
-<ParamField body="type" type="string" default="id">
-  Como o parâmetro `reply` é interpretado:
-  - `id`: Busca a mensagem pelo ID único do WhatsApp
-  - `text`: Encontra a mensagem mais recente com o texto exato fornecido (sem distinção de maiúsculas)
-</ParamField>
-
-<ParamField body="quoted_id" type="string">
-  ID da mensagem a citar diretamente.
-</ParamField>
-
 <Note>
   **Modo texto**: Quando `type: "text"`, a API busca no histórico local (últimas 100 mensagens) a mensagem mais recente que contenha exatamente o texto fornecido em `reply`. Útil quando você não tem o ID da mensagem.
 </Note>
-
-
-<ResponseField name="success" type="boolean">
-  Indica se o comando foi aceito pelo servidor.
-</ResponseField>
-
-<ResponseField name="message" type="string">
-  Mensagem de status.
-</ResponseField>
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "message": "Message sent."
-}
-```
-
-```json 401 Não autorizado
-{
-  "error": "Unauthorized",
-  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
-}
-```
-
-</ResponseExample>

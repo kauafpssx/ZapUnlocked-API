@@ -1,50 +1,7 @@
 ---
 title: 'Parear'
-icon: 'mobile'
-api: "POST /session/pair"
+icon: "qrcode"
+openapi: "POST /session/pair"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
-
 Gera um código de 8 dígitos para conectar o WhatsApp sem escanear QR Code (útil para servidores headless ou quando a câmera não está disponível).
-
-### Corpo da Requisição
-
-<ParamField body="phone" type="string" required>
-  Número de telefone a conectar, incluindo código do país (ex: `5511999999999`).
-</ParamField>
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "code": "ABCD-1234"
-}
-```
-
-```json 400 Falha ao gerar código
-{
-  "detail": "Pairing code was not generated. Check that the phone number is correctly formatted (e.g. 5551988887777)."
-}
-```
-
-```json 409 Já conectado
-{
-  "detail": {
-    "error": "WhatsApp is already connected. Disconnect before pairing again."
-  }
-}
-```
-
-```json 503 Serviço indisponível
-{
-  "detail": {
-    "error": "WhatsApp service is not initialized."
-  }
-}
-```
-
-</ResponseExample>

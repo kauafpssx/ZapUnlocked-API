@@ -1,38 +1,7 @@
 ---
 title: 'Info Contato'
-icon: 'address-book'
-api: "POST /contacts/info"
+icon: "address-book"
+openapi: "POST /contacts/info"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
-
 Retorna informações detalhadas sobre um número específico: foto de perfil, recado/status e perfil comercial.
-
-### Corpo da Requisição
-
-<ParamField body="phone" type="string" required>
-  Número do contato a consultar (ex: `5511999999999`).
-</ParamField>
-
-
-<ResponseField name="success" type="boolean">
-  Indica se a requisição foi bem-sucedida.
-</ResponseField>
-
-<ResponseField name="exists" type="boolean">
-  Indica se o número está registrado no WhatsApp.
-</ResponseField>
-
-<ResponseField name="profilePictureUrl" type="string">
-  URL da foto de perfil do contato (se disponível).
-</ResponseField>
-
-<ResponseField name="about" type="string">
-  Recado/status atual do usuário.
-</ResponseField>
-
-<ResponseField name="businessProfile" type="object">
-  Se for conta comercial, retorna detalhes como descrição, categoria e e-mail.
-</ResponseField>

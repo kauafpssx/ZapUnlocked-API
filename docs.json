@@ -50,531 +50,292 @@
         "groups": [
           {
             "group": "Configuração",
+            "icon": "gear",
             "pages": [
               "api-reference/configuration"
             ]
           },
           {
-            "group": "Enviar Mensagem",
+            "group": "Sistema",
+            "icon": "gear",
             "pages": [
-              {
-                "group": "Mensagem",
-                "icon": "message",
-                "pages": [
-                  "api-reference/endpoint/create"
-                ]
-              },
-              {
-                "group": "Reações",
-                "icon": "face-smile",
-                "pages": [
-                  "api-reference/endpoint/send-reaction"
-                ]
-              },
-              {
-                "group": "Mídia",
-                "icon": "image",
-                "pages": [
-                  "api-reference/endpoint/send-sticker",
-                  "api-reference/endpoint/send-sticker-sound",
-                  "api-reference/endpoint/video",
-                  "api-reference/endpoint/image",
-                  "api-reference/endpoint/document",
-                  "api-reference/endpoint/audio",
-                  "api-reference/endpoint/send-gif"
-                ]
-              },
-              {
-                "group": "Contatos e Links",
-                "icon": "address-card",
-                "pages": [
-                  "api-reference/endpoint/send-location",
-                  "api-reference/endpoint/send-contact",
-                  "api-reference/endpoint/send-contacts",
-                  "api-reference/endpoint/send-link"
-                ]
-              },
-              {
-                "group": "Lote",
-                "icon": "boxes",
-                "pages": [
-                  "api-reference/endpoint/send-bulk"
-                ]
-              }
+              "api-reference/endpoint/root",
+              "api-reference/endpoint/collectionjson",
+              "api-reference/endpoint/post-collectionjson",
+              "api-reference/endpoint/system-env",
+              "api-reference/endpoint/system-env-update",
+              "api-reference/endpoint/system-cleanup-force",
+              "api-reference/endpoint/system-cleanup-settings",
+              "api-reference/endpoint/system-cleanup-settings-update"
             ]
           },
           {
-            "group": "Ações de Mensagem",
+            "group": "Monitoramento",
+            "icon": "heart-pulse",
             "pages": [
-              {
-                "group": "Excluir",
-                "icon": "trash",
-                "pages": [
-                  "api-reference/endpoint/message-delete"
-                ]
-              },
-              {
-                "group": "Marcar como Lida",
-                "icon": "eye",
-                "pages": [
-                  "api-reference/endpoint/message-read",
-                  "api-reference/endpoint/message-status"
-                ]
-              },
-              {
-                "group": "Editar",
-                "icon": "pen",
-                "pages": [
-                  "api-reference/endpoint/message-edit"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Mensagens Interativas",
-            "pages": [
-              {
-                "group": "Botões",
-                "icon": "rectangle-ad",
-                "pages": [
-                  "api-reference/endpoint/send-button-list",
-                  "api-reference/endpoint/send-button-actions",
-                  "api-reference/endpoint/send-button-otp",
-                  "api-reference/endpoint/send-button-pix",
-                  "api-reference/endpoint/send-button-url",
-                  "api-reference/endpoint/send-button-call",
-                  "api-reference/endpoint/send-button-quick-reply"
-                ]
-              },
-              {
-                "group": "Enquetes",
-                "icon": "square-poll-vertical",
-                "pages": [
-                  "api-reference/endpoint/send-poll",
-                  "api-reference/endpoint/send-poll-vote"
-                ]
-              },
-              {
-                "group": "Listas",
-                "icon": "list",
-                "pages": [
-                  "api-reference/endpoint/send-option-list"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Consultas",
-            "pages": [
-              {
-                "group": "Contatos",
-                "icon": "user",
-                "pages": [
-                  "api-reference/endpoint/contact-info"
-                ]
-              },
-              {
-                "group": "Mensagens",
-                "icon": "comments",
-                "pages": [
-                  "api-reference/endpoint/fetch-messages",
-                  "api-reference/endpoint/recent-contacts"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Gerenciamento",
-            "pages": [
-              {
-                "group": "Banco de Dados",
-                "icon": "database",
-                "pages": [
-                  "api-reference/endpoint/database-cleanup",
-                  "api-reference/endpoint/database-config",
-                  "api-reference/endpoint/database-status"
-                ]
-              },
-              {
-                "group": "Chats",
-                "icon": "comment",
-                "pages": [
-                  "api-reference/endpoint/management-chats",
-                  "api-reference/endpoint/management-chat-messages"
-                ]
-              },
-              {
-                "group": "Contatos",
-                "icon": "address-book",
-                "pages": [
-                  "api-reference/endpoint/management-contacts"
-                ]
-              },
-              {
-                "group": "Grupos",
-                "icon": "user-group",
-                "pages": [
-                  "api-reference/endpoint/management-groups"
-                ]
-              },
-              {
-                "group": "Exportar / Importar",
-                "icon": "arrow-right-arrow-left",
-                "pages": [
-                  "api-reference/endpoint/management-export",
-                  "api-reference/endpoint/management-import"
-                ]
-              },
-              {
-                "group": "Limpeza",
-                "icon": "broom",
-                "pages": [
-                  "api-reference/endpoint/cleanup"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Conexão",
-            "pages": [
-              "api-reference/endpoint/get",
-              {
-                "group": "Gerenciar",
-                "icon": "gear",
-                "pages": [
-                  "api-reference/endpoint/status",
-                  "api-reference/endpoint/delete"
-                ]
-              },
-              {
-                "group": "Parear",
-                "icon": "qrcode",
-                "pages": [
-                  "api-reference/endpoint/qr",
-                  "api-reference/endpoint/qr-image",
-                  "api-reference/endpoint/pair"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Webhooks",
-            "pages": [
-              "api-reference/endpoint/webhooks-overview",
-              {
-                "group": "Gerenciar",
-                "icon": "sliders",
-                "pages": [
-                  "api-reference/endpoint/webhooks-create",
-                  "api-reference/endpoint/webhooks-list",
-                  "api-reference/endpoint/webhooks-get",
-                  "api-reference/endpoint/webhooks-update",
-                  "api-reference/endpoint/webhooks-delete",
-                  "api-reference/endpoint/webhooks-toggle",
-                  "api-reference/endpoint/webhooks-test",
-                  "api-reference/endpoint/webhooks-events"
-                ]
-              },
-              {
-                "group": "Logs",
-                "icon": "clock-rotate-left",
-                "pages": [
-                  "api-reference/endpoint/webhooks-logs",
-                  "api-reference/endpoint/webhooks-logs-clear"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Configurações do Bot",
-            "pages": [
-              {
-                "group": "Geral",
-                "icon": "gear",
-                "pages": [
-                  "api-reference/endpoint/bot-settings",
-                  "api-reference/endpoint/bot-settings-update"
-                ]
-              },
-              {
-                "group": "Chamadas",
-                "icon": "phone",
-                "pages": [
-                  "api-reference/endpoint/call-reject-auto",
-                  "api-reference/endpoint/call-reject-message"
-                ]
-              },
-              {
-                "group": "Leitura Automática",
-                "icon": "eye",
-                "pages": [
-                  "api-reference/endpoint/auto-read"
-                ]
-              },
-              {
-                "group": "Código do País",
-                "icon": "globe",
-                "pages": [
-                  "api-reference/endpoint/settings-phone-code"
-                ]
-              },
-              {
-                "group": "Privacidade",
-                "icon": "shield",
-                "pages": [
-                  "api-reference/endpoint/privacy"
-                ]
-              },
-              {
-                "group": "Bloqueio",
-                "icon": "ban",
-                "pages": [
-                  "api-reference/endpoint/block"
-                ]
-              },
-              {
-                "group": "Perfil",
-                "icon": "user",
-                "pages": [
-                  "api-reference/endpoint/profile",
-                  "api-reference/endpoint/settings-profile"
-                ]
-              },
-              {
-                "group": "Controle de IP",
-                "icon": "network-wired",
-                "pages": [
-                  "api-reference/endpoint/ip-control"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Regras de IP",
-            "pages": [
-              {
-                "group": "Listar",
-                "icon": "list",
-                "pages": [
-                  "api-reference/endpoint/ip-rules-list"
-                ]
-              },
-              {
-                "group": "Whitelist",
-                "icon": "check",
-                "pages": [
-                  "api-reference/endpoint/ip-rules-whitelist-add",
-                  "api-reference/endpoint/ip-rules-whitelist-remove"
-                ]
-              },
-              {
-                "group": "Blacklist",
-                "icon": "ban",
-                "pages": [
-                  "api-reference/endpoint/ip-rules-blacklist-add",
-                  "api-reference/endpoint/ip-rules-blacklist-remove"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Instância",
-            "pages": [
-              {
-                "group": "Informações",
-                "icon": "circle-info",
-                "pages": [
-                  "api-reference/endpoint/instance-me",
-                  "api-reference/endpoint/instance-device",
-                  "api-reference/endpoint/instance-update-name"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Sessões",
-            "pages": [
-              {
-                "group": "Gerenciar",
-                "icon": "sliders",
-                "pages": [
-                  "api-reference/endpoint/sessions-list",
-                  "api-reference/endpoint/sessions-create",
-                  "api-reference/endpoint/sessions-rename",
-                  "api-reference/endpoint/sessions-delete"
-                ]
-              },
-              {
-                "group": "Conectar / Desconectar",
-                "icon": "plug",
-                "pages": [
-                  "api-reference/endpoint/sessions-connect",
-                  "api-reference/endpoint/sessions-disconnect",
-                  "api-reference/endpoint/sessions-status"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "IA",
-            "pages": [
-              {
-                "group": "Perguntar",
-                "icon": "circle-question",
-                "pages": [
-                  "api-reference/endpoint/ai-ask"
-                ]
-              },
-              {
-                "group": "Imaginar",
-                "icon": "wand-magic-sparkles",
-                "pages": [
-                  "api-reference/endpoint/ai-imagine"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Status",
-            "pages": [
-              {
-                "group": "Serviço",
-                "icon": "heart",
-                "pages": [
-                  "api-reference/endpoint/status-health",
-                  "api-reference/endpoint/status-readiness",
-                  "api-reference/endpoint/status-stream",
-                  "api-reference/endpoint/status-volume"
-                ]
-              },
-              {
-                "group": "Métricas",
-                "icon": "chart-simple",
-                "pages": [
-                  "api-reference/endpoint/memory",
-                  "api-reference/endpoint/stats",
-                  "api-reference/endpoint/stats-webhooks"
-                ]
-              }
+              "api-reference/endpoint/status",
+              "api-reference/endpoint/status-stream",
+              "api-reference/endpoint/status-health",
+              "api-reference/endpoint/status-readiness",
+              "api-reference/endpoint/memory",
+              "api-reference/endpoint/volume-stats"
             ]
           },
           {
             "group": "Logs",
+            "icon": "file-lines",
             "pages": [
-              {
-                "group": "Visualizar",
-                "icon": "list",
-                "pages": [
-                  "api-reference/endpoint/logs",
-                  "api-reference/endpoint/logs-files"
-                ]
-              },
-              {
-                "group": "Limpeza",
-                "icon": "broom",
-                "pages": [
-                  "api-reference/endpoint/logs-cleanup"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Sistema",
-            "pages": [
-              {
-                "group": "Variáveis de Ambiente",
-                "icon": "gear",
-                "pages": [
-                  "api-reference/endpoint/system-env",
-                  "api-reference/endpoint/system-env-update"
-                ]
-              },
-              {
-                "group": "Limpeza Forçada",
-                "icon": "broom",
-                "pages": [
-                  "api-reference/endpoint/system-cleanup-force"
-                ]
-              },
-              {
-                "group": "Config. de Limpeza",
-                "icon": "sliders",
-                "pages": [
-                  "api-reference/endpoint/system-cleanup-settings",
-                  "api-reference/endpoint/system-cleanup-settings-update"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Outros Endpoints",
-            "pages": []
-          },
-          {
-            "group": "Outros Endpoints",
-            "pages": [
-              "api-reference/endpoint/channels-invite-invite",
-              "api-reference/endpoint/channels-jid",
-              "api-reference/endpoint/channels-jid-follow",
-              "api-reference/endpoint/channels-jid-messages",
-              "api-reference/endpoint/channels-jid-mute",
-              "api-reference/endpoint/channels-jid-react",
-              "api-reference/endpoint/channels-jid-unfollow",
-              "api-reference/endpoint/collectionjson",
-              "api-reference/endpoint/contacts-blocklist",
-              "api-reference/endpoint/contacts-business-profile",
-              "api-reference/endpoint/contacts-devices",
-              "api-reference/endpoint/contacts-is-on-whatsapp",
-              "api-reference/endpoint/contacts-privacy",
+              "api-reference/endpoint/logs-files",
+              "api-reference/endpoint/logs",
               "api-reference/endpoint/delete-logs",
+              "api-reference/endpoint/logs-cleanup"
+            ]
+          },
+          {
+            "group": "Estatísticas",
+            "icon": "chart-line",
+            "pages": [
+              "api-reference/endpoint/stats",
               "api-reference/endpoint/delete-stats",
+              "api-reference/endpoint/stats-webhooks",
               "api-reference/endpoint/delete-stats-webhooks",
-              "api-reference/endpoint/delete-stats-webhooks-name",
-              "api-reference/endpoint/experimental-messages-send-form",
-              "api-reference/endpoint/get-orders",
-              "api-reference/endpoint/get-qr",
-              "api-reference/endpoint/groups",
-              "api-reference/endpoint/groups-jid",
-              "api-reference/endpoint/groups-jid-invite-link",
-              "api-reference/endpoint/groups-jid-join-requests",
-              "api-reference/endpoint/groups-jid-leave",
-              "api-reference/endpoint/groups-jid-participants",
+              "api-reference/endpoint/stats-webhooks-name",
+              "api-reference/endpoint/delete-stats-webhooks-name"
+            ]
+          },
+          {
+            "group": "Enviar Mensagens",
+            "icon": "paper-plane",
+            "pages": [
+              "api-reference/endpoint/image",
+              "api-reference/endpoint/audio",
+              "api-reference/endpoint/video",
+              "api-reference/endpoint/document",
+              "api-reference/endpoint/send-gif",
+              "api-reference/endpoint/send-sticker",
+              "api-reference/endpoint/send-sticker-sound",
+              "api-reference/endpoint/create",
+              "api-reference/endpoint/send-bulk",
+              "api-reference/endpoint/send-reaction",
+              "api-reference/endpoint/send-location",
+              "api-reference/endpoint/send-contact",
+              "api-reference/endpoint/send-contacts",
+              "api-reference/endpoint/send-link"
+            ]
+          },
+          {
+            "group": "Mensagens",
+            "icon": "message",
+            "pages": [
+              "api-reference/endpoint/message-status",
               "api-reference/endpoint/messages-pin",
               "api-reference/endpoint/messages-presence",
+              "api-reference/endpoint/message-delete",
+              "api-reference/endpoint/message-read",
+              "api-reference/endpoint/message-edit"
+            ]
+          },
+          {
+            "group": "Mensagens Interativas e Mídia",
+            "icon": "comments",
+            "pages": [
               "api-reference/endpoint/messages-send-album",
-              "api-reference/endpoint/messages-send-carousel",
-              "api-reference/endpoint/messages-send-interactive",
-              "api-reference/endpoint/messages-send-native-flow",
               "api-reference/endpoint/messages-send-sticker-pack",
+              "api-reference/endpoint/send-button-list",
+              "api-reference/endpoint/send-button-otp",
+              "api-reference/endpoint/send-button-pix",
+              "api-reference/endpoint/send-button-quick-reply",
+              "api-reference/endpoint/send-button-url",
+              "api-reference/endpoint/send-button-call",
+              "api-reference/endpoint/send-option-list",
+              "api-reference/endpoint/messages-send-native-flow",
+              "api-reference/endpoint/messages-send-interactive",
+              "api-reference/endpoint/messages-send-carousel",
+              "api-reference/endpoint/send-poll",
+              "api-reference/endpoint/send-poll-vote"
+            ]
+          },
+          {
+            "group": "Experimental",
+            "icon": "flask",
+            "pages": [
+              "api-reference/endpoint/experimental-messages-send-form"
+            ]
+          },
+          {
+            "group": "Pedidos",
+            "icon": "cart-shopping",
+            "pages": [
               "api-reference/endpoint/orders",
+              "api-reference/endpoint/get-orders",
               "api-reference/endpoint/orders-orderid",
+              "api-reference/endpoint/patch-orders-orderid",
+              "api-reference/endpoint/orders-orderid-refresh",
               "api-reference/endpoint/orders-orderid-accept",
               "api-reference/endpoint/orders-orderid-decline",
               "api-reference/endpoint/orders-orderid-payment-info",
-              "api-reference/endpoint/orders-orderid-refresh",
-              "api-reference/endpoint/orders-orderid-review-and-pay",
-              "api-reference/endpoint/patch-groups-jid",
-              "api-reference/endpoint/patch-orders-orderid",
-              "api-reference/endpoint/post-collectionjson",
-              "api-reference/endpoint/post-groups",
-              "api-reference/endpoint/post-groups-jid-join-requests",
-              "api-reference/endpoint/put-settings-ip-control",
-              "api-reference/endpoint/root",
-              "api-reference/endpoint/session-logout",
-              "api-reference/endpoint/settings-ip-control",
-              "api-reference/endpoint/settings-privacy-about",
-              "api-reference/endpoint/settings-privacy-call-add",
-              "api-reference/endpoint/settings-privacy-disappearing-timer",
-              "api-reference/endpoint/settings-privacy-groups-add",
+              "api-reference/endpoint/orders-orderid-review-and-pay"
+            ]
+          },
+          {
+            "group": "Conexão",
+            "icon": "qrcode",
+            "pages": [
+              "api-reference/endpoint/get-qr",
+              "api-reference/endpoint/qr-image",
+              "api-reference/endpoint/pair",
+              "api-reference/endpoint/session-logout"
+            ]
+          },
+          {
+            "group": "Gerenciamento",
+            "icon": "database",
+            "pages": [
+              "api-reference/endpoint/fetch-messages",
+              "api-reference/endpoint/recent-contacts",
+              "api-reference/endpoint/management-chats",
+              "api-reference/endpoint/management-chat-messages",
+              "api-reference/endpoint/management-contacts",
+              "api-reference/endpoint/management-groups",
+              "api-reference/endpoint/cleanup",
+              "api-reference/endpoint/management-export",
+              "api-reference/endpoint/management-import"
+            ]
+          },
+          {
+            "group": "Banco de Dados",
+            "icon": "database",
+            "pages": [
+              "api-reference/endpoint/database-cleanup",
+              "api-reference/endpoint/database-config",
+              "api-reference/endpoint/database-status"
+            ]
+          },
+          {
+            "group": "Configurações",
+            "icon": "sliders",
+            "pages": [
+              "api-reference/endpoint/settings-profile",
+              "api-reference/endpoint/block",
+              "api-reference/endpoint/call-reject-auto",
+              "api-reference/endpoint/call-reject-message",
+              "api-reference/endpoint/auto-read",
+              "api-reference/endpoint/settings-phone-code"
+            ]
+          },
+          {
+            "group": "Privacidade",
+            "icon": "shield-halved",
+            "pages": [
               "api-reference/endpoint/settings-privacy-last-seen",
               "api-reference/endpoint/settings-privacy-online",
               "api-reference/endpoint/settings-privacy-profile",
-              "api-reference/endpoint/settings-privacy-read-receipts",
               "api-reference/endpoint/settings-privacy-status",
-              "api-reference/endpoint/stats-webhooks-name",
-              "api-reference/endpoint/system-cleanup",
-              "api-reference/endpoint/volume-stats",
+              "api-reference/endpoint/settings-privacy-read-receipts",
+              "api-reference/endpoint/settings-privacy-groups-add",
+              "api-reference/endpoint/settings-privacy-call-add",
+              "api-reference/endpoint/settings-privacy-about",
+              "api-reference/endpoint/settings-privacy-disappearing-timer"
+            ]
+          },
+          {
+            "group": "Controle de IP",
+            "icon": "shield-halved",
+            "pages": [
+              "api-reference/endpoint/settings-ip-control",
+              "api-reference/endpoint/put-settings-ip-control",
+              "api-reference/endpoint/ip-rules-list",
+              "api-reference/endpoint/ip-rules-whitelist-add",
+              "api-reference/endpoint/ip-rules-blacklist-add",
+              "api-reference/endpoint/ip-rules-whitelist-remove",
+              "api-reference/endpoint/ip-rules-blacklist-remove"
+            ]
+          },
+          {
+            "group": "Contatos",
+            "icon": "address-book",
+            "pages": [
+              "api-reference/endpoint/contact-info",
+              "api-reference/endpoint/contacts-is-on-whatsapp",
+              "api-reference/endpoint/contacts-business-profile",
+              "api-reference/endpoint/contacts-devices",
+              "api-reference/endpoint/contacts-blocklist",
+              "api-reference/endpoint/contacts-privacy"
+            ]
+          },
+          {
+            "group": "Grupos",
+            "icon": "user-group",
+            "pages": [
+              "api-reference/endpoint/groups",
+              "api-reference/endpoint/post-groups",
+              "api-reference/endpoint/groups-jid",
+              "api-reference/endpoint/patch-groups-jid",
+              "api-reference/endpoint/groups-jid-leave",
+              "api-reference/endpoint/groups-jid-invite-link",
+              "api-reference/endpoint/groups-jid-participants",
+              "api-reference/endpoint/groups-jid-join-requests",
+              "api-reference/endpoint/post-groups-jid-join-requests"
+            ]
+          },
+          {
+            "group": "Canais",
+            "icon": "bullhorn",
+            "pages": [
+              "api-reference/endpoint/channels-invite-invite",
+              "api-reference/endpoint/channels-jid",
+              "api-reference/endpoint/channels-jid-messages",
+              "api-reference/endpoint/channels-jid-follow",
+              "api-reference/endpoint/channels-jid-unfollow",
+              "api-reference/endpoint/channels-jid-react",
+              "api-reference/endpoint/channels-jid-mute"
+            ]
+          },
+          {
+            "group": "Instância",
+            "icon": "server",
+            "pages": [
+              "api-reference/endpoint/instance-me",
+              "api-reference/endpoint/instance-device",
+              "api-reference/endpoint/instance-update-name"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "icon": "bolt",
+            "pages": [
+              "api-reference/endpoint/webhooks-events",
+              "api-reference/endpoint/webhooks-list",
+              "api-reference/endpoint/webhooks-create",
+              "api-reference/endpoint/webhooks-get",
+              "api-reference/endpoint/webhooks-update",
+              "api-reference/endpoint/webhooks-delete",
+              "api-reference/endpoint/webhooks-toggle",
+              "api-reference/endpoint/webhooks-test",
+              "api-reference/endpoint/webhooks-logs",
+              "api-reference/endpoint/webhooks-logs-clear",
               "api-reference/endpoint/webhooks-logs-all"
+            ]
+          },
+          {
+            "group": "Inteligência Artificial",
+            "icon": "robot",
+            "pages": [
+              "api-reference/endpoint/ai-ask",
+              "api-reference/endpoint/ai-imagine"
+            ]
+          },
+          {
+            "group": "Sessões",
+            "icon": "layer-group",
+            "pages": [
+              "api-reference/endpoint/sessions-list",
+              "api-reference/endpoint/sessions-create",
+              "api-reference/endpoint/sessions-rename",
+              "api-reference/endpoint/sessions-delete",
+              "api-reference/endpoint/sessions-connect",
+              "api-reference/endpoint/sessions-disconnect",
+              "api-reference/endpoint/sessions-status"
             ]
           }
         ]
@@ -610,7 +371,7 @@
   },
   "api": {
     "mdx": {
-      "server": "https://api.example.com",
+      "server": "http://localhost:8300",
       "auth": {
         "method": "key",
         "name": "x-api-key"
@@ -619,7 +380,8 @@
     "playground": {
       "display": "interactive",
       "proxy": false
-    }
+    },
+    "openapi": "api-reference/openapi.json"
   },
   "footer": {
     "socials": {

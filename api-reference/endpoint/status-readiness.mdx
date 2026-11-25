@@ -1,24 +1,7 @@
 ---
 title: "Readiness"
-icon: "check"
-api: "GET /status/readiness"
+icon: "heart-pulse"
+openapi: "GET /status/readiness"
 ---
 
 Verifica se o servidor está totalmente inicializado e o cliente WhatsApp pronto. Retorna HTTP 200 apenas quando pronto. Útil para Kubernetes, Docker e load balancers.
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "ok": true
-}
-```
-
-```json 503 Indisponível
-{
-  "error": "Service Unavailable",
-  "message": "Server is not ready yet."
-}
-```
-
-</ResponseExample>

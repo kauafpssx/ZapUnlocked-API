@@ -1,34 +1,7 @@
 ---
 title: 'Gerenciar Solicitações de Entrada'
-icon: 'user-check'
-api: "POST /groups/{jid}/join-requests"
+icon: "user-group"
+openapi: "POST /groups/{jid}/join-requests"
 ---
 
 Aprova ou recusa solicitações de entrada de um grupo.
-
-### Corpo da Requisição
-
-<ParamField body="participants" type="array" required>
-  Lista de JIDs dos participantes.
-</ParamField>
-
-<ParamField body="action" type="string" default="approve">
-  Ação: `approve` ou `reject`.
-</ParamField>
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "jid": "120363...@g.us",
-  "results": [
-    {
-      "jid": "5511999999999@s.whatsapp.net",
-      "error": null
-    }
-  ]
-}
-```
-
-</ResponseExample>

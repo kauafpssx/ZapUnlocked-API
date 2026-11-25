@@ -1,28 +1,6 @@
 ---
-title: 'Config. do Bot'
-icon: 'sliders'
-api: "GET /settings/profile"
+title: "Referência atualizada"
+icon: "arrow-right"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
-
-Retorna as configurações atuais do bot: tag de IA e controle de IP.
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "settings": {
-    "ai_tag_enabled": false,
-    "ai_tag_text": "[IA]",
-    "ip_control_enabled": false,
-    "ip_whitelist": [],
-    "ip_blacklist": []
-  }
-}
-```
-
-</ResponseExample>
+Consulte a [documentação atualizada](/api-reference/endpoint/call-reject-auto).

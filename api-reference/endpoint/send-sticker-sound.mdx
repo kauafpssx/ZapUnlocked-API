@@ -1,8 +1,9 @@
 ---
 title: 'Enviar Sticker com Áudio'
-icon: 'note-sticky'
-api: "POST /send_sticker_sound"
+icon: "paper-plane"
+openapi: "POST /send_sticker_sound"
 ---
+
 title: 'Enviar Sticker com Áudio'
 icon: 'note-sticky'
 api: "POST /send_sticker_sound"
@@ -11,66 +12,3 @@ api: "POST /send_sticker_sound"
 Envia uma figurinha com áudio (sound sticker). Aceita URL pública ou upload direto de imagem/vídeo via `multipart/form-data`.
 
 ### Corpo da Requisição (JSON ou multipart/form-data)
-
-<ParamField body="phone" type="string" required>
-  Número do contato com código do país (ex: `5511999999999`).
-</ParamField>
-
-<ParamField body="sticker_url" type="string">
-  URL pública da imagem/vídeo base do sticker. Se omitido, use `file`.
-</ParamField>
-
-<ParamField body="file" type="file">
-  Arquivo de imagem/vídeo via multipart/form-data. Alternativa a `sticker_url`.
-</ParamField>
-
-<ParamField body="audio_url" type="string">
-  URL pública do áudio. Se omitido e a fonte for vídeo, o áudio é extraído do vídeo.
-</ParamField>
-
-<ParamField body="audio_file" type="file">
-  Arquivo de áudio via multipart/form-data.
-</ParamField>
-
-<ParamField body="audio_format" type="string" default="ogg">
-  Formato do áudio: `ogg`, `mp3`, `wav` ou `m4a`.
-</ParamField>
-
-<ParamField body="pack" type="string">
-  Nome do pacote de stickers.
-</ParamField>
-
-<ParamField body="author" type="string">
-  Nome do autor do sticker.
-</ParamField>
-
-<ParamField body="resize_mode" type="string" default="pad">
-  Modo de redimensionamento da imagem.
-</ParamField>
-
-<ParamField body="pad_color" type="string" default="black">
-  Cor de fundo (somente para `pad`).
-</ParamField>
-
-<ParamField body="blur_intensity" type="number" default="20">
-  Intensidade do desfoque (somente para `blur`).
-</ParamField>
-
-<ParamField body="reply" type="string">
-  ID ou texto da mensagem para responder.
-</ParamField>
-
-<ParamField body="quoted_id" type="string">
-  ID da mensagem a citar diretamente.
-</ParamField>
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "message": "Sticker sent successfully."
-}
-```
-
-</ResponseExample>

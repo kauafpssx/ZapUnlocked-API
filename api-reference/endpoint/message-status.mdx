@@ -1,8 +1,9 @@
 ---
 title: 'Status da Mensagem'
-icon: 'circle-check'
-api: "GET /messages/{message_id}/status"
+icon: "message"
+openapi: "GET /messages/{message_id}/status"
 ---
+
 title: 'Status da Mensagem'
 icon: 'circle-check'
 api: "GET /messages/{message_id}/status"
@@ -11,40 +12,3 @@ api: "GET /messages/{message_id}/status"
 Retorna o status de entrega/leitura de uma mensagem enviada.
 
 ### Parâmetros de Caminho
-
-<ParamField path="message_id" type="string" required>
-  ID da mensagem.
-</ParamField>
-
-### Resposta
-
-<ParamField response="status" type="string">
-  Status atual: `sent`, `delivered`, `read`, `played` ou `failed`.
-</ParamField>
-
-<ParamField response="updatedAt" type="string">
-  Data/hora da última atualização (ISO 8601).
-</ParamField>
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "messageId": "ABC123",
-  "status": "read",
-  "chatJid": "5511999999999@s.whatsapp.net",
-  "receiptType": 4,
-  "timestamp": 1700000000,
-  "updatedAt": "2026-01-01T00:00:00Z"
-}
-```
-
-```json 404 Não encontrado
-{
-  "success": false,
-  "message": "Status not found."
-}
-```
-
-</ResponseExample>

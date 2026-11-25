@@ -1,35 +1,7 @@
 ---
 title: "Exportar Config"
-icon: "file-export"
-api: "GET /management/export"
+icon: "database"
+openapi: "GET /management/export"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
-
 Exporta toda a configuração do sistema em formato JSON. Útil para backup ou migração entre servidores.
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "filename": "config_export_2026-06-08.json",
-  "exported_at": "2026-06-08T23:19:00Z",
-  "data": {
-    "webhooks": [],
-    "settings": {},
-    "ip_rules": {}
-  }
-}
-```
-
-```json 401 Não autorizado
-{
-  "error": "Unauthorized",
-  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
-}
-```
-
-</ResponseExample>

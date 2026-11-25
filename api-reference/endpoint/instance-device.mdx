@@ -1,31 +1,7 @@
 ---
 title: 'Dispositivo'
-icon: 'mobile'
-api: "GET /instance/device"
+icon: "server"
+openapi: "GET /instance/device"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
-
 Retorna dados técnicos do dispositivo vinculado: ID do dispositivo, RawAgent, Integrator e plataforma.
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "connected": true,
-  "device": 3,
-  "raw_agent": 0,
-  "integrator": 0,
-  "platform": "SMBI"
-}
-```
-
-```json 503 Não conectado
-{
-  "detail": "WhatsApp is not connected."
-}
-```
-
-</ResponseExample>

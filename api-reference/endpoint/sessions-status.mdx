@@ -1,36 +1,7 @@
 ---
 title: "Status da Sessão"
-icon: "circle-info"
-api: "GET /sessions/{session_id}/status"
+icon: "layer-group"
+openapi: "GET /sessions/{session_id}/status"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
-
-<ParamField path="session_id" type="string" required>
-  ID da sessão a ser consultada.
-</ParamField>
-
 Retorna o status atual de conexão da sessão.
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "sessionId": "1",
-  "name": "Principal",
-  "connected": true,
-  "hasQr": false
-}
-```
-
-```json 401 Não autorizado
-{
-  "error": "Unauthorized",
-  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
-}
-```
-
-</ResponseExample>

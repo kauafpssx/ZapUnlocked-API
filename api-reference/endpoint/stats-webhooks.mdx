@@ -1,40 +1,7 @@
 ---
 title: "Stats Webhooks"
 icon: "chart-line"
-api: "GET /stats/webhooks"
+openapi: "GET /stats/webhooks"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
-
 Retorna estatísticas detalhadas dos webhooks, incluindo total de chamadas, falhas e taxa de sucesso.
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "total": 3,
-  "webhooks": [
-    {
-      "name": "my-webhook",
-      "fired": 150,
-      "last_fired": "2026-06-08T23:19:00Z"
-    },
-    {
-      "name": "alerts",
-      "fired": 42,
-      "last_fired": "2026-06-08T22:00:00Z"
-    }
-  ]
-}
-```
-
-```json 401 Não autorizado
-{
-  "error": "Unauthorized",
-  "message": "Invalid or missing API key. Send via x-api-key header (preferred) or ?API_KEY= query param."
-}
-```
-
-</ResponseExample>

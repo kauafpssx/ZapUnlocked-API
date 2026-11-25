@@ -1,26 +1,11 @@
 ---
 title: 'Limpar Chats'
-icon: 'trash-can'
-api: "DELETE /management/cleanup"
+icon: "database"
+openapi: "DELETE /management/cleanup"
 ---
-
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
 
 Deleta **todo** o histórico de mensagens e índices armazenados no servidor.
 
 <Warning>
   Esta ação é irreversível e apaga todos os registros de conversas armazenados. A sessão do WhatsApp não é desconectada.
 </Warning>
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-    "success": true,
-    "message": "All chat files and indexes have been cleared from disk."
-}
-```
-
-</ResponseExample>

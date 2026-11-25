@@ -1,12 +1,8 @@
 ---
 title: 'Parear por Telef.'
-icon: 'mobile-screen'
-api: "GET /settings/phone-code/{phone}"
+icon: "sliders"
+openapi: "GET /settings/phone-code/{phone}"
 ---
-
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
 
 Gera um código de 8 dígitos para conectar um número do WhatsApp sem QR Code, via **Aparelhos conectados › Conectar com número de telefone**.
 
@@ -15,31 +11,3 @@ Gera um código de 8 dígitos para conectar um número do WhatsApp sem QR Code, 
 </Warning>
 
 ### Parâmetro de Rota
-
-<ParamField path="phone" type="string" required>
-  Número de telefone com código do país (ex: `5511999999999`).
-</ParamField>
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "phone": "5511999999999",
-  "code": "ABCD-1234"
-}
-```
-
-```json 408 Timeout
-{
-  "detail": "Timed out waiting for pairing code. The phone number may be invalid or rate-limited."
-}
-```
-
-```json 503 Não conectado
-{
-  "detail": "WhatsApp is not connected (client must be awaiting connection)."
-}
-```
-
-</ResponseExample>

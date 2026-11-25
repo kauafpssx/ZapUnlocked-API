@@ -1,28 +1,7 @@
 ---
 title: 'Leitura Automática'
-icon: 'check-double'
-api: "PUT /settings/instance/auto-read-message"
+icon: "sliders"
+openapi: "PUT /settings/instance/auto-read-message"
 ---
 
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
-
 Ativa ou desativa confirmações de leitura automáticas para mensagens recebidas (envia o check azul duplo automaticamente).
-
-### Corpo da Requisição
-
-<ParamField body="value" type="boolean" required>
-  `true` para ativar, `false` para desativar.
-</ParamField>
-
-<ResponseExample>
-
-```json 200 Sucesso
-{
-  "success": true,
-  "auto_read_message": true
-}
-```
-
-</ResponseExample>
