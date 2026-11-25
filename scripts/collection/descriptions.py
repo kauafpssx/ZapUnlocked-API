@@ -472,6 +472,10 @@ ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
         "Available event types:\n"
         "- `message.*` / `message.text` / `message.image` / `message.audio` / etc.\n"
         "- `message.contacts` — contact array messages\n"
+        "- `message.button_reply` / `message.list_reply` — quick replies & lists\n"
+        "- `message.native_flow_response` — lossless Native Flow (name/version/params)\n"
+        "- `message.form_response` — `galaxy_message` form submissions\n"
+        "- `message.order_received` / `message.product_received` — commerce messages\n"
         "- `message.sent` / `message.delivered` / `message.read` — delivery receipts\n"
         "- `message.poll_created` / `message.poll_vote` — poll events\n"
         "- `connection.*` — connection state changes\n"
@@ -479,6 +483,8 @@ ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
         "- `call.*` — call events\n"
         "- `group.*` — group events\n"
         "- `contact.*` — presence/chat state events\n"
+        "- `order.*` — order details/status events (from Fase 3)\n"
+        "- `media.*` — media retry events\n"
         "- `media.cleanup.*` — automatic media cleanup events\n"
         "- `ai.response` — Meta AI reply received",
     "/webhooks/{name}":
@@ -496,6 +502,8 @@ ENDPOINT_DESCRIPTIONS: Dict[str, str] = {
         "- `message.text`, `message.image`, `message.video`, `message.audio`\n"
         "- `message.document`, `message.sticker`, `message.reaction`\n"
         "- `message.location`, `message.button_reply`, `message.list_reply`\n"
+        "- `message.native_flow_response`, `message.form_response`\n"
+        "- `message.order_received`, `message.product_received`\n"
         "- `message.deleted`, `message.poll_created`, `message.poll_vote`\n"
         "- `message.sent`, `message.delivered`, `message.read`\n"
         "- `connection.connected`, `connection.disconnected`, `connection.qr_ready`\n"

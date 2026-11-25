@@ -19,7 +19,7 @@ class TestBuildQrUrl:
         mock_getenv.side_effect = mock_getenv_side_effect
 
         result = build_qr_url()
-        assert result.startswith("https://myapp.example.com:8300/qr")
+        assert result.startswith("https://myapp.example.com/qr")
 
     @patch("src.config.url_builder.os.getenv")
     def test_with_public_url_already_has_port(self, mock_getenv):
@@ -36,16 +36,14 @@ class TestBuildQrUrl:
         assert "/qr" in result
 
     @patch("src.config.url_builder.os.getenv")
-    @patch("src.config.url_builder.socket.gethostname")
-    def test_fallback_to_hostname(self, mock_hostname, mock_getenv):
+    def test_fallback_to_loopback(self, mock_getenv):
         def mock_getenv_side_effect(key, default=None):
             env = {"PUBLIC_URL": None, "USER": None}
             return env.get(key, default)
         mock_getenv.side_effect = mock_getenv_side_effect
-        mock_hostname.return_value = "myserver"
 
         result = build_qr_url()
-        assert "myserver" in result
+        assert "127.0.0.1" in result
         assert ":8300" in result
 
     @patch("src.config.url_builder.os.getenv")
