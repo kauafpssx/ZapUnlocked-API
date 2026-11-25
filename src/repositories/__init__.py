@@ -1,0 +1,1 @@
+"""Repositories for persistent domain data."""
