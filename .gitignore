@@ -77,3 +77,6 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Neonize evolution map (local planning docs)
+NEONIZE_0.12.4_MAP/
