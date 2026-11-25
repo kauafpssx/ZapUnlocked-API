@@ -3,10 +3,14 @@ Message type router — identifies the type of an incoming message
 and dispatches the appropriate structured webhook event.
 """
 
-import json
-
 from src.utils.logger import logger
 from src.handlers.helpers import _has, _safe_str, _safe_int, _detect_type
+from src.services.whatsapp.message_normalizer import (
+    normalize_native_flow_response,
+    normalize_order,
+    normalize_product,
+    resolve_chat_jid,
+)
 
 
 async def dispatch_message_event(msg, phone: str, parsed: dict, session_id: str = "1"):
@@ -17,7 +21,7 @@ async def dispatch_message_event(msg, phone: str, parsed: dict, session_id: str 
         source = msg.Info.MessageSource
         message_id = msg.Info.ID
         push_name = msg.Info.Pushname or phone
-        jid = parsed["jid"]
+        jid = resolve_chat_jid(source, parsed.get("jid", "") if parsed else "")
         raw = msg.Message
 
         base = {
@@ -122,9 +126,22 @@ async def dispatch_message_event(msg, phone: str, parsed: dict, session_id: str 
             file_length = _safe_int(stk, "fileLength") if hasattr(stk, "fileLength") else 0
             from src.services.whatsapp.media_receiver import try_download_media
             media = await try_download_media(msg, file_length, mime, "sticker")
+            has_audio = _has(stk, "audioMessage")
+            audio_mime = ""
+            audio_length = 0
+            audio_seconds = 0
+            if has_audio:
+                aud = stk.audioMessage
+                audio_mime = _safe_str(aud, "mimetype")
+                audio_length = _safe_int(aud, "fileLength")
+                audio_seconds = _safe_int(aud, "seconds")
             await dispatch_event("message.sticker", {
                 **base,
                 "isAnimated": bool(getattr(stk, "isAnimated", False)),
+                "hasAudio": has_audio,
+                "audioMimeType": audio_mime or None,
+                "audioFileLength": audio_length or None,
+                "audioDurationSeconds": audio_seconds or None,
                 **media,
             }, session_id)
             return
@@ -227,36 +244,47 @@ async def dispatch_message_event(msg, phone: str, parsed: dict, session_id: str 
             }, session_id)
             return
 
-        # ── Interactive response (button / list) ───────────────
+        # ── Interactive response (button / list / native flow / form) ──
         if _has(raw, "interactiveResponseMessage"):
             resp = raw.interactiveResponseMessage
-            button_id = None
-            display_text = ""
-            resp_type = "unknown"
-            try:
-                native = resp.nativeFlowResponseMessage
-                if native:
-                    params = json.loads(native.paramsJSON)
-                    button_id = params.get("id", "")
-                    display_text = params.get("display_text", "") or params.get("title", "")
-                    resp_type = "list_reply" if params.get("id", "").isdigit() else "button_reply"
-            except Exception:
-                pass
-            try:
-                if not button_id and resp.buttonResponseMessage:
-                    button_id = resp.buttonResponseMessage.selectedButtonID
-                    display_text = resp.buttonResponseMessage.selectedDisplayText or ""
-                    resp_type = "button_reply"
-            except Exception:
-                pass
+            flow = normalize_native_flow_response(resp)
+            params = flow.get("params") or {}
+            button_id = params.get("id", "") or ""
+            display_text = params.get("display_text", "") or params.get("title", "")
+            kind = flow.get("kind", "unknown")
 
-            if resp_type == "list_reply":
+            # Always emit the lossless native-flow event first.
+            await dispatch_event("message.native_flow_response", {
+                **base,
+                "name": flow["name"],
+                "version": flow["version"],
+                "params": flow["params"],
+                "rawParamsJSON": flow["rawParamsJSON"],
+                "parseError": flow["parseError"],
+                "sourceMessageId": flow["sourceMessageId"],
+                "kind": kind,
+            }, session_id)
+
+            # Specialized event for galaxy_message forms.
+            if kind == "form":
+                await dispatch_event("message.form_response", {
+                    **base,
+                    "name": flow["name"],
+                    "version": flow["version"],
+                    "params": flow["params"],
+                    "rawParamsJSON": flow["rawParamsJSON"],
+                    "sourceMessageId": flow["sourceMessageId"],
+                }, session_id)
+                return
+
+            # Legacy-compatible events (no more id.isdigit() inference).
+            if kind == "list":
                 await dispatch_event("message.list_reply", {
                     **base,
                     "rowId": button_id,
                     "title": display_text,
                 }, session_id)
-            else:
+            elif kind == "button":
                 await dispatch_event("message.button_reply", {
                     **base,
                     "buttonId": button_id,
@@ -295,6 +323,38 @@ async def dispatch_message_event(msg, phone: str, parsed: dict, session_id: str 
                 "rowId": _safe_str(lr, "singleSelectReply.selectedRowId") or _safe_str(lr, "title"),
                 "title": _safe_str(lr, "title"),
                 "description": _safe_str(lr, "description"),
+            }, session_id)
+            return
+
+        # ── Order ─────────────────────────────────────────
+        if _has(raw, "orderMessage"):
+            order = normalize_order(raw.orderMessage)
+            try:
+                from src.services.whatsapp.orders import persist_order_from_message, fetch_order_details
+                import asyncio
+                order_id = await persist_order_from_message(msg, phone, session_id, raw.orderMessage)
+                token = getattr(raw.orderMessage, "token", None)
+                if order_id and token:
+                    async def _fetch():
+                        try:
+                            await fetch_order_details(session_id, order_id, token)
+                        except Exception as exc:
+                            logger.error(f"order details fetch failed: {exc}")
+                    asyncio.create_task(_fetch())
+            except Exception as exc:
+                logger.error(f"Failed to persist order: {exc}")
+            await dispatch_event("message.order_received", {
+                **base,
+                **{k: v for k, v in order.items() if k != "raw"},
+            }, session_id)
+            return
+
+        # ── Product ───────────────────────────────────────
+        if _has(raw, "productMessage"):
+            product = normalize_product(raw.productMessage)
+            await dispatch_event("message.product_received", {
+                **base,
+                **{k: v for k, v in product.items() if k != "raw"},
             }, session_id)
             return
 

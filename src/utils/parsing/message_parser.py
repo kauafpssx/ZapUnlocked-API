@@ -1,8 +1,23 @@
-"""Message parsing utilities for incoming WhatsApp messages."""
+"""Message parsing utilities for incoming WhatsApp messages.
 
-import json
+Text/sender extraction for storage. PN/LID resolution and interactive-response
+normalization are delegated to the canonical normalizer
+(``src.services.whatsapp.message_normalizer``) so every consumer shares one
+implementation.
+"""
 
+from src.services.whatsapp.message_normalizer import (
+    normalize_native_flow_response,
+    resolve_chat_jid,
+)
 from src.utils.logger import logger
+
+
+def _safe_getattr(obj, field):
+    try:
+        return getattr(obj, field)
+    except Exception:
+        return None
 
 
 def parse_message(msg) -> dict | None:
@@ -11,27 +26,15 @@ def parse_message(msg) -> dict | None:
         return None
 
     source = msg.Info.MessageSource
-    chat = source.Chat
 
-    resolved_user = chat.User
-    jid_suffix = "@s.whatsapp.net"
-
-    if source.IsGroup:
-        jid_suffix = "@g.us"
-    elif chat.Server == "lid":
-        if source.SenderAlt and source.SenderAlt.Server == "s.whatsapp.net":
-            resolved_user = source.SenderAlt.User
-        elif source.RecipientAlt and source.RecipientAlt.Server == "s.whatsapp.net":
-            resolved_user = source.RecipientAlt.User
-        elif source.Sender and source.Sender.Server == "s.whatsapp.net":
-            resolved_user = source.Sender.User
+    # Centralized PN/LID resolution (single source of truth).
+    resolved_jid = resolve_chat_jid(source)
 
     conversation_text = msg.Message.conversation or ""
     extended_text = ""
     image_caption = ""
     button_response_text = ""
     button_response_id = None
-    interactive_response_id = None
 
     try:
         if msg.Message.extendedTextMessage.text:
@@ -55,17 +58,19 @@ def parse_message(msg) -> dict | None:
     try:
         interactive_response = msg.Message.interactiveResponseMessage
         if interactive_response:
-            native = interactive_response.nativeFlowResponseMessage
-            if native and native.paramsJSON:
-                params = json.loads(native.paramsJSON)
-                interactive_response_id = params.get("id", "")
-                button_response_text = params.get("display_text", button_response_text)
-            elif interactive_response.buttonResponseMessage:
-                button_response_id = interactive_response.buttonResponseMessage.selectedButtonID
-                button_response_text = interactive_response.buttonResponseMessage.selectedDisplayText or button_response_text
-
+            flow = normalize_native_flow_response(interactive_response)
+            params = flow.get("params") or {}
+            button_response_id = params.get("id", "") or button_response_id
+            button_response_text = params.get("display_text", button_response_text)
             if not button_response_id:
-                button_response_id = interactive_response_id
+                button_response_id = _safe_getattr(
+                    _safe_getattr(interactive_response, "buttonResponseMessage") or object(),
+                    "selectedButtonID",
+                )
+                button_response_text = _safe_getattr(
+                    _safe_getattr(interactive_response, "buttonResponseMessage") or object(),
+                    "selectedDisplayText",
+                ) or button_response_text
     except Exception:
         pass
 
@@ -102,8 +107,8 @@ def parse_message(msg) -> dict | None:
             pass
 
     return {
-        "jid": f"{resolved_user}{jid_suffix}",
-        "phone": str(resolved_user),
+        "jid": resolved_jid,
+        "phone": str(resolved_jid.split("@")[0]) if resolved_jid else "",
         "text": full_text,
         "imageMessage": None,
         "quotedMessage": quoted_message,
