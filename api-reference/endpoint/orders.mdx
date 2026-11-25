@@ -1,6 +1,23 @@
 ---
-title: 'Create Order'
+title: 'Criar Pedido'
+icon: 'shopping-cart'
 api: "POST /orders"
 ---
 
-Gerado automaticamente a partir do OpenAPI.
+Cria um pedido comercial no WhatsApp.
+
+### Corpo da Requisição
+
+<ParamField body="phone" type="string" required>
+  Número do contato com código do país.
+</ParamField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true
+}
+```
+
+</ResponseExample>
