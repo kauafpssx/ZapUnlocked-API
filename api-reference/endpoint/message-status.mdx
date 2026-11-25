@@ -3,15 +3,27 @@ title: 'Status da Mensagem'
 icon: 'circle-check'
 api: "GET /messages/{message_id}/status"
 ---
-
-<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
-  Chave de autenticação da API.
-</ParamField>
+title: 'Status da Mensagem'
+icon: 'circle-check'
+api: "GET /messages/{message_id}/status"
+---
 
 Retorna o status de entrega/leitura de uma mensagem enviada.
 
+### Parâmetros de Caminho
+
 <ParamField path="message_id" type="string" required>
   ID da mensagem.
+</ParamField>
+
+### Resposta
+
+<ParamField response="status" type="string">
+  Status atual: `sent`, `delivered`, `read`, `played` ou `failed`.
+</ParamField>
+
+<ParamField response="updatedAt" type="string">
+  Data/hora da última atualização (ISO 8601).
 </ParamField>
 
 <ResponseExample>
@@ -21,6 +33,9 @@ Retorna o status de entrega/leitura de uma mensagem enviada.
   "success": true,
   "messageId": "ABC123",
   "status": "read",
+  "chatJid": "5511999999999@s.whatsapp.net",
+  "receiptType": 4,
+  "timestamp": 1700000000,
   "updatedAt": "2026-01-01T00:00:00Z"
 }
 ```

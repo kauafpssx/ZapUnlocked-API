@@ -4,4 +4,27 @@ icon: 'user-plus'
 api: "GET /groups/{jid}/join-requests"
 ---
 
-Lista solicitações de entrada pendentes.
+Lista solicitações de entrada pendentes do grupo.
+
+### Parâmetros de Caminho
+
+<ParamField path="jid" type="string" required>
+  JID do grupo.
+</ParamField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "jid": "120363...@g.us",
+  "requests": [
+    {
+      "jid": "5511999999999@s.whatsapp.net",
+      "timeAt": 1700000000
+    }
+  ]
+}
+```
+
+</ResponseExample>
