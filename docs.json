@@ -76,6 +76,7 @@
                 "icon": "image",
                 "pages": [
                   "api-reference/endpoint/send-sticker",
+                  "api-reference/endpoint/send-sticker-sound",
                   "api-reference/endpoint/video",
                   "api-reference/endpoint/image",
                   "api-reference/endpoint/document",
@@ -116,7 +117,8 @@
                 "group": "Marcar como Lida",
                 "icon": "eye",
                 "pages": [
-                  "api-reference/endpoint/message-read"
+                  "api-reference/endpoint/message-read",
+                  "api-reference/endpoint/message-status",
                 ]
               },
               {

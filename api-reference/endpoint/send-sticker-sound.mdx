@@ -1,0 +1,48 @@
+---
+title: 'Enviar Sticker com Áudio'
+icon: 'note-sticky'
+api: "POST /send_sticker_sound"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Envia uma figurinha com áudio (sound sticker). Aceita URL pública ou upload direto.
+
+### Corpo da Requisição (JSON ou multipart/form-data)
+
+<ParamField body="phone" type="string" required>
+  Número do contato com código do país.
+</ParamField>
+
+<ParamField body="sticker_url" type="string">
+  URL pública da imagem/vídeo base do sticker.
+</ParamField>
+
+<ParamField body="audio_url" type="string">
+  URL pública do áudio. Se omitido e a fonte for vídeo, o áudio é extraído do vídeo.
+</ParamField>
+
+<ParamField body="audio_format" type="string" default="ogg">
+  Formato do áudio (ogg, mp3, wav, m4a).
+</ParamField>
+
+<ParamField body="pack" type="string">
+  Nome do pacote de stickers.
+</ParamField>
+
+<ParamField body="author" type="string">
+  Nome do autor do sticker.
+</ParamField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "message": "Sticker sent successfully."
+}
+```
+
+</ResponseExample>

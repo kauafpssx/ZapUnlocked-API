@@ -1,0 +1,35 @@
+---
+title: 'Status da Mensagem'
+icon: 'circle-check'
+api: "GET /messages/{message_id}/status"
+---
+
+<ParamField header="x-api-key" type="string" required placeholder="SUA_CHAVE_SECRETA">
+  Chave de autenticação da API.
+</ParamField>
+
+Retorna o status de entrega/leitura de uma mensagem enviada.
+
+<ParamField path="message_id" type="string" required>
+  ID da mensagem.
+</ParamField>
+
+<ResponseExample>
+
+```json 200 Sucesso
+{
+  "success": true,
+  "messageId": "ABC123",
+  "status": "read",
+  "updatedAt": "2026-01-01T00:00:00Z"
+}
+```
+
+```json 404 Não encontrado
+{
+  "success": false,
+  "message": "Status not found."
+}
+```
+
+</ResponseExample>
