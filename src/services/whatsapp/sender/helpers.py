@@ -73,6 +73,11 @@ async def _dispatch_sent_event(jid: str, event_type: str, res, session_id: str =
         payload = {"to": phone, "type": event_type, "messageId": res.ID}
         await dispatch_event("message.sent", payload, session_id)
         await dispatch_event(f"message.sent.{event_type}", payload, session_id)
+        try:
+            from src.repositories.message_status import record_sent
+            record_sent(session_id, res.ID, jid)
+        except Exception as e:
+            logger.debug(f"message_status record_sent failed: {e}")
     except Exception as e:
         logger.error(f"Failed to dispatch message.sent: {e}")
 

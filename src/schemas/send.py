@@ -54,6 +54,9 @@ class SendReactionRequest(BaseWhatsAppRequest):
 class SendStickerRequest(BaseWhatsAppRequest):
     sticker_url: Optional[str] = None
     image_url: Optional[str] = None
+    audio_url: Optional[str] = None
+    audio_file: Optional[str] = None
+    audio_format: Optional[str] = "ogg"
     pack: Optional[str] = None
     author: Optional[str] = None
     resizeMode: Optional[str] = "pad"
@@ -215,3 +218,15 @@ class BulkSendTextRequest(BaseModel):
     delay_typing: Optional[Union[int, float]] = None
     delay_between: Optional[Union[int, float, str]] = None
     mentioned: Optional[List[str]] = None
+
+
+class SendAlbumRequest(BaseWhatsAppRequest):
+    files: List[str]
+    caption: Optional[str] = ""
+    spoiler: Optional[bool] = False
+
+
+class SendStickerPackRequest(BaseWhatsAppRequest):
+    files: List[str]
+    packname: Optional[str] = "Sticker pack"
+    publisher: Optional[str] = ""

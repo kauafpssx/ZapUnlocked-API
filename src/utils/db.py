@@ -106,8 +106,91 @@ CREATE TABLE IF NOT EXISTS chat_index (
     last_message_timestamp  INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (session_id, chat_id)
 );
-"""
 
+CREATE TABLE IF NOT EXISTS orders (
+    session_id          TEXT NOT NULL,
+    order_id            TEXT NOT NULL,
+    message_id          TEXT,
+    chat_jid            TEXT,
+    seller_jid          TEXT,
+    whatsapp_status     TEXT,
+    local_status        TEXT NOT NULL DEFAULT 'received',
+    currency            TEXT,
+    subtotal_1000       INTEGER,
+    total_1000          INTEGER,
+    item_count          INTEGER,
+    title               TEXT,
+    note                TEXT,
+    token               TEXT,
+    catalog_id          TEXT,
+    surface             TEXT,
+    request_message_id  TEXT,
+    raw_payload         TEXT,
+    created_at          TEXT NOT NULL,
+    updated_at          TEXT NOT NULL,
+    PRIMARY KEY (session_id, order_id)
+);
+
+CREATE TABLE IF NOT EXISTS order_items (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id      TEXT NOT NULL,
+    order_id        TEXT NOT NULL,
+    product_id      TEXT,
+    name            TEXT,
+    quantity        INTEGER,
+    price_1000      INTEGER,
+    currency        TEXT,
+    image_id        TEXT,
+    image_url       TEXT,
+    raw_payload     TEXT,
+    FOREIGN KEY (session_id, order_id) REFERENCES orders(session_id, order_id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_order_items_order
+    ON order_items(session_id, order_id);
+
+CREATE TABLE IF NOT EXISTS order_events (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id      TEXT NOT NULL,
+    order_id        TEXT NOT NULL,
+    event_type      TEXT NOT NULL,
+    old_status      TEXT,
+    new_status      TEXT,
+    actor           TEXT,
+    metadata        TEXT,
+    created_at      TEXT NOT NULL,
+    FOREIGN KEY (session_id, order_id) REFERENCES orders(session_id, order_id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_order_events_order
+    ON order_events(session_id, order_id, id);
+
+CREATE TABLE IF NOT EXISTS payment_references (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id      TEXT NOT NULL,
+    reference_id    TEXT NOT NULL,
+    order_id        TEXT,
+    amount_1000     INTEGER NOT NULL,
+    currency        TEXT NOT NULL,
+    pix_key_type    TEXT NOT NULL,
+    pix_key_hash    TEXT,
+    created_at      TEXT NOT NULL,
+    UNIQUE(session_id, reference_id)
+);
+
+CREATE TABLE IF NOT EXISTS message_status (
+    session_id    TEXT NOT NULL,
+    message_id    TEXT NOT NULL,
+    chat_jid      TEXT,
+    status        TEXT NOT NULL,
+    status_rank   INTEGER NOT NULL DEFAULT 0,
+    receipt_type  INTEGER,
+    timestamp     INTEGER,
+    updated_at    TEXT NOT NULL,
+    PRIMARY KEY (session_id, message_id)
+);
+
+"""
 
 def init_db() -> None:
     """Create all tables if they don't exist. Safe to call multiple times."""

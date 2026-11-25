@@ -1,89 +1,130 @@
 import uuid
 from pathlib import Path
+from urllib.parse import urljoin, urlparse
 
 from src.config.constants import TEMP_DIR
 from src.utils.logger import logger
 
-MAX_SIZE = 400 * 1024 * 1024 # 400 MB
+MAX_SIZE = 400 * 1024 * 1024  # 400 MB
+MAX_REDIRECTS = 5
+
+
+def _is_protected_ip(ip_address: str) -> bool:
+    import ipaddress
+
+    try:
+        ip_obj = ipaddress.ip_address(ip_address)
+    except ValueError:
+        return True
+    return (
+        ip_obj.is_private
+        or ip_obj.is_loopback
+        or ip_obj.is_link_local
+        or ip_obj.is_multicast
+        or ip_obj.is_reserved
+        or ip_obj.is_unspecified
+    )
+
+
+def _validate_url(url: str) -> None:
+    import socket
+
+    parsed_url = urlparse(url)
+    if parsed_url.scheme not in ("http", "https"):
+        raise Exception(f"Invalid protocol: {parsed_url.scheme}. Only HTTP/HTTPS allowed.")
+
+    hostname = parsed_url.hostname
+    if not hostname:
+        raise Exception("Invalid URL: hostname not identified.")
+
+    # Block obvious local names even if DNS resolution is mocked.
+    lowered = hostname.lower()
+    if lowered in {"localhost", "localhost.localdomain"} or lowered.endswith(".localhost"):
+        raise Exception(f"Access denied: {hostname} resolves to a protected/internal IP.")
+
+    try:
+        ip_address = socket.gethostbyname(hostname)
+    except Exception as exc:
+        raise Exception(f"DNS resolution failed for {hostname}: {exc}")
+
+    if _is_protected_ip(ip_address):
+        logger.warning(f"🚨 SSRF attempt blocked for internal IP: {ip_address} ({hostname})")
+        raise Exception(f"Access denied: {hostname} resolves to a protected/internal IP.")
+
 
 async def download_media(url: str) -> str:
-    import requests
     import asyncio
-    import socket
-    from urllib.parse import urlparse
-    import ipaddress
+    import requests
 
     logger.info(f"🌐 Downloading: {url}")
 
-    # --- SSRF protection ---
+    current_url = url
+    response = None
     try:
-        parsed_url = urlparse(url)
-        if parsed_url.scheme not in ["http", "https"]:
-            raise Exception(f"Invalid protocol: {parsed_url.scheme}. Only HTTP/HTTPS allowed.")
+        for _ in range(MAX_REDIRECTS + 1):
+            _validate_url(current_url)
+            candidate = requests.get(
+                current_url,
+                headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                    "Accept-Language": "en-US,en;q=0.9,pt-BR;q=0.8,pt;q=0.7",
+                    "Referer": "https://www.google.com/",
+                },
+                stream=True,
+                timeout=60,
+                allow_redirects=False,
+            )
+            if candidate.status_code in (301, 302, 303, 307, 308):
+                location = candidate.headers.get("location")
+                candidate.close()
+                if not location:
+                    raise Exception("Redirect without Location header.")
+                current_url = urljoin(current_url, location)
+                continue
+            response = candidate
+            break
+        else:
+            raise Exception("Too many redirects.")
 
-        hostname = parsed_url.hostname
-        if not hostname:
-            raise Exception("Invalid URL: hostname not identified.")
+        if response is None:
+            raise Exception("Failed to obtain response.")
 
-        # Resolve IP and check for private/internal addresses
-        ip_address = socket.gethostbyname(hostname)
-        ip_obj = ipaddress.ip_address(ip_address)
+        response.raise_for_status()
 
-        if ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_link_local or ip_obj.is_multicast:
-            logger.warning(f"🚨 SSRF attempt blocked for internal IP: {ip_address} ({hostname})")
-            raise Exception(f"Access denied: {hostname} resolves to a protected/internal IP.")
+        content_length = int(response.headers.get("content-length", 0) or 0)
+        if content_length > MAX_SIZE:
+            size_mb = content_length / (1024 * 1024)
+            raise Exception(f"File too large: {size_mb:.2f}MB. Maximum allowed is 400MB.")
 
-    except Exception as ssrf_err:
-        logger.error(f"❌ URL security validation failed: {str(ssrf_err)}")
-        raise ssrf_err
-    # ---------------------
+        content_type = response.headers.get("content-type", "")
+        extension = ".bin"
+        if "image/" in content_type:
+            extension = "." + content_type.split("/")[1].split(";")[0]
+        elif "video/" in content_type:
+            extension = "." + content_type.split("/")[1].split(";")[0]
+        elif "audio/" in content_type:
+            extension = "." + content_type.split("/")[1].split(";")[0]
+        elif "application/pdf" in content_type:
+            extension = ".pdf"
+        if extension == ".jpeg":
+            extension = ".jpg"
+        if extension == ".mpeg":
+            extension = ".mp3" if "audio" in content_type else ".mp4"
 
-    try:
-        common_headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-            "Accept-Language": "en-US,en;q=0.9,pt-BR;q=0.8,pt;q=0.7",
-            "Referer": "https://www.google.com/"
-        }
+        filename = f"{uuid.uuid4()}{extension}"
+        file_path = Path(TEMP_DIR) / filename
+        logger.info(f"⏳ Writing stream to file: {filename}...")
 
-        # Run requests in a thread for better CDN compatibility (bypasses httpx TLS fingerprints)
-        def perform_download():
-            with requests.get(url, headers=common_headers, stream=True, timeout=60, allow_redirects=True) as r:
-                r.raise_for_status()
-                
-                content_length = int(r.headers.get("content-length", 0))
-                if content_length > MAX_SIZE:
-                    size_mb = content_length / (1024 * 1024)
-                    raise Exception(f"File too large: {size_mb:.2f}MB. Maximum allowed is 400MB.")
+        total = 0
+        with open(file_path, "wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:
+                    total += len(chunk)
+                    if total > MAX_SIZE:
+                        raise Exception("File too large: streamed content exceeded 400MB.")
+                    f.write(chunk)
 
-                content_type = r.headers.get("content-type", "")
-                extension = ".bin"
-
-                if "image/" in content_type:
-                    extension = "." + content_type.split("/")[1].split(";")[0]
-                elif "video/" in content_type:
-                    extension = "." + content_type.split("/")[1].split(";")[0]
-                elif "audio/" in content_type:
-                    extension = "." + content_type.split("/")[1].split(";")[0]
-                elif "application/pdf" in content_type:
-                    extension = ".pdf"
-
-                if extension == ".jpeg": extension = ".jpg"
-                if extension == ".mpeg": extension = ".mp3" if "audio" in content_type else ".mp4"
-
-                filename = f"{uuid.uuid4()}{extension}"
-                file_path = Path(TEMP_DIR) / filename
-
-                logger.info(f"⏳ Writing stream to file: {filename}...")
-                with open(file_path, "wb") as f:
-                    for chunk in r.iter_content(chunk_size=8192):
-                        if chunk:
-                            f.write(chunk)
-                return str(file_path)
-
-        file_path_str = await asyncio.to_thread(perform_download)
-        
-        file_path = Path(file_path_str)
         size_mb = file_path.stat().st_size / (1024 * 1024)
         logger.info(f"✅ Download complete: {file_path.name} ({size_mb:.2f} MB)")
         return str(file_path)
@@ -91,3 +132,9 @@ async def download_media(url: str) -> str:
     except Exception as e:
         logger.error(f"❌ Media download failed: {str(e)}")
         raise e
+    finally:
+        if response is not None:
+            try:
+                response.close()
+            except Exception:
+                pass

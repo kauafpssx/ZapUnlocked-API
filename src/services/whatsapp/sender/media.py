@@ -1,7 +1,7 @@
 from src.services.whatsapp.sender.helpers import _ensure_client, _build_context_info, _save_to_history, build_jid, _dispatch_sent_event, apply_pre_send
 
 
-async def send_image_message(jid: str, image_path: str, caption: str = "", as_document: bool = False, file_name: str = None, options: dict = None, session_id: str = "1"):
+async def send_image_message(jid: str, image_path: str, caption: str = "", as_document: bool = False, file_name: str = None, view_once: bool = False, accessibility_label: str = "", options: dict = None, session_id: str = "1"):
     import magic
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, ImageMessage, DocumentMessage
     from neonize.utils.enum import MediaType
@@ -46,6 +46,8 @@ async def send_image_message(jid: str, image_path: str, caption: str = "", as_do
                 fileLength=len(image_bytes),
                 mimetype=mimetype,
                 caption=caption,
+                viewOnce=view_once,
+                accessibilityLabel=accessibility_label or None,
                 contextInfo=_build_context_info(options.get("quoted"), options.get("mentioned")) if options else None
             )
         )
@@ -100,7 +102,7 @@ async def send_audio_message(jid: str, audio_path: str, is_ptt: bool = False, du
     return res
 
 
-async def send_video_message(jid: str, video_path: str, caption: str = "", as_document: bool = False, gif_playback: bool = False, ptv: bool = False, options: dict = None, session_id: str = "1"):
+async def send_video_message(jid: str, video_path: str, caption: str = "", as_document: bool = False, gif_playback: bool = False, ptv: bool = False, accessibility_label: str = "", options: dict = None, session_id: str = "1"):
     import magic
     import os
     from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import Message, VideoMessage
@@ -127,6 +129,7 @@ async def send_video_message(jid: str, video_path: str, caption: str = "", as_do
         mimetype=mimetype,
         caption=caption,
         gifPlayback=gif_playback,
+        accessibilityLabel=accessibility_label or None,
         contextInfo=_build_context_info(options.get("quoted"), options.get("mentioned")) if options else None
     )
 

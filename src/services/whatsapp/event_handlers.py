@@ -351,6 +351,15 @@ def _on_receipt(c: NewClient, event) -> None:
     phone = jid_str.split("@")[0] if jid_str else ""
     msg_ids = list(event.MessageIDs) if event.MessageIDs else []
     logger.debug(f"📨 Receipt: {phone} — type={event.Type}, ids={len(msg_ids)}")
+    status_map = {1: "delivered", 4: "read", 5: "read", 6: "played", 7: "played", 8: "failed"}
+    status = status_map.get(event.Type)
+    if status:
+        try:
+            from src.repositories.message_status import upsert_status
+            for mid in msg_ids:
+                upsert_status(sid, mid, status, chat_jid=jid_str, receipt_type=event.Type, timestamp=getattr(event, "Timestamp", None))
+        except Exception as e:
+            logger.debug(f"message_status upsert failed: {e}")
     event_name = {1: "message.delivered", 4: "message.read"}.get(event.Type, "message.receipt")
     _run_in_loop(lambda: _fire(event_name, {
         "from": phone, "fromJid": jid_str,

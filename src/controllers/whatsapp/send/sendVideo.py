@@ -27,6 +27,7 @@ async def send_video(
     as_document: bool = Form(False),
     gif_playback: bool = Form(False),
     ptv: bool = Form(False),
+    accessibility_label: Optional[str] = Form(None),
     delay_message: Optional[str] = Form(None),
     delay_typing: Optional[float] = Form(None),
     mentioned: Optional[str] = Form(None),
@@ -36,7 +37,7 @@ async def send_video(
     if is_dry_run():
         return dry_run_media_response("Video sent successfully.")
     path, size = await resolve_media(url, file, media_type="video")
-    await _send_video_common(phone, path, size, caption, reply, quoted_id, as_document, gif_playback, ptv, delay_message, delay_typing, mentioned, sid)
+    await _send_video_common(phone, path, size, caption, reply, quoted_id, as_document, gif_playback, ptv, accessibility_label, delay_message, delay_typing, mentioned, sid)
     return {"success": True, "message": "Video sent successfully."}
 
 
@@ -59,11 +60,11 @@ async def send_gif(
     if is_dry_run():
         return dry_run_media_response("GIF sent successfully.")
     path, size = await resolve_media(url, file, media_type="gif")
-    await _send_video_common(phone, path, size, caption, reply, quoted_id, as_document=False, gif_playback=True, ptv=False, delay_message=delay_message, delay_typing=delay_typing, mentioned=mentioned, session_id=sid)
+    await _send_video_common(phone, path, size, caption, reply, quoted_id, as_document=False, gif_playback=True, ptv=False, accessibility_label=accessibility_label, delay_message=delay_message, delay_typing=delay_typing, mentioned=mentioned, session_id=sid)
     return {"success": True, "message": "GIF sent successfully."}
 
 
-async def _send_video_common(phone, path, size, caption, reply, quoted_id, as_document, gif_playback, ptv, delay_message=None, delay_typing=None, mentioned=None, session_id="1"):
+async def _send_video_common(phone, path, size, caption, reply, quoted_id, as_document, gif_playback, ptv, accessibility_label=None, delay_message=None, delay_typing=None, mentioned=None, session_id="1"):
     async def process_task():
         converted_path = None
         try:
@@ -82,7 +83,7 @@ async def _send_video_common(phone, path, size, caption, reply, quoted_id, as_do
             final_ptv = False if should_be_doc else ptv
             final_gif = False if (should_be_doc or final_ptv) else gif_playback
 
-            await send_video_message(jid, final_path, caption, as_document=should_be_doc, gif_playback=final_gif, ptv=final_ptv, options=options, session_id=session_id)
+            await send_video_message(jid, final_path, caption, as_document=should_be_doc, gif_playback=final_gif, ptv=final_ptv, accessibility_label=accessibility_label or "", options=options, session_id=session_id)
         finally:
             await upload_tracker.release(size)
             if converted_path:
