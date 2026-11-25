@@ -110,6 +110,245 @@
       ]
     },
     {
+      "name": "Channels",
+      "item": [
+        {
+          "name": "Get Info",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/channels/:jid",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "channels",
+                ":jid"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Get Info.\n\nPath parameters: `jid`"
+          }
+        },
+        {
+          "name": "Follow",
+          "item": [
+            {
+              "name": "Follow",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/channels/:jid/follow",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "channels",
+                    ":jid",
+                    "follow"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Follow.\n\nPath parameters: `jid`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Invite",
+          "item": [
+            {
+              "name": "Get Info By Invite",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/channels/invite/:invite",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "channels",
+                    "invite",
+                    ":invite"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Get Info By Invite.\n\nPath parameters: `invite`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Messages",
+          "item": [
+            {
+              "name": "Get Messages",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/channels/:jid/messages",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "channels",
+                    ":jid",
+                    "messages"
+                  ],
+                  "query": [
+                    {
+                      "key": "count",
+                      "value": "20",
+                      "description": ""
+                    },
+                    {
+                      "key": "before",
+                      "value": "0",
+                      "description": ""
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Get Messages.\n\nPath parameters: `jid`\nQuery parameters: `count`, `before`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mute",
+          "item": [
+            {
+              "name": "Mute",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/channels/:jid/mute",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "channels",
+                    ":jid",
+                    "mute"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Mute.\n\nPath parameters: `jid`\nRequest body: `Mute` schema"
+              }
+            }
+          ]
+        },
+        {
+          "name": "React",
+          "item": [
+            {
+              "name": "React",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/channels/:jid/react",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "channels",
+                    ":jid",
+                    "react"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"server_id\": 1,\n    \"reaction\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "React.\n\nPath parameters: `jid`\nRequest body: `React` schema"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Unfollow",
+          "item": [
+            {
+              "name": "Unfollow",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/channels/:jid/unfollow",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "channels",
+                    ":jid",
+                    "unfollow"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Unfollow.\n\nPath parameters: `jid`"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "Collection",
       "item": [
         {
@@ -160,6 +399,89 @@
       "name": "Contacts",
       "item": [
         {
+          "name": "Blocklist",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/contacts/blocklist",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "contacts",
+                "blocklist"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Blocklist."
+          }
+        },
+        {
+          "name": "Business Profile",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/contacts/business-profile",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "contacts",
+                "business-profile"
+              ],
+              "query": [
+                {
+                  "key": "phone",
+                  "value": "",
+                  "description": ""
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Business Profile.\n\nQuery parameters: `phone`"
+          }
+        },
+        {
+          "name": "User Devices",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/contacts/devices",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "contacts",
+                "devices"
+              ],
+              "query": [
+                {
+                  "key": "phone",
+                  "value": "",
+                  "description": ""
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "User Devices.\n\nQuery parameters: `phone`"
+          }
+        },
+        {
           "name": "Get Contact Info",
           "request": {
             "method": "POST",
@@ -193,6 +515,65 @@
               }
             },
             "description": "Get Contact Info.\n\nRequest body: `Contact` schema"
+          }
+        },
+        {
+          "name": "Is On Whatsapp",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/contacts/is-on-whatsapp",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "contacts",
+                "is-on-whatsapp"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phones\": [\n        \"string\"\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Is On Whatsapp.\n\nRequest body: `IsOnWhatsApp` schema"
+          }
+        },
+        {
+          "name": "Privacy Settings",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/contacts/privacy",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "contacts",
+                "privacy"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Privacy Settings."
           }
         },
         {
@@ -230,6 +611,347 @@
             },
             "description": "Block User.\n\nRequest body: `Block` schema"
           }
+        }
+      ]
+    },
+    {
+      "name": "Experimental",
+      "item": [
+        {
+          "name": "Messages",
+          "item": [
+            {
+              "name": "Send Form",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/experimental/messages/send-form",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "experimental",
+                    "messages",
+                    "send-form"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Hello! This is a test message.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Send Form.\n\nRequest body: `SendForm` schema"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Groups",
+      "item": [
+        {
+          "name": "List Groups",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/groups",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "groups"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "List Groups."
+          }
+        },
+        {
+          "name": "Create Group",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/groups",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "groups"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Create Group.\n\nRequest body: `CreateGroup` schema"
+          }
+        },
+        {
+          "name": "Get Group",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/groups/:jid",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "groups",
+                ":jid"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Get Group.\n\nPath parameters: `jid`"
+          }
+        },
+        {
+          "name": "Update Settings",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{BASE_URL}}/groups/:jid",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "groups",
+                ":jid"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Update Settings.\n\nPath parameters: `jid`\nRequest body: `GroupSettings` schema"
+          }
+        },
+        {
+          "name": "Invite Link",
+          "item": [
+            {
+              "name": "Invite Link",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/groups/:jid/invite-link",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "groups",
+                    ":jid",
+                    "invite-link"
+                  ],
+                  "query": [
+                    {
+                      "key": "revoke",
+                      "value": "false",
+                      "description": ""
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Invite Link.\n\nPath parameters: `jid`\nQuery parameters: `revoke`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Join Requests",
+          "item": [
+            {
+              "name": "List Join Requests",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/groups/:jid/join-requests",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "groups",
+                    ":jid",
+                    "join-requests"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "List Join Requests.\n\nPath parameters: `jid`"
+              }
+            },
+            {
+              "name": "Update Join Requests",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/groups/:jid/join-requests",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "groups",
+                    ":jid",
+                    "join-requests"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"participants\": [\n        \"string\"\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Update Join Requests.\n\nPath parameters: `jid`\nRequest body: `Joins` schema"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Leave",
+          "item": [
+            {
+              "name": "Leave Group",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/groups/:jid/leave",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "groups",
+                    ":jid",
+                    "leave"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Leave Group.\n\nPath parameters: `jid`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Participants",
+          "item": [
+            {
+              "name": "Update Participants",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/groups/:jid/participants",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "groups",
+                    ":jid",
+                    "participants"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"participants\": [\n        \"string\"\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Update Participants.\n\nPath parameters: `jid`\nRequest body: `Participants` schema"
+              }
+            }
+          ]
         }
       ]
     },
@@ -1095,6 +1817,28 @@
                   "value": "0",
                   "description": "Skip first N matching lines"
                 }
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Returns server logs with powerful filtering. All filter parameters below are optional query params — use as many or as few as needed.\n\nDate filters (use `date` OR `from_date`+`to_date`, never both):\n- `date` (YYYY-MM-DD): Specific day's logs (default: today)\n- `from_date` / `to_date` (YYYY-MM-DD): Date range\n\nTime filter (refines within the selected date(s)):\n- `from_time` / `to_time` (HH:MM): Time range\n\nContent filters:\n- `level`: Log level — `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`\n- `search`: Case-insensitive full-text search in log messages\n\nPagination:\n- `limit`: Max lines to return (default: 200, max: 10000)\n- `offset`: Skip first N matching lines\n\nResponse: `{\"success\": true, \"filters\": {...}, \"total\": N, \"returned\": N, \"offset\": N, \"logs\": [...]}`"
+          }
+        },
+        {
+          "name": "Delete All Logs",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{BASE_URL}}/logs",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "logs"
               ]
             },
             "header": [
@@ -2200,7 +2944,7 @@
                     }
                   ]
                 },
-                "description": "Sends a sticker image. Accepts URL or file upload.\n\nUse `url` (text) or `file` (upload).\n\nSticker-specific fields:\n- `pack` — sticker pack name\n- `author` — sticker author\n- `resize_mode` — `\"pad\"` (adds padding) or `\"crop\"` (crops to fit)\n- `pad_color` — background hex/name when using pad mode (e.g. `\"black\"`, `\"#FF0000\"`)\n- `blur_intensity` — background blur strength when padding (integer)\n\nOptional: delay_message, delay_typing, mentioned, reply (by text), quoted_id (by ID).\nNote: Media endpoints do NOT have a type field.\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- reply: reply to message by matching text content\n- quoted_id: reply to message by exact message ID"
+                "description": "Sends a sticker image. Accepts URL or file upload.\n\nUse `url` (text) or `file` (upload).\n\nSticker-specific fields:\n- `pack` — sticker pack name\n- `author` — sticker author\n- `resize_mode` — `\"pad\"` (adds padding), `\"cover\"` (crops to fill 512x512), `\"stretch\"` or `\"blur\"` (blurred background)\n- `pad_color` — background hex/name when using pad mode (e.g. `\"black\"`, `\"#FF0000\"`)\n- `blur_intensity` — background blur strength when padding (integer)\n\nOptional: delay_message, delay_typing, mentioned, reply (by text), quoted_id (by ID).\nNote: Media endpoints do NOT have a type field.\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- reply: reply to message by matching text content\n- quoted_id: reply to message by exact message ID"
               }
             },
             {
@@ -2298,6 +3042,88 @@
           ]
         },
         {
+          "name": "Pin",
+          "item": [
+            {
+              "name": "Pin Message",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/pin",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "pin"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"messageId\": \"MESSAGE_ID\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Pin Message.\n\nRequest body: `PinMessage` schema"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Presence",
+          "item": [
+            {
+              "name": "Send Presence",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/presence",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "presence"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Send Presence.\n\nRequest body: `Presence` schema"
+              }
+            }
+          ]
+        },
+        {
           "name": "Reaction",
           "item": [
             {
@@ -2333,6 +3159,240 @@
                   }
                 },
                 "description": "Sends an emoji reaction to a specific message.\n\nRequired: phone, messageId (target message ID), emoji.\nTo remove a reaction, send an empty string as emoji.\n\nOptional: delay_message, delay_typing, mentioned, quoted_id (by ID), type (\"text\" or \"id\").\n- delay_message: server-side delay (seconds or range like \"2-5\")\n- delay_typing: shows typing indicator for N seconds\n- mentioned: array of phones to @mention in groups\n- quoted_id: reply to message by exact message ID\n- type: \"id\" (match by ID, default) or \"text\" (match by text content)"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Send Album",
+          "item": [
+            {
+              "name": "Send Album",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/send-album",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "send-album"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"files\": [\n        \"string\"\n    ],\n    \"caption\": \"Image caption\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Send Album.\n\nRequest body: `SendAlbum` schema"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Send Carousel",
+          "item": [
+            {
+              "name": "Send Carousel",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/send-carousel",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "send-carousel"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Send Carousel.\n\nRequest body: `SendCarousel` schema"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Send Interactive",
+          "item": [
+            {
+              "name": "Send Interactive",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/send-interactive",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "send-interactive"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Hello! This is a test message.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Send Interactive.\n\nRequest body: `SendInteractive` schema"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Send Native Flow",
+          "item": [
+            {
+              "name": "Send Native Flow",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/send-native-flow",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "send-native-flow"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"message\": \"Hello! This is a test message.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Send Native Flow.\n\nRequest body: `SendNativeFlow` schema"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Send Sticker Pack",
+          "item": [
+            {
+              "name": "Send Sticker Pack",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/send-sticker-pack",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    "send-sticker-pack"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"files\": [\n        \"string\"\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Send Sticker Pack.\n\nRequest body: `SendStickerPack` schema"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Status",
+          "item": [
+            {
+              "name": "Get Message Status",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{BASE_URL}}/messages/:message_id/status",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "messages",
+                    ":message_id",
+                    "status"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Get Message Status.\n\nPath parameters: `message_id`"
               }
             }
           ]
@@ -2411,6 +3471,379 @@
               }
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/orders",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Create Order.\n\nRequest body: `OrderCreate` schema"
+          }
+        },
+        {
+          "name": "List Orders",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/orders",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "orders"
+              ],
+              "query": [
+                {
+                  "key": "phone",
+                  "value": "",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": ""
+                },
+                {
+                  "key": "localStatus",
+                  "value": "",
+                  "description": ""
+                },
+                {
+                  "key": "currency",
+                  "value": "",
+                  "description": ""
+                },
+                {
+                  "key": "dateFrom",
+                  "value": "",
+                  "description": ""
+                },
+                {
+                  "key": "dateTo",
+                  "value": "",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": ""
+                },
+                {
+                  "key": "offset",
+                  "value": "0",
+                  "description": ""
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "List Orders.\n\nQuery parameters: `phone`, `status`, `localStatus`, `currency`, `dateFrom`, `dateTo`, `limit`, `offset`"
+          }
+        },
+        {
+          "name": "Get Order",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/orders/:order_id",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "orders",
+                ":order_id"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Get Order.\n\nPath parameters: `order_id`"
+          }
+        },
+        {
+          "name": "Patch Order",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{BASE_URL}}/orders/:order_id",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "orders",
+                ":order_id"
+              ]
+            },
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "description": "Patch Order.\n\nPath parameters: `order_id`\nRequest body: `OrderPatch` schema"
+          }
+        },
+        {
+          "name": "Accept",
+          "item": [
+            {
+              "name": "Accept Order",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/orders/:order_id/accept",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "orders",
+                    ":order_id",
+                    "accept"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Accept Order.\n\nPath parameters: `order_id`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Decline",
+          "item": [
+            {
+              "name": "Decline Order",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/orders/:order_id/decline",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "orders",
+                    ":order_id",
+                    "decline"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Decline Order.\n\nPath parameters: `order_id`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Payment Info",
+          "item": [
+            {
+              "name": "Payment Info",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/orders/:order_id/payment-info",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "orders",
+                    ":order_id",
+                    "payment-info"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"amount1000\": 1,\n    \"pixKey\": \"yourkey@email.com\",\n    \"merchantName\": \"My Store\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Payment Info.\n\nPath parameters: `order_id`\nRequest body: `PaymentInfo` schema"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Refresh",
+          "item": [
+            {
+              "name": "Refresh Order",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/orders/:order_id/refresh",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "orders",
+                    ":order_id",
+                    "refresh"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "description": "Refresh Order.\n\nPath parameters: `order_id`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Review And Pay",
+          "item": [
+            {
+              "name": "Review And Pay",
+              "request": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{BASE_URL}}/orders/:order_id/review-and-pay",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "orders",
+                    ":order_id",
+                    "review-and-pay"
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-api-key",
+                    "value": "{{API_KEY}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"{{PHONE}}\",\n    \"amount1000\": 1,\n    \"pixKey\": \"yourkey@email.com\",\n    \"merchantName\": \"My Store\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Review And Pay.\n\nPath parameters: `order_id`\nRequest body: `ReviewAndPay` schema"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Send Sticker Sound",
+      "item": [
+        {
+          "name": "Send Sticker",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}/send_sticker_sound",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "send_sticker_sound"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "value": "",
+                  "type": "file",
+                  "src": [],
+                  "disabled": true
+                },
+                {
+                  "key": "phone",
+                  "value": "{{PHONE}}",
+                  "type": "text",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Send Sticker.\n\nRequest body: `Body send sticker send sticker sound post` schema"
+          }
         }
       ]
     },
@@ -3671,7 +5104,7 @@
                 }
               }
             },
-            "description": "Creates a new webhook endpoint. The server will POST event payloads to this URL whenever matching events occur.\n\nRequired: name, url, events (array of event names, or [\"*\"] for all), active (boolean to enable immediately).\nOptional: secret (string) — if set, outgoing payloads are signed with HMAC-SHA256 and the signature is sent in the X-Webhook-Signature header.\n\nAvailable event types:\n- `message.*` / `message.text` / `message.image` / `message.audio` / etc.\n- `message.contacts` — contact array messages\n- `message.sent` / `message.delivered` / `message.read` — delivery receipts\n- `message.poll_created` / `message.poll_vote` — poll events\n- `connection.*` — connection state changes\n- `qr.*` — QR code events\n- `call.*` — call events\n- `group.*` — group events\n- `contact.*` — presence/chat state events\n- `media.cleanup.*` — automatic media cleanup events\n- `ai.response` — Meta AI reply received"
+            "description": "Creates a new webhook endpoint. The server will POST event payloads to this URL whenever matching events occur.\n\nRequired: name, url, events (array of event names, or [\"*\"] for all), active (boolean to enable immediately).\nOptional: secret (string) — if set, outgoing payloads are signed with HMAC-SHA256 and the signature is sent in the X-Webhook-Signature header.\n\nAvailable event types:\n- `message.*` / `message.text` / `message.image` / `message.audio` / etc.\n- `message.contacts` — contact array messages\n- `message.button_reply` / `message.list_reply` — quick replies & lists\n- `message.native_flow_response` — lossless Native Flow (name/version/params)\n- `message.form_response` — `galaxy_message` form submissions\n- `message.order_received` / `message.product_received` — commerce messages\n- `message.sent` / `message.delivered` / `message.read` — delivery receipts\n- `message.poll_created` / `message.poll_vote` — poll events\n- `connection.*` — connection state changes\n- `qr.*` — QR code events\n- `call.*` — call events\n- `group.*` — group events\n- `contact.*` — presence/chat state events\n- `order.*` — order details/status events (from Fase 3)\n- `media.*` — media retry events\n- `media.cleanup.*` — automatic media cleanup events\n- `ai.response` — Meta AI reply received"
           }
         },
         {
@@ -3706,7 +5139,7 @@
                 }
               }
             },
-            "description": "Creates a new webhook endpoint. The server will POST event payloads to this URL whenever matching events occur.\n\nRequired: name, url, events (array of event names, or [\"*\"] for all), active (boolean to enable immediately).\nOptional: secret (string) — if set, outgoing payloads are signed with HMAC-SHA256 and the signature is sent in the X-Webhook-Signature header.\n\nAvailable event types:\n- `message.*` / `message.text` / `message.image` / `message.audio` / etc.\n- `message.contacts` — contact array messages\n- `message.sent` / `message.delivered` / `message.read` — delivery receipts\n- `message.poll_created` / `message.poll_vote` — poll events\n- `connection.*` — connection state changes\n- `qr.*` — QR code events\n- `call.*` — call events\n- `group.*` — group events\n- `contact.*` — presence/chat state events\n- `media.cleanup.*` — automatic media cleanup events\n- `ai.response` — Meta AI reply received"
+            "description": "Creates a new webhook endpoint. The server will POST event payloads to this URL whenever matching events occur.\n\nRequired: name, url, events (array of event names, or [\"*\"] for all), active (boolean to enable immediately).\nOptional: secret (string) — if set, outgoing payloads are signed with HMAC-SHA256 and the signature is sent in the X-Webhook-Signature header.\n\nAvailable event types:\n- `message.*` / `message.text` / `message.image` / `message.audio` / etc.\n- `message.contacts` — contact array messages\n- `message.button_reply` / `message.list_reply` — quick replies & lists\n- `message.native_flow_response` — lossless Native Flow (name/version/params)\n- `message.form_response` — `galaxy_message` form submissions\n- `message.order_received` / `message.product_received` — commerce messages\n- `message.sent` / `message.delivered` / `message.read` — delivery receipts\n- `message.poll_created` / `message.poll_vote` — poll events\n- `connection.*` — connection state changes\n- `qr.*` — QR code events\n- `call.*` — call events\n- `group.*` — group events\n- `contact.*` — presence/chat state events\n- `order.*` — order details/status events (from Fase 3)\n- `media.*` — media retry events\n- `media.cleanup.*` — automatic media cleanup events\n- `ai.response` — Meta AI reply received"
           }
         },
         {
@@ -3936,7 +5369,7 @@
                 "value": "{{API_KEY}}"
               }
             ],
-            "description": "Sends a test payload to a registered webhook to verify connectivity and payload format.\n\nThe `{name}` path param specifies which webhook to test.\n\nOptional body — specify an `event` to choose which payload template to send. If omitted, defaults to `message.text`.\n\nAvailable event types for testing:\n- `message.text`, `message.image`, `message.video`, `message.audio`\n- `message.document`, `message.sticker`, `message.reaction`\n- `message.location`, `message.button_reply`, `message.list_reply`\n- `message.deleted`, `message.poll_created`, `message.poll_vote`\n- `message.sent`, `message.delivered`, `message.read`\n- `connection.connected`, `connection.disconnected`, `connection.qr_ready`\n- `group.join`, `contact.presence`, `contact.chat_presence`\n- `call.received`, `media.cleanup.completed`, `ai.response`\n\nExample body: `{\"event\": \"message.image\"}`\n\nResponse includes the target's HTTP `statusCode` and `response` body."
+            "description": "Sends a test payload to a registered webhook to verify connectivity and payload format.\n\nThe `{name}` path param specifies which webhook to test.\n\nOptional body — specify an `event` to choose which payload template to send. If omitted, defaults to `message.text`.\n\nAvailable event types for testing:\n- `message.text`, `message.image`, `message.video`, `message.audio`\n- `message.document`, `message.sticker`, `message.reaction`\n- `message.location`, `message.button_reply`, `message.list_reply`\n- `message.native_flow_response`, `message.form_response`\n- `message.order_received`, `message.product_received`\n- `message.deleted`, `message.poll_created`, `message.poll_vote`\n- `message.sent`, `message.delivered`, `message.read`\n- `connection.connected`, `connection.disconnected`, `connection.qr_ready`\n- `group.join`, `contact.presence`, `contact.chat_presence`\n- `call.received`, `media.cleanup.completed`, `ai.response`\n\nExample body: `{\"event\": \"message.image\"}`\n\nResponse includes the target's HTTP `statusCode` and `response` body."
           }
         },
         {
