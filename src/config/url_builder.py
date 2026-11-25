@@ -6,24 +6,27 @@ logic from event processing (Clean Architecture dependency rule).
 """
 
 import os
-import socket
 
 from src.config.constants import PORT, API_KEY
+from src.utils.startup_validator import is_alwaysdata
 
 
 def build_qr_url() -> str:
-    """Build the public /qr dashboard URL based on environment."""
-    public_url = os.getenv("PUBLIC_URL")
-    if not public_url:
-        user = os.getenv("USER", "")
-        if user:
-            public_url = f"http://services-{user}.alwaysdata.net:{PORT}"
-        else:
-            hostname = socket.gethostname()
-            public_url = f"http://{hostname}:{PORT}"
+    """Build the /qr dashboard URL for the current environment.
+
+    ``PUBLIC_URL`` is treated as the complete externally reachable origin. When
+    running locally, use the loopback address instead of the Windows hostname;
+    a LAN address can still be selected explicitly through ``PUBLIC_URL``.
+    """
+    configured_url = (os.getenv("PUBLIC_URL") or "").strip()
+    if configured_url:
+        public_url = configured_url.rstrip("/")
+    elif is_alwaysdata():
+        account = os.getenv("ALWAYSDATA_ACCOUNT") or os.getenv("USER", "")
+        public_url = f"http://services-{account}.alwaysdata.net:{PORT}"
     else:
-        if ":" not in public_url.split("/")[-1]:
-            public_url = f"{public_url}:{PORT}"
+        public_url = f"http://127.0.0.1:{PORT}"
+
     qr_url = f"{public_url}/qr"
     if API_KEY:
         qr_url += f"?API_KEY={API_KEY}"

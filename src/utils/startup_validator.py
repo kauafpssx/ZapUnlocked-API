@@ -17,18 +17,13 @@ _REQUIRED = [
     ("neonize",          "neonize"),
     ("Pillow",           "PIL"),
     ("python-magic",     "magic"),
-    ("ffmpeg-python",    "ffmpeg"),
+    ("imageio-ffmpeg",   "imageio_ffmpeg"),
     ("requests",         "requests"),
     ("httpx",            "httpx"),
     ("qrcode",           "qrcode"),
     ("loguru",           "loguru"),
     ("psutil",           "psutil"),
 ]
-
-_OPTIONAL = [
-    ("imageio-ffmpeg",   "imageio_ffmpeg"),
-]
-
 
 def validate_dependencies() -> None:
     missing = []
@@ -37,11 +32,15 @@ def validate_dependencies() -> None:
             missing.append(pip_name)
 
     if missing:
-        install_cmd = (
-            "bash scripts/install/install.sh"
-            if is_alwaysdata()
-            else ".venv/bin/pip install -r requirements.txt"
-        )
+        if is_alwaysdata():
+            install_cmd = "bash scripts/install/install.sh"
+            start_cmd = "bash scripts/run/run.sh"
+        elif sys.platform == "win32":
+            install_cmd = r".venv\Scripts\python.exe -m pip install -r requirements.txt"
+            start_cmd = r"scripts\run\run.bat"
+        else:
+            install_cmd = ".venv/bin/python -m pip install -r requirements.txt"
+            start_cmd = "bash scripts/run/run.sh"
         lines = [
             "",
             "=" * 60,
@@ -56,7 +55,7 @@ def validate_dependencies() -> None:
             f"  {install_cmd}",
             "",
             "Then start with:",
-            "  bash scripts/run/run.sh",
+            f"  {start_cmd}",
             "=" * 60,
             "",
         ]
@@ -69,11 +68,12 @@ def validate_dependencies() -> None:
         installed_neonize = "missing"
 
     if installed_neonize != _REQUIRED_NEONIZE_VERSION:
-        install_cmd = (
-            "bash scripts/install/install.sh"
-            if is_alwaysdata()
-            else ".venv/bin/pip install --upgrade -r requirements.txt"
-        )
+        if is_alwaysdata():
+            install_cmd = "bash scripts/install/install.sh"
+        elif sys.platform == "win32":
+            install_cmd = r".venv\Scripts\python.exe -m pip install --upgrade -r requirements.txt"
+        else:
+            install_cmd = ".venv/bin/python -m pip install --upgrade -r requirements.txt"
         print(
             "\n".join([
                 "",

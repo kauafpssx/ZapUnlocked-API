@@ -32,6 +32,8 @@ from src.schemas.send import (
     ReadMessagesRequest,
     SendEditMessageRequest,
     BulkSendTextRequest,
+    SendAlbumRequest,
+    SendStickerPackRequest,
 )
 from src.schemas.settings import (
     ProfileUpdateRequest,
@@ -47,3 +49,13 @@ from src.schemas.webhooks import (
     WebhookUpdateRequest,
     WebhookToggleRequest,
 )
+from src.schemas.interactive import (
+    NativeFlowButton,
+    SendNativeFlowRequest,
+    SendInteractiveRequest,
+    SendCarouselRequest,
+    InteractiveAction,
+)
+from src.schemas.orders import OrderListQuery, OrderPatchRequest, OrderCreateRequest
+from src.schemas.experimental import SendFormRequest
+from src.schemas.payments import PaymentInfoRequest, ReviewAndPayRequest

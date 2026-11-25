@@ -38,9 +38,12 @@ from src.config.constants import PORT
 app = create_app(lifespan=lifespan)
 
 if __name__ == "__main__":
+    # Windows does not consistently expose an IPv6 ``::`` listener over the
+    # IPv4 loopback address used by the local dashboard URL.
+    bind_host = "0.0.0.0" if sys.platform == "win32" else "::"
     uvicorn.run(
         "main:app",
-        host="::",
+        host=bind_host,
         port=PORT,
         proxy_headers=True,
         log_level="info",

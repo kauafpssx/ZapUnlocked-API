@@ -10,10 +10,14 @@ from typing import Any
 
 from src.routes.index import router as root_router
 from src.routes.send import router as send_router
+from src.routes.experimental import router as experimental_router
+from src.routes.orders import router as orders_router
 from src.routes.qr import router as qr_router
 from src.routes.management import router as management_router
 from src.routes.settings import router as settings_router
 from src.routes.contacts import router as contacts_router
+from src.routes.groups import router as groups_router
+from src.routes.channels import router as channels_router
 from src.routes.system import router as system_router
 from src.routes.instance import router as instance_router
 from src.routes.webhooks import router as webhooks_router
@@ -80,10 +84,14 @@ def create_app(lifespan: Any = None) -> FastAPI:
     app.include_router(root_router)
     app.include_router(system_router, prefix="/system")
     app.include_router(send_router)
+    app.include_router(experimental_router, prefix="/experimental")
+    app.include_router(orders_router)
     app.include_router(qr_router, prefix="/qr")
     app.include_router(management_router, prefix="/management")
     app.include_router(settings_router, prefix="/settings")
     app.include_router(contacts_router, prefix="/contacts")
+    app.include_router(groups_router)
+    app.include_router(channels_router)
     app.include_router(instance_router, prefix="/instance")
     app.include_router(webhooks_router, prefix="/webhooks")
     app.include_router(session_router, prefix="/session")
