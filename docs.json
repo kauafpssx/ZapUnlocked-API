@@ -118,7 +118,7 @@
                 "icon": "eye",
                 "pages": [
                   "api-reference/endpoint/message-read",
-                  "api-reference/endpoint/message-status",
+                  "api-reference/endpoint/message-status"
                 ]
               },
               {
@@ -504,6 +504,77 @@
                   "api-reference/endpoint/system-cleanup-settings-update"
                 ]
               }
+            ]
+          },
+          {
+            "group": "Outros Endpoints",
+            "pages": []
+          },
+          {
+            "group": "Outros Endpoints",
+            "pages": [
+              "api-reference/endpoint/channels-invite-invite",
+              "api-reference/endpoint/channels-jid",
+              "api-reference/endpoint/channels-jid-follow",
+              "api-reference/endpoint/channels-jid-messages",
+              "api-reference/endpoint/channels-jid-mute",
+              "api-reference/endpoint/channels-jid-react",
+              "api-reference/endpoint/channels-jid-unfollow",
+              "api-reference/endpoint/collectionjson",
+              "api-reference/endpoint/contacts-blocklist",
+              "api-reference/endpoint/contacts-business-profile",
+              "api-reference/endpoint/contacts-devices",
+              "api-reference/endpoint/contacts-is-on-whatsapp",
+              "api-reference/endpoint/contacts-privacy",
+              "api-reference/endpoint/delete-logs",
+              "api-reference/endpoint/delete-stats",
+              "api-reference/endpoint/delete-stats-webhooks",
+              "api-reference/endpoint/delete-stats-webhooks-name",
+              "api-reference/endpoint/experimental-messages-send-form",
+              "api-reference/endpoint/get-orders",
+              "api-reference/endpoint/get-qr",
+              "api-reference/endpoint/groups",
+              "api-reference/endpoint/groups-jid",
+              "api-reference/endpoint/groups-jid-invite-link",
+              "api-reference/endpoint/groups-jid-join-requests",
+              "api-reference/endpoint/groups-jid-leave",
+              "api-reference/endpoint/groups-jid-participants",
+              "api-reference/endpoint/messages-pin",
+              "api-reference/endpoint/messages-presence",
+              "api-reference/endpoint/messages-send-album",
+              "api-reference/endpoint/messages-send-carousel",
+              "api-reference/endpoint/messages-send-interactive",
+              "api-reference/endpoint/messages-send-native-flow",
+              "api-reference/endpoint/messages-send-sticker-pack",
+              "api-reference/endpoint/orders",
+              "api-reference/endpoint/orders-orderid",
+              "api-reference/endpoint/orders-orderid-accept",
+              "api-reference/endpoint/orders-orderid-decline",
+              "api-reference/endpoint/orders-orderid-payment-info",
+              "api-reference/endpoint/orders-orderid-refresh",
+              "api-reference/endpoint/orders-orderid-review-and-pay",
+              "api-reference/endpoint/patch-groups-jid",
+              "api-reference/endpoint/patch-orders-orderid",
+              "api-reference/endpoint/post-collectionjson",
+              "api-reference/endpoint/post-groups",
+              "api-reference/endpoint/post-groups-jid-join-requests",
+              "api-reference/endpoint/put-settings-ip-control",
+              "api-reference/endpoint/root",
+              "api-reference/endpoint/session-logout",
+              "api-reference/endpoint/settings-ip-control",
+              "api-reference/endpoint/settings-privacy-about",
+              "api-reference/endpoint/settings-privacy-call-add",
+              "api-reference/endpoint/settings-privacy-disappearing-timer",
+              "api-reference/endpoint/settings-privacy-groups-add",
+              "api-reference/endpoint/settings-privacy-last-seen",
+              "api-reference/endpoint/settings-privacy-online",
+              "api-reference/endpoint/settings-privacy-profile",
+              "api-reference/endpoint/settings-privacy-read-receipts",
+              "api-reference/endpoint/settings-privacy-status",
+              "api-reference/endpoint/stats-webhooks-name",
+              "api-reference/endpoint/system-cleanup",
+              "api-reference/endpoint/volume-stats",
+              "api-reference/endpoint/webhooks-logs-all"
             ]
           }
         ]
