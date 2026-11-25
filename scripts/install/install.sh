@@ -112,6 +112,7 @@ PKGS = [
     ("Pillow",              "11.3.0",   "cp313"),
     ("python-magic",        "0.4.27",   "py3-none-any"),
     ("ffmpeg-python",       "0.2.0",    "py3-none-any"),
+    ("imageio-ffmpeg",      "0.8.1",    "py3-none-any"),
     ("future",              "1.0.0",    "py3-none-any"),
     ("neonize",             "0.12.4",   "py310"),
 
